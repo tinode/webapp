@@ -23,8 +23,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ AccessMode)
 /* harmony export */ });
 
-function _classStaticPrivateMethodGet(receiver, classConstructor, method) { _classCheckPrivateStaticAccess(receiver, classConstructor); return method; }
-function _classCheckPrivateStaticAccess(receiver, classConstructor) { if (receiver !== classConstructor) { throw new TypeError("Private static access of wrong provenance"); } }
 class AccessMode {
   constructor(acs) {
     if (acs) {
@@ -32,6 +30,13 @@ class AccessMode {
       this.want = typeof acs.want == 'number' ? acs.want : AccessMode.decode(acs.want);
       this.mode = acs.mode ? typeof acs.mode == 'number' ? acs.mode : AccessMode.decode(acs.mode) : this.given & this.want;
     }
+  }
+  static #checkFlag(val, side, flag) {
+    side = side || 'mode';
+    if (['given', 'want', 'mode'].includes(side)) {
+      return (val[side] & flag) != 0;
+    }
+    throw new Error(`Invalid AccessMode component '${side}'`);
   }
   static decode(str) {
     if (!str) {
@@ -174,42 +179,35 @@ class AccessMode {
     return this;
   }
   isOwner(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._OWNER);
+    return AccessMode.#checkFlag(this, side, AccessMode._OWNER);
   }
   isPresencer(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._PRES);
+    return AccessMode.#checkFlag(this, side, AccessMode._PRES);
   }
   isMuted(side) {
     return !this.isPresencer(side);
   }
   isJoiner(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._JOIN);
+    return AccessMode.#checkFlag(this, side, AccessMode._JOIN);
   }
   isReader(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._READ);
+    return AccessMode.#checkFlag(this, side, AccessMode._READ);
   }
   isWriter(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._WRITE);
+    return AccessMode.#checkFlag(this, side, AccessMode._WRITE);
   }
   isApprover(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._APPROVE);
+    return AccessMode.#checkFlag(this, side, AccessMode._APPROVE);
   }
   isAdmin(side) {
     return this.isOwner(side) || this.isApprover(side);
   }
   isSharer(side) {
-    return this.isAdmin(side) || _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._SHARE);
+    return this.isAdmin(side) || AccessMode.#checkFlag(this, side, AccessMode._SHARE);
   }
   isDeleter(side) {
-    return _classStaticPrivateMethodGet(AccessMode, AccessMode, _checkFlag).call(AccessMode, this, side, AccessMode._DELETE);
+    return AccessMode.#checkFlag(this, side, AccessMode._DELETE);
   }
-}
-function _checkFlag(val, side, flag) {
-  side = side || 'mode';
-  if (['given', 'want', 'mode'].includes(side)) {
-    return (val[side] & flag) != 0;
-  }
-  throw new Error(`Invalid AccessMode component '${side}'`);
 }
 AccessMode._NONE = 0x00;
 AccessMode._JOIN = 0x01;
@@ -236,39 +234,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ CBuffer)
 /* harmony export */ });
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
-function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
-function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
-function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
-function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
-var _comparator = new WeakMap();
-var _unique = new WeakMap();
-var _findNearest = new WeakSet();
-var _insertSorted = new WeakSet();
 class CBuffer {
+  #comparator = undefined;
+  #unique = false;
+  buffer = [];
   constructor(compare_, unique_) {
-    _classPrivateMethodInitSpec(this, _insertSorted);
-    _classPrivateMethodInitSpec(this, _findNearest);
-    _classPrivateFieldInitSpec(this, _comparator, {
-      writable: true,
-      value: undefined
-    });
-    _classPrivateFieldInitSpec(this, _unique, {
-      writable: true,
-      value: false
-    });
-    _defineProperty(this, "buffer", []);
-    _classPrivateFieldSet(this, _comparator, compare_ || ((a, b) => {
+    this.#comparator = compare_ || ((a, b) => {
       return a === b ? 0 : a < b ? -1 : 1;
-    }));
-    _classPrivateFieldSet(this, _unique, unique_);
+    });
+    this.#unique = unique_;
+  }
+  #findNearest(elem, arr, exact) {
+    let start = 0;
+    let end = arr.length - 1;
+    let pivot = 0;
+    let diff = 0;
+    let found = false;
+    while (start <= end) {
+      pivot = (start + end) / 2 | 0;
+      diff = this.#comparator(arr[pivot], elem);
+      if (diff < 0) {
+        start = pivot + 1;
+      } else if (diff > 0) {
+        end = pivot - 1;
+      } else {
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      return {
+        idx: pivot,
+        exact: true
+      };
+    }
+    if (exact) {
+      return {
+        idx: -1
+      };
+    }
+    return {
+      idx: diff < 0 ? pivot + 1 : pivot
+    };
+  }
+  #insertSorted(elem, arr) {
+    const found = this.#findNearest(elem, arr, false);
+    const count = found.exact && this.#unique ? 1 : 0;
+    arr.splice(found.idx, count, elem);
+    return arr;
   }
   getAt(at) {
     return this.buffer[at];
@@ -285,7 +298,7 @@ class CBuffer {
       insert = arguments;
     }
     for (let idx in insert) {
-      _classPrivateMethodGet(this, _insertSorted, _insertSorted2).call(this, insert[idx], this.buffer);
+      this.#insertSorted(insert[idx], this.buffer);
     }
   }
   delAt(at) {
@@ -315,7 +328,7 @@ class CBuffer {
   find(elem, nearest) {
     const {
       idx
-    } = _classPrivateMethodGet(this, _findNearest, _findNearest2).call(this, elem, this.buffer, !nearest);
+    } = this.#findNearest(elem, this.buffer, !nearest);
     return idx;
   }
   filter(callback, context) {
@@ -331,45 +344,6 @@ class CBuffer {
   isEmpty() {
     return this.buffer.length == 0;
   }
-}
-function _findNearest2(elem, arr, exact) {
-  let start = 0;
-  let end = arr.length - 1;
-  let pivot = 0;
-  let diff = 0;
-  let found = false;
-  while (start <= end) {
-    pivot = (start + end) / 2 | 0;
-    diff = _classPrivateFieldGet(this, _comparator).call(this, arr[pivot], elem);
-    if (diff < 0) {
-      start = pivot + 1;
-    } else if (diff > 0) {
-      end = pivot - 1;
-    } else {
-      found = true;
-      break;
-    }
-  }
-  if (found) {
-    return {
-      idx: pivot,
-      exact: true
-    };
-  }
-  if (exact) {
-    return {
-      idx: -1
-    };
-  }
-  return {
-    idx: diff < 0 ? pivot + 1 : pivot
-  };
-}
-function _insertSorted2(elem, arr) {
-  const found = _classPrivateMethodGet(this, _findNearest, _findNearest2).call(this, elem, arr, false);
-  const count = found.exact && _classPrivateFieldGet(this, _unique) ? 1 : 0;
-  arr.splice(found.idx, count, elem);
-  return arr;
 }
 
 /***/ }),
@@ -480,22 +454,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
-function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
-function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
-function _classStaticPrivateFieldSpecSet(receiver, classConstructor, descriptor, value) { _classCheckPrivateStaticAccess(receiver, classConstructor); _classCheckPrivateStaticFieldDescriptor(descriptor, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
-function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
-function _classStaticPrivateFieldSpecGet(receiver, classConstructor, descriptor) { _classCheckPrivateStaticAccess(receiver, classConstructor); _classCheckPrivateStaticFieldDescriptor(descriptor, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
-function _classCheckPrivateStaticFieldDescriptor(descriptor, action) { if (descriptor === undefined) { throw new TypeError("attempted to " + action + " private static field before its declaration"); } }
-function _classCheckPrivateStaticAccess(receiver, classConstructor) { if (receiver !== classConstructor) { throw new TypeError("Private static access of wrong provenance"); } }
-function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
 
 
 let WebSocketProvider;
@@ -522,62 +480,33 @@ function makeBaseUrl(host, protocol, version, apiKey) {
   }
   return url;
 }
-var _boffTimer = new WeakMap();
-var _boffIteration = new WeakMap();
-var _boffClosed = new WeakMap();
-var _socket = new WeakMap();
-var _boffReconnect = new WeakSet();
-var _boffStop = new WeakSet();
-var _boffReset = new WeakSet();
-var _init_lp = new WeakSet();
-var _init_ws = new WeakSet();
 class Connection {
+  static #log = _ => {};
+  #boffTimer = null;
+  #boffIteration = 0;
+  #boffClosed = false;
+  #socket = null;
+  host;
+  secure;
+  apiKey;
+  version;
+  autoreconnect;
+  initialized;
   constructor(config, version_, autoreconnect_) {
-    _classPrivateMethodInitSpec(this, _init_ws);
-    _classPrivateMethodInitSpec(this, _init_lp);
-    _classPrivateMethodInitSpec(this, _boffReset);
-    _classPrivateMethodInitSpec(this, _boffStop);
-    _classPrivateMethodInitSpec(this, _boffReconnect);
-    _classPrivateFieldInitSpec(this, _boffTimer, {
-      writable: true,
-      value: null
-    });
-    _classPrivateFieldInitSpec(this, _boffIteration, {
-      writable: true,
-      value: 0
-    });
-    _classPrivateFieldInitSpec(this, _boffClosed, {
-      writable: true,
-      value: false
-    });
-    _classPrivateFieldInitSpec(this, _socket, {
-      writable: true,
-      value: null
-    });
-    _defineProperty(this, "host", void 0);
-    _defineProperty(this, "secure", void 0);
-    _defineProperty(this, "apiKey", void 0);
-    _defineProperty(this, "version", void 0);
-    _defineProperty(this, "autoreconnect", void 0);
-    _defineProperty(this, "initialized", void 0);
-    _defineProperty(this, "onMessage", undefined);
-    _defineProperty(this, "onDisconnect", undefined);
-    _defineProperty(this, "onOpen", undefined);
-    _defineProperty(this, "onAutoreconnectIteration", undefined);
     this.host = config.host;
     this.secure = config.secure;
     this.apiKey = config.apiKey;
     this.version = version_;
     this.autoreconnect = autoreconnect_;
     if (config.transport === 'lp') {
-      _classPrivateMethodGet(this, _init_lp, _init_lp2).call(this);
+      this.#init_lp();
       this.initialized = 'lp';
     } else if (config.transport === 'ws') {
-      _classPrivateMethodGet(this, _init_ws, _init_ws2).call(this);
+      this.#init_ws();
       this.initialized = 'ws';
     }
     if (!this.initialized) {
-      _classStaticPrivateFieldSpecGet(Connection, Connection, _log).call(Connection, "Unknown or invalid network transport. Running under Node? Call 'Tinode.setNetworkProviders()'.");
+      Connection.#log("Unknown or invalid network transport. Running under Node? Call 'Tinode.setNetworkProviders()'.");
       throw new Error("Unknown or invalid network transport. Running under Node? Call 'Tinode.setNetworkProviders()'.");
     }
   }
@@ -586,7 +515,7 @@ class Connection {
     XHRProvider = xhrProvider;
   }
   static set logger(l) {
-    _classStaticPrivateFieldSpecSet(Connection, Connection, _log, l);
+    Connection.#log = l;
   }
   connect(host_, force) {
     return Promise.reject(null);
@@ -604,236 +533,236 @@ class Connection {
     this.sendText('1');
   }
   backoffReset() {
-    _classPrivateMethodGet(this, _boffReset, _boffReset2).call(this);
+    this.#boffReset();
   }
-}
-function _boffReconnect2() {
-  clearTimeout(_classPrivateFieldGet(this, _boffTimer));
-  const timeout = _BOFF_BASE * (Math.pow(2, _classPrivateFieldGet(this, _boffIteration)) * (1.0 + _BOFF_JITTER * Math.random()));
-  _classPrivateFieldSet(this, _boffIteration, _classPrivateFieldGet(this, _boffIteration) >= _BOFF_MAX_ITER ? _classPrivateFieldGet(this, _boffIteration) : _classPrivateFieldGet(this, _boffIteration) + 1);
-  if (this.onAutoreconnectIteration) {
-    this.onAutoreconnectIteration(timeout);
-  }
-  _classPrivateFieldSet(this, _boffTimer, setTimeout(_ => {
-    _classStaticPrivateFieldSpecGet(Connection, Connection, _log).call(Connection, `Reconnecting, iter=${_classPrivateFieldGet(this, _boffIteration)}, timeout=${timeout}`);
-    if (!_classPrivateFieldGet(this, _boffClosed)) {
-      const prom = this.connect();
-      if (this.onAutoreconnectIteration) {
-        this.onAutoreconnectIteration(0, prom);
-      } else {
-        prom.catch(_ => {});
-      }
-    } else if (this.onAutoreconnectIteration) {
-      this.onAutoreconnectIteration(-1);
+  #boffReconnect() {
+    clearTimeout(this.#boffTimer);
+    const timeout = _BOFF_BASE * (Math.pow(2, this.#boffIteration) * (1.0 + _BOFF_JITTER * Math.random()));
+    this.#boffIteration = this.#boffIteration >= _BOFF_MAX_ITER ? this.#boffIteration : this.#boffIteration + 1;
+    if (this.onAutoreconnectIteration) {
+      this.onAutoreconnectIteration(timeout);
     }
-  }, timeout));
-}
-function _boffStop2() {
-  clearTimeout(_classPrivateFieldGet(this, _boffTimer));
-  _classPrivateFieldSet(this, _boffTimer, null);
-}
-function _boffReset2() {
-  _classPrivateFieldSet(this, _boffIteration, 0);
-}
-function _init_lp2() {
-  const XDR_UNSENT = 0;
-  const XDR_OPENED = 1;
-  const XDR_HEADERS_RECEIVED = 2;
-  const XDR_LOADING = 3;
-  const XDR_DONE = 4;
-  let _lpURL = null;
-  let _poller = null;
-  let _sender = null;
-  let lp_sender = url_ => {
-    const sender = new XHRProvider();
-    sender.onreadystatechange = evt => {
-      if (sender.readyState == XDR_DONE && sender.status >= 400) {
-        throw new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"]("LP sender failed", sender.status);
+    this.#boffTimer = setTimeout(_ => {
+      Connection.#log(`Reconnecting, iter=${this.#boffIteration}, timeout=${timeout}`);
+      if (!this.#boffClosed) {
+        const prom = this.connect();
+        if (this.onAutoreconnectIteration) {
+          this.onAutoreconnectIteration(0, prom);
+        } else {
+          prom.catch(_ => {});
+        }
+      } else if (this.onAutoreconnectIteration) {
+        this.onAutoreconnectIteration(-1);
+      }
+    }, timeout);
+  }
+  #boffStop() {
+    clearTimeout(this.#boffTimer);
+    this.#boffTimer = null;
+  }
+  #boffReset() {
+    this.#boffIteration = 0;
+  }
+  #init_lp() {
+    const XDR_UNSENT = 0;
+    const XDR_OPENED = 1;
+    const XDR_HEADERS_RECEIVED = 2;
+    const XDR_LOADING = 3;
+    const XDR_DONE = 4;
+    let _lpURL = null;
+    let _poller = null;
+    let _sender = null;
+    let lp_sender = url_ => {
+      const sender = new XHRProvider();
+      sender.onreadystatechange = evt => {
+        if (sender.readyState == XDR_DONE && sender.status >= 400) {
+          throw new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"]("LP sender failed", sender.status);
+        }
+      };
+      sender.open('POST', url_, true);
+      return sender;
+    };
+    let lp_poller = (url_, resolve, reject) => {
+      let poller = new XHRProvider();
+      let promiseCompleted = false;
+      poller.onreadystatechange = evt => {
+        if (poller.readyState == XDR_DONE) {
+          if (poller.status == 201) {
+            let pkt = JSON.parse(poller.responseText, _utils_js__WEBPACK_IMPORTED_MODULE_1__.jsonParseHelper);
+            _lpURL = url_ + '&sid=' + pkt.ctrl.params.sid;
+            poller = lp_poller(_lpURL);
+            poller.send(null);
+            if (this.onOpen) {
+              this.onOpen();
+            }
+            if (resolve) {
+              promiseCompleted = true;
+              resolve();
+            }
+            if (this.autoreconnect) {
+              this.#boffStop();
+            }
+          } else if (poller.status > 0 && poller.status < 400) {
+            if (this.onMessage) {
+              this.onMessage(poller.responseText);
+            }
+            poller = lp_poller(_lpURL);
+            poller.send(null);
+          } else {
+            if (reject && !promiseCompleted) {
+              promiseCompleted = true;
+              reject(poller.responseText);
+            }
+            if (this.onMessage && poller.responseText) {
+              this.onMessage(poller.responseText);
+            }
+            if (this.onDisconnect) {
+              const code = poller.status || (this.#boffClosed ? NETWORK_USER : NETWORK_ERROR);
+              const text = poller.responseText || (this.#boffClosed ? NETWORK_USER_TEXT : NETWORK_ERROR_TEXT);
+              this.onDisconnect(new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"](text, code), code);
+            }
+            poller = null;
+            if (!this.#boffClosed && this.autoreconnect) {
+              this.#boffReconnect();
+            }
+          }
+        }
+      };
+      poller.open('POST', url_, true);
+      return poller;
+    };
+    this.connect = (host_, force) => {
+      this.#boffClosed = false;
+      if (_poller) {
+        if (!force) {
+          return Promise.resolve();
+        }
+        _poller.onreadystatechange = undefined;
+        _poller.abort();
+        _poller = null;
+      }
+      if (host_) {
+        this.host = host_;
+      }
+      return new Promise((resolve, reject) => {
+        const url = makeBaseUrl(this.host, this.secure ? 'https' : 'http', this.version, this.apiKey);
+        Connection.#log("LP connecting to:", url);
+        _poller = lp_poller(url, resolve, reject);
+        _poller.send(null);
+      }).catch(err => {
+        Connection.#log("LP connection failed:", err);
+      });
+    };
+    this.reconnect = force => {
+      this.#boffStop();
+      this.connect(null, force);
+    };
+    this.disconnect = _ => {
+      this.#boffClosed = true;
+      this.#boffStop();
+      if (_sender) {
+        _sender.onreadystatechange = undefined;
+        _sender.abort();
+        _sender = null;
+      }
+      if (_poller) {
+        _poller.onreadystatechange = undefined;
+        _poller.abort();
+        _poller = null;
+      }
+      if (this.onDisconnect) {
+        this.onDisconnect(new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"](NETWORK_USER_TEXT, NETWORK_USER), NETWORK_USER);
+      }
+      _lpURL = null;
+    };
+    this.sendText = msg => {
+      _sender = lp_sender(_lpURL);
+      if (_sender && _sender.readyState == XDR_OPENED) {
+        _sender.send(msg);
+      } else {
+        throw new Error("Long poller failed to connect");
       }
     };
-    sender.open('POST', url_, true);
-    return sender;
-  };
-  let lp_poller = (url_, resolve, reject) => {
-    let poller = new XHRProvider();
-    let promiseCompleted = false;
-    poller.onreadystatechange = evt => {
-      if (poller.readyState == XDR_DONE) {
-        if (poller.status == 201) {
-          let pkt = JSON.parse(poller.responseText, _utils_js__WEBPACK_IMPORTED_MODULE_1__.jsonParseHelper);
-          _lpURL = url_ + '&sid=' + pkt.ctrl.params.sid;
-          poller = lp_poller(_lpURL);
-          poller.send(null);
+    this.isConnected = _ => {
+      return _poller && true;
+    };
+  }
+  #init_ws() {
+    this.connect = (host_, force) => {
+      this.#boffClosed = false;
+      if (this.#socket) {
+        if (!force && this.#socket.readyState == this.#socket.OPEN) {
+          return Promise.resolve();
+        }
+        this.#socket.close();
+        this.#socket = null;
+      }
+      if (host_) {
+        this.host = host_;
+      }
+      return new Promise((resolve, reject) => {
+        const url = makeBaseUrl(this.host, this.secure ? 'wss' : 'ws', this.version, this.apiKey);
+        Connection.#log("WS connecting to: ", url);
+        const conn = new WebSocketProvider(url);
+        conn.onerror = err => {
+          reject(err);
+        };
+        conn.onopen = _ => {
+          if (this.autoreconnect) {
+            this.#boffStop();
+          }
           if (this.onOpen) {
             this.onOpen();
           }
-          if (resolve) {
-            promiseCompleted = true;
-            resolve();
-          }
-          if (this.autoreconnect) {
-            _classPrivateMethodGet(this, _boffStop, _boffStop2).call(this);
-          }
-        } else if (poller.status > 0 && poller.status < 400) {
-          if (this.onMessage) {
-            this.onMessage(poller.responseText);
-          }
-          poller = lp_poller(_lpURL);
-          poller.send(null);
-        } else {
-          if (reject && !promiseCompleted) {
-            promiseCompleted = true;
-            reject(poller.responseText);
-          }
-          if (this.onMessage && poller.responseText) {
-            this.onMessage(poller.responseText);
-          }
+          resolve();
+        };
+        conn.onclose = _ => {
+          this.#socket = null;
           if (this.onDisconnect) {
-            const code = poller.status || (_classPrivateFieldGet(this, _boffClosed) ? NETWORK_USER : NETWORK_ERROR);
-            const text = poller.responseText || (_classPrivateFieldGet(this, _boffClosed) ? NETWORK_USER_TEXT : NETWORK_ERROR_TEXT);
-            this.onDisconnect(new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"](text, code), code);
+            const code = this.#boffClosed ? NETWORK_USER : NETWORK_ERROR;
+            this.onDisconnect(new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.#boffClosed ? NETWORK_USER_TEXT : NETWORK_ERROR_TEXT, code), code);
           }
-          poller = null;
-          if (!_classPrivateFieldGet(this, _boffClosed) && this.autoreconnect) {
-            _classPrivateMethodGet(this, _boffReconnect, _boffReconnect2).call(this);
+          if (!this.#boffClosed && this.autoreconnect) {
+            this.#boffReconnect();
           }
-        }
+        };
+        conn.onmessage = evt => {
+          if (this.onMessage) {
+            this.onMessage(evt.data);
+          }
+        };
+        this.#socket = conn;
+      });
+    };
+    this.reconnect = force => {
+      this.#boffStop();
+      this.connect(null, force);
+    };
+    this.disconnect = _ => {
+      this.#boffClosed = true;
+      this.#boffStop();
+      if (!this.#socket) {
+        return;
+      }
+      this.#socket.close();
+      this.#socket = null;
+    };
+    this.sendText = msg => {
+      if (this.#socket && this.#socket.readyState == this.#socket.OPEN) {
+        this.#socket.send(msg);
+      } else {
+        throw new Error("Websocket is not connected");
       }
     };
-    poller.open('POST', url_, true);
-    return poller;
-  };
-  this.connect = (host_, force) => {
-    _classPrivateFieldSet(this, _boffClosed, false);
-    if (_poller) {
-      if (!force) {
-        return Promise.resolve();
-      }
-      _poller.onreadystatechange = undefined;
-      _poller.abort();
-      _poller = null;
-    }
-    if (host_) {
-      this.host = host_;
-    }
-    return new Promise((resolve, reject) => {
-      const url = makeBaseUrl(this.host, this.secure ? 'https' : 'http', this.version, this.apiKey);
-      _classStaticPrivateFieldSpecGet(Connection, Connection, _log).call(Connection, "LP connecting to:", url);
-      _poller = lp_poller(url, resolve, reject);
-      _poller.send(null);
-    }).catch(err => {
-      _classStaticPrivateFieldSpecGet(Connection, Connection, _log).call(Connection, "LP connection failed:", err);
-    });
-  };
-  this.reconnect = force => {
-    _classPrivateMethodGet(this, _boffStop, _boffStop2).call(this);
-    this.connect(null, force);
-  };
-  this.disconnect = _ => {
-    _classPrivateFieldSet(this, _boffClosed, true);
-    _classPrivateMethodGet(this, _boffStop, _boffStop2).call(this);
-    if (_sender) {
-      _sender.onreadystatechange = undefined;
-      _sender.abort();
-      _sender = null;
-    }
-    if (_poller) {
-      _poller.onreadystatechange = undefined;
-      _poller.abort();
-      _poller = null;
-    }
-    if (this.onDisconnect) {
-      this.onDisconnect(new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"](NETWORK_USER_TEXT, NETWORK_USER), NETWORK_USER);
-    }
-    _lpURL = null;
-  };
-  this.sendText = msg => {
-    _sender = lp_sender(_lpURL);
-    if (_sender && _sender.readyState == XDR_OPENED) {
-      _sender.send(msg);
-    } else {
-      throw new Error("Long poller failed to connect");
-    }
-  };
-  this.isConnected = _ => {
-    return _poller && true;
-  };
+    this.isConnected = _ => {
+      return this.#socket && this.#socket.readyState == this.#socket.OPEN;
+    };
+  }
+  onMessage = undefined;
+  onDisconnect = undefined;
+  onOpen = undefined;
+  onAutoreconnectIteration = undefined;
 }
-function _init_ws2() {
-  this.connect = (host_, force) => {
-    _classPrivateFieldSet(this, _boffClosed, false);
-    if (_classPrivateFieldGet(this, _socket)) {
-      if (!force && _classPrivateFieldGet(this, _socket).readyState == _classPrivateFieldGet(this, _socket).OPEN) {
-        return Promise.resolve();
-      }
-      _classPrivateFieldGet(this, _socket).close();
-      _classPrivateFieldSet(this, _socket, null);
-    }
-    if (host_) {
-      this.host = host_;
-    }
-    return new Promise((resolve, reject) => {
-      const url = makeBaseUrl(this.host, this.secure ? 'wss' : 'ws', this.version, this.apiKey);
-      _classStaticPrivateFieldSpecGet(Connection, Connection, _log).call(Connection, "WS connecting to: ", url);
-      const conn = new WebSocketProvider(url);
-      conn.onerror = err => {
-        reject(err);
-      };
-      conn.onopen = _ => {
-        if (this.autoreconnect) {
-          _classPrivateMethodGet(this, _boffStop, _boffStop2).call(this);
-        }
-        if (this.onOpen) {
-          this.onOpen();
-        }
-        resolve();
-      };
-      conn.onclose = _ => {
-        _classPrivateFieldSet(this, _socket, null);
-        if (this.onDisconnect) {
-          const code = _classPrivateFieldGet(this, _boffClosed) ? NETWORK_USER : NETWORK_ERROR;
-          this.onDisconnect(new _comm_error_js__WEBPACK_IMPORTED_MODULE_0__["default"](_classPrivateFieldGet(this, _boffClosed) ? NETWORK_USER_TEXT : NETWORK_ERROR_TEXT, code), code);
-        }
-        if (!_classPrivateFieldGet(this, _boffClosed) && this.autoreconnect) {
-          _classPrivateMethodGet(this, _boffReconnect, _boffReconnect2).call(this);
-        }
-      };
-      conn.onmessage = evt => {
-        if (this.onMessage) {
-          this.onMessage(evt.data);
-        }
-      };
-      _classPrivateFieldSet(this, _socket, conn);
-    });
-  };
-  this.reconnect = force => {
-    _classPrivateMethodGet(this, _boffStop, _boffStop2).call(this);
-    this.connect(null, force);
-  };
-  this.disconnect = _ => {
-    _classPrivateFieldSet(this, _boffClosed, true);
-    _classPrivateMethodGet(this, _boffStop, _boffStop2).call(this);
-    if (!_classPrivateFieldGet(this, _socket)) {
-      return;
-    }
-    _classPrivateFieldGet(this, _socket).close();
-    _classPrivateFieldSet(this, _socket, null);
-  };
-  this.sendText = msg => {
-    if (_classPrivateFieldGet(this, _socket) && _classPrivateFieldGet(this, _socket).readyState == _classPrivateFieldGet(this, _socket).OPEN) {
-      _classPrivateFieldGet(this, _socket).send(msg);
-    } else {
-      throw new Error("Websocket is not connected");
-    }
-  };
-  this.isConnected = _ => {
-    return _classPrivateFieldGet(this, _socket) && _classPrivateFieldGet(this, _socket).readyState == _classPrivateFieldGet(this, _socket).OPEN;
-  };
-}
-var _log = {
-  writable: true,
-  value: _ => {}
-};
 Connection.NETWORK_ERROR = NETWORK_ERROR;
 Connection.NETWORK_ERROR_TEXT = NETWORK_ERROR_TEXT;
 Connection.NETWORK_USER = NETWORK_USER;
@@ -852,43 +781,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ DB)
 /* harmony export */ });
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
-function _classStaticPrivateFieldSpecGet(receiver, classConstructor, descriptor) { _classCheckPrivateStaticAccess(receiver, classConstructor); _classCheckPrivateStaticFieldDescriptor(descriptor, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
-function _classCheckPrivateStaticFieldDescriptor(descriptor, action) { if (descriptor === undefined) { throw new TypeError("attempted to " + action + " private static field before its declaration"); } }
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
-function _classStaticPrivateMethodGet(receiver, classConstructor, method) { _classCheckPrivateStaticAccess(receiver, classConstructor); return method; }
-function _classCheckPrivateStaticAccess(receiver, classConstructor) { if (receiver !== classConstructor) { throw new TypeError("Private static access of wrong provenance"); } }
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
-function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
-function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
-function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
-function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
 const DB_VERSION = 1;
 const DB_NAME = 'tinode-web';
 let IDBProvider;
-var _onError = new WeakMap();
-var _logger = new WeakMap();
-var _mapObjects = new WeakSet();
 class DB {
+  #onError = _ => {};
+  #logger = _ => {};
+  db = null;
+  disabled = false;
   constructor(onError, logger) {
-    _classPrivateMethodInitSpec(this, _mapObjects);
-    _classPrivateFieldInitSpec(this, _onError, {
-      writable: true,
-      value: _ => {}
+    this.#onError = onError || this.#onError;
+    this.#logger = logger || this.#logger;
+  }
+  #mapObjects(source, callback, context) {
+    if (!this.db) {
+      return disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const trx = this.db.transaction([source]);
+      trx.onerror = event => {
+        this.#logger('PCache', 'mapObjects', source, event.target.error);
+        reject(event.target.error);
+      };
+      trx.objectStore(source).getAll().onsuccess = event => {
+        if (callback) {
+          event.target.result.forEach(topic => {
+            callback.call(context, topic);
+          });
+        }
+        resolve(event.target.result);
+      };
     });
-    _classPrivateFieldInitSpec(this, _logger, {
-      writable: true,
-      value: _ => {}
-    });
-    _defineProperty(this, "db", null);
-    _defineProperty(this, "disabled", false);
-    _classPrivateFieldSet(this, _onError, onError || _classPrivateFieldGet(this, _onError));
-    _classPrivateFieldSet(this, _logger, logger || _classPrivateFieldGet(this, _logger));
   }
   initDatabase() {
     return new Promise((resolve, reject) => {
@@ -899,15 +822,15 @@ class DB {
         resolve(this.db);
       };
       req.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', "failed to initialize", event);
+        this.#logger('PCache', "failed to initialize", event);
         reject(event.target.error);
-        _classPrivateFieldGet(this, _onError).call(this, event.target.error);
+        this.#onError(event.target.error);
       };
       req.onupgradeneeded = event => {
         this.db = event.target.result;
         this.db.onerror = event => {
-          _classPrivateFieldGet(this, _logger).call(this, 'PCache', "failed to create storage", event);
-          _classPrivateFieldGet(this, _onError).call(this, event.target.error);
+          this.#logger('PCache', "failed to create storage", event);
+          this.#onError(event.target.error);
         };
         this.db.createObjectStore('topic', {
           keyPath: 'name'
@@ -936,7 +859,7 @@ class DB {
           this.db.close();
         }
         const err = new Error("blocked");
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'deleteDatabase', err);
+        this.#logger('PCache', 'deleteDatabase', err);
         reject(err);
       };
       req.onsuccess = _ => {
@@ -945,7 +868,7 @@ class DB {
         resolve(true);
       };
       req.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'deleteDatabase', event.target.error);
+        this.#logger('PCache', 'deleteDatabase', event.target.error);
         reject(event.target.error);
       };
     });
@@ -963,12 +886,12 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'updTopic', event.target.error);
+        this.#logger('PCache', 'updTopic', event.target.error);
         reject(event.target.error);
       };
       const req = trx.objectStore('topic').get(topic.name);
       req.onsuccess = _ => {
-        trx.objectStore('topic').put(_classStaticPrivateMethodGet(DB, DB, _serializeTopic).call(DB, req.result, topic));
+        trx.objectStore('topic').put(DB.#serializeTopic(req.result, topic));
         trx.commit();
       };
     });
@@ -983,7 +906,7 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'markTopicAsDeleted', event.target.error);
+        this.#logger('PCache', 'markTopicAsDeleted', event.target.error);
         reject(event.target.error);
       };
       const req = trx.objectStore('topic').get(name);
@@ -1005,7 +928,7 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'remTopic', event.target.error);
+        this.#logger('PCache', 'remTopic', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('topic').delete(IDBKeyRange.only(name));
@@ -1015,10 +938,10 @@ class DB {
     });
   }
   mapTopics(callback, context) {
-    return _classPrivateMethodGet(this, _mapObjects, _mapObjects2).call(this, 'topic', callback, context);
+    return this.#mapObjects('topic', callback, context);
   }
   deserializeTopic(topic, src) {
-    _classStaticPrivateMethodGet(DB, DB, _deserializeTopic).call(DB, topic, src);
+    DB.#deserializeTopic(topic, src);
   }
   updUser(uid, pub) {
     if (arguments.length < 2 || pub === undefined) {
@@ -1033,7 +956,7 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'updUser', event.target.error);
+        this.#logger('PCache', 'updUser', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('user').put({
@@ -1053,7 +976,7 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'remUser', event.target.error);
+        this.#logger('PCache', 'remUser', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('user').delete(IDBKeyRange.only(uid));
@@ -1061,7 +984,7 @@ class DB {
     });
   }
   mapUsers(callback, context) {
-    return _classPrivateMethodGet(this, _mapObjects, _mapObjects2).call(this, 'user', callback, context);
+    return this.#mapObjects('user', callback, context);
   }
   getUser(uid) {
     if (!this.isReady()) {
@@ -1077,7 +1000,7 @@ class DB {
         });
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'getUser', event.target.error);
+        this.#logger('PCache', 'getUser', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('user').get(uid);
@@ -1093,11 +1016,11 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'updSubscription', event.target.error);
+        this.#logger('PCache', 'updSubscription', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('subscription').get([topicName, uid]).onsuccess = event => {
-        trx.objectStore('subscription').put(_classStaticPrivateMethodGet(DB, DB, _serializeSubscription).call(DB, event.target.result, topicName, uid, sub));
+        trx.objectStore('subscription').put(DB.#serializeSubscription(event.target.result, topicName, uid, sub));
         trx.commit();
       };
     });
@@ -1109,7 +1032,7 @@ class DB {
     return new Promise((resolve, reject) => {
       const trx = this.db.transaction(['subscription']);
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'mapSubscriptions', event.target.error);
+        this.#logger('PCache', 'mapSubscriptions', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('subscription').getAll(IDBKeyRange.bound([topicName, '-'], [topicName, '~'])).onsuccess = event => {
@@ -1132,10 +1055,10 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'addMessage', event.target.error);
+        this.#logger('PCache', 'addMessage', event.target.error);
         reject(event.target.error);
       };
-      trx.objectStore('message').add(_classStaticPrivateMethodGet(DB, DB, _serializeMessage).call(DB, null, msg));
+      trx.objectStore('message').add(DB.#serializeMessage(null, msg));
       trx.commit();
     });
   }
@@ -1149,7 +1072,7 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'updMessageStatus', event.target.error);
+        this.#logger('PCache', 'updMessageStatus', event.target.error);
         reject(event.target.error);
       };
       const req = trx.objectStore('message').get(IDBKeyRange.only([topicName, seq]));
@@ -1159,7 +1082,7 @@ class DB {
           trx.commit();
           return;
         }
-        trx.objectStore('message').put(_classStaticPrivateMethodGet(DB, DB, _serializeMessage).call(DB, src, {
+        trx.objectStore('message').put(DB.#serializeMessage(src, {
           topic: topicName,
           seq: seq,
           _status: status
@@ -1183,7 +1106,7 @@ class DB {
         resolve(event.target.result);
       };
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'remMessages', event.target.error);
+        this.#logger('PCache', 'remMessages', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('message').delete(range);
@@ -1203,7 +1126,7 @@ class DB {
       const range = IDBKeyRange.bound([topicName, since], [topicName, before], false, true);
       const trx = this.db.transaction(['message']);
       trx.onerror = event => {
-        _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'readMessages', event.target.error);
+        this.#logger('PCache', 'readMessages', event.target.error);
         reject(event.target.error);
       };
       trx.objectStore('message').openCursor(range, 'prev').onsuccess = event => {
@@ -1224,90 +1147,67 @@ class DB {
       };
     });
   }
+  static #topic_fields = ['created', 'updated', 'deleted', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', 'touched', '_deleted'];
+  static #deserializeTopic(topic, src) {
+    DB.#topic_fields.forEach(f => {
+      if (src.hasOwnProperty(f)) {
+        topic[f] = src[f];
+      }
+    });
+    if (Array.isArray(src.tags)) {
+      topic._tags = src.tags;
+    }
+    if (src.acs) {
+      topic.setAccessMode(src.acs);
+    }
+    topic.seq |= 0;
+    topic.read |= 0;
+    topic.unread = Math.max(0, topic.seq - topic.read);
+  }
+  static #serializeTopic(dst, src) {
+    const res = dst || {
+      name: src.name
+    };
+    DB.#topic_fields.forEach(f => {
+      if (src.hasOwnProperty(f)) {
+        res[f] = src[f];
+      }
+    });
+    if (Array.isArray(src._tags)) {
+      res.tags = src._tags;
+    }
+    if (src.acs) {
+      res.acs = src.getAccessMode().jsonHelper();
+    }
+    return res;
+  }
+  static #serializeSubscription(dst, topicName, uid, sub) {
+    const fields = ['updated', 'mode', 'read', 'recv', 'clear', 'lastSeen', 'userAgent'];
+    const res = dst || {
+      topic: topicName,
+      uid: uid
+    };
+    fields.forEach(f => {
+      if (sub.hasOwnProperty(f)) {
+        res[f] = sub[f];
+      }
+    });
+    return res;
+  }
+  static #serializeMessage(dst, msg) {
+    const fields = ['topic', 'seq', 'ts', '_status', 'from', 'head', 'content'];
+    const res = dst || {};
+    fields.forEach(f => {
+      if (msg.hasOwnProperty(f)) {
+        res[f] = msg[f];
+      }
+    });
+    return res;
+  }
   static setDatabaseProvider(idbProvider) {
     IDBProvider = idbProvider;
   }
 }
-function _mapObjects2(source, callback, context) {
-  if (!this.db) {
-    return disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
-  }
-  return new Promise((resolve, reject) => {
-    const trx = this.db.transaction([source]);
-    trx.onerror = event => {
-      _classPrivateFieldGet(this, _logger).call(this, 'PCache', 'mapObjects', source, event.target.error);
-      reject(event.target.error);
-    };
-    trx.objectStore(source).getAll().onsuccess = event => {
-      if (callback) {
-        event.target.result.forEach(topic => {
-          callback.call(context, topic);
-        });
-      }
-      resolve(event.target.result);
-    };
-  });
-}
-function _deserializeTopic(topic, src) {
-  _classStaticPrivateFieldSpecGet(DB, DB, _topic_fields).forEach(f => {
-    if (src.hasOwnProperty(f)) {
-      topic[f] = src[f];
-    }
-  });
-  if (Array.isArray(src.tags)) {
-    topic._tags = src.tags;
-  }
-  if (src.acs) {
-    topic.setAccessMode(src.acs);
-  }
-  topic.seq |= 0;
-  topic.read |= 0;
-  topic.unread = Math.max(0, topic.seq - topic.read);
-}
-function _serializeTopic(dst, src) {
-  const res = dst || {
-    name: src.name
-  };
-  _classStaticPrivateFieldSpecGet(DB, DB, _topic_fields).forEach(f => {
-    if (src.hasOwnProperty(f)) {
-      res[f] = src[f];
-    }
-  });
-  if (Array.isArray(src._tags)) {
-    res.tags = src._tags;
-  }
-  if (src.acs) {
-    res.acs = src.getAccessMode().jsonHelper();
-  }
-  return res;
-}
-function _serializeSubscription(dst, topicName, uid, sub) {
-  const fields = ['updated', 'mode', 'read', 'recv', 'clear', 'lastSeen', 'userAgent'];
-  const res = dst || {
-    topic: topicName,
-    uid: uid
-  };
-  fields.forEach(f => {
-    if (sub.hasOwnProperty(f)) {
-      res[f] = sub[f];
-    }
-  });
-  return res;
-}
-function _serializeMessage(dst, msg) {
-  const fields = ['topic', 'seq', 'ts', '_status', 'from', 'head', 'content'];
-  const res = dst || {};
-  fields.forEach(f => {
-    if (msg.hasOwnProperty(f)) {
-      res[f] = msg[f];
-    }
-  });
-  return res;
-}
-var _topic_fields = {
-  writable: true,
-  value: ['created', 'updated', 'deleted', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', 'touched', '_deleted']
-};
 
 /***/ }),
 
@@ -3258,17 +3158,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ MetaGetBuilder)
 /* harmony export */ });
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
-var _get_desc_ims = new WeakSet();
-var _get_subs_ims = new WeakSet();
 class MetaGetBuilder {
   constructor(parent) {
-    _classPrivateMethodInitSpec(this, _get_subs_ims);
-    _classPrivateMethodInitSpec(this, _get_desc_ims);
     this.topic = parent;
     this.what = {};
+  }
+  #get_desc_ims() {
+    return this.topic.updated;
+  }
+  #get_subs_ims() {
+    if (this.topic.isP2PType()) {
+      return this.#get_desc_ims();
+    }
+    return this.topic._lastSubsUpdate;
   }
   withData(since, before, limit) {
     this.what['data'] = {
@@ -3291,7 +3193,7 @@ class MetaGetBuilder {
     return this;
   }
   withLaterDesc() {
-    return this.withDesc(_classPrivateMethodGet(this, _get_desc_ims, _get_desc_ims2).call(this));
+    return this.withDesc(this.#get_desc_ims());
   }
   withSub(ims, limit, userOrTopic) {
     const opts = {
@@ -3313,7 +3215,7 @@ class MetaGetBuilder {
     return this.withOneSub(this.topic._lastSubsUpdate, userOrTopic);
   }
   withLaterSub(limit) {
-    return this.withSub(_classPrivateMethodGet(this, _get_subs_ims, _get_subs_ims2).call(this), limit);
+    return this.withSub(this.#get_subs_ims(), limit);
   }
   withTags() {
     this.what['tags'] = true;
@@ -3361,15 +3263,6 @@ class MetaGetBuilder {
     return params;
   }
 }
-function _get_desc_ims2() {
-  return this.topic.updated;
-}
-function _get_subs_ims2() {
-  if (this.topic.isP2PType()) {
-    return _classPrivateMethodGet(this, _get_desc_ims, _get_desc_ims2).call(this);
-  }
-  return this.topic._lastSubsUpdate;
-}
 
 /***/ }),
 
@@ -3395,9 +3288,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 
 
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 
 
@@ -4501,9 +4391,9 @@ class Topic {
   }
 }
 class TopicMe extends Topic {
+  onContactUpdate;
   constructor(callbacks) {
     super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME, callbacks);
-    _defineProperty(this, "onContactUpdate", void 0);
     if (callbacks) {
       this.onContactUpdate = callbacks.onContactUpdate;
     }
@@ -4759,9 +4649,9 @@ class TopicMe extends Topic {
   }
 }
 class TopicFnd extends Topic {
+  _contacts = {};
   constructor(callbacks) {
     super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_FND, callbacks);
-    _defineProperty(this, "_contacts", {});
   }
   _processMetaSub(subs) {
     let updateCount = Object.getOwnPropertyNames(this._contacts).length;
@@ -5102,12 +4992,6 @@ __webpack_require__.r(__webpack_exports__);
  * </body>
  */
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
 
 
 
@@ -5277,71 +5161,32 @@ function getBrowserInfo(ua, product) {
   }
   return reactnative + result;
 }
-var _makePromise = new WeakSet();
-var _execPromise = new WeakSet();
-var _send = new WeakSet();
-var _dispatchMessage = new WeakSet();
-var _connectionOpen = new WeakSet();
-var _disconnected = new WeakSet();
-var _getUserAgent = new WeakSet();
-var _initPacket = new WeakSet();
-var _cachePut = new WeakSet();
-var _cacheGet = new WeakSet();
-var _cacheDel = new WeakSet();
-var _cacheMap = new WeakSet();
-var _attachCacheToTopic = new WeakSet();
-var _loginSuccessful = new WeakSet();
 class Tinode {
+  _host;
+  _secure;
+  _appName;
+  _apiKey;
+  _browser = '';
+  _platform;
+  _hwos = 'undefined';
+  _humanLanguage = 'xx';
+  _loggingEnabled = false;
+  _trimLongStrings = false;
+  _myUID = null;
+  _authenticated = false;
+  _login = null;
+  _authToken = null;
+  _inPacketCount = 0;
+  _messageId = Math.floor(Math.random() * 0xFFFF + 0xFFFF);
+  _serverInfo = null;
+  _deviceToken = null;
+  _pendingPromises = {};
+  _expirePromises = null;
+  _connection = null;
+  _persist = false;
+  _db = null;
+  _cache = {};
   constructor(config, onComplete) {
-    _classPrivateMethodInitSpec(this, _loginSuccessful);
-    _classPrivateMethodInitSpec(this, _attachCacheToTopic);
-    _classPrivateMethodInitSpec(this, _cacheMap);
-    _classPrivateMethodInitSpec(this, _cacheDel);
-    _classPrivateMethodInitSpec(this, _cacheGet);
-    _classPrivateMethodInitSpec(this, _cachePut);
-    _classPrivateMethodInitSpec(this, _initPacket);
-    _classPrivateMethodInitSpec(this, _getUserAgent);
-    _classPrivateMethodInitSpec(this, _disconnected);
-    _classPrivateMethodInitSpec(this, _connectionOpen);
-    _classPrivateMethodInitSpec(this, _dispatchMessage);
-    _classPrivateMethodInitSpec(this, _send);
-    _classPrivateMethodInitSpec(this, _execPromise);
-    _classPrivateMethodInitSpec(this, _makePromise);
-    _defineProperty(this, "_host", void 0);
-    _defineProperty(this, "_secure", void 0);
-    _defineProperty(this, "_appName", void 0);
-    _defineProperty(this, "_apiKey", void 0);
-    _defineProperty(this, "_browser", '');
-    _defineProperty(this, "_platform", void 0);
-    _defineProperty(this, "_hwos", 'undefined');
-    _defineProperty(this, "_humanLanguage", 'xx');
-    _defineProperty(this, "_loggingEnabled", false);
-    _defineProperty(this, "_trimLongStrings", false);
-    _defineProperty(this, "_myUID", null);
-    _defineProperty(this, "_authenticated", false);
-    _defineProperty(this, "_login", null);
-    _defineProperty(this, "_authToken", null);
-    _defineProperty(this, "_inPacketCount", 0);
-    _defineProperty(this, "_messageId", Math.floor(Math.random() * 0xFFFF + 0xFFFF));
-    _defineProperty(this, "_serverInfo", null);
-    _defineProperty(this, "_deviceToken", null);
-    _defineProperty(this, "_pendingPromises", {});
-    _defineProperty(this, "_expirePromises", null);
-    _defineProperty(this, "_connection", null);
-    _defineProperty(this, "_persist", false);
-    _defineProperty(this, "_db", null);
-    _defineProperty(this, "_cache", {});
-    _defineProperty(this, "onWebsocketOpen", undefined);
-    _defineProperty(this, "onConnect", undefined);
-    _defineProperty(this, "onDisconnect", undefined);
-    _defineProperty(this, "onLogin", undefined);
-    _defineProperty(this, "onCtrlMessage", undefined);
-    _defineProperty(this, "onDataMessage", undefined);
-    _defineProperty(this, "onPresMessage", undefined);
-    _defineProperty(this, "onMessage", undefined);
-    _defineProperty(this, "onRawMessage", undefined);
-    _defineProperty(this, "onNetworkProbe", undefined);
-    _defineProperty(this, "onAutoreconnectIteration", undefined);
     this._host = config.host;
     this._secure = config.secure;
     this._appName = config.appName || "Undefined";
@@ -5359,10 +5204,10 @@ class Tinode {
     }
     this._connection = new _connection_js__WEBPACK_IMPORTED_MODULE_3__["default"](config, _config_js__WEBPACK_IMPORTED_MODULE_1__.PROTOCOL_VERSION, true);
     this._connection.onMessage = data => {
-      _classPrivateMethodGet(this, _dispatchMessage, _dispatchMessage2).call(this, data);
+      this.#dispatchMessage(data);
     };
-    this._connection.onOpen = _ => _classPrivateMethodGet(this, _connectionOpen, _connectionOpen2).call(this);
-    this._connection.onDisconnect = (err, code) => _classPrivateMethodGet(this, _disconnected, _disconnected2).call(this, err, code);
+    this._connection.onOpen = _ => this.#connectionOpen();
+    this._connection.onDisconnect = (err, code) => this.#disconnected(err, code);
     this._connection.onAutoreconnectIteration = (timeout, promise) => {
       if (this.onAutoreconnectIteration) {
         this.onAutoreconnectIteration(timeout, promise);
@@ -5376,7 +5221,7 @@ class Tinode {
       const prom = [];
       this._db.initDatabase().then(_ => {
         return this._db.mapTopics(data => {
-          let topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', data.name);
+          let topic = this.#cacheGet('topic', data.name);
           if (topic) {
             return;
           }
@@ -5388,14 +5233,14 @@ class Tinode {
             topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic(data.name);
           }
           this._db.deserializeTopic(topic, data);
-          _classPrivateMethodGet(this, _attachCacheToTopic, _attachCacheToTopic2).call(this, topic);
+          this.#attachCacheToTopic(topic);
           topic._cachePutSelf();
           delete topic._new;
           prom.push(topic._loadMessages(this._db));
         });
       }).then(_ => {
         return this._db.mapUsers(data => {
-          _classPrivateMethodGet(this, _cachePut, _cachePut2).call(this, 'user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, data.public));
+          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, data.public));
         });
       }).then(_ => {
         return Promise.all(prom);
@@ -5427,6 +5272,361 @@ class Tinode {
       }
       console.log('[' + dateString + ']', str, args.join(' '));
     }
+  }
+  #makePromise(id) {
+    let promise = null;
+    if (id) {
+      promise = new Promise((resolve, reject) => {
+        this._pendingPromises[id] = {
+          'resolve': resolve,
+          'reject': reject,
+          'ts': new Date()
+        };
+      });
+    }
+    return promise;
+  }
+  #execPromise(id, code, onOK, errorText) {
+    const callbacks = this._pendingPromises[id];
+    if (callbacks) {
+      delete this._pendingPromises[id];
+      if (code >= 200 && code < 400) {
+        if (callbacks.resolve) {
+          callbacks.resolve(onOK);
+        }
+      } else if (callbacks.reject) {
+        callbacks.reject(new _comm_error_js__WEBPACK_IMPORTED_MODULE_2__["default"](errorText, code));
+      }
+    }
+  }
+  #send(pkt, id) {
+    let promise;
+    if (id) {
+      promise = this.#makePromise(id);
+    }
+    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.simplify)(pkt);
+    let msg = JSON.stringify(pkt);
+    this.logger("out: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : msg));
+    try {
+      this._connection.sendText(msg);
+    } catch (err) {
+      if (id) {
+        this.#execPromise(id, _connection_js__WEBPACK_IMPORTED_MODULE_3__["default"].NETWORK_ERROR, null, err.message);
+      } else {
+        throw err;
+      }
+    }
+    return promise;
+  }
+  #dispatchMessage(data) {
+    if (!data) return;
+    this._inPacketCount++;
+    if (this.onRawMessage) {
+      this.onRawMessage(data);
+    }
+    if (data === '0') {
+      if (this.onNetworkProbe) {
+        this.onNetworkProbe();
+      }
+      return;
+    }
+    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_9__.jsonParseHelper);
+    if (!pkt) {
+      this.logger("in: " + data);
+      this.logger("ERROR: failed to parse data");
+    } else {
+      this.logger("in: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : data));
+      if (this.onMessage) {
+        this.onMessage(pkt);
+      }
+      if (pkt.ctrl) {
+        if (this.onCtrlMessage) {
+          this.onCtrlMessage(pkt.ctrl);
+        }
+        if (pkt.ctrl.id) {
+          this.#execPromise(pkt.ctrl.id, pkt.ctrl.code, pkt.ctrl, pkt.ctrl.text);
+        }
+        setTimeout(_ => {
+          if (pkt.ctrl.code == 205 && pkt.ctrl.text == 'evicted') {
+            const topic = this.#cacheGet('topic', pkt.ctrl.topic);
+            if (topic) {
+              topic._resetSub();
+              if (pkt.ctrl.params && pkt.ctrl.params.unsub) {
+                topic._gone();
+              }
+            }
+          } else if (pkt.ctrl.code < 300 && pkt.ctrl.params) {
+            if (pkt.ctrl.params.what == 'data') {
+              const topic = this.#cacheGet('topic', pkt.ctrl.topic);
+              if (topic) {
+                topic._allMessagesReceived(pkt.ctrl.params.count);
+              }
+            } else if (pkt.ctrl.params.what == 'sub') {
+              const topic = this.#cacheGet('topic', pkt.ctrl.topic);
+              if (topic) {
+                topic._processMetaSub([]);
+              }
+            }
+          }
+        }, 0);
+      } else {
+        setTimeout(_ => {
+          if (pkt.meta) {
+            const topic = this.#cacheGet('topic', pkt.meta.topic);
+            if (topic) {
+              topic._routeMeta(pkt.meta);
+            }
+            if (pkt.meta.id) {
+              this.#execPromise(pkt.meta.id, 200, pkt.meta, 'META');
+            }
+            if (this.onMetaMessage) {
+              this.onMetaMessage(pkt.meta);
+            }
+          } else if (pkt.data) {
+            const topic = this.#cacheGet('topic', pkt.data.topic);
+            if (topic) {
+              topic._routeData(pkt.data);
+            }
+            if (this.onDataMessage) {
+              this.onDataMessage(pkt.data);
+            }
+          } else if (pkt.pres) {
+            const topic = this.#cacheGet('topic', pkt.pres.topic);
+            if (topic) {
+              topic._routePres(pkt.pres);
+            }
+            if (this.onPresMessage) {
+              this.onPresMessage(pkt.pres);
+            }
+          } else if (pkt.info) {
+            const topic = this.#cacheGet('topic', pkt.info.topic);
+            if (topic) {
+              topic._routeInfo(pkt.info);
+            }
+            if (this.onInfoMessage) {
+              this.onInfoMessage(pkt.info);
+            }
+          } else {
+            this.logger("ERROR: Unknown packet received.");
+          }
+        }, 0);
+      }
+    }
+  }
+  #connectionOpen() {
+    if (!this._expirePromises) {
+      this._expirePromises = setInterval(_ => {
+        const err = new _comm_error_js__WEBPACK_IMPORTED_MODULE_2__["default"]("timeout", 504);
+        const expires = new Date(new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_1__.EXPIRE_PROMISES_TIMEOUT);
+        for (let id in this._pendingPromises) {
+          let callbacks = this._pendingPromises[id];
+          if (callbacks && callbacks.ts < expires) {
+            this.logger("Promise expired", id);
+            delete this._pendingPromises[id];
+            if (callbacks.reject) {
+              callbacks.reject(err);
+            }
+          }
+        }
+      }, _config_js__WEBPACK_IMPORTED_MODULE_1__.EXPIRE_PROMISES_PERIOD);
+    }
+    this.hello();
+  }
+  #disconnected(err, code) {
+    this._inPacketCount = 0;
+    this._serverInfo = null;
+    this._authenticated = false;
+    if (this._expirePromises) {
+      clearInterval(this._expirePromises);
+      this._expirePromises = null;
+    }
+    this.#cacheMap('topic', (topic, key) => {
+      topic._resetSub();
+    });
+    for (let key in this._pendingPromises) {
+      const callbacks = this._pendingPromises[key];
+      if (callbacks && callbacks.reject) {
+        callbacks.reject(err);
+      }
+    }
+    this._pendingPromises = {};
+    if (this.onDisconnect) {
+      this.onDisconnect(err);
+    }
+  }
+  #getUserAgent() {
+    return this._appName + ' (' + (this._browser ? this._browser + '; ' : '') + this._hwos + '); ' + _config_js__WEBPACK_IMPORTED_MODULE_1__.LIBRARY;
+  }
+  #initPacket(type, topic) {
+    switch (type) {
+      case 'hi':
+        return {
+          'hi': {
+            'id': this.getNextUniqueId(),
+            'ver': _config_js__WEBPACK_IMPORTED_MODULE_1__.VERSION,
+            'ua': this.#getUserAgent(),
+            'dev': this._deviceToken,
+            'lang': this._humanLanguage,
+            'platf': this._platform
+          }
+        };
+      case 'acc':
+        return {
+          'acc': {
+            'id': this.getNextUniqueId(),
+            'user': null,
+            'scheme': null,
+            'secret': null,
+            'tmpscheme': null,
+            'tmpsecret': null,
+            'login': false,
+            'tags': null,
+            'desc': {},
+            'cred': {}
+          }
+        };
+      case 'login':
+        return {
+          'login': {
+            'id': this.getNextUniqueId(),
+            'scheme': null,
+            'secret': null
+          }
+        };
+      case 'sub':
+        return {
+          'sub': {
+            'id': this.getNextUniqueId(),
+            'topic': topic,
+            'set': {},
+            'get': {}
+          }
+        };
+      case 'leave':
+        return {
+          'leave': {
+            'id': this.getNextUniqueId(),
+            'topic': topic,
+            'unsub': false
+          }
+        };
+      case 'pub':
+        return {
+          'pub': {
+            'id': this.getNextUniqueId(),
+            'topic': topic,
+            'noecho': false,
+            'head': null,
+            'content': {}
+          }
+        };
+      case 'get':
+        return {
+          'get': {
+            'id': this.getNextUniqueId(),
+            'topic': topic,
+            'what': null,
+            'desc': {},
+            'sub': {},
+            'data': {}
+          }
+        };
+      case 'set':
+        return {
+          'set': {
+            'id': this.getNextUniqueId(),
+            'topic': topic,
+            'desc': {},
+            'sub': {},
+            'tags': [],
+            'ephemeral': {}
+          }
+        };
+      case 'del':
+        return {
+          'del': {
+            'id': this.getNextUniqueId(),
+            'topic': topic,
+            'what': null,
+            'delseq': null,
+            'user': null,
+            'hard': false
+          }
+        };
+      case 'note':
+        return {
+          'note': {
+            'topic': topic,
+            'what': null,
+            'seq': undefined
+          }
+        };
+      default:
+        throw new Error(`Unknown packet type requested: ${type}`);
+    }
+  }
+  #cachePut(type, name, obj) {
+    this._cache[type + ':' + name] = obj;
+  }
+  #cacheGet(type, name) {
+    return this._cache[type + ':' + name];
+  }
+  #cacheDel(type, name) {
+    delete this._cache[type + ':' + name];
+  }
+  #cacheMap(type, func, context) {
+    const key = type ? type + ':' : undefined;
+    for (let idx in this._cache) {
+      if (!key || idx.indexOf(key) == 0) {
+        if (func.call(context, this._cache[idx], idx)) {
+          break;
+        }
+      }
+    }
+  }
+  #attachCacheToTopic(topic) {
+    topic._tinode = this;
+    topic._cacheGetUser = uid => {
+      const pub = this.#cacheGet('user', uid);
+      if (pub) {
+        return {
+          user: uid,
+          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, pub)
+        };
+      }
+      return undefined;
+    };
+    topic._cachePutUser = (uid, user) => {
+      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, user.public));
+    };
+    topic._cacheDelUser = uid => {
+      this.#cacheDel('user', uid);
+    };
+    topic._cachePutSelf = _ => {
+      this.#cachePut('topic', topic.name, topic);
+    };
+    topic._cacheDelSelf = _ => {
+      this.#cacheDel('topic', topic.name);
+    };
+  }
+  #loginSuccessful(ctrl) {
+    if (!ctrl.params || !ctrl.params.user) {
+      return ctrl;
+    }
+    this._myUID = ctrl.params.user;
+    this._authenticated = ctrl && ctrl.code >= 200 && ctrl.code < 300;
+    if (ctrl.params && ctrl.params.token && ctrl.params.expires) {
+      this._authToken = {
+        token: ctrl.params.token,
+        expires: ctrl.params.expires
+      };
+    } else {
+      this._authToken = null;
+    }
+    if (this.onLogin) {
+      this.onLogin(ctrl.code, ctrl.text);
+    }
+    return ctrl;
   }
   static credential(meth, val, params, resp) {
     if (typeof meth == 'object') {
@@ -5539,7 +5739,7 @@ class Tinode {
     return url;
   }
   account(uid, scheme, secret, login, params) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'acc');
+    const pkt = this.#initPacket('acc');
     pkt.acc.user = uid;
     pkt.acc.scheme = scheme;
     pkt.acc.secret = secret;
@@ -5559,12 +5759,12 @@ class Tinode {
         };
       }
     }
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.acc.id);
+    return this.#send(pkt, pkt.acc.id);
   }
   createAccount(scheme, secret, login, params) {
     let promise = this.account(_config_js__WEBPACK_IMPORTED_MODULE_1__.USER_NEW, scheme, secret, login, params);
     if (login) {
-      promise = promise.then(ctrl => _classPrivateMethodGet(this, _loginSuccessful, _loginSuccessful2).call(this, ctrl));
+      promise = promise.then(ctrl => this.#loginSuccessful(ctrl));
     }
     return promise;
   }
@@ -5579,8 +5779,8 @@ class Tinode {
     return this.account(uid, 'basic', b64EncodeUnicode(username + ':' + password), false, params);
   }
   hello() {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'hi');
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.hi.id).then(ctrl => {
+    const pkt = this.#initPacket('hi');
+    return this.#send(pkt, pkt.hi.id).then(ctrl => {
       this._connection.backoffReset();
       if (ctrl.params) {
         this._serverInfo = ctrl.params;
@@ -5602,7 +5802,7 @@ class Tinode {
     if (dt != this._deviceToken) {
       this._deviceToken = dt;
       if (this.isConnected() && this.isAuthenticated()) {
-        _classPrivateMethodGet(this, _send, _send2).call(this, {
+        this.#send({
           'hi': {
             'dev': dt || Tinode.DEL_CHAR
           }
@@ -5613,11 +5813,11 @@ class Tinode {
     return sent;
   }
   login(scheme, secret, cred) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'login');
+    const pkt = this.#initPacket('login');
     pkt.login.scheme = scheme;
     pkt.login.secret = secret;
     pkt.login.cred = cred;
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.login.id).then(ctrl => _classPrivateMethodGet(this, _loginSuccessful, _loginSuccessful2).call(this, ctrl));
+    return this.#send(pkt, pkt.login.id).then(ctrl => this.#loginSuccessful(ctrl));
   }
   loginBasic(uname, password, cred) {
     return this.login('basic', b64EncodeUnicode(uname + ':' + password), cred).then(ctrl => {
@@ -5643,7 +5843,7 @@ class Tinode {
     this._authToken = token;
   }
   subscribe(topicName, getParams, setParams) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'sub', topicName);
+    const pkt = this.#initPacket('sub', topicName);
     if (!topicName) {
       topicName = _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_NEW;
     }
@@ -5671,15 +5871,15 @@ class Tinode {
         pkt.sub.set.tags = setParams.tags;
       }
     }
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.sub.id);
+    return this.#send(pkt, pkt.sub.id);
   }
   leave(topic, unsub) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'leave', topic);
+    const pkt = this.#initPacket('leave', topic);
     pkt.leave.unsub = unsub;
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.leave.id);
+    return this.#send(pkt, pkt.leave.id);
   }
   createMessage(topic, content, noEcho) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'pub', topic);
+    const pkt = this.#initPacket('pub', topic);
     let dft = typeof content == 'string' ? _drafty_js__WEBPACK_IMPORTED_MODULE_5___default().parse(content) : content;
     if (dft && !_drafty_js__WEBPACK_IMPORTED_MODULE_5___default().isPlainText(dft)) {
       pkt.pub.head = {
@@ -5707,7 +5907,7 @@ class Tinode {
         attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
       };
     }
-    return _classPrivateMethodGet(this, _send, _send2).call(this, msg, pub.id);
+    return this.#send(msg, pub.id);
   }
   oobNotification(data) {
     this.logger('oob: ' + (this._trimLongStrings ? JSON.stringify(data, jsonLoggerHelper) : data));
@@ -5719,7 +5919,7 @@ class Tinode {
         if (!this.isConnected()) {
           break;
         }
-        const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', data.topic);
+        const topic = this.#cacheGet('topic', data.topic);
         if (!topic) {
           break;
         }
@@ -5730,7 +5930,7 @@ class Tinode {
           if (topic.isChannelType()) {
             topic._updateReceived(data.seq, 'fake-uid');
           }
-          if (data.xfrom && !_classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'user', data.xfrom)) {
+          if (data.xfrom && !this.#cacheGet('user', data.xfrom)) {
             this.getMeta(data.xfrom, new _meta_builder_js__WEBPACK_IMPORTED_MODULE_7__["default"]().withDesc().build()).catch(err => {
               this.logger("Failed to get the name of a new sender", err);
             });
@@ -5776,12 +5976,12 @@ class Tinode {
     }
   }
   getMeta(topic, params) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'get', topic);
+    const pkt = this.#initPacket('get', topic);
     pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)(pkt.get, params);
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.get.id);
+    return this.#send(pkt, pkt.get.id);
   }
   setMeta(topic, params) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'set', topic);
+    const pkt = this.#initPacket('set', topic);
     const what = [];
     if (params) {
       ['desc', 'sub', 'tags', 'cred', 'ephemeral'].forEach(function (key) {
@@ -5799,41 +5999,41 @@ class Tinode {
     if (what.length == 0) {
       return Promise.reject(new Error("Invalid {set} parameters"));
     }
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.set.id);
+    return this.#send(pkt, pkt.set.id);
   }
   delMessages(topic, ranges, hard) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'del', topic);
+    const pkt = this.#initPacket('del', topic);
     pkt.del.what = 'msg';
     pkt.del.delseq = ranges;
     pkt.del.hard = hard;
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.del.id);
+    return this.#send(pkt, pkt.del.id);
   }
   delTopic(topicName, hard) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'del', topicName);
+    const pkt = this.#initPacket('del', topicName);
     pkt.del.what = 'topic';
     pkt.del.hard = hard;
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.del.id);
+    return this.#send(pkt, pkt.del.id);
   }
   delSubscription(topicName, user) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'del', topicName);
+    const pkt = this.#initPacket('del', topicName);
     pkt.del.what = 'sub';
     pkt.del.user = user;
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.del.id);
+    return this.#send(pkt, pkt.del.id);
   }
   delCredential(method, value) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'del', _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME);
+    const pkt = this.#initPacket('del', _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME);
     pkt.del.what = 'cred';
     pkt.del.cred = {
       meth: method,
       val: value
     };
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.del.id);
+    return this.#send(pkt, pkt.del.id);
   }
   delCurrentUser(hard) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'del', null);
+    const pkt = this.#initPacket('del', null);
     pkt.del.what = 'user';
     pkt.del.hard = hard;
-    return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.del.id).then(_ => {
+    return this.#send(pkt, pkt.del.id).then(_ => {
       this._myUID = null;
     });
   }
@@ -5841,26 +6041,26 @@ class Tinode {
     if (seq <= 0 || seq >= _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID) {
       throw new Error(`Invalid message id ${seq}`);
     }
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'note', topicName);
+    const pkt = this.#initPacket('note', topicName);
     pkt.note.what = what;
     pkt.note.seq = seq;
-    _classPrivateMethodGet(this, _send, _send2).call(this, pkt);
+    this.#send(pkt);
   }
   noteKeyPress(topicName, type) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'note', topicName);
+    const pkt = this.#initPacket('note', topicName);
     pkt.note.what = type || 'kp';
-    _classPrivateMethodGet(this, _send, _send2).call(this, pkt);
+    this.#send(pkt);
   }
   videoCall(topicName, seq, evt, payload) {
-    const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'note', topicName);
+    const pkt = this.#initPacket('note', topicName);
     pkt.note.seq = seq;
     pkt.note.what = 'call';
     pkt.note.event = evt;
     pkt.note.payload = payload;
-    _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.note.id);
+    this.#send(pkt, pkt.note.id);
   }
   getTopic(topicName) {
-    let topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', topicName);
+    let topic = this.#cacheGet('topic', topicName);
     if (!topic && topicName) {
       if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
         topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicMe();
@@ -5869,22 +6069,22 @@ class Tinode {
       } else {
         topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic(topicName);
       }
-      _classPrivateMethodGet(this, _attachCacheToTopic, _attachCacheToTopic2).call(this, topic);
+      this.#attachCacheToTopic(topic);
       topic._cachePutSelf();
     }
     return topic;
   }
   cacheGetTopic(topicName) {
-    return _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', topicName);
+    return this.#cacheGet('topic', topicName);
   }
   cacheRemTopic(topicName) {
-    _classPrivateMethodGet(this, _cacheDel, _cacheDel2).call(this, 'topic', topicName);
+    this.#cacheDel('topic', topicName);
   }
   mapTopics(func, context) {
-    _classPrivateMethodGet(this, _cacheMap, _cacheMap2).call(this, 'topic', func, context);
+    this.#cacheMap('topic', func, context);
   }
   isTopicCached(topicName) {
-    return !!_classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', topicName);
+    return !!this.#cacheGet('topic', topicName);
   }
   newGroupTopicName(isChan) {
     return (isChan ? _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_NEW_CHAN : _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_NEW) + this.getNextUniqueId();
@@ -5929,11 +6129,11 @@ class Tinode {
     }
   }
   isTopicOnline(name) {
-    const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', name);
+    const topic = this.#cacheGet('topic', name);
     return topic && topic.online;
   }
   getTopicAccessMode(name) {
-    const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', name);
+    const topic = this.#cacheGet('topic', name);
     return topic ? topic.acs : null;
   }
   wantAkn(status) {
@@ -5943,361 +6143,17 @@ class Tinode {
       this._messageId = 0;
     }
   }
-}
-function _makePromise2(id) {
-  let promise = null;
-  if (id) {
-    promise = new Promise((resolve, reject) => {
-      this._pendingPromises[id] = {
-        'resolve': resolve,
-        'reject': reject,
-        'ts': new Date()
-      };
-    });
-  }
-  return promise;
-}
-function _execPromise2(id, code, onOK, errorText) {
-  const callbacks = this._pendingPromises[id];
-  if (callbacks) {
-    delete this._pendingPromises[id];
-    if (code >= 200 && code < 400) {
-      if (callbacks.resolve) {
-        callbacks.resolve(onOK);
-      }
-    } else if (callbacks.reject) {
-      callbacks.reject(new _comm_error_js__WEBPACK_IMPORTED_MODULE_2__["default"](errorText, code));
-    }
-  }
-}
-function _send2(pkt, id) {
-  let promise;
-  if (id) {
-    promise = _classPrivateMethodGet(this, _makePromise, _makePromise2).call(this, id);
-  }
-  pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.simplify)(pkt);
-  let msg = JSON.stringify(pkt);
-  this.logger("out: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : msg));
-  try {
-    this._connection.sendText(msg);
-  } catch (err) {
-    if (id) {
-      _classPrivateMethodGet(this, _execPromise, _execPromise2).call(this, id, _connection_js__WEBPACK_IMPORTED_MODULE_3__["default"].NETWORK_ERROR, null, err.message);
-    } else {
-      throw err;
-    }
-  }
-  return promise;
-}
-function _dispatchMessage2(data) {
-  if (!data) return;
-  this._inPacketCount++;
-  if (this.onRawMessage) {
-    this.onRawMessage(data);
-  }
-  if (data === '0') {
-    if (this.onNetworkProbe) {
-      this.onNetworkProbe();
-    }
-    return;
-  }
-  let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_9__.jsonParseHelper);
-  if (!pkt) {
-    this.logger("in: " + data);
-    this.logger("ERROR: failed to parse data");
-  } else {
-    this.logger("in: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : data));
-    if (this.onMessage) {
-      this.onMessage(pkt);
-    }
-    if (pkt.ctrl) {
-      if (this.onCtrlMessage) {
-        this.onCtrlMessage(pkt.ctrl);
-      }
-      if (pkt.ctrl.id) {
-        _classPrivateMethodGet(this, _execPromise, _execPromise2).call(this, pkt.ctrl.id, pkt.ctrl.code, pkt.ctrl, pkt.ctrl.text);
-      }
-      setTimeout(_ => {
-        if (pkt.ctrl.code == 205 && pkt.ctrl.text == 'evicted') {
-          const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.ctrl.topic);
-          if (topic) {
-            topic._resetSub();
-            if (pkt.ctrl.params && pkt.ctrl.params.unsub) {
-              topic._gone();
-            }
-          }
-        } else if (pkt.ctrl.code < 300 && pkt.ctrl.params) {
-          if (pkt.ctrl.params.what == 'data') {
-            const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.ctrl.topic);
-            if (topic) {
-              topic._allMessagesReceived(pkt.ctrl.params.count);
-            }
-          } else if (pkt.ctrl.params.what == 'sub') {
-            const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.ctrl.topic);
-            if (topic) {
-              topic._processMetaSub([]);
-            }
-          }
-        }
-      }, 0);
-    } else {
-      setTimeout(_ => {
-        if (pkt.meta) {
-          const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.meta.topic);
-          if (topic) {
-            topic._routeMeta(pkt.meta);
-          }
-          if (pkt.meta.id) {
-            _classPrivateMethodGet(this, _execPromise, _execPromise2).call(this, pkt.meta.id, 200, pkt.meta, 'META');
-          }
-          if (this.onMetaMessage) {
-            this.onMetaMessage(pkt.meta);
-          }
-        } else if (pkt.data) {
-          const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.data.topic);
-          if (topic) {
-            topic._routeData(pkt.data);
-          }
-          if (this.onDataMessage) {
-            this.onDataMessage(pkt.data);
-          }
-        } else if (pkt.pres) {
-          const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.pres.topic);
-          if (topic) {
-            topic._routePres(pkt.pres);
-          }
-          if (this.onPresMessage) {
-            this.onPresMessage(pkt.pres);
-          }
-        } else if (pkt.info) {
-          const topic = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'topic', pkt.info.topic);
-          if (topic) {
-            topic._routeInfo(pkt.info);
-          }
-          if (this.onInfoMessage) {
-            this.onInfoMessage(pkt.info);
-          }
-        } else {
-          this.logger("ERROR: Unknown packet received.");
-        }
-      }, 0);
-    }
-  }
-}
-function _connectionOpen2() {
-  if (!this._expirePromises) {
-    this._expirePromises = setInterval(_ => {
-      const err = new _comm_error_js__WEBPACK_IMPORTED_MODULE_2__["default"]("timeout", 504);
-      const expires = new Date(new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_1__.EXPIRE_PROMISES_TIMEOUT);
-      for (let id in this._pendingPromises) {
-        let callbacks = this._pendingPromises[id];
-        if (callbacks && callbacks.ts < expires) {
-          this.logger("Promise expired", id);
-          delete this._pendingPromises[id];
-          if (callbacks.reject) {
-            callbacks.reject(err);
-          }
-        }
-      }
-    }, _config_js__WEBPACK_IMPORTED_MODULE_1__.EXPIRE_PROMISES_PERIOD);
-  }
-  this.hello();
-}
-function _disconnected2(err, code) {
-  this._inPacketCount = 0;
-  this._serverInfo = null;
-  this._authenticated = false;
-  if (this._expirePromises) {
-    clearInterval(this._expirePromises);
-    this._expirePromises = null;
-  }
-  _classPrivateMethodGet(this, _cacheMap, _cacheMap2).call(this, 'topic', (topic, key) => {
-    topic._resetSub();
-  });
-  for (let key in this._pendingPromises) {
-    const callbacks = this._pendingPromises[key];
-    if (callbacks && callbacks.reject) {
-      callbacks.reject(err);
-    }
-  }
-  this._pendingPromises = {};
-  if (this.onDisconnect) {
-    this.onDisconnect(err);
-  }
-}
-function _getUserAgent2() {
-  return this._appName + ' (' + (this._browser ? this._browser + '; ' : '') + this._hwos + '); ' + _config_js__WEBPACK_IMPORTED_MODULE_1__.LIBRARY;
-}
-function _initPacket2(type, topic) {
-  switch (type) {
-    case 'hi':
-      return {
-        'hi': {
-          'id': this.getNextUniqueId(),
-          'ver': _config_js__WEBPACK_IMPORTED_MODULE_1__.VERSION,
-          'ua': _classPrivateMethodGet(this, _getUserAgent, _getUserAgent2).call(this),
-          'dev': this._deviceToken,
-          'lang': this._humanLanguage,
-          'platf': this._platform
-        }
-      };
-    case 'acc':
-      return {
-        'acc': {
-          'id': this.getNextUniqueId(),
-          'user': null,
-          'scheme': null,
-          'secret': null,
-          'tmpscheme': null,
-          'tmpsecret': null,
-          'login': false,
-          'tags': null,
-          'desc': {},
-          'cred': {}
-        }
-      };
-    case 'login':
-      return {
-        'login': {
-          'id': this.getNextUniqueId(),
-          'scheme': null,
-          'secret': null
-        }
-      };
-    case 'sub':
-      return {
-        'sub': {
-          'id': this.getNextUniqueId(),
-          'topic': topic,
-          'set': {},
-          'get': {}
-        }
-      };
-    case 'leave':
-      return {
-        'leave': {
-          'id': this.getNextUniqueId(),
-          'topic': topic,
-          'unsub': false
-        }
-      };
-    case 'pub':
-      return {
-        'pub': {
-          'id': this.getNextUniqueId(),
-          'topic': topic,
-          'noecho': false,
-          'head': null,
-          'content': {}
-        }
-      };
-    case 'get':
-      return {
-        'get': {
-          'id': this.getNextUniqueId(),
-          'topic': topic,
-          'what': null,
-          'desc': {},
-          'sub': {},
-          'data': {}
-        }
-      };
-    case 'set':
-      return {
-        'set': {
-          'id': this.getNextUniqueId(),
-          'topic': topic,
-          'desc': {},
-          'sub': {},
-          'tags': [],
-          'ephemeral': {}
-        }
-      };
-    case 'del':
-      return {
-        'del': {
-          'id': this.getNextUniqueId(),
-          'topic': topic,
-          'what': null,
-          'delseq': null,
-          'user': null,
-          'hard': false
-        }
-      };
-    case 'note':
-      return {
-        'note': {
-          'topic': topic,
-          'what': null,
-          'seq': undefined
-        }
-      };
-    default:
-      throw new Error(`Unknown packet type requested: ${type}`);
-  }
-}
-function _cachePut2(type, name, obj) {
-  this._cache[type + ':' + name] = obj;
-}
-function _cacheGet2(type, name) {
-  return this._cache[type + ':' + name];
-}
-function _cacheDel2(type, name) {
-  delete this._cache[type + ':' + name];
-}
-function _cacheMap2(type, func, context) {
-  const key = type ? type + ':' : undefined;
-  for (let idx in this._cache) {
-    if (!key || idx.indexOf(key) == 0) {
-      if (func.call(context, this._cache[idx], idx)) {
-        break;
-      }
-    }
-  }
-}
-function _attachCacheToTopic2(topic) {
-  topic._tinode = this;
-  topic._cacheGetUser = uid => {
-    const pub = _classPrivateMethodGet(this, _cacheGet, _cacheGet2).call(this, 'user', uid);
-    if (pub) {
-      return {
-        user: uid,
-        public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, pub)
-      };
-    }
-    return undefined;
-  };
-  topic._cachePutUser = (uid, user) => {
-    _classPrivateMethodGet(this, _cachePut, _cachePut2).call(this, 'user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, user.public));
-  };
-  topic._cacheDelUser = uid => {
-    _classPrivateMethodGet(this, _cacheDel, _cacheDel2).call(this, 'user', uid);
-  };
-  topic._cachePutSelf = _ => {
-    _classPrivateMethodGet(this, _cachePut, _cachePut2).call(this, 'topic', topic.name, topic);
-  };
-  topic._cacheDelSelf = _ => {
-    _classPrivateMethodGet(this, _cacheDel, _cacheDel2).call(this, 'topic', topic.name);
-  };
-}
-function _loginSuccessful2(ctrl) {
-  if (!ctrl.params || !ctrl.params.user) {
-    return ctrl;
-  }
-  this._myUID = ctrl.params.user;
-  this._authenticated = ctrl && ctrl.code >= 200 && ctrl.code < 300;
-  if (ctrl.params && ctrl.params.token && ctrl.params.expires) {
-    this._authToken = {
-      token: ctrl.params.token,
-      expires: ctrl.params.expires
-    };
-  } else {
-    this._authToken = null;
-  }
-  if (this.onLogin) {
-    this.onLogin(ctrl.code, ctrl.text);
-  }
-  return ctrl;
+  onWebsocketOpen = undefined;
+  onConnect = undefined;
+  onDisconnect = undefined;
+  onLogin = undefined;
+  onCtrlMessage = undefined;
+  onDataMessage = undefined;
+  onPresMessage = undefined;
+  onMessage = undefined;
+  onRawMessage = undefined;
+  onNetworkProbe = undefined;
+  onAutoreconnectIteration = undefined;
 }
 ;
 Tinode.MESSAGE_STATUS_NONE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_NONE;
