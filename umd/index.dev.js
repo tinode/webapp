@@ -5289,11 +5289,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     } else {
       this.postReadNotification(0);
     }
-    if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
-      if (topic._new && topic.isP2PType()) {
-        topic.getMeta(topic.startMetaQuery().withDesc().build());
-      } else {
-        this.subscribe(topic);
+    if (topic) {
+      if (this.state.topic != prevState.topic || !prevProps.ready) {
+        if (topic._new && topic.isP2PType()) {
+          topic.getMeta(topic.startMetaQuery().withDesc().build());
+        } else {
+          this.subscribe(topic);
+        }
+      } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
+        topic.getMeta(topic.startMetaQuery().withLaterData().build());
       }
     }
   }

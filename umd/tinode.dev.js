@@ -4058,8 +4058,9 @@ class Topic {
     return this._tinode.getMeta(this.name, params);
   }
   getMessagesPage(limit, forward) {
-    let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
-    this._tinode._db.missingRanges(this.name, this._maxSeq, limit).then(ranges => console.log("missing range:", ranges));
+    this._tinode._db.missingRanges(this.name, this._maxSeq, limit, forward ? this._maxSeq : undefined).then(ranges => {
+      let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
+    });
     return this._loadMessages(this._tinode._db, query.extract('data')).then(count => {
       if (count == limit) {
         return Promise.resolve({

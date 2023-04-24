@@ -249,12 +249,17 @@ class MessagesView extends React.Component {
       this.postReadNotification(0);
     }
 
-    if (topic && ((this.state.topic != prevState.topic) || !prevProps.ready)) {
-      // Don't immediately subscribe to a new p2p topic, wait for the first message.
-      if (topic._new && topic.isP2PType()) {
-        topic.getMeta(topic.startMetaQuery().withDesc().build());
-      } else {
-        this.subscribe(topic);
+    if (topic) {
+      if ((this.state.topic != prevState.topic) || !prevProps.ready) {
+        // Don't immediately subscribe to a new p2p topic, wait for the first message.
+        if (topic._new && topic.isP2PType()) {
+          topic.getMeta(topic.startMetaQuery().withDesc().build());
+        } else {
+          this.subscribe(topic);
+        }
+      } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
+        // If reader status has changed and data became available.
+        topic.getMeta(topic.startMetaQuery().withLaterData().build());
       }
     }
   }
