@@ -783,7 +783,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ DB)
 /* harmony export */ });
 
-const DB_VERSION = 1;
+const DB_VERSION = 3;
 const DB_NAME = 'tinode-web';
 let IDBProvider;
 class DB {
@@ -845,6 +845,12 @@ class DB {
         });
         this.db.createObjectStore('message', {
           keyPath: ['topic', 'seq']
+        });
+        const dellog = this.db.createObjectStore('dellog', {
+          keyPath: ['topic', 'low', 'hi']
+        });
+        dellog.createIndex('topic_clear', ['topic', 'clear'], {
+          unique: false
         });
       };
     });
@@ -1173,6 +1179,128 @@ class DB {
       };
     });
   }
+  missingRanges(topicName, from, limit, maxSeq) {
+    if (!this.isReady()) {
+      return this.disabled ? Promise.resolve(null) : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const since = maxSeq > 0 ? from : 0;
+      const before = maxSeq > 0 ? maxSeq + 1 : from;
+      const trx = this.db.transaction(['message', 'dellog']);
+      trx.onerror = event => {
+        this.#logger('PCache', 'missingRange', event.target.error);
+        reject(event.target.error);
+      };
+      const query = IDBKeyRange.bound([topicName, since], [topicName, before], true, true);
+      let seq = from;
+      const diff = maxSeq > 0 ? 1 : -1;
+      let done = false;
+      let clipped = [];
+      trx.objectStore('message').openCursor(query, maxSeq > 0 ? undefined : 'prev').onsuccess = event => {
+        const cursor = event.target.result;
+        const msg = cursor && cursor.value;
+        let range;
+        if (msg) {
+          if (msg.seq == seq + diff) {
+            seq = msg.seq;
+            cursor.continue();
+            return;
+          }
+          range = maxSeq > 0 ? {
+            low: seq + 1,
+            hi: msg.seq
+          } : {
+            low: msg.seq + 1,
+            hi: seq
+          };
+          seq = msg.seq;
+          done = false;
+        } else {
+          if (maxSeq > seq + 1) {
+            range = {
+              low: seq + 1,
+              hi: maxSeq + 1
+            };
+          } else if (seq > 1) {
+            range = {
+              low: 1,
+              hi: seq
+            };
+          }
+          if (!range) {
+            resolve(clipped);
+            return;
+          }
+          done = true;
+        }
+        clipped.push(range);
+        trx.objectStore('dellog').openCursor(IDBKeyRange.bound([topicName, 0, range.low + 1], [topicName, range.hi - 1, Number.MAX_SAFE_INTEGER])).onsuccess = event2 => {
+          const delrange = event2.target.result && event2.target.result.value;
+          if (delrange) {
+            const result = [];
+            clipped.forEach(r => result.push.apply(result, DB.#clipRange(r, delrange)));
+            clipped = result;
+            if (clipped.length > 0) {
+              event2.target.result.continue();
+            } else if (done) {
+              resolve([]);
+            } else {
+              cursor.continue();
+            }
+          } else if (done) {
+            resolve(clipped);
+          } else {
+            const count = clipped.reduce((acc, r) => acc + r.hi - r.low, 0);
+            if (count >= limit) {
+              resolve(clipped);
+            } else {
+              cursor.continue();
+            }
+          }
+        };
+      };
+    });
+  }
+  addDelLog(topicName, delId, ranges) {
+    if (!this.isReady()) {
+      return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const trx = this.db.transaction(['dellog'], 'readwrite');
+      trx.onsuccess = event => {
+        resolve(event.target.result);
+      };
+      trx.onerror = event => {
+        this.#logger('PCache', 'addDelLog', event.target.error);
+        reject(event.target.error);
+      };
+      ranges.forEach(r => trx.objectStore('dellog').add({
+        topic: topicName,
+        clear: delId,
+        low: r.low,
+        hi: r.hi || r.low + 1
+      }));
+      trx.commit();
+    });
+  }
+  maxDelId(topicName) {
+    if (!this.isReady()) {
+      return this.disabled ? Promise.resolve(0) : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const trx = this.db.transaction(['dellog']);
+      trx.onerror = event => {
+        this.#logger('PCache', 'maxDelId', event.target.error);
+        reject(event.target.error);
+      };
+      const index = trx.objectStore('dellog').index('topic_clear');
+      index.openCursor(IDBKeyRange.bound([topicName, 0], [topicName, Number.MAX_SAFE_INTEGER]), 'prev').onsuccess = event => {
+        if (event.target.result) {
+          resolve(event.target.result.value);
+        }
+      };
+    });
+  }
   static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted'];
   static #deserializeTopic(topic, src) {
     DB.#topic_fields.forEach(f => {
@@ -1229,6 +1357,31 @@ class DB {
       }
     });
     return res;
+  }
+  static #clipRange(src, clip) {
+    if (clip.hi < src.low || clip.low >= src.hi) {
+      return [src];
+    }
+    if (clip.low <= src.low) {
+      if (clip.hi >= src.hi) {
+        return [];
+      }
+      return [{
+        low: src.low,
+        hi: clip.hi
+      }];
+    }
+    const result = [{
+      low: src.low,
+      hi: clip.low
+    }];
+    if (clip.hi < src.hi) {
+      result.push({
+        low: clip.hi,
+        hi: src.hi
+      });
+    }
+    return result;
   }
   static setDatabaseProvider(idbProvider) {
     IDBProvider = idbProvider;
@@ -3906,6 +4059,7 @@ class Topic {
   }
   getMessagesPage(limit, forward) {
     let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
+    this._tinode._db.missingRanges(this.name, this._maxSeq, limit).then(ranges => console.log("missing range:", ranges));
     return this._loadMessages(this._tinode._db, query.extract('data')).then(count => {
       if (count == limit) {
         return Promise.resolve({
@@ -3939,11 +4093,13 @@ class Topic {
       ranges: (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(pins)
     }).then(msgs => {
       msgs.forEach(data => {
-        loaded.push(data.seq);
-        this._messages.put(data);
-        this._maybeUpdateMessageVersionsCache(data);
+        if (data) {
+          loaded.push(data.seq);
+          this._messages.put(data);
+          this._maybeUpdateMessageVersionsCache(data);
+        }
       });
-      return msgs.length;
+      return loaded.length;
     }).then(count => {
       if (count == pins.length) {
         return Promise.resolve({
@@ -4089,6 +4245,7 @@ class Topic {
           this.flushMessage(r.low);
         }
       });
+      this._tinode._db.addDelLog(this.name, ctrl.params.del, ranges);
       if (this.onData) {
         this.onData();
       }
@@ -4735,6 +4892,7 @@ class Topic {
           this.flushMessageRange(range.low, range.hi);
         }
       });
+      this._tinode._db.addDelLog(this.name, clear, delseq);
     }
     if (count > 0) {
       if (this.onData) {
@@ -5415,6 +5573,10 @@ class Tinode {
           this._db.deserializeTopic(topic, data);
           this.#attachCacheToTopic(topic);
           topic._cachePutSelf();
+          this._db.maxDelId(topic.name).then(clear => {
+            console.log("topic=", topic.name, "delID=", clear, "was", topic._maxDel);
+            topic._maxDel = Math.max(topic._maxDel, clear || 0);
+          });
           delete topic._new;
           prom.push(topic._loadMessages(this._db));
         });
