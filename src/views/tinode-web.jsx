@@ -1334,7 +1334,7 @@ class TinodeWeb extends React.Component {
 
     const params = {};
     if (Tinode.isP2PTopicName(topicName)) {
-      // Because we are initialing the subscription, set 'want' to all permissions.
+      // Because we are initiating the subscription, set 'want' to all permissions.
       params.sub = {mode: DEFAULT_P2P_ACCESS_MODE};
       // Give the other user all permissions too.
       params.desc = {defacs: {auth: DEFAULT_P2P_ACCESS_MODE}};

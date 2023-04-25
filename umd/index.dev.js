@@ -5181,6 +5181,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   constructor(props) {
     super(props);
     this.state = MessagesView.getDerivedStateFromProps(props, {});
+    this.componentSetup = this.componentSetup.bind(this);
     this.leave = this.leave.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.retrySend = this.retrySend.bind(this);
@@ -5246,6 +5247,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
     this.mountDnDEvents(this.dndRef);
+    this.componentSetup({}, {});
   }
   componentWillUnmount() {
     if (this.messagesScroller) {
@@ -5266,6 +5268,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
       }
     }
+    if (!this.props.applicationVisible) {
+      this.clearNotificationQueue();
+    } else {
+      this.postReadNotification(0);
+    }
+    this.componentSetup(prevProps, prevState);
+  }
+  componentSetup(prevProps, prevState) {
     const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNewGroupTopicName(prevState.topic)) {
@@ -5284,14 +5294,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         topic.onAuxUpdated = this.handleAuxUpdate;
       }
     }
-    if (!this.props.applicationVisible) {
-      this.clearNotificationQueue();
-    } else {
-      this.postReadNotification(0);
-    }
     if (topic) {
       if (this.state.topic != prevState.topic || !prevProps.ready) {
-        if (topic._new && topic.isP2PType()) {
+        const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
+        if (topic.isP2PType() && newTopic) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
         } else {
           this.subscribe(topic);
@@ -6646,7 +6652,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     id: "search_placeholder",
     defaultMessage: [{
       "type": 0,
-      "value": "List like email:alice@example.com, tel:17025550003..."
+      "value": "List like alice@example.com, +17025550003..."
     }]
   }
 });
@@ -6679,10 +6685,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       searchQuery: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
   }
-  handleSearchResultSelected(name) {
+  handleSearchResultSelected(topicName) {
     if (this.state.tabSelected == 'find') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(name);
+      this.props.onCreateTopic(topicName);
     }
   }
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
