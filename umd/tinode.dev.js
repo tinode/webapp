@@ -319,8 +319,8 @@ class CBuffer {
     this.buffer = [];
   }
   forEach(callback, startIdx, beforeIdx, context) {
-    startIdx = startIdx | 0;
-    beforeIdx = beforeIdx || this.buffer.length;
+    startIdx = Math.max(0, startIdx | 0);
+    beforeIdx = Math.min(beforeIdx || this.buffer.length, this.buffer.length);
     for (let i = startIdx; i < beforeIdx; i++) {
       callback.call(context, this.buffer[i], i > startIdx ? this.buffer[i - 1] : undefined, i < beforeIdx - 1 ? this.buffer[i + 1] : undefined, i);
     }
@@ -3909,6 +3909,9 @@ class Topic {
   static isChannelTopicName(name) {
     return typeof name == 'string' && (name.substring(0, 3) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_CHAN || name.substring(0, 3) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW_CHAN);
   }
+  static #isReplacementMsg(pub) {
+    return pub.head && pub.head.replace;
+  }
   isSubscribed() {
     return this._attached;
   }
@@ -4058,9 +4061,20 @@ class Topic {
     return this._tinode.getMeta(this.name, params);
   }
   getMessagesPage(limit, forward) {
-    this._tinode._db.missingRanges(this.name, this._maxSeq, limit, forward ? this._maxSeq : undefined).then(ranges => {
-      let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
+    const gaps = [];
+    this._messages.forEach((msg, prev) => {
+      const p = prev || {
+        seq: 0
+      };
+      if (msg.seq > p.seq + 1) {
+        gaps.push({
+          low: p.seq + 1,
+          hi: msg.seq
+        });
+      }
     });
+    console.log("Gaps in cache found:", gaps);
+    let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
     return this._loadMessages(this._tinode._db, query.extract('data')).then(count => {
       if (count == limit) {
         return Promise.resolve({
@@ -4439,7 +4453,7 @@ class Topic {
       if (startIdx != -1 && beforeIdx != -1) {
         let msgs = [];
         this._messages.forEach((msg, unused1, unused2, i) => {
-          if (this._isReplacementMsg(msg)) {
+          if (Topic.#isReplacementMsg(msg)) {
             return;
           }
           const latest = this.latestMsgVersion(msg.seq) || msg;
@@ -4632,11 +4646,8 @@ class Topic {
     }
     return status;
   }
-  _isReplacementMsg(pub) {
-    return pub.head && pub.head.replace;
-  }
   _maybeUpdateMessageVersionsCache(msg) {
-    if (!this._isReplacementMsg(msg)) {
+    if (!Topic.#isReplacementMsg(msg)) {
       if (this._messageVersions[msg.seq]) {
         this._messageVersions[msg.seq].filter(version => version.from == msg.from);
         if (this._messageVersions[msg.seq].isEmpty()) {
