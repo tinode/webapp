@@ -801,7 +801,7 @@
     "description": "Text shown in contacts view when query returned no results."
   },
   "search_placeholder": {
-    "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
+    "defaultMessage": "List like alice@example.com, +17025550003...",
     "description": "Placeholder in contacts search field"
   },
   "sidepanel_title_acc_notifications": {

@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   search_placeholder: {
     id: "search_placeholder",
-    defaultMessage: "List like email:alice@example.com, tel:17025550003...",
+    defaultMessage: "List like alice@example.com, +17025550003...",
     description: "Placeholder in contacts search field"
   },
 });
@@ -61,10 +61,10 @@ class NewTopicView extends React.Component {
     this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
   }
 
-  handleSearchResultSelected(name) {
+  handleSearchResultSelected(topicName) {
     if (this.state.tabSelected == 'find') {
       HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(name);
+      this.props.onCreateTopic(topicName);
     }
   }
 

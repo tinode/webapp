@@ -108,6 +108,7 @@ class MessagesView extends React.Component {
 
     this.state = MessagesView.getDerivedStateFromProps(props, {});
 
+    this.componentSetup = this.componentSetup.bind(this);
     this.leave = this.leave.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.retrySend = this.retrySend.bind(this);
@@ -185,6 +186,8 @@ class MessagesView extends React.Component {
 
     // Drag and drop events
     this.mountDnDEvents(this.dndRef);
+
+    this.componentSetup({}, {});
   }
 
   componentWillUnmount() {
@@ -205,9 +208,9 @@ class MessagesView extends React.Component {
     }
   }
 
-  // Scroll last message into view on component update e.g. on message received
-  // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
+    // Scroll last message into view on component update e.g. on message received
+    // or vertical shrinking.
     if (this.messagesScroller &&
       (prevState.topic != this.state.topic || prevState.maxSeqId != this.state.maxSeqId ||
         prevState.minSeqId != this.state.minSeqId)) {
@@ -218,6 +221,18 @@ class MessagesView extends React.Component {
       }
     }
 
+    if (!this.props.applicationVisible) {
+      // If application is not visible, flush all unsent 'read' notifications.
+      this.clearNotificationQueue();
+    } else {
+      // Otherwise assume there are unread messages.
+      this.postReadNotification(0);
+    }
+
+    this.componentSetup(prevProps, prevState);
+  }
+
+  componentSetup(prevProps, prevState) {
     const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
@@ -237,18 +252,11 @@ class MessagesView extends React.Component {
       }
     }
 
-    if (!this.props.applicationVisible) {
-      // If application is not visible, flush all unsent 'read' notifications.
-      this.clearNotificationQueue();
-    } else {
-      // Otherwise assume there are unread messages.
-      this.postReadNotification(0);
-    }
-
     if (topic) {
       if ((this.state.topic != prevState.topic) || !prevProps.ready) {
         // Don't immediately subscribe to a new p2p topic, wait for the first message.
-        if (topic._new && topic.isP2PType()) {
+        const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
+        if (topic.isP2PType() && newTopic) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
         } else {
           this.subscribe(topic);
