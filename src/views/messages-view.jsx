@@ -21,8 +21,8 @@ import PinnedMessages from '../widgets/pinned-messages.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 import VideoPreview from '../widgets/video-preview.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
-  MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
+import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, IMMEDIATE_P2P_SUBSCRIPTION,
+  KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
@@ -276,7 +276,7 @@ class MessagesView extends React.Component {
       if ((this.state.topic != prevState.topic) || !prevProps.ready) {
         // Don't immediately subscribe to a new p2p topic, wait for the first message.
         const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
-        if (topic.isP2PType() && newTopic) {
+        if (topic.isP2PType() && newTopic && !IMMEDIATE_P2P_SUBSCRIPTION) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
         } else {
           this.subscribe(topic);
