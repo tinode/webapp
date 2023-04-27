@@ -2212,6 +2212,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
 /* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
 /* harmony export */   "IMAGE_THUMBNAIL_DIM": () => (/* binding */ IMAGE_THUMBNAIL_DIM),
+/* harmony export */   "IMMEDIATE_P2P_SUBSCRIPTION": () => (/* binding */ IMMEDIATE_P2P_SUBSCRIPTION),
 /* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
 /* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
 /* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
@@ -2289,6 +2290,7 @@ const MAX_DURATION = 600_000;
 const LINK_CONTACT_US = 'mailto:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
+const IMMEDIATE_P2P_SUBSCRIPTION = false;
 
 /***/ }),
 
@@ -5292,7 +5294,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (topic) {
       if (this.state.topic != prevState.topic || !prevProps.ready) {
         const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-        if (topic.isP2PType() && newTopic) {
+        if (topic.isP2PType() && newTopic && !_config_js__WEBPACK_IMPORTED_MODULE_17__.IMMEDIATE_P2P_SUBSCRIPTION) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
         } else {
           this.subscribe(topic);

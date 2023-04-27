@@ -122,3 +122,7 @@ export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 // Link to Terms of Service.
 export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 
+// When user starts a P2P topic, automatic subscription does not
+// happen until the first message. Setting this option to true enables
+// immediate subscription.
+export const IMMEDIATE_P2P_SUBSCRIPTION = false;
