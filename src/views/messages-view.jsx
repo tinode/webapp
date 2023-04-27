@@ -157,8 +157,9 @@ class MessagesView extends React.Component {
     this.handleDrag = this.handleDrag.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
 
-    this.chatMessageRefs = {};
+    this.chatMessageRefs = [];
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+    this.getVisibleMessageRange = this.getVisibleMessageRange.bind(this);
 
     // Keeps track of the drag event.
     // Need a counter b/c the browser's 'drag' events may fire multiple times
@@ -174,12 +175,27 @@ class MessagesView extends React.Component {
   }
 
   getOrCreateMessageRef(seqId) {
-    if (this.chatMessageRefs.hasOwnProperty(seqId)) {
+    if (this.chatMessageRefs[seqId]) {
       return this.chatMessageRefs[seqId];
     }
     const ref = React.createRef();
     this.chatMessageRefs[seqId] = ref;
     return ref;
+  }
+
+  getVisibleMessageRange(holderRect) {
+    let min = Number.MAX_SAFE_INTEGER, max = -1;
+    this.chatMessageRefs.forEach((ref, seq) => {
+      if (ref.current) {
+        const { top, bottom, height } = ref.current.getBoundingClientRect();
+        const visible = top <= holderRect.top ? holderRect.top - top <= height : bottom - holderRect.bottom <= height;
+        if (visible) {
+          min = Math.min(min, seq);
+          max = Math.max(max, seq);
+        }
+      }
+    });
+    return max >= min ? {min: min, max: max} : {min: 0, max: 0};
   }
 
   componentDidMount() {
@@ -565,12 +581,17 @@ class MessagesView extends React.Component {
 
     if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
       const topic = this.props.tinode.getTopic(this.state.topic);
-      if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-        this.setState({fetchingMessages: true}, _ => {
-          topic.getMessagesPage(MESSAGES_PAGE)
-            .catch(err => this.props.onError(err.message, 'err'))
-            .finally(_ => this.setState({fetchingMessages: false}));
-          });
+      if (topic && topic.isSubscribed()) {
+        const {min, max} = this.getVisibleMessageRange(event.target.getBoundingClientRect());
+        const gaps = topic.msgHasMoreMessages(min, max, false);
+        if (gaps.length > 0) {
+          console.log("Fetch triggered", min, max, gaps);
+          this.setState({fetchingMessages: true}, _ => {
+            topic.getMessagesPage(MESSAGES_PAGE, gaps)
+              .catch(err => this.props.onError(err.message, 'err'))
+              .finally(_ => this.setState({fetchingMessages: false}));
+            });
+        }
       }
     }
   }

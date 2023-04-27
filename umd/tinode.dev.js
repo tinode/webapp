@@ -782,6 +782,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ DB)
 /* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+
 
 const DB_VERSION = 3;
 const DB_NAME = 'tinode-web';
@@ -1136,13 +1138,16 @@ class DB {
         let count = 0;
         query.ranges.forEach(range => {
           const key = range.hi ? IDBKeyRange.bound([topicName, range.low], [topicName, range.Hi], false, true) : IDBKeyRange.only([topicName, range.low]);
-          const req = trx.objectStore('message').get(key);
-          req.onsuccess = event => {
+          trx.objectStore('message').get(key).onsuccess = event => {
+            const msgs = event.target.result;
+            if (callback) {
+              callback.call(context, msgs);
+            }
             count++;
-            if (Array.isArray(event.target.result)) {
-              result.concat(event.target.result);
+            if (Array.isArray(msgs)) {
+              result.concat(msgs);
             } else {
-              result.push(event.target.result);
+              result.push(msgs);
             }
             if (count == query.ranges.length) {
               resolve(result);
@@ -1238,7 +1243,7 @@ class DB {
           const delrange = event2.target.result && event2.target.result.value;
           if (delrange) {
             const result = [];
-            clipped.forEach(r => result.push.apply(result, DB.#clipRange(r, delrange)));
+            clipped.forEach(r => result.push.apply(result, (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.clipRange)(r, delrange)));
             clipped = result;
             if (clipped.length > 0) {
               event2.target.result.continue();
@@ -1281,6 +1286,42 @@ class DB {
         hi: r.hi || r.low + 1
       }));
       trx.commit();
+    });
+  }
+  readDelLog(topicName, query) {
+    query = query || {};
+    const since = query.since > 0 ? query.since : 0;
+    const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
+    const limit = query.limit | 0;
+    if (!this.isReady()) {
+      return this.disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const trx = this.db.transaction(['dellog']);
+      trx.onerror = event => {
+        this.#logger('PCache', 'readDelLog', event.target.error);
+        reject(event.target.error);
+      };
+      let count = 0;
+      const result = [];
+      const range = IDBKeyRange.bound([topicName, 0, since], [topicName, before, Number.MAX_SAFE_INTEGER], false, true);
+      trx.objectStore('dellog').openCursor(range, 'prev').onsuccess = event => {
+        const cursor = event.target.result;
+        if (cursor) {
+          result.push({
+            low: cursor.value.low,
+            hi: cursor.value.hi
+          });
+          count += cursor.value.hi - cursor.value.low;
+          if (limit <= 0 || count < limit) {
+            cursor.continue();
+          } else {
+            resolve(result);
+          }
+        } else {
+          resolve(result);
+        }
+      };
     });
   }
   maxDelId(topicName) {
@@ -1357,31 +1398,6 @@ class DB {
       }
     });
     return res;
-  }
-  static #clipRange(src, clip) {
-    if (clip.hi < src.low || clip.low >= src.hi) {
-      return [src];
-    }
-    if (clip.low <= src.low) {
-      if (clip.hi >= src.hi) {
-        return [];
-      }
-      return [{
-        low: src.low,
-        hi: clip.hi
-      }];
-    }
-    const result = [{
-      low: src.low,
-      hi: clip.low
-    }];
-    if (clip.hi < src.hi) {
-      result.push({
-        low: clip.hi,
-        hi: src.hi
-      });
-    }
-    return result;
   }
   static setDatabaseProvider(idbProvider) {
     IDBProvider = idbProvider;
@@ -4060,20 +4076,8 @@ class Topic {
   getMeta(params) {
     return this._tinode.getMeta(this.name, params);
   }
-  getMessagesPage(limit, forward) {
-    const gaps = [];
-    this._messages.forEach((msg, prev) => {
-      const p = prev || {
-        seq: 0
-      };
-      if (msg.seq > p.seq + 1) {
-        gaps.push({
-          low: p.seq + 1,
-          hi: msg.seq
-        });
-      }
-    });
-    console.log("Gaps in cache found:", gaps);
+  getMessagesPage(limit, gaps, forward) {
+    console.log("getMessagesPage", gaps, forward);
     let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
     return this._loadMessages(this._tinode._db, query.extract('data')).then(count => {
       if (count == limit) {
@@ -4456,6 +4460,9 @@ class Topic {
           if (Topic.#isReplacementMsg(msg)) {
             return;
           }
+          if (msg._deleted) {
+            return;
+          }
           const latest = this.latestMsgVersion(msg.seq) || msg;
           if (!latest._origTs) {
             latest._origTs = latest.ts;
@@ -4527,8 +4534,39 @@ class Topic {
   msgRecvCount(seq) {
     return this.msgReceiptCount('recv', seq);
   }
-  msgHasMoreMessages(newer) {
-    return newer ? this.seq > this._maxSeq : this._minSeq > 1 && !this._noEarlierMsgs;
+  msgHasMoreMessages(min, max, newer) {
+    const gaps = [];
+    let maxSeq = 0;
+    let gap;
+    this._messages.forEach((msg, prev) => {
+      const p = prev || {
+        seq: 0
+      };
+      const expected = p._deleted ? p.hi : p.seq + 1;
+      if (msg.seq > expected) {
+        gap = {
+          low: expected,
+          hi: msg.seq
+        };
+      } else {
+        gap = null;
+      }
+      if (gap && (newer ? gap.hi >= min : gap.low < max)) {
+        gaps.push(gap);
+      }
+      maxSeq = expected;
+    });
+    if (maxSeq < this.seq) {
+      gap = {
+        low: maxSeq + 1,
+        hi: this.seq + 1
+      };
+      if (newer ? gap.hi >= min : gap.low < max) {
+        gaps.push(gap);
+      }
+    }
+    console.log("Gaps in cache found:", gaps, "min/max:", min, max, "haveMore:", gaps.length > 0);
+    return gaps;
   }
   isNewMessage(seqId) {
     return this._maxSeq <= seqId;
@@ -4953,17 +4991,10 @@ class Topic {
   _getQueuedSeqId() {
     return this._queuedSeqId++;
   }
-  _loadMessages(db, params) {
-    const {
-      since,
-      before,
-      limit
-    } = params || {};
-    return db.readMessages(this.name, {
-      since: since,
-      before: before,
-      limit: limit || _config_js__WEBPACK_IMPORTED_MODULE_3__.DEFAULT_MESSAGES_PAGE
-    }).then(msgs => {
+  _loadMessages(db, query) {
+    query = query || {};
+    query.limit = query.limit || _config_js__WEBPACK_IMPORTED_MODULE_3__.DEFAULT_MESSAGES_PAGE;
+    return db.readMessages(this.name, query).then(msgs => {
       msgs.forEach(data => {
         if (data.seq > this._maxSeq) {
           this._maxSeq = data.seq;
@@ -4975,6 +5006,17 @@ class Topic {
         this._maybeUpdateMessageVersionsCache(data);
       });
       return msgs.length;
+    }).then(_ => db.readDelLog(this.name, query)).then(dellog => {
+      return dellog.forEach(rec => {
+        this._messages.put({
+          seq: rec.low,
+          low: rec.low,
+          hi: rec.hi,
+          _deleted: true
+        });
+      });
+    }).then(_ => {
+      this._messages.forEach(msg => console.log(msg));
     });
   }
   _updateReceived(seq, act) {
@@ -4999,6 +5041,7 @@ class Topic {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "clipRange": () => (/* binding */ clipRange),
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
 /* harmony export */   "jsonParseHelper": () => (/* binding */ jsonParseHelper),
 /* harmony export */   "listToRanges": () => (/* binding */ listToRanges),
@@ -5172,6 +5215,31 @@ function listToRanges(list) {
     }
     return out;
   }, []);
+}
+function clipRange(src, clip) {
+  if (clip.hi < src.low || clip.low >= src.hi) {
+    return [src];
+  }
+  if (clip.low <= src.low) {
+    if (clip.hi >= src.hi) {
+      return [];
+    }
+    return [{
+      low: src.low,
+      hi: clip.hi
+    }];
+  }
+  const result = [{
+    low: src.low,
+    hi: clip.low
+  }];
+  if (clip.hi < src.hi) {
+    result.push({
+      low: clip.hi,
+      hi: src.hi
+    });
+  }
+  return result;
 }
 
 /***/ }),

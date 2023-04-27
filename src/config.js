@@ -121,4 +121,3 @@ export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 
 // Link to Terms of Service.
 export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
-

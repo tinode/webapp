@@ -5226,8 +5226,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleDragOut = this.handleDragOut.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
-    this.chatMessageRefs = {};
+    this.chatMessageRefs = [];
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+    this.getVisibleMessageRange = this.getVisibleMessageRange.bind(this);
     this.dragCounter = 0;
     this.dndRef = null;
     this.readNotificationQueue = [];
@@ -5235,12 +5236,37 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.keyPressTimer = null;
   }
   getOrCreateMessageRef(seqId) {
-    if (this.chatMessageRefs.hasOwnProperty(seqId)) {
+    if (this.chatMessageRefs[seqId]) {
       return this.chatMessageRefs[seqId];
     }
     const ref = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.chatMessageRefs[seqId] = ref;
     return ref;
+  }
+  getVisibleMessageRange(holderRect) {
+    let min = Number.MAX_SAFE_INTEGER,
+      max = -1;
+    this.chatMessageRefs.forEach((ref, seq) => {
+      if (ref.current) {
+        const {
+          top,
+          bottom,
+          height
+        } = ref.current.getBoundingClientRect();
+        const visible = top <= holderRect.top ? holderRect.top - top <= height : bottom - holderRect.bottom <= height;
+        if (visible) {
+          min = Math.min(min, seq);
+          max = Math.max(max, seq);
+        }
+      }
+    });
+    return max >= min ? {
+      min: min,
+      max: max
+    } : {
+      min: 0,
+      max: 0
+    };
   }
   componentDidMount() {
     if (this.messagesScroller) {
@@ -5558,14 +5584,22 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
       const topic = this.props.tinode.getTopic(this.state.topic);
-      if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-        this.setState({
-          fetchingMessages: true
-        }, _ => {
-          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
-            fetchingMessages: false
-          }));
-        });
+      if (topic && topic.isSubscribed()) {
+        const {
+          min,
+          max
+        } = this.getVisibleMessageRange(event.target.getBoundingClientRect());
+        const gaps = topic.msgHasMoreMessages(min, max, false);
+        if (gaps.length > 0) {
+          console.log("Fetch triggered", min, max, gaps);
+          this.setState({
+            fetchingMessages: true
+          }, _ => {
+            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE, gaps).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
+              fetchingMessages: false
+            }));
+          });
+        }
       }
     }
   }
