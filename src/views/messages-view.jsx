@@ -253,12 +253,12 @@ class MessagesView extends React.Component {
     }
 
     if (topic) {
-      if ((this.state.topic != prevState.topic) || !prevProps.ready) {
+      if ((this.state.topic != prevState.topic) || (this.props.myUserId && !prevProps.myUserId)) {
         // Don't immediately subscribe to a new p2p topic, wait for the first message.
         const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
         if (topic.isP2PType() && newTopic && !IMMEDIATE_P2P_SUBSCRIPTION) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
-        } else {
+        } else if (this.props.myUserId) {
           this.subscribe(topic);
         }
       } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
