@@ -5593,11 +5593,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         } = this.getVisibleMessageRange(event.target.getBoundingClientRect());
         const gaps = topic.msgHasMoreMessages(min, max, false);
         if (gaps.length > 0) {
-          console.log("Fetch triggered", min, max, gaps);
           this.setState({
             fetchingMessages: true
           }, _ => {
-            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE, gaps).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
+            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE, gaps, min, max).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
               fetchingMessages: false
             }));
           });

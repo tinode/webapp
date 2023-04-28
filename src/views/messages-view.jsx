@@ -585,9 +585,8 @@ class MessagesView extends React.Component {
         const {min, max} = this.getVisibleMessageRange(event.target.getBoundingClientRect());
         const gaps = topic.msgHasMoreMessages(min, max, false);
         if (gaps.length > 0) {
-          console.log("Fetch triggered", min, max, gaps);
           this.setState({fetchingMessages: true}, _ => {
-            topic.getMessagesPage(MESSAGES_PAGE, gaps)
+            topic.getMessagesPage(MESSAGES_PAGE, gaps, min, max)
               .catch(err => this.props.onError(err.message, 'err'))
               .finally(_ => this.setState({fetchingMessages: false}));
             });
