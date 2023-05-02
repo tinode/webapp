@@ -14932,7 +14932,7 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned",
       onClick: this.handleSelected
-    }, shown), selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, shown)), selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger upper"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",

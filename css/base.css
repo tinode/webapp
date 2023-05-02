@@ -3043,17 +3043,20 @@ ul.tabbar li.active > a {
   padding: 0.15rem 0.5rem 0.25rem 0.5rem;
   background-color: #fafafa;
   background-position: center;
-  line-height: 1.5em;
   font-weight: lighter;
   border-radius: 0 0.25rem 0.25rem 0;
   color: #666;
   height: 100%;
-  width: 100%;
-  min-width: 24rem;
+  width: 24rem;
+  min-width: 0;
   cursor: pointer;
   transition: background 0.4s;
+}
+
+.pinned > p {
   overflow-x: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pinned:hover {
@@ -3194,7 +3197,7 @@ ul.phone-country-selector span.country {
   }
 
   .pinned {
-    min-width: 12rem;
+    width: 16rem;
   }
 }
 
@@ -3236,6 +3239,6 @@ ul.phone-country-selector span.country {
   }
 
   .pinned {
-    min-width: unset;
+    width: unset;
   }
 }

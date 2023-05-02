@@ -72,7 +72,7 @@ class PinnedMessages extends React.PureComponent {
           <div><i className="material-icons gray">push_pin</i></div>
         }
         <div className="pinned-scroll">{dots}</div>
-        <div className="pinned" onClick={this.handleSelected}>{shown}</div>
+        <div className="pinned" onClick={this.handleSelected}><p>{shown}</p></div>
         {selected > 0 ?
           <span className="menuTrigger upper">
             <a href="#" onClick={this.handleMovePrev}>

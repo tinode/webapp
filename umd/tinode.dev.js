@@ -4170,12 +4170,18 @@ class Topic {
         this._maxDel = Math.max(ctrl.params.del, this._maxDel);
         this.clear = Math.max(ctrl.params.del, this.clear);
       }
-      ranges.forEach(r => {
-        if (r.hi) {
-          this.flushMessageRange(r.low, r.hi);
+      ranges.forEach(rec => {
+        if (rec.hi) {
+          this.flushMessageRange(rec.low, rec.hi);
         } else {
-          this.flushMessage(r.low);
+          this.flushMessage(rec.low);
         }
+        this._messages.put({
+          seq: rec.low,
+          low: rec.low,
+          hi: rec.hi,
+          _deleted: true
+        });
       });
       this._tinode._db.addDelLog(this.name, ctrl.params.del, ranges);
       if (this.onData) {
@@ -4845,14 +4851,20 @@ class Topic {
     this.clear = Math.max(clear, this.clear);
     let count = 0;
     if (Array.isArray(delseq)) {
-      delseq.forEach(range => {
-        if (!range.hi) {
+      delseq.forEach(rec => {
+        if (!rec.hi) {
           count++;
-          this.flushMessage(range.low);
+          this.flushMessage(rec.low);
         } else {
-          count += range.hi - range.low;
-          this.flushMessageRange(range.low, range.hi);
+          count += rec.hi - rec.low;
+          this.flushMessageRange(rec.low, rec.hi);
         }
+        this._messages.put({
+          seq: rec.low,
+          low: rec.low,
+          hi: rec.hi,
+          _deleted: true
+        });
       });
       this._tinode._db.addDelLog(this.name, clear, delseq);
     }
