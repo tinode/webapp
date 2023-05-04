@@ -176,6 +176,7 @@ class TinodeWeb extends React.Component {
     this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
     this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
+    this.handleVCCallJoin = this.handleVCCallJoin.bind(this);
 
     this.handleCallAccept = this.handleCallAccept.bind(this);
 
@@ -1591,7 +1592,7 @@ class TinodeWeb extends React.Component {
     }
 
     let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false,
-      archived = false, webrtc = false;
+      archived = false, webrtc = false, writer = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
@@ -1602,10 +1603,12 @@ class TinodeWeb extends React.Component {
         blocked = !acs.isJoiner();
         self_blocked = !acs.isJoiner('want');
         deleter = acs.isDeleter();
+        writer = acs.isWriter();
       }
     }
 
-    webrtc = !!this.tinode.getServerParam('iceServers');
+    webrtc = writer && !!this.tinode.getServerParam('iceServers');
+    const mediaServerAvailable = !!this.tinode.getServerParam('vcEndpoint');
 
     return [
       subscribed ? {
@@ -1616,8 +1619,9 @@ class TinodeWeb extends React.Component {
         title: this.props.intl.formatMessage(messages.menu_item_audio_call),
         handler: this.handleStartAudioCall
       } : null,
-      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
+      subscribed && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_video_call),
+        disabled: Tinode.isGroupTopicName(topicName) && !mediaServerAvailable,
         handler: this.handleStartVideoCall
       } : null,
       subscribed ? 'messages_clear' : null,
@@ -1772,13 +1776,19 @@ class TinodeWeb extends React.Component {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
         const head = { webrtc: CALL_HEAD_STARTED, aonly: !!audioOnly };
-        this.handleSendMessage(Drafty.videoCall(audioOnly), undefined, undefined, head)
+        let msg = Drafty.videoCall(audioOnly);
+        if (Tinode.isGroupTopicName(callTopic)) {
+          // Video conference.
+          head.vc = true;
+        }
+        return this.handleSendMessage(msg, undefined, undefined, head)
           .then(ctrl => {
             if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
               this.handleCallClose();
-              return;
+              return ctrl;
             }
             this.setState({callSeq: ctrl.params['seq']});
+            return ctrl
           });
         break;
       case CALL_STATE_IN_PROGRESS:
@@ -1836,6 +1846,15 @@ class TinodeWeb extends React.Component {
     topic.videoCall('answer', callSeq, sdp);
   }
 
+  handleVCCallJoin(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+
+    topic.videoCall('vc-join', callSeq);
+  }
+
   handleCallClose() {
     if (this.callTimeoutTimer) {
       clearTimeout(this.callTimeoutTimer);
@@ -1847,16 +1866,21 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleCallAccept(topicName) {
+  handleCallAccept(topicName, setCallTopic, callSeq) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
     if (topic.isSubscribed()) {
-      this.handleTopicSelected(this.state.callTopic);
-      this.setState({
+      this.handleTopicSelected(setCallTopic ? topicName : this.state.callTopic);
+      let upd = {
         callState: CALL_STATE_IN_PROGRESS
-      });
+      }
+      if (setCallTopic) {
+        upd.callTopic = topicName;
+        upd.callSeq = callSeq;
+      }
+      this.setState(upd);
     } else {
       // We need to switch and subscribe to callTopic first.
       this.setState({
@@ -1894,7 +1918,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleDataMessage(data) {
-    if (data.head && data.head.webrtc && data.head.webrtc == CALL_HEAD_STARTED) {
+    if (data.head && data.head.webrtc && data.head.webrtc == CALL_HEAD_STARTED && Tinode.isP2PTopicName(data.topic)) {
       // If it's a video call invite message.
       // See if we need to display incoming call UI.
       const topic = this.tinode.getTopic(data.topic);
@@ -2089,11 +2113,13 @@ class TinodeWeb extends React.Component {
             callState={this.state.callState}
             callAudioOnly={this.state.callAudioOnly}
             onCallHangup={this.handleCallHangup}
+            onAcceptCall={this.handleCallAccept}
 
             onCallInvite={this.handleCallInvite}
             onCallSendOffer={this.handleCallSendOffer}
             onCallIceCandidate={this.handleCallIceCandidate}
             onCallSendAnswer={this.handleCallSendAnswer}
+            onVCJoin={this.handleVCCallJoin}
 
             errorText={this.state.errorText}
             errorLevel={this.state.errorLevel}

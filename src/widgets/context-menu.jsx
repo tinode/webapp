@@ -493,11 +493,12 @@ class ContextMenu extends React.Component {
         item = this.MenuItems[item];
       }
       if (item && item.title) {
+        const className = item.disabled ? 'disabled' : undefined;
         menu.push(
           item.title == '-' ?
             <li className="separator" key={count} />
             :
-            <li onClick={this.handleClick} data-id={count} key={count}>{item.title}</li>
+            <li className={className} onClick={this.handleClick} data-id={count} key={count}>{item.title}</li>
         );
       }
       count++;

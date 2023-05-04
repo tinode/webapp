@@ -136,6 +136,8 @@ export function fullFormatter(style, data, values, key, stack) {
         attr.callState = data.state;
         attr.incoming = data.incoming;
         attr.duration = data.duration;
+        attr.vc = data.vc;
+        attr.onCallJoin = this.onCallJoin;
       }
       break;
     case 'VD':
