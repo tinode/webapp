@@ -59,15 +59,15 @@ class VCPanel extends React.PureComponent {
 
     this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
 
-    this.handleTrackSubscribed2 = this.handleTrackSubscribed2.bind(this);
-    this.handleTrackUnsubscribed2 = this.handleTrackUnsubscribed2.bind(this);
-    this.handleActiveSpeakerChange2 = this.handleActiveSpeakerChange2.bind(this);
-    this.handleDisconnect2 = this.handleDisconnect2.bind(this);
-    this.handleLocalTrackUnpublished2 = this.handleLocalTrackUnpublished2.bind(this);
-    this.handleLocalTrackPublished2 = this.handleLocalTrackPublished2.bind(this);
-    this.handleParticipantConnected2 = this.handleParticipantConnected2.bind(this);
-    this.handleParticipantDisconnected2 = this.handleParticipantDisconnected2.bind(this);
-    this.handleData2 = this.handleData2.bind(this);
+    this.handleTrackSubscribed = this.handleTrackSubscribed.bind(this);
+    this.handleTrackUnsubscribed = this.handleTrackUnsubscribed.bind(this);
+    this.handleActiveSpeakerChange = this.handleActiveSpeakerChange.bind(this);
+    this.handleDisconnect = this.handleDisconnect.bind(this);
+    this.handleLocalTrackUnpublished = this.handleLocalTrackUnpublished.bind(this);
+    this.handleLocalTrackPublished = this.handleLocalTrackPublished.bind(this);
+    this.handleParticipantConnected = this.handleParticipantConnected.bind(this);
+    this.handleParticipantDisconnected = this.handleParticipantDisconnected.bind(this);
+    this.handleData = this.handleData.bind(this);
     this.handleDevicesChanged = this.handleDevicesChanged.bind(this);
     this.startRoom = this.startRoom.bind(this);
 
@@ -108,7 +108,7 @@ class VCPanel extends React.PureComponent {
   }
 
 
-  handleParticipantConnected2(participant) {
+  handleParticipantConnected(participant) {
     if (!participant) return;
     if (participant instanceof RemoteParticipant) {
       participant
@@ -142,17 +142,17 @@ class VCPanel extends React.PureComponent {
     }
   }
 
-  handleParticipantDisconnected2(participant) {
+  handleParticipantDisconnected(participant) {
     console.log('Deleting participant ', participant.identity);
     delete this.participants[participant.identity];
     this.setState({participants: this.participants});
   }
 
-  handleData2(msg, participant) {
+  handleData(msg, participant) {
     console.log('Data message ', msg, participant);
   }
 
-  handleTrackSubscribed2(track, publication, participant) {
+  handleTrackSubscribed(track, publication, participant) {
     if (participant instanceof RemoteParticipant) {
       // Check if we're presenting a remote video stream.
       if (this.remoteRef.current && !(this.remoteRef.current.src != '' || this.remoteRef.srcObject)) {
@@ -163,14 +163,14 @@ class VCPanel extends React.PureComponent {
     this.forceUpdate();
   }
 
-  handleTrackUnsubscribed2(track, publication, participant) {
-    console.log('handleTrackUnsubscribed2', track);
+  handleTrackUnsubscribed(track, publication, participant) {
+    console.log('handleTrackUnsubscribed', track);
     // remove tracks from all attached elements
     track.detach();
     this.forceUpdate();
   }
 
-  handleLocalTrackPublished2(pub) {
+  handleLocalTrackPublished(pub) {
     console.log('Local track published', pub);
     const track = pub.track;
     if (this.localRef.current) {
@@ -181,16 +181,16 @@ class VCPanel extends React.PureComponent {
     }
   }
 
-  handleLocalTrackUnpublished2(pub) {
+  handleLocalTrackUnpublished(pub) {
     const track = pub.track;
-    console.log('handleLocalTrackUnpublished2', track);
+    console.log('handleLocalTrackUnpublished', track);
     track.detach();
     // Redraw carousel.
     this.forceUpdate();
   }
 
-  handleActiveSpeakerChange2(speakers) {
-    console.log('handleActiveSpeakerChange2', speakers);
+  handleActiveSpeakerChange(speakers) {
+    console.log('handleActiveSpeakerChange', speakers);
     speakers.forEach(s => {
       if (s.isSpeaking) {
         console.log('Speaking participant ', s);
@@ -216,7 +216,7 @@ class VCPanel extends React.PureComponent {
     // TODO: implement.
   }
 
-  handleDisconnect2() {
+  handleDisconnect() {
     console.log('disconnected from room');
     this.handleCloseClick();
   }
@@ -249,15 +249,15 @@ class VCPanel extends React.PureComponent {
     const shouldPublish = this.isOutgoingCall || !this.isBroadcast;
 
     room
-      .on(RoomEvent.ParticipantConnected, this.handleParticipantConnected2)
-      .on(RoomEvent.ParticipantDisconnected, this.handleParticipantDisconnected2)
-      .on(RoomEvent.DataReceived, this.handleData2)
-      .on(RoomEvent.TrackSubscribed, this.handleTrackSubscribed2)
-      .on(RoomEvent.TrackUnsubscribed, this.handleTrackUnsubscribed2)
-      .on(RoomEvent.ActiveSpeakersChanged, this.handleActiveSpeakerChange2)
-      .on(RoomEvent.Disconnected, this.handleDisconnect2)
-      .on(RoomEvent.LocalTrackUnpublished, this.handleLocalTrackUnpublished2)
-      .on(RoomEvent.LocalTrackPublished, this.handleLocalTrackPublished2)
+      .on(RoomEvent.ParticipantConnected, this.handleParticipantConnected)
+      .on(RoomEvent.ParticipantDisconnected, this.handleParticipantDisconnected)
+      .on(RoomEvent.DataReceived, this.handleData)
+      .on(RoomEvent.TrackSubscribed, this.handleTrackSubscribed)
+      .on(RoomEvent.TrackUnsubscribed, this.handleTrackUnsubscribed)
+      .on(RoomEvent.ActiveSpeakersChanged, this.handleActiveSpeakerChange)
+      .on(RoomEvent.Disconnected, this.handleDisconnect)
+      .on(RoomEvent.LocalTrackUnpublished, this.handleLocalTrackUnpublished)
+      .on(RoomEvent.LocalTrackPublished, this.handleLocalTrackPublished)
 
       .on(RoomEvent.RoomMetadataChanged, metadata => {
         console.log('VC room new metadata ', metadata);
@@ -291,9 +291,9 @@ class VCPanel extends React.PureComponent {
       console.log('Connected to VC room', room.name, '. Access token', token);
 
       room.participants.forEach((participant) => {
-        this.handleParticipantConnected2(participant);
+        this.handleParticipantConnected(participant);
       });
-      this.handleParticipantConnected2(room.localParticipant);
+      this.handleParticipantConnected(room.localParticipant);
     });
 
   }
