@@ -100,7 +100,7 @@ class ValidationView extends React.PureComponent {
             (numbers_only) => <input type="text" id="enter-confirmation-code"
               placeholder={numbers_only}
               value={this.state.code} onChange={this.handleCodeChange}
-              onKeyPress={this.handleKeyPress} required />
+              onKeyDown={this.handleKeyPress} required />
           }</FormattedMessage>
         </div>
         <div className="dialog-buttons">

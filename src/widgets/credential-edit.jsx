@@ -58,8 +58,11 @@ class CredentialEdit extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault();
     const value = this.props.method == 'email' ? this.state.email : this.state.tel;
-    if (value) {
-      this.props.onSubmit(this.props.method, value);
+    if (this.state.code) {
+      this.props.onError(null);
+      this.props.onCredConfirm(this.props.method, this.state.code);
+    } else if (value) {
+      this.props.onCredAdd(this.props.method, value);
       this.setState({sent: true});
       const msg = this.props.method == 'email' ? messages.password_reset_email_sent : messages.password_reset_sms_sent;
       this.props.onError(this.props.intl.formatMessage(msg), 'info');
@@ -68,8 +71,8 @@ class CredentialEdit extends React.PureComponent {
 
   render() {
     const readyForCode = this.state.sent || !this.props.done;
-    const currentValue = CredentialEdit.formatPhoneNumber(readyForCode ?
-      (this.state.tel || this.state.email) : this.props.val);
+    const rawValue = readyForCode ? (this.state.tel || this.state.email) : this.props.val;
+    const formattedValue = this.props.method == 'tel' ? CredentialEdit.formatPhoneNumber(rawValue) : rawValue;
 
     const changeEmail = (
       <><div className="panel-form-row">
@@ -140,21 +143,19 @@ class CredentialEdit extends React.PureComponent {
     );
 
     return (<form className="panel-form-column" onSubmit={this.handleSubmit}>
-      {readyForCode ? null :
-      this.props.method == 'email' ?
-        changeEmail
-      : this.props.method == 'tel' ?
-        changePhone
-      : null}
+      {readyForCode ?
+        (this.props.method == 'email' ? newEmailLabel : this.props.method == 'tel' ? newPhoneLabel : null)
+        :
+        (this.props.method == 'email' ? changeEmail : this.props.method == 'tel' ? changePhone : null)
+      }
       <div className="panel-form-row">
-        <tt className="quoted">{currentValue}</tt>
+        <tt className="quoted">{formattedValue}</tt>
       </div>
-      {readyForCode ? null :
-      this.props.method == 'email' ?
-        newEmailInput
-      : this.props.method == 'tel' ?
-        newPhoneInput
-      : null}
+      {readyForCode ?
+        null
+        :
+        (this.props.method == 'email' ? newEmailInput : this.props.method == 'tel' ? newPhoneInput : null)
+      }
       {readyForCode ? codeInput : null}
       <div className="dialog-buttons">
         <button className="secondary" onClick={this.props.onCancel}>
