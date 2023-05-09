@@ -1,13 +1,10 @@
 // Video conference carousel item.
 import React from 'react';
-import { injectIntl } from 'react-intl';
-import {
-  Track,
-} from 'livekit-client';
+import Track from 'livekit-client';
 
 import LetterTile from './letter-tile.jsx';
 
-class VCCarouselItem extends React.PureComponent {
+export default class VCCarouselItem extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -54,16 +51,15 @@ class VCCarouselItem extends React.PureComponent {
   }
 
   render() {
-    const name = this.props.name;
-    let classes = "call-party carousel-item";
+    let classes = 'call-party carousel-item';
     if (this.props.isSpeaking) {
-      classes += " call-party-speaking";
+      classes += ' call-party-speaking';
     }
 
     const micPub = this.props.micPub;
     const cameraPub = this.props.cameraPub;
     return (
-      <div className={classes} key={this.props.key}>
+      <div className={classes}>
         <>
           <video ref={this.handleVideoRefChange}></video>
           <audio ref={this.handleAudioRefChange}></audio>
@@ -90,5 +86,3 @@ class VCCarouselItem extends React.PureComponent {
     );
   }
 }
-
-export default injectIntl(VCCarouselItem);

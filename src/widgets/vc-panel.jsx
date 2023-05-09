@@ -14,7 +14,7 @@ import {
   Room,
   RoomEvent,
   Track,
-  VideoPresets,
+  VideoPresets
 } from 'livekit-client';
 
 import LetterTile from './letter-tile.jsx';
@@ -50,7 +50,6 @@ class VCPanel extends React.PureComponent {
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
 
-
     this.reportError = this.reportError.bind(this);
 
     this.handleCloseClick = this.handleCloseClick.bind(this);
@@ -85,7 +84,6 @@ class VCPanel extends React.PureComponent {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onInfo = this.previousOnInfo;
     this.stop();
-
   }
 
   onInfo(info) {
@@ -362,19 +360,19 @@ class VCPanel extends React.PureComponent {
 
     const peerTitle = this.state.activeSpeaker ? this.state.activeSpeaker : clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
 
-    const remoteActive = this.remoteRef.current && (this.remoteRef.current.src != '' || this.remoteRef.current.srcObject)
+    const remoteActive = this.remoteRef.current && (this.remoteRef.current.src || this.remoteRef.current.srcObject)
 
     return (
       <>
         <div id="video-container">
-          { !this.isBroadcast && Object.keys(this.state.participants).length > 0 ?
+          {!this.isBroadcast && Object.keys(this.state.participants).length > 0 ?
             <VCCarousel
               tinode={this.props.tinode}
               participants={this.state.participants} /> :
             null
           }
           <div id="video-container-panel">
-            { isPublishing ?
+            {isPublishing ?
               <div className="call-party self" disabled={this.state.audioOnly}>
                 <video ref={this.localRef} autoPlay muted playsInline />
                 <div className="caller-name inactive">

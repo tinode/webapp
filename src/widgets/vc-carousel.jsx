@@ -1,13 +1,13 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
-import {
-  Track,
-} from 'livekit-client';
+
+import { Track } from 'livekit-client';
 
 import LetterTile from './letter-tile.jsx';
 import VCCarouselItem from './vc-carousel-item.jsx';
 
-class VCCarousel extends React.Component {
+import { VC_CAROUSEL_ITEM_GAP } from '../constants.js';
+
+export default class VCCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.handlePrevClick = this.handlePrevClick.bind(this);
@@ -20,26 +20,26 @@ class VCCarousel extends React.Component {
   }
 
   handlePrevClick() {
-    const gap = 16;
+    const gap = VC_CAROUSEL_ITEM_GAP;
     const width = this.carouselRef.current.offsetWidth;
     this.carouselRef.current.scrollBy(-(width + gap), 0);
     if (this.carouselRef.current.scrollLeft - width - gap <= 0) {
-      this.prevRef.current.style.display = "none";
+      this.prevRef.current.style.display = 'none';
     }
     if (!this.contentRef.current.scrollWidth - width - gap <= this.carouselRef.current.scrollLeft + width) {
-      this.nextRef.current.style.display = "flex";
+      this.nextRef.current.style.display = 'flex';
     }
   }
 
   handleNextClick() {
-    const gap = 16;
+    const gap = VC_CAROUSEL_ITEM_GAP;
     const width = this.carouselRef.current.offsetWidth;
     this.carouselRef.current.scrollBy(width + gap, 0);
     if (this.carouselRef.current.scrollWidth !== 0) {
-      this.prevRef.current.style.display = "flex";
+      this.prevRef.current.style.display = 'flex';
     }
     if (this.contentRef.current.scrollWidth - width - gap <= this.carouselRef.current.scrollLeft + width) {
-      this.nextRef.current.style.display = "none";
+      this.nextRef.current.style.display = 'none';
     }
   }
 
@@ -98,5 +98,3 @@ class VCCarousel extends React.Component {
     );
   }
 }
-
-export default injectIntl(VCCarousel);

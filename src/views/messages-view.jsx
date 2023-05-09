@@ -1442,7 +1442,7 @@ class MessagesView extends React.Component {
         );
       } else if (this.state.rtcPanel) {
         // P2P call.
-        if (this.state.rtcPanel.startsWith("usr")) {
+        if (Tinode.isP2PTopicName(this.state.rtcPanel)) {
           component2 = (
             <CallPanel
               topic={this.state.topic}

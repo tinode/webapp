@@ -143,6 +143,10 @@
     "defaultMessage": "missed",
     "description": "Label for missed incoming call"
   },
+  "calls_conference": {
+    "defaultMessage": "Conference call",
+    "description": "Conference call label"
+  },
   "calls_incoming": {
     "defaultMessage": "Incoming call",
     "description": "Incoming call label"

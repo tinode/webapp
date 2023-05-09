@@ -1776,7 +1776,7 @@ class TinodeWeb extends React.Component {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
         const head = { webrtc: CALL_HEAD_STARTED, aonly: !!audioOnly };
-        let msg = Drafty.videoCall(audioOnly);
+        const msg = Drafty.videoCall(audioOnly);
         if (Tinode.isGroupTopicName(callTopic)) {
           // Video conference.
           head.vc = true;
@@ -1873,7 +1873,7 @@ class TinodeWeb extends React.Component {
     }
     if (topic.isSubscribed()) {
       this.handleTopicSelected(setCallTopic ? topicName : this.state.callTopic);
-      let upd = {
+      const upd = {
         callState: CALL_STATE_IN_PROGRESS
       }
       if (setCallTopic) {

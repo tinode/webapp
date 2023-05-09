@@ -4647,11 +4647,15 @@ class Topic {
     }
     const outgoing = !this.isChannelType() && !data.from || this._tinode.isMe(data.from);
     if (data.head && data.head.webrtc && data.head.mime == _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().getContentType() && data.content) {
-      data.content = _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().updateVideoCall(data.content, {
+      const upd = {
         state: data.head.webrtc,
         duration: data.head['webrtc-duration'],
         incoming: !outgoing
-      });
+      };
+      if (data.head.vc) {
+        upd.vc = true;
+      }
+      data.content = _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().updateVideoCall(data.content, upd);
     }
     if (!data._noForwarding) {
       this._messages.put(data);

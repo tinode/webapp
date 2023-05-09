@@ -1647,5 +1647,12 @@
     "description": "Menu item [Unpin] for un-pinning the message.",
     "missing": false,
     "obsolete": false
+  },
+  "calls_conference": {
+    "translation": "Conference call",
+    "defaultMessage": "Conference call",
+    "description": "Conference call label",
+    "missing": false,
+    "obsolete": false
   }
 }
