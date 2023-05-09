@@ -870,6 +870,7 @@ class TinodeWeb extends React.Component {
       // Topic deleted or user unsubscribed. Remove topic from view.
       // If the currently selected topic is gone, clear the selection.
       if (this.state.topicSelected == cont.topic) {
+        console.log("tnMeContactUpdate", cont.topic, what);
         this.handleTopicSelected(null);
       }
       // Redraw without the deleted topic.

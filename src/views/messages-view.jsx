@@ -209,6 +209,18 @@ class MessagesView extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const p = [];
+    const s = [];
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && p.push(key)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && s.push(key)
+      );
+    }
+    console.log(`Prop '${p}', state '${s}' changed`);
+
     // Scroll last message into view on component update e.g. on message received
     // or vertical shrinking.
     if (this.messagesScroller &&
@@ -446,7 +458,6 @@ class MessagesView extends React.Component {
 
     // Is this a new topic?
     const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
-
     // Don't request the tags. They are useless unless the user
     // is the owner and is editing the topic.
     let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
@@ -470,6 +481,9 @@ class MessagesView extends React.Component {
         }
         if (this.state.topic != ctrl.topic) {
           this.setState({topic: ctrl.topic});
+        }
+        if (this.state.deleted) {
+          this.setState({deleted: false});
         }
         this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
         // If there are unsent messages (except hard-failed and video call messages),

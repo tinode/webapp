@@ -896,7 +896,7 @@ class DB {
       };
     });
   }
-  markTopicAsDeleted(name) {
+  markTopicAsDeleted(name, deleted) {
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
     }
@@ -912,8 +912,10 @@ class DB {
       const req = trx.objectStore('topic').get(name);
       req.onsuccess = event => {
         const topic = event.target.result;
-        topic._deleted = true;
-        trx.objectStore('topic').put(topic);
+        if (topic && topic._deleted != deleted) {
+          topic._deleted = deleted;
+          trx.objectStore('topic').put(topic);
+        }
         trx.commit();
       };
     });
@@ -3164,13 +3166,13 @@ class MetaGetBuilder {
     this.what = {};
   }
   #get_desc_ims() {
-    return this.topic.updated;
+    return this.topic._deleted ? undefined : this.topic.updated;
   }
   #get_subs_ims() {
     if (this.topic.isP2PType()) {
       return this.#get_desc_ims();
     }
-    return this.topic._lastSubsUpdate;
+    return this.topic._deleted ? undefined : this.topic._lastSubsUpdate;
   }
   withData(since, before, limit) {
     this.what['data'] = {
@@ -3377,9 +3379,6 @@ class Topic {
     this._delayedLeaveTimer = null;
     if (this._attached) {
       return Promise.resolve(this);
-    }
-    if (this._deleted) {
-      return Promise.reject(new Error("Conversation deleted"));
     }
     return this._tinode.subscribe(this.name || _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW, getParams, setParams).then(ctrl => {
       if (ctrl.code >= 300) {
@@ -4164,7 +4163,7 @@ class Topic {
         break;
       case 'upd':
         if (pres.src && !this._tinode.isTopicCached(pres.src)) {
-          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
+          this.getMeta(this.startMetaQuery().withOneSub(pres.src).build());
         }
         break;
       case 'acs':
@@ -4506,6 +4505,7 @@ class TopicMe extends Topic {
     }
   }
   _routePres(pres) {
+    console.log("me._routePres", pres.what);
     if (pres.what == 'term') {
       this._resetSub();
       return;
@@ -4529,6 +4529,7 @@ class TopicMe extends Topic {
           }
           break;
         case 'msg':
+          console.log("me._routePres>_updateReceived", pres.seq, pres.act, cont._deleted);
           cont._updateReceived(pres.seq, pres.act);
           break;
         case 'upd':
@@ -4559,10 +4560,12 @@ class TopicMe extends Topic {
           cont.unread = cont.seq - cont.read;
           break;
         case 'gone':
+          this._tinode.cacheRemTopic(pres.src);
+          console.log("gone, deleting", this._tinode.cacheGetTopic(pres.src));
           if (!cont._deleted) {
             cont._deleted = true;
             cont._attached = false;
-            this._tinode._db.markTopicAsDeleted(pres.src);
+            this._tinode._db.markTopicAsDeleted(pres.src, true);
           } else {
             this._tinode._db.remTopic(pres.src);
           }
@@ -4585,14 +4588,20 @@ class TopicMe extends Topic {
         } else {
           this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
           const dummy = this._tinode.getTopic(pres.src);
-          dummy.topic = pres.src;
           dummy.online = false;
           dummy.acs = acs;
           this._tinode._db.updTopic(dummy);
         }
       } else if (pres.what == 'tags') {
         this.getMeta(this.startMetaQuery().withTags().build());
+      } else if (pres.what == 'msg') {
+        console.log("me._routePres > this.getMeta", pres.src);
+        this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
+        const dummy = this._tinode.getTopic(pres.src);
+        dummy._deleted = false;
+        this._tinode._db.updTopic(dummy);
       }
+      this._refreshContact(pres.what, cont);
     }
     if (this.onPres) {
       this.onPres(pres);
@@ -5566,6 +5575,9 @@ class Tinode {
     }
   }
   #cachePut(type, name, obj) {
+    if (name == 'usrGosrQjv25RM') {
+      console.log("adding", type, "to cache", new Error("stacktrace"));
+    }
     this._cache[type + ':' + name] = obj;
   }
   #cacheGet(type, name) {
