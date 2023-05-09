@@ -16313,7 +16313,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     super(props);
     this.inputRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.state = {
-      value: this.props.value,
+      value: this.props.value || '',
       visible: false
     };
     this.handleVisibility = this.handleVisibility.bind(this);
@@ -16343,7 +16343,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   handleKeyDown(e) {
     if (e.keyCode == 27) {
       this.setState({
-        value: this.props.value,
+        value: this.props.value || '',
         visible: false
       });
       if (this.props.onFinished) {
@@ -16374,7 +16374,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onBlur: this.handleEditingFinished
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       className: "with-visibility",
-      type: this.state.visible ? "text" : "password",
+      type: this.state.visible ? 'text' : 'password',
       value: this.state.value,
       placeholder: this.props.placeholder,
       required: this.props.required ? 'required' : '',
