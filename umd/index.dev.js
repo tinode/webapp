@@ -3245,7 +3245,9 @@ class HashNavigation {
     const args = [];
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
-        args.push(key + '=' + encodeURIComponent(params[key]));
+        if (params[key] !== undefined) {
+          args.push(key + '=' + encodeURIComponent(params[key]));
+        }
       }
     }
     if (args.length > 0) {
@@ -5329,11 +5331,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
     if (topic) {
-      if (this.state.topic != prevState.topic || !prevProps.ready) {
+      if (this.state.topic != prevState.topic || this.props.myUserId && !prevProps.myUserId) {
         const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
         if (topic.isP2PType() && newTopic && !_config_js__WEBPACK_IMPORTED_MODULE_19__.IMMEDIATE_P2P_SUBSCRIPTION) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
-        } else {
+        } else if (this.props.myUserId) {
           this.subscribe(topic);
         }
       } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
@@ -5527,6 +5529,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       if (this.state.topic != ctrl.topic) {
         this.setState({
           topic: ctrl.topic
+        });
+      }
+      if (this.state.deleted) {
+        this.setState({
+          deleted: false
         });
       }
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
@@ -7216,6 +7223,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       trustedBadges: this.props.trustedBadges,
+      reqCredMethod: this.props.reqCredMethod,
       onShowCountrySelector: this.props.onShowCountrySelector,
       onNavigate: this.props.onNavigate,
       onCredAdd: this.props.onCredAdd,
@@ -8031,6 +8039,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
     parsed.params['token'] = params.token;
+    parsed.params['code'] = params.code;
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].composeUrlHash(parsed.path, parsed.params));
   }
   handleLoginSuccessful() {
@@ -8104,7 +8113,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     } else if (what == 'read') {
       this.resetContactList();
-    } else if (what == 'msg') {
+    } else if (what == 'msg' && cont) {
       const topic = this.tinode.getTopic(cont.topic);
       const archived = topic && topic.isArchived();
       if (cont.unread > 0 && this.state.messageSounds && !archived) {
@@ -8125,7 +8134,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       }
     } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
-      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
+      console.info("Unsupported (yet) presence update:", what, "in", (cont || {}).topic);
     }
   }
   tnMeSubsUpdated(unused) {
@@ -8227,6 +8236,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     } else {
       this.setState({
+        topicSelected: null,
         errorText: '',
         errorLevel: null,
         mobilePanel: 'sidepanel',
@@ -8474,7 +8484,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleCredConfirm(method, response) {
     TinodeWeb.navigateToCredentialsView({
-      cred: [method]
+      cred: [method],
+      code: response
     });
   }
   handleSidepanelCancel() {
@@ -8851,7 +8862,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           meth: cred,
           resp: code
         }
-      }).catch(err => this.handleError(err.message, 'err'));
+      }).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlSidePanel(window.location.hash, 'contacts'))).catch(err => this.handleError(err.message, 'err'));
     } else {
       this.setState({
         credMethod: cred,
@@ -9468,7 +9479,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       placeholder: numbers_only,
       value: this.state.code,
       onChange: this.handleCodeChange,
-      onKeyPress: this.handleKeyPress,
+      onKeyDown: this.handleKeyPress,
       required: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
@@ -12994,7 +13005,7 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "icon"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, level)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.text, this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, level)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.text, this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, "\xA0 ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       style: {
         whiteSpace: 'nowrap'
@@ -16821,7 +16832,7 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
   handleLocalTrackPublished(pub) {
     console.log('Local track published', pub);
     const track = pub.track;
-    if (this.localRef.current) {
+    if (track instanceof livekit_client__WEBPACK_IMPORTED_MODULE_2__.LocalVideoTrack && this.localRef.current) {
       const elem = this.localRef.current;
       track.attach(elem);
       elem.style.transform = 'scale(-1, 1)';
@@ -17192,7 +17203,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     super(props);
     this.inputRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.state = {
-      value: this.props.value,
+      value: this.props.value || '',
       visible: false
     };
     this.handleVisibility = this.handleVisibility.bind(this);
@@ -17222,7 +17233,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   handleKeyDown(e) {
     if (e.keyCode == 27) {
       this.setState({
-        value: this.props.value,
+        value: this.props.value || '',
         visible: false
       });
       if (this.props.onFinished) {
@@ -17253,7 +17264,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onBlur: this.handleEditingFinished
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       className: "with-visibility",
-      type: this.state.visible ? "text" : "password",
+      type: this.state.visible ? 'text' : 'password',
       value: this.state.value,
       placeholder: this.props.placeholder,
       required: this.props.required ? 'required' : '',

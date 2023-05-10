@@ -71,7 +71,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     if (this.state.token) {
       this.props.onReset(this.state.password.trim(), {
         scheme: 'token',
-        token: this.state.token
+        secret: this.state.token
       });
     } else if (this.state.code && this.props.reqCredMethod) {
       const cred = this.state.email.trim() || this.state.tel.trim();
@@ -222,7 +222,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       onSubmit: this.handleSubmit
     }, !this.state.sent && showCredentialInput ? credentialInput : null, this.state.haveCode || this.state.sent ? codeInput : null, showPasswordInput ? passwordInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
-    }, this.state.haveCode || this.state.sent ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, this.state.haveCode || this.state.sent || this.state.token ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleShowCodeField,
       style: {

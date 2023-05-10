@@ -46,11 +46,20 @@ export default class AccountSettingsView extends React.Component {
           val={this.state.credEdit.val}
           done={this.state.credEdit.done}
           onShowCountrySelector={this.props.onShowCountrySelector}
-          onSubmit={this.props.onCredAdd}
+          onCredAdd={this.props.onCredAdd}
+          onCredConfirm={this.props.onCredConfirm}
           onCancel={_ => this.setState({credEdit: undefined})}
           onError={this.props.onError} />
       );
     }
+
+    // Count how many times each method is validated.
+    const validated = {};
+    this.state.credentials.forEach(cred => {
+      if (cred.done) {
+        validated[cred.meth] = (validated[cred.meth] || 0) + 1;
+      }
+    });
 
     const credentials = [];
     this.state.credentials.forEach((cred, idx) => {
@@ -68,15 +77,14 @@ export default class AccountSettingsView extends React.Component {
       credentials.push(
         <div className="group quoted" key={idx}>
           <tt className="clickable" onClick={e => {e.preventDefault(); this.setState({credEdit: cred});}}>{val}</tt>
-          <span> {
-            cred.done ? null :
-            <>
-              <i className="material-icons">pending</i>&nbsp;
+          <span> {cred.done ? null : <i className="material-icons">pending</i>}&nbsp;
+            {!cred.done || validated[cred.meth] > 1 || this.props.reqCredMethod != cred.meth ?
               <a href="#" onClick={e => {e.preventDefault(); this.props.onCredDelete(cred.meth, cred.val);}}>
                 <i className="material-icons">delete</i>
               </a>
-            </>
-          }</span>
+            :
+            null}
+          </span>
         </div>);
     });
     if (credentials.length > 0) {

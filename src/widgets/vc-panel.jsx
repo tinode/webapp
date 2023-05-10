@@ -5,6 +5,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import {
   connect,
   LocalParticipant,
+  LocalVideoTrack,
   MediaDeviceFailure,
   Participant,
   ParticipantEvent,
@@ -171,7 +172,7 @@ class VCPanel extends React.PureComponent {
   handleLocalTrackPublished(pub) {
     console.log('Local track published', pub);
     const track = pub.track;
-    if (this.localRef.current) {
+    if ((track instanceof LocalVideoTrack) && this.localRef.current) {
       const elem = this.localRef.current;
       track.attach(elem);
       // flip.

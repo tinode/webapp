@@ -57,7 +57,7 @@ class PasswordResetView extends React.PureComponent {
       // Reset using token.
       this.props.onReset(this.state.password.trim(), {
         scheme: 'token',
-        token: this.state.token
+        secret: this.state.token
       });
     } else if (this.state.code && this.props.reqCredMethod) {
       // Reset using security code.
@@ -193,7 +193,7 @@ class PasswordResetView extends React.PureComponent {
         {this.state.haveCode || this.state.sent ? codeInput : null}
         {showPasswordInput ? passwordInput : null}
         <div className="dialog-buttons">
-          {this.state.haveCode || this.state.sent ? null :
+          {this.state.haveCode || this.state.sent || this.state.token ? null :
             <a href="#" onClick={this.handleShowCodeField} style={{marginRight: 'auto'}}>
               <FormattedMessage id="password_i_have_code" defaultMessage="I have code"
                 description="Call to open field to enter password reset code" />

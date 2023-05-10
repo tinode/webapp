@@ -8,7 +8,7 @@ export default class VisiblePassword extends React.PureComponent {
     this.inputRef = React.createRef();
 
     this.state = {
-      value: this.props.value,
+      value: this.props.value || '',
       visible: false
     };
 
@@ -39,7 +39,7 @@ export default class VisiblePassword extends React.PureComponent {
   handleKeyDown(e) {
     if (e.keyCode == 27) {
       // Escape pressed
-      this.setState({value: this.props.value, visible: false});
+      this.setState({value: this.props.value || '', visible: false});
       if (this.props.onFinished) {
         this.props.onFinished();
       }
@@ -68,7 +68,7 @@ export default class VisiblePassword extends React.PureComponent {
     return (
       <div tabIndex="-1" className="group-focus" onBlur={this.handleEditingFinished}>
         <input className="with-visibility"
-          type={this.state.visible ? "text" : "password"}
+          type={this.state.visible ? 'text' : 'password'}
           value={this.state.value}
           placeholder={this.props.placeholder}
           required={this.props.required ? 'required' : ''}
