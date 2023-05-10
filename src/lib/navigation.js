@@ -32,7 +32,9 @@ export default class HashNavigation {
     const args = [];
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
-        args.push(key + '=' + encodeURIComponent(params[key]));
+        if (params[key] !== undefined) {
+          args.push(key + '=' + encodeURIComponent(params[key]));
+        }
       }
     }
     if (args.length > 0) {

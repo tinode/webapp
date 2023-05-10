@@ -181,6 +181,7 @@ class SidepanelView extends React.PureComponent {
               tinode={this.props.tinode}
               myUserId={this.props.myUserId}
               trustedBadges={this.props.trustedBadges}
+              reqCredMethod={this.props.reqCredMethod}
               onShowCountrySelector={this.props.onShowCountrySelector}
               onNavigate={this.props.onNavigate}
               onCredAdd={this.props.onCredAdd}

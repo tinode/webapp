@@ -762,6 +762,7 @@ class TinodeWeb extends React.Component {
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
     parsed.params['token'] = params.token;
+    parsed.params['code'] = params.code;
     HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
   }
 
@@ -847,7 +848,7 @@ class TinodeWeb extends React.Component {
       }
     } else if (what == 'read') {
       this.resetContactList();
-    } else if (what == 'msg') {
+    } else if (what == 'msg' && cont) {
       // Check if the topic is archived. If so, don't play a sound.
       const topic = this.tinode.getTopic(cont.topic);
       const archived = topic && topic.isArchived();
@@ -886,7 +887,7 @@ class TinodeWeb extends React.Component {
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
+      console.info("Unsupported (yet) presence update:", what, "in", (cont || {}).topic);
     }
   }
 
@@ -1018,6 +1019,7 @@ class TinodeWeb extends React.Component {
     } else {
       // Currently selected contact deleted
       this.setState({
+        topicSelected: null,
         errorText: '',
         errorLevel: null,
         mobilePanel: 'sidepanel',
@@ -1286,7 +1288,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleCredConfirm(method, response) {
-    TinodeWeb.navigateToCredentialsView({cred: [method]});
+    TinodeWeb.navigateToCredentialsView({cred: [method], code: response});
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -1705,6 +1707,7 @@ class TinodeWeb extends React.Component {
     if (this.tinode.isAuthenticated()) {
       // Adding new email or phone number in account setting.
       this.tinode.getMeTopic().setMeta({cred: {meth: cred, resp: code}})
+        .then(_ => HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'contacts')))
         .catch(err => this.handleError(err.message, 'err'));
     } else {
       // Credential validation on signup.
