@@ -4505,7 +4505,6 @@ class TopicMe extends Topic {
     }
   }
   _routePres(pres) {
-    console.log("me._routePres", pres.what);
     if (pres.what == 'term') {
       this._resetSub();
       return;
@@ -4529,7 +4528,6 @@ class TopicMe extends Topic {
           }
           break;
         case 'msg':
-          console.log("me._routePres>_updateReceived", pres.seq, pres.act, cont._deleted);
           cont._updateReceived(pres.seq, pres.act);
           break;
         case 'upd':
@@ -4561,7 +4559,6 @@ class TopicMe extends Topic {
           break;
         case 'gone':
           this._tinode.cacheRemTopic(pres.src);
-          console.log("gone, deleting", this._tinode.cacheGetTopic(pres.src));
           if (!cont._deleted) {
             cont._deleted = true;
             cont._attached = false;
@@ -4595,7 +4592,6 @@ class TopicMe extends Topic {
       } else if (pres.what == 'tags') {
         this.getMeta(this.startMetaQuery().withTags().build());
       } else if (pres.what == 'msg') {
-        console.log("me._routePres > this.getMeta", pres.src);
         this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
         const dummy = this._tinode.getTopic(pres.src);
         dummy._deleted = false;
@@ -4849,7 +4845,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.7";
+const PACKAGE_VERSION = "0.22.8";
 
 /***/ })
 
@@ -5575,9 +5571,6 @@ class Tinode {
     }
   }
   #cachePut(type, name, obj) {
-    if (name == 'usrGosrQjv25RM') {
-      console.log("adding", type, "to cache", new Error("stacktrace"));
-    }
     this._cache[type + ':' + name] = obj;
   }
   #cacheGet(type, name) {

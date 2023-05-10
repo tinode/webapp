@@ -209,18 +209,6 @@ class MessagesView extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const p = [];
-    const s = [];
-    Object.entries(this.props).forEach(([key, val]) =>
-      prevProps[key] !== val && p.push(key)
-    );
-    if (this.state) {
-      Object.entries(this.state).forEach(([key, val]) =>
-        prevState[key] !== val && s.push(key)
-      );
-    }
-    console.log(`Prop '${p}', state '${s}' changed`);
-
     // Scroll last message into view on component update e.g. on message received
     // or vertical shrinking.
     if (this.messagesScroller &&

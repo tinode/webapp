@@ -5263,16 +5263,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   componentDidUpdate(prevProps, prevState) {
-    Object.entries(this.props).forEach(_ref => {
-      let [key, val] = _ref;
-      return prevProps[key] !== val && console.log(`Prop '${key}' changed`);
-    });
-    if (this.state) {
-      Object.entries(this.state).forEach(_ref2 => {
-        let [key, val] = _ref2;
-        return prevState[key] !== val && console.log(`State '${key}' changed`);
-      });
-    }
     if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.maxSeqId != this.state.maxSeqId || prevState.minSeqId != this.state.minSeqId)) {
       if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
@@ -8001,7 +7991,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     } else if (what == 'read') {
       this.resetContactList();
-    } else if (what == 'msg') {
+    } else if (what == 'msg' && cont) {
       const topic = this.tinode.getTopic(cont.topic);
       const archived = topic && topic.isArchived();
       if (cont.unread > 0 && this.state.messageSounds && !archived) {
@@ -8012,7 +8002,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.resetContactList();
     } else if (what == 'recv') {} else if (what == 'gone' || what == 'unsub') {
       if (this.state.topicSelected == cont.topic) {
-        console.log("tnMeContactUpdate", cont.topic, what);
         this.handleTopicSelected(null);
       }
       this.resetContactList();
@@ -8023,7 +8012,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       }
     } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
-      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
+      console.info("Unsupported (yet) presence update:", what, "in", (cont || {}).topic);
     }
   }
   tnMeSubsUpdated(unused) {
@@ -8125,6 +8114,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     } else {
       this.setState({
+        topicSelected: null,
         errorText: '',
         errorLevel: null,
         mobilePanel: 'sidepanel',

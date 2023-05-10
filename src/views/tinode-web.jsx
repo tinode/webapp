@@ -848,7 +848,7 @@ class TinodeWeb extends React.Component {
       }
     } else if (what == 'read') {
       this.resetContactList();
-    } else if (what == 'msg') {
+    } else if (what == 'msg' && cont) {
       // Check if the topic is archived. If so, don't play a sound.
       const topic = this.tinode.getTopic(cont.topic);
       const archived = topic && topic.isArchived();
@@ -870,7 +870,6 @@ class TinodeWeb extends React.Component {
       // Topic deleted or user unsubscribed. Remove topic from view.
       // If the currently selected topic is gone, clear the selection.
       if (this.state.topicSelected == cont.topic) {
-        console.log("tnMeContactUpdate", cont.topic, what);
         this.handleTopicSelected(null);
       }
       // Redraw without the deleted topic.
@@ -888,7 +887,7 @@ class TinodeWeb extends React.Component {
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
+      console.info("Unsupported (yet) presence update:", what, "in", (cont || {}).topic);
     }
   }
 
@@ -1020,6 +1019,7 @@ class TinodeWeb extends React.Component {
     } else {
       // Currently selected contact deleted
       this.setState({
+        topicSelected: null,
         errorText: '',
         errorLevel: null,
         mobilePanel: 'sidepanel',
