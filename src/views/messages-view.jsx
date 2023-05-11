@@ -198,9 +198,10 @@ class MessagesView extends React.Component {
           // The remaining elements are no longer visible, no need to iterate them.
           return false;
         }
-        return true;
       }
+      return true;
     });
+
     return max >= min ? {min: min, max: max} : {min: 0, max: 0};
   }
 

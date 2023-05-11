@@ -5266,8 +5266,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         } else if (visibilityStatus) {
           return false;
         }
-        return true;
       }
+      return true;
     });
     return max >= min ? {
       min: min,
