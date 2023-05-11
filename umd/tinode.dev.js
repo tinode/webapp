@@ -4461,6 +4461,9 @@ class Topic {
   }
   msgHasMoreMessages(min, max, newer) {
     const gaps = [];
+    if (min >= max) {
+      return gaps;
+    }
     let maxSeq = 0;
     let gap;
     this._messages.forEach((msg, prev) => {

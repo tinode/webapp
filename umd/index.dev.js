@@ -5250,7 +5250,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   getVisibleMessageRange(holderRect) {
     let min = Number.MAX_SAFE_INTEGER,
       max = -1;
-    this.chatMessageRefs.forEach((ref, seq) => {
+    let visibilityStatus = false;
+    this.chatMessageRefs.every((ref, seq) => {
       if (ref.current) {
         const {
           top,
@@ -5259,9 +5260,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         } = ref.current.getBoundingClientRect();
         const visible = top <= holderRect.top ? holderRect.top - top <= height : bottom - holderRect.bottom <= height;
         if (visible) {
+          visibilityStatus = true;
           min = Math.min(min, seq);
           max = Math.max(max, seq);
+        } else if (visibilityStatus) {
+          return false;
         }
+        return true;
       }
     });
     return max >= min ? {
@@ -5588,12 +5593,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       scrollPosition: pos,
       showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST && pos < this.state.scrollPosition
     });
-    if (this.state.fetchingMessages) {
+    if (this.state.fetchingMessages || this.processingScrollEvent) {
       return;
     }
     if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
       const topic = this.props.tinode.getTopic(this.state.topic);
       if (topic && topic.isSubscribed()) {
+        this.processingScrollEvent = true;
         const {
           min,
           max
@@ -5610,6 +5616,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       }
     }
+    this.processingScrollEvent = false;
   }
   mountDnDEvents(dnd) {
     if (dnd) {
