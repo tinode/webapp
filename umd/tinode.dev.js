@@ -3562,7 +3562,7 @@ class Topic {
           }
         }
         params.sub._noForwarding = true;
-        this._processMetaSub([params.sub]);
+        this._processMetaSubs([params.sub]);
       }
       if (params.desc) {
         if (ctrl.params && ctrl.params.acs) {
@@ -4128,7 +4128,7 @@ class Topic {
       this._processMetaDesc(meta.desc);
     }
     if (meta.sub && meta.sub.length > 0) {
-      this._processMetaSub(meta.sub);
+      this._processMetaSubs(meta.sub);
     }
     if (meta.del) {
       this._processDelMessages(meta.del.clear, meta.del.delseq);
@@ -4163,7 +4163,7 @@ class Topic {
         break;
       case 'upd':
         if (pres.src && !this._tinode.isTopicCached(pres.src)) {
-          this.getMeta(this.startMetaQuery().withOneSub(pres.src).build());
+          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
         }
         break;
       case 'acs':
@@ -4183,11 +4183,11 @@ class Topic {
               user.acs = acs;
             }
             user.updated = new Date();
-            this._processMetaSub([user]);
+            this._processMetaSubs([user]);
           }
         } else {
           user.acs.updateAll(pres.dacs);
-          this._processMetaSub([{
+          this._processMetaSubs([{
             user: uid,
             updated: new Date(),
             acs: user.acs
@@ -4252,7 +4252,7 @@ class Topic {
       this.onMetaDesc(this);
     }
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     for (let idx in subs) {
       const sub = subs[idx];
       sub.online = !!sub.online;
@@ -4417,7 +4417,7 @@ class TopicMe extends Topic {
       this.onMetaDesc(this);
     }
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     let updateCount = 0;
     subs.forEach(sub => {
       const topicName = sub.topic;
@@ -4534,12 +4534,14 @@ class TopicMe extends Topic {
           this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
           break;
         case 'acs':
-          if (cont.acs) {
-            cont.acs.updateAll(pres.dacs);
-          } else {
-            cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
+          if (!pres.tgt) {
+            if (cont.acs) {
+              cont.acs.updateAll(pres.dacs);
+            } else {
+              cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
+            }
+            cont.touched = new Date();
           }
-          cont.touched = new Date();
           break;
         case 'ua':
           cont.seen = {
@@ -4658,7 +4660,7 @@ class TopicFnd extends Topic {
   constructor(callbacks) {
     super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_FND, callbacks);
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     let updateCount = Object.getOwnPropertyNames(this._contacts).length;
     this._contacts = {};
     for (let idx in subs) {
