@@ -4,7 +4,7 @@ export default class HashNavigation {
   // Parse hash as in http://www.example.com/path#hash as if it were
   // path and arguments.
   static parseUrlHash(hash) {
-    // Split path from args, path -> parts[0], args->path[1]
+    // Split 'path/?args' into 'path/' and 'args', path -> parts[0], args->path[1].
     const parts = hash.split('?', 2);
     const params = {};
     let path = [];

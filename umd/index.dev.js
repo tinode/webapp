@@ -7321,6 +7321,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Confirmed successfully"
     }]
+  },
+  password_reset_success: {
+    id: "password_reset_success",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Password reset successfully"
+    }]
   }
 });
 class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -8764,7 +8771,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.connect().then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {
         scheme: tempAuth.scheme,
         secret: secret
-      })).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('')).catch(err => {
+      })).then(_ => {
+        this.handleError(this.props.intl.formatMessage(messages.password_reset_success), 'info');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
+      }).catch(err => {
         this.handleError(err.message, 'err');
       });
     }

@@ -5371,7 +5371,7 @@ class Tinode {
             } else if (pkt.ctrl.params.what == 'sub') {
               const topic = this.#cacheGet('topic', pkt.ctrl.topic);
               if (topic) {
-                topic._processMetaSub([]);
+                topic._processMetaSubs([]);
               }
             }
           }
