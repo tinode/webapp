@@ -378,33 +378,33 @@ class CommError extends Error {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DEFAULT_MESSAGES_PAGE": () => (/* binding */ DEFAULT_MESSAGES_PAGE),
-/* harmony export */   "DEL_CHAR": () => (/* binding */ DEL_CHAR),
-/* harmony export */   "EXPIRE_PROMISES_PERIOD": () => (/* binding */ EXPIRE_PROMISES_PERIOD),
-/* harmony export */   "EXPIRE_PROMISES_TIMEOUT": () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
-/* harmony export */   "LIBRARY": () => (/* binding */ LIBRARY),
-/* harmony export */   "LOCAL_SEQID": () => (/* binding */ LOCAL_SEQID),
-/* harmony export */   "MESSAGE_STATUS_FAILED": () => (/* binding */ MESSAGE_STATUS_FAILED),
-/* harmony export */   "MESSAGE_STATUS_FATAL": () => (/* binding */ MESSAGE_STATUS_FATAL),
-/* harmony export */   "MESSAGE_STATUS_NONE": () => (/* binding */ MESSAGE_STATUS_NONE),
-/* harmony export */   "MESSAGE_STATUS_QUEUED": () => (/* binding */ MESSAGE_STATUS_QUEUED),
-/* harmony export */   "MESSAGE_STATUS_READ": () => (/* binding */ MESSAGE_STATUS_READ),
-/* harmony export */   "MESSAGE_STATUS_RECEIVED": () => (/* binding */ MESSAGE_STATUS_RECEIVED),
-/* harmony export */   "MESSAGE_STATUS_SENDING": () => (/* binding */ MESSAGE_STATUS_SENDING),
-/* harmony export */   "MESSAGE_STATUS_SENT": () => (/* binding */ MESSAGE_STATUS_SENT),
-/* harmony export */   "MESSAGE_STATUS_TO_ME": () => (/* binding */ MESSAGE_STATUS_TO_ME),
-/* harmony export */   "PROTOCOL_VERSION": () => (/* binding */ PROTOCOL_VERSION),
-/* harmony export */   "RECV_TIMEOUT": () => (/* binding */ RECV_TIMEOUT),
-/* harmony export */   "TOPIC_CHAN": () => (/* binding */ TOPIC_CHAN),
-/* harmony export */   "TOPIC_FND": () => (/* binding */ TOPIC_FND),
-/* harmony export */   "TOPIC_GRP": () => (/* binding */ TOPIC_GRP),
-/* harmony export */   "TOPIC_ME": () => (/* binding */ TOPIC_ME),
-/* harmony export */   "TOPIC_NEW": () => (/* binding */ TOPIC_NEW),
-/* harmony export */   "TOPIC_NEW_CHAN": () => (/* binding */ TOPIC_NEW_CHAN),
-/* harmony export */   "TOPIC_P2P": () => (/* binding */ TOPIC_P2P),
-/* harmony export */   "TOPIC_SYS": () => (/* binding */ TOPIC_SYS),
-/* harmony export */   "USER_NEW": () => (/* binding */ USER_NEW),
-/* harmony export */   "VERSION": () => (/* binding */ VERSION)
+/* harmony export */   DEFAULT_MESSAGES_PAGE: () => (/* binding */ DEFAULT_MESSAGES_PAGE),
+/* harmony export */   DEL_CHAR: () => (/* binding */ DEL_CHAR),
+/* harmony export */   EXPIRE_PROMISES_PERIOD: () => (/* binding */ EXPIRE_PROMISES_PERIOD),
+/* harmony export */   EXPIRE_PROMISES_TIMEOUT: () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
+/* harmony export */   LIBRARY: () => (/* binding */ LIBRARY),
+/* harmony export */   LOCAL_SEQID: () => (/* binding */ LOCAL_SEQID),
+/* harmony export */   MESSAGE_STATUS_FAILED: () => (/* binding */ MESSAGE_STATUS_FAILED),
+/* harmony export */   MESSAGE_STATUS_FATAL: () => (/* binding */ MESSAGE_STATUS_FATAL),
+/* harmony export */   MESSAGE_STATUS_NONE: () => (/* binding */ MESSAGE_STATUS_NONE),
+/* harmony export */   MESSAGE_STATUS_QUEUED: () => (/* binding */ MESSAGE_STATUS_QUEUED),
+/* harmony export */   MESSAGE_STATUS_READ: () => (/* binding */ MESSAGE_STATUS_READ),
+/* harmony export */   MESSAGE_STATUS_RECEIVED: () => (/* binding */ MESSAGE_STATUS_RECEIVED),
+/* harmony export */   MESSAGE_STATUS_SENDING: () => (/* binding */ MESSAGE_STATUS_SENDING),
+/* harmony export */   MESSAGE_STATUS_SENT: () => (/* binding */ MESSAGE_STATUS_SENT),
+/* harmony export */   MESSAGE_STATUS_TO_ME: () => (/* binding */ MESSAGE_STATUS_TO_ME),
+/* harmony export */   PROTOCOL_VERSION: () => (/* binding */ PROTOCOL_VERSION),
+/* harmony export */   RECV_TIMEOUT: () => (/* binding */ RECV_TIMEOUT),
+/* harmony export */   TOPIC_CHAN: () => (/* binding */ TOPIC_CHAN),
+/* harmony export */   TOPIC_FND: () => (/* binding */ TOPIC_FND),
+/* harmony export */   TOPIC_GRP: () => (/* binding */ TOPIC_GRP),
+/* harmony export */   TOPIC_ME: () => (/* binding */ TOPIC_ME),
+/* harmony export */   TOPIC_NEW: () => (/* binding */ TOPIC_NEW),
+/* harmony export */   TOPIC_NEW_CHAN: () => (/* binding */ TOPIC_NEW_CHAN),
+/* harmony export */   TOPIC_P2P: () => (/* binding */ TOPIC_P2P),
+/* harmony export */   TOPIC_SYS: () => (/* binding */ TOPIC_SYS),
+/* harmony export */   USER_NEW: () => (/* binding */ USER_NEW),
+/* harmony export */   VERSION: () => (/* binding */ VERSION)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../version.js */ "./version.js");
 
@@ -3276,9 +3276,9 @@ class MetaGetBuilder {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Topic": () => (/* binding */ Topic),
-/* harmony export */   "TopicFnd": () => (/* binding */ TopicFnd),
-/* harmony export */   "TopicMe": () => (/* binding */ TopicMe)
+/* harmony export */   Topic: () => (/* binding */ Topic),
+/* harmony export */   TopicFnd: () => (/* binding */ TopicFnd),
+/* harmony export */   TopicMe: () => (/* binding */ TopicMe)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _cbuffer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cbuffer.js */ "./src/cbuffer.js");
@@ -4709,13 +4709,13 @@ class TopicFnd extends Topic {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "jsonParseHelper": () => (/* binding */ jsonParseHelper),
-/* harmony export */   "mergeObj": () => (/* binding */ mergeObj),
-/* harmony export */   "mergeToCache": () => (/* binding */ mergeToCache),
-/* harmony export */   "normalizeArray": () => (/* binding */ normalizeArray),
-/* harmony export */   "rfc3339DateString": () => (/* binding */ rfc3339DateString),
-/* harmony export */   "simplify": () => (/* binding */ simplify)
+/* harmony export */   isUrlRelative: () => (/* binding */ isUrlRelative),
+/* harmony export */   jsonParseHelper: () => (/* binding */ jsonParseHelper),
+/* harmony export */   mergeObj: () => (/* binding */ mergeObj),
+/* harmony export */   mergeToCache: () => (/* binding */ mergeToCache),
+/* harmony export */   normalizeArray: () => (/* binding */ normalizeArray),
+/* harmony export */   rfc3339DateString: () => (/* binding */ rfc3339DateString),
+/* harmony export */   simplify: () => (/* binding */ simplify)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
@@ -4845,7 +4845,7 @@ function normalizeArray(arr) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
+/* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
 const PACKAGE_VERSION = "0.22.8";
 
@@ -4939,9 +4939,9 @@ var __webpack_exports__ = {};
   \***********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AccessMode": () => (/* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   "Drafty": () => (/* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a),
-/* harmony export */   "Tinode": () => (/* binding */ Tinode)
+/* harmony export */   AccessMode: () => (/* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   Drafty: () => (/* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a),
+/* harmony export */   Tinode: () => (/* binding */ Tinode)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
