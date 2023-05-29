@@ -15,7 +15,7 @@ const OUTPUT_PATTERN   = './src/i18n.min/%s.json';
 const args = process.argv.slice(2);
 
 function getLocaleFromFileName(filename) {
-  const parts = filename.split('/');
+  const parts = filename.split(path.sep);
   return parts[parts.length - 1].split('.json')[0];
 }
 
