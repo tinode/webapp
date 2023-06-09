@@ -16574,7 +16574,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.11";
+const version$1 = "0.9.12";
 
 /**
  * @license
@@ -16641,7 +16641,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.22.1";
+const version = "9.22.2";
 
 /**
  * @license
@@ -21197,7 +21197,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.22.1";
+var version = "9.22.2";
 
 /**
  * @license
