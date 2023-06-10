@@ -61,20 +61,33 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
   componentDidMount() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseUrlHash(window.location.hash);
-    this.setState({
+    const newState = {
       token: parsed.params.token,
-      scheme: parsed.params.scheme
-    });
+      scheme: parsed.params.scheme,
+      code: parsed.params.code || ''
+    };
+    this.savedCred = parsed.params.cred;
+    if (this.props.reqCredMethod && parsed.params.cred) {
+      newState[this.props.reqCredMethod] = this.savedCred;
+    }
+    this.setState(newState);
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.reqCredMethod != this.props.reqCredMethod && this.props.reqCredMethod) {
+      this.setState({
+        [this.props.reqCredMethod]: this.savedCred || ''
+      });
+    }
   }
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.token) {
       this.props.onReset(this.state.password.trim(), {
         scheme: 'token',
-        token: this.state.token
+        secret: this.state.token
       });
     } else if (this.state.code && this.props.reqCredMethod) {
-      const cred = this.state.email.trim() || this.state.tel.trim();
+      const cred = this.props.reqCredMethod == 'email' ? this.state.email.trim() : this.state.tel.trim();
       this.props.onReset(this.state.password.trim(), {
         scheme: 'code',
         secret: btoa(`${this.state.code}:${this.props.reqCredMethod}:${cred}`)
@@ -119,7 +132,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     });
   }
   render() {
-    const showCredentialInput = !(this.state.token && this.state.scheme);
+    const showCredentialInput = !((this.state.token || this.state.code && this.props.reqCredMethod) && this.state.scheme);
     const showPasswordInput = !showCredentialInput || this.state.haveCode || this.state.sent;
     const passwordInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray",
@@ -222,7 +235,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       onSubmit: this.handleSubmit
     }, !this.state.sent && showCredentialInput ? credentialInput : null, this.state.haveCode || this.state.sent ? codeInput : null, showPasswordInput ? passwordInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
-    }, this.state.haveCode || this.state.sent ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, this.state.haveCode || this.state.sent || this.state.token || this.state.code ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleShowCodeField,
       style: {

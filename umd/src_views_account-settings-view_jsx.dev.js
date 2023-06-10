@@ -61,13 +61,20 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         val: this.state.credEdit.val,
         done: this.state.credEdit.done,
         onShowCountrySelector: this.props.onShowCountrySelector,
-        onSubmit: this.props.onCredAdd,
+        onCredAdd: this.props.onCredAdd,
+        onCredConfirm: this.props.onCredConfirm,
         onCancel: _ => this.setState({
           credEdit: undefined
         }),
         onError: this.props.onError
       });
     }
+    const validated = {};
+    this.state.credentials.forEach(cred => {
+      if (cred.done) {
+        validated[cred.meth] = (validated[cred.meth] || 0) + 1;
+      }
+    });
     const credentials = [];
     this.state.credentials.forEach((cred, idx) => {
       if (!['email', 'tel'].includes(cred.meth)) {
@@ -89,9 +96,9 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
             credEdit: cred
           });
         }
-      }, val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, " ", cred.done ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      }, val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, " ", cred.done ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons"
-      }, "pending"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      }, "pending"), "\xA0", !cred.done || validated[cred.meth] > 1 || this.props.reqCredMethod != cred.meth ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         onClick: e => {
           e.preventDefault();
@@ -99,7 +106,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons"
-      }, "delete"))))));
+      }, "delete")) : null)));
     });
     if (credentials.length > 0) {
       credentials.unshift(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
@@ -313,8 +320,11 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   handleSubmit(e) {
     e.preventDefault();
     const value = this.props.method == 'email' ? this.state.email : this.state.tel;
-    if (value) {
-      this.props.onSubmit(this.props.method, value);
+    if (this.state.code) {
+      this.props.onError(null);
+      this.props.onCredConfirm(this.props.method, this.state.code);
+    } else if (value) {
+      this.props.onCredAdd(this.props.method, value);
       this.setState({
         sent: true
       });
@@ -324,7 +334,8 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
   render() {
     const readyForCode = this.state.sent || !this.props.done;
-    const currentValue = CredentialEdit.formatPhoneNumber(readyForCode ? this.state.tel || this.state.email : this.props.val);
+    const rawValue = readyForCode ? this.state.tel || this.state.email : this.props.val;
+    const formattedValue = this.props.method == 'tel' ? CredentialEdit.formatPhoneNumber(rawValue) : rawValue;
     const changeEmail = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
@@ -441,11 +452,11 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
       className: "panel-form-column",
       onSubmit: this.handleSubmit
-    }, readyForCode ? null : this.props.method == 'email' ? changeEmail : this.props.method == 'tel' ? changePhone : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, readyForCode ? this.props.method == 'email' ? newEmailLabel : this.props.method == 'tel' ? newPhoneLabel : null : this.props.method == 'email' ? changeEmail : this.props.method == 'tel' ? changePhone : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "quoted"
-    }, currentValue)), readyForCode ? null : this.props.method == 'email' ? newEmailInput : this.props.method == 'tel' ? newPhoneInput : null, readyForCode ? codeInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, formattedValue)), readyForCode ? null : this.props.method == 'email' ? newEmailInput : this.props.method == 'tel' ? newPhoneInput : null, readyForCode ? codeInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",

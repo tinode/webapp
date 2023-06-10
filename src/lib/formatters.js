@@ -210,7 +210,7 @@ function handleImageData(el, data, attr) {
   return el;
 }
 
-// Additional processing of image data.
+// Additional processing of attached video data.
 function handleVideoData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_video.png';
@@ -241,7 +241,7 @@ function handleVideoData(el, data, attr) {
     }
     el = InlineVideo;
   } else {
-    // Use custom element instead of <img>.
+    // Use custom element instead of <img> or <video>.
     el = UploadingImage;
   }
 

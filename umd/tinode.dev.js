@@ -378,34 +378,34 @@ class CommError extends Error {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DEFAULT_MESSAGES_PAGE": () => (/* binding */ DEFAULT_MESSAGES_PAGE),
-/* harmony export */   "DEL_CHAR": () => (/* binding */ DEL_CHAR),
-/* harmony export */   "EXPIRE_PROMISES_PERIOD": () => (/* binding */ EXPIRE_PROMISES_PERIOD),
-/* harmony export */   "EXPIRE_PROMISES_TIMEOUT": () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
-/* harmony export */   "LIBRARY": () => (/* binding */ LIBRARY),
-/* harmony export */   "LOCAL_SEQID": () => (/* binding */ LOCAL_SEQID),
-/* harmony export */   "MAX_PINNED_COUNT": () => (/* binding */ MAX_PINNED_COUNT),
-/* harmony export */   "MESSAGE_STATUS_FAILED": () => (/* binding */ MESSAGE_STATUS_FAILED),
-/* harmony export */   "MESSAGE_STATUS_FATAL": () => (/* binding */ MESSAGE_STATUS_FATAL),
-/* harmony export */   "MESSAGE_STATUS_NONE": () => (/* binding */ MESSAGE_STATUS_NONE),
-/* harmony export */   "MESSAGE_STATUS_QUEUED": () => (/* binding */ MESSAGE_STATUS_QUEUED),
-/* harmony export */   "MESSAGE_STATUS_READ": () => (/* binding */ MESSAGE_STATUS_READ),
-/* harmony export */   "MESSAGE_STATUS_RECEIVED": () => (/* binding */ MESSAGE_STATUS_RECEIVED),
-/* harmony export */   "MESSAGE_STATUS_SENDING": () => (/* binding */ MESSAGE_STATUS_SENDING),
-/* harmony export */   "MESSAGE_STATUS_SENT": () => (/* binding */ MESSAGE_STATUS_SENT),
-/* harmony export */   "MESSAGE_STATUS_TO_ME": () => (/* binding */ MESSAGE_STATUS_TO_ME),
-/* harmony export */   "PROTOCOL_VERSION": () => (/* binding */ PROTOCOL_VERSION),
-/* harmony export */   "RECV_TIMEOUT": () => (/* binding */ RECV_TIMEOUT),
-/* harmony export */   "TOPIC_CHAN": () => (/* binding */ TOPIC_CHAN),
-/* harmony export */   "TOPIC_FND": () => (/* binding */ TOPIC_FND),
-/* harmony export */   "TOPIC_GRP": () => (/* binding */ TOPIC_GRP),
-/* harmony export */   "TOPIC_ME": () => (/* binding */ TOPIC_ME),
-/* harmony export */   "TOPIC_NEW": () => (/* binding */ TOPIC_NEW),
-/* harmony export */   "TOPIC_NEW_CHAN": () => (/* binding */ TOPIC_NEW_CHAN),
-/* harmony export */   "TOPIC_P2P": () => (/* binding */ TOPIC_P2P),
-/* harmony export */   "TOPIC_SYS": () => (/* binding */ TOPIC_SYS),
-/* harmony export */   "USER_NEW": () => (/* binding */ USER_NEW),
-/* harmony export */   "VERSION": () => (/* binding */ VERSION)
+/* harmony export */   DEFAULT_MESSAGES_PAGE: () => (/* binding */ DEFAULT_MESSAGES_PAGE),
+/* harmony export */   DEL_CHAR: () => (/* binding */ DEL_CHAR),
+/* harmony export */   EXPIRE_PROMISES_PERIOD: () => (/* binding */ EXPIRE_PROMISES_PERIOD),
+/* harmony export */   EXPIRE_PROMISES_TIMEOUT: () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
+/* harmony export */   LIBRARY: () => (/* binding */ LIBRARY),
+/* harmony export */   LOCAL_SEQID: () => (/* binding */ LOCAL_SEQID),
+/* harmony export */   MAX_PINNED_COUNT: () => (/* binding */ MAX_PINNED_COUNT),
+/* harmony export */   MESSAGE_STATUS_FAILED: () => (/* binding */ MESSAGE_STATUS_FAILED),
+/* harmony export */   MESSAGE_STATUS_FATAL: () => (/* binding */ MESSAGE_STATUS_FATAL),
+/* harmony export */   MESSAGE_STATUS_NONE: () => (/* binding */ MESSAGE_STATUS_NONE),
+/* harmony export */   MESSAGE_STATUS_QUEUED: () => (/* binding */ MESSAGE_STATUS_QUEUED),
+/* harmony export */   MESSAGE_STATUS_READ: () => (/* binding */ MESSAGE_STATUS_READ),
+/* harmony export */   MESSAGE_STATUS_RECEIVED: () => (/* binding */ MESSAGE_STATUS_RECEIVED),
+/* harmony export */   MESSAGE_STATUS_SENDING: () => (/* binding */ MESSAGE_STATUS_SENDING),
+/* harmony export */   MESSAGE_STATUS_SENT: () => (/* binding */ MESSAGE_STATUS_SENT),
+/* harmony export */   MESSAGE_STATUS_TO_ME: () => (/* binding */ MESSAGE_STATUS_TO_ME),
+/* harmony export */   PROTOCOL_VERSION: () => (/* binding */ PROTOCOL_VERSION),
+/* harmony export */   RECV_TIMEOUT: () => (/* binding */ RECV_TIMEOUT),
+/* harmony export */   TOPIC_CHAN: () => (/* binding */ TOPIC_CHAN),
+/* harmony export */   TOPIC_FND: () => (/* binding */ TOPIC_FND),
+/* harmony export */   TOPIC_GRP: () => (/* binding */ TOPIC_GRP),
+/* harmony export */   TOPIC_ME: () => (/* binding */ TOPIC_ME),
+/* harmony export */   TOPIC_NEW: () => (/* binding */ TOPIC_NEW),
+/* harmony export */   TOPIC_NEW_CHAN: () => (/* binding */ TOPIC_NEW_CHAN),
+/* harmony export */   TOPIC_P2P: () => (/* binding */ TOPIC_P2P),
+/* harmony export */   TOPIC_SYS: () => (/* binding */ TOPIC_SYS),
+/* harmony export */   USER_NEW: () => (/* binding */ USER_NEW),
+/* harmony export */   VERSION: () => (/* binding */ VERSION)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../version.js */ "./version.js");
 
@@ -792,7 +792,7 @@ class DB {
   #onError = _ => {};
   #logger = _ => {};
   db = null;
-  disabled = false;
+  disabled = true;
   constructor(onError, logger) {
     this.#onError = onError || this.#onError;
     this.#logger = logger || this.#logger;
@@ -906,7 +906,7 @@ class DB {
       };
     });
   }
-  markTopicAsDeleted(name) {
+  markTopicAsDeleted(name, deleted) {
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
     }
@@ -922,8 +922,10 @@ class DB {
       const req = trx.objectStore('topic').get(name);
       req.onsuccess = event => {
         const topic = event.target.result;
-        topic._deleted = true;
-        trx.objectStore('topic').put(topic);
+        if (topic && topic._deleted != deleted) {
+          topic._deleted = deleted;
+          trx.objectStore('topic').put(topic);
+        }
         trx.commit();
       };
     });
@@ -3049,7 +3051,7 @@ class TopicFnd extends _topic_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
   constructor(callbacks) {
     super(_config_js__WEBPACK_IMPORTED_MODULE_0__.TOPIC_FND, callbacks);
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     let updateCount = Object.getOwnPropertyNames(this._contacts).length;
     this._contacts = {};
     for (let idx in subs) {
@@ -3374,7 +3376,7 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
       this.onMetaDesc(this);
     }
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     let updateCount = 0;
     subs.forEach(sub => {
       const topicName = sub.topic;
@@ -3491,12 +3493,14 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
           this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
           break;
         case 'acs':
-          if (cont.acs) {
-            cont.acs.updateAll(pres.dacs);
-          } else {
-            cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
+          if (!pres.tgt) {
+            if (cont.acs) {
+              cont.acs.updateAll(pres.dacs);
+            } else {
+              cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
+            }
+            cont.touched = new Date();
           }
-          cont.touched = new Date();
           break;
         case 'ua':
           cont.seen = {
@@ -3515,10 +3519,11 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
           cont.unread = cont.seq - cont.read;
           break;
         case 'gone':
+          this._tinode.cacheRemTopic(pres.src);
           if (!cont._deleted) {
             cont._deleted = true;
             cont._attached = false;
-            this._tinode._db.markTopicAsDeleted(pres.src);
+            this._tinode._db.markTopicAsDeleted(pres.src, true);
           } else {
             this._tinode._db.remTopic(pres.src);
           }
@@ -3548,7 +3553,13 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         }
       } else if (pres.what == 'tags') {
         this.getMeta(this.startMetaQuery().withTags().build());
+      } else if (pres.what == 'msg') {
+        this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
+        const dummy = this._tinode.getTopic(pres.src);
+        dummy._deleted = false;
+        this._tinode._db.updTopic(dummy);
       }
+      this._refreshContact(pres.what, cont);
     }
     if (this.onPres) {
       this.onPres(pres);
@@ -3627,13 +3638,13 @@ class MetaGetBuilder {
     this.what = {};
   }
   #get_desc_ims() {
-    return this.topic.updated;
+    return this.topic._deleted ? undefined : this.topic.updated;
   }
   #get_subs_ims() {
     if (this.topic.isP2PType()) {
       return this.#get_desc_ims();
     }
-    return this.topic._lastSubsUpdate;
+    return this.topic._deleted ? undefined : this.topic._lastSubsUpdate;
   }
   withData(since, before, limit) {
     this.what['data'] = {
@@ -3858,9 +3869,6 @@ class Topic {
     if (this._attached) {
       return Promise.resolve(this);
     }
-    if (this._deleted) {
-      return Promise.reject(new Error("Conversation deleted"));
-    }
     return this._tinode.subscribe(this.name || _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW, getParams, setParams).then(ctrl => {
       if (ctrl.code >= 300) {
         return ctrl;
@@ -4067,7 +4075,7 @@ class Topic {
           }
         }
         params.sub._noForwarding = true;
-        this._processMetaSub([params.sub]);
+        this._processMetaSubs([params.sub]);
       }
       if (params.desc) {
         if (ctrl.params && ctrl.params.acs) {
@@ -4248,7 +4256,7 @@ class Topic {
     }
     if (update) {
       this._tinode.note(this.name, what, seq);
-      this._updateReadRecv(what, seq);
+      this._updateMyReadRecv(what, seq);
       if (this.acs != null && !this.acs.isMuted()) {
         const me = this._tinode.getMeTopic();
         me._refreshContact(what, this);
@@ -4284,7 +4292,7 @@ class Topic {
     }
     return this._tinode.videoCall(this.name, seq, evt, payload);
   }
-  _updateReadRecv(what, seq, ts) {
+  _updateMyReadRecv(what, seq, ts) {
     let oldVal,
       doUpdate = false;
     seq = seq | 0;
@@ -4455,6 +4463,9 @@ class Topic {
   }
   msgHasMoreMessages(min, max, newer) {
     const gaps = [];
+    if (min >= max) {
+      return gaps;
+    }
     let maxSeq = 0;
     let gap;
     this._messages.forEach((msg, prev) => {
@@ -4666,7 +4677,15 @@ class Topic {
       this.onData(data);
     }
     const what = outgoing ? 'read' : 'msg';
-    this._updateReadRecv(what, data.seq, data.ts);
+    this._updateMyReadRecv(what, data.seq, data.ts);
+    if (!outgoing && data.from) {
+      this._routeInfo({
+        what: 'read',
+        from: data.from,
+        seq: data.seq,
+        _noForwarding: true
+      });
+    }
     this._tinode.getMeTopic()._refreshContact(what, this);
   }
   _routeMeta(meta) {
@@ -4674,7 +4693,7 @@ class Topic {
       this._processMetaDesc(meta.desc);
     }
     if (meta.sub && meta.sub.length > 0) {
-      this._processMetaSub(meta.sub);
+      this._processMetaSubs(meta.sub);
     }
     if (meta.del) {
       this._processDelMessages(meta.del.clear, meta.del.delseq);
@@ -4712,7 +4731,7 @@ class Topic {
         break;
       case 'upd':
         if (pres.src && !this._tinode.isTopicCached(pres.src)) {
-          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
+          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
         }
         break;
       case 'aux':
@@ -4735,11 +4754,11 @@ class Topic {
               user.acs = acs;
             }
             user.updated = new Date();
-            this._processMetaSub([user]);
+            this._processMetaSubs([user]);
           }
         } else {
           user.acs.updateAll(pres.dacs);
-          this._processMetaSub([{
+          this._processMetaSubs([{
             user: uid,
             updated: new Date(),
             acs: user.acs
@@ -4768,12 +4787,14 @@ class Topic {
         if (msg) {
           this.msgStatus(msg, true);
         }
-        if (this._tinode.isMe(info.from)) {
-          this._updateReadRecv(info.what, info.seq);
+        if (this._tinode.isMe(info.from) && !info._noForwarding) {
+          this._updateMyReadRecv(info.what, info.seq);
         }
         this._tinode.getMeTopic()._refreshContact(info.what, this);
         break;
       case 'kp':
+      case 'kpa':
+      case 'kpv':
         break;
       case 'call':
         break;
@@ -4804,7 +4825,7 @@ class Topic {
       this.onMetaDesc(this);
     }
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     for (let idx in subs) {
       const sub = subs[idx];
       sub.online = !!sub.online;
@@ -4970,16 +4991,16 @@ class Topic {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clipRange": () => (/* binding */ clipRange),
-/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "jsonParseHelper": () => (/* binding */ jsonParseHelper),
-/* harmony export */   "listToRanges": () => (/* binding */ listToRanges),
-/* harmony export */   "mergeObj": () => (/* binding */ mergeObj),
-/* harmony export */   "mergeToCache": () => (/* binding */ mergeToCache),
-/* harmony export */   "normalizeArray": () => (/* binding */ normalizeArray),
-/* harmony export */   "normalizeRanges": () => (/* binding */ normalizeRanges),
-/* harmony export */   "rfc3339DateString": () => (/* binding */ rfc3339DateString),
-/* harmony export */   "simplify": () => (/* binding */ simplify)
+/* harmony export */   clipRange: () => (/* binding */ clipRange),
+/* harmony export */   isUrlRelative: () => (/* binding */ isUrlRelative),
+/* harmony export */   jsonParseHelper: () => (/* binding */ jsonParseHelper),
+/* harmony export */   listToRanges: () => (/* binding */ listToRanges),
+/* harmony export */   mergeObj: () => (/* binding */ mergeObj),
+/* harmony export */   mergeToCache: () => (/* binding */ mergeToCache),
+/* harmony export */   normalizeArray: () => (/* binding */ normalizeArray),
+/* harmony export */   normalizeRanges: () => (/* binding */ normalizeRanges),
+/* harmony export */   rfc3339DateString: () => (/* binding */ rfc3339DateString),
+/* harmony export */   simplify: () => (/* binding */ simplify)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
@@ -5181,7 +5202,7 @@ function clipRange(src, clip) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
+/* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
 const PACKAGE_VERSION = "0.23.0-rc1";
 
@@ -5275,9 +5296,9 @@ var __webpack_exports__ = {};
   \***********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AccessMode": () => (/* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   "Drafty": () => (/* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a),
-/* harmony export */   "Tinode": () => (/* binding */ Tinode)
+/* harmony export */   AccessMode: () => (/* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   Drafty: () => (/* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a),
+/* harmony export */   Tinode: () => (/* binding */ Tinode)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
@@ -5712,7 +5733,7 @@ class Tinode {
             } else if (pkt.ctrl.params.what == 'sub') {
               const topic = this.#cacheGet('topic', pkt.ctrl.topic);
               if (topic) {
-                topic._processMetaSub([]);
+                topic._processMetaSubs([]);
               }
             }
           }

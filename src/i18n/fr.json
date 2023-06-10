@@ -1420,7 +1420,7 @@
   "cred_confirmed_successfully": {
     "translation": "Confirmé avec succès",
     "defaultMessage": "Confirmed successfully",
-    "description": "Message explaining that the credential was successfully validated.",
+    "description": "Notification message that the credential was successfully validated.",
     "missing": false,
     "obsolete": false
   },
@@ -1653,6 +1653,13 @@
     "defaultMessage": "Conference call",
     "description": "Conference call label",
     "missing": true,
+    "obsolete": false
+  },
+  "password_reset_success": {
+    "translation": "Mot de passe réinitialisé avec succès",
+    "defaultMessage": "Password reset successfully",
+    "description": "Notification message that the password was successfully reset.",
+    "missing": false,
     "obsolete": false
   }
 }

@@ -39,7 +39,7 @@ export default class ErrorPanel extends React.PureComponent {
           {this.props.text}
           {this.props.action ?
             <>
-              &#32;<a href="#"
+              &nbsp;&#32;<a href="#"
                 style={{ whiteSpace: 'nowrap' }}
                 onClick={(e) => {e.preventDefault(); this.props.action();}}>
                 {this.props.actionText}
