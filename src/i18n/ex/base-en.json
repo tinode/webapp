@@ -209,7 +209,7 @@
   },
   "cred_confirmed_successfully": {
     "defaultMessage": "Confirmed successfully",
-    "description": "Message explaining that the credential was successfully validated."
+    "description": "Notification message that the credential was successfully validated."
   },
   "credential_email_prompt": {
     "defaultMessage": "Your registration email",
@@ -703,6 +703,10 @@
   "password_reset_sms_sent": {
     "defaultMessage": "A text message with security code has been sent.",
     "description": "Notification that the SMS with password reset instructions has been sent"
+  },
+  "password_reset_success": {
+    "defaultMessage": "Password reset successfully",
+    "description": "Notification message that the password was successfully reset."
   },
   "password_unchanged_prompt": {
     "defaultMessage": "Unchanged",

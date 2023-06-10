@@ -327,7 +327,8 @@ class MessagesView extends React.Component {
         showGoToLastButton: false,
         dragging: false,
         pins: [],
-        selectedPin: 0
+        selectedPin: 0,
+        subsVersion: 0
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -715,12 +716,12 @@ class MessagesView extends React.Component {
     if (this.state.topic) {
       const subs = [];
       const topic = this.props.tinode.getTopic(this.state.topic);
-      topic.subscribers((sub) => {
+      topic.subscribers(sub => {
         if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
-      const newState = {onlineSubs: subs};
+      const newState = {onlineSubs: subs, subsVersion: this.state.subsVersion + 1};
       const peer = topic.p2pPeerDesc();
       if (peer) {
         Object.assign(newState, {

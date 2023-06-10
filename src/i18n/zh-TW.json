@@ -1420,7 +1420,7 @@
   "cred_confirmed_successfully": {
     "translation": "確認成功",
     "defaultMessage": "Confirmed successfully",
-    "description": "Message explaining that the credential was successfully validated.",
+    "description": "Notification message that the credential was successfully validated.",
     "missing": false,
     "obsolete": false
   },
@@ -1645,6 +1645,13 @@
     "translation": "初始化錄音失敗",
     "defaultMessage": "Failed to initialize audio recording",
     "description": "Error message when audio is not available",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_success": {
+    "translation": "密碼重置成功",
+    "defaultMessage": "Password reset successfully",
+    "description": "Notification message that the password was successfully reset.",
     "missing": false,
     "obsolete": false
   }

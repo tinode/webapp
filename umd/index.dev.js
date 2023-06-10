@@ -10,72 +10,72 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
-/* harmony export */   "DecodeBase64StringError": () => (/* binding */ DecodeBase64StringError),
-/* harmony export */   "Deferred": () => (/* binding */ Deferred),
-/* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
-/* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
-/* harmony export */   "MAX_VALUE_MILLIS": () => (/* binding */ MAX_VALUE_MILLIS),
-/* harmony export */   "RANDOM_FACTOR": () => (/* binding */ RANDOM_FACTOR),
-/* harmony export */   "Sha1": () => (/* binding */ Sha1),
-/* harmony export */   "areCookiesEnabled": () => (/* binding */ areCookiesEnabled),
-/* harmony export */   "assert": () => (/* binding */ assert),
-/* harmony export */   "assertionError": () => (/* binding */ assertionError),
-/* harmony export */   "async": () => (/* binding */ async),
-/* harmony export */   "base64": () => (/* binding */ base64),
-/* harmony export */   "base64Decode": () => (/* binding */ base64Decode),
-/* harmony export */   "base64Encode": () => (/* binding */ base64Encode),
-/* harmony export */   "base64urlEncodeWithoutPadding": () => (/* binding */ base64urlEncodeWithoutPadding),
-/* harmony export */   "calculateBackoffMillis": () => (/* binding */ calculateBackoffMillis),
-/* harmony export */   "contains": () => (/* binding */ contains),
-/* harmony export */   "createMockUserToken": () => (/* binding */ createMockUserToken),
-/* harmony export */   "createSubscribe": () => (/* binding */ createSubscribe),
-/* harmony export */   "decode": () => (/* binding */ decode),
-/* harmony export */   "deepCopy": () => (/* binding */ deepCopy),
-/* harmony export */   "deepEqual": () => (/* binding */ deepEqual),
-/* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
-/* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
-/* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
-/* harmony export */   "getDefaultAppConfig": () => (/* binding */ getDefaultAppConfig),
-/* harmony export */   "getDefaultEmulatorHost": () => (/* binding */ getDefaultEmulatorHost),
-/* harmony export */   "getDefaultEmulatorHostnameAndPort": () => (/* binding */ getDefaultEmulatorHostnameAndPort),
-/* harmony export */   "getDefaults": () => (/* binding */ getDefaults),
-/* harmony export */   "getExperimentalSetting": () => (/* binding */ getExperimentalSetting),
-/* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
-/* harmony export */   "getModularInstance": () => (/* binding */ getModularInstance),
-/* harmony export */   "getUA": () => (/* binding */ getUA),
-/* harmony export */   "isAdmin": () => (/* binding */ isAdmin),
-/* harmony export */   "isBrowser": () => (/* binding */ isBrowser),
-/* harmony export */   "isBrowserExtension": () => (/* binding */ isBrowserExtension),
-/* harmony export */   "isElectron": () => (/* binding */ isElectron),
-/* harmony export */   "isEmpty": () => (/* binding */ isEmpty),
-/* harmony export */   "isIE": () => (/* binding */ isIE),
-/* harmony export */   "isIndexedDBAvailable": () => (/* binding */ isIndexedDBAvailable),
-/* harmony export */   "isMobileCordova": () => (/* binding */ isMobileCordova),
-/* harmony export */   "isNode": () => (/* binding */ isNode),
-/* harmony export */   "isNodeSdk": () => (/* binding */ isNodeSdk),
-/* harmony export */   "isReactNative": () => (/* binding */ isReactNative),
-/* harmony export */   "isSafari": () => (/* binding */ isSafari),
-/* harmony export */   "isUWP": () => (/* binding */ isUWP),
-/* harmony export */   "isValidFormat": () => (/* binding */ isValidFormat),
-/* harmony export */   "isValidTimestamp": () => (/* binding */ isValidTimestamp),
-/* harmony export */   "issuedAtTime": () => (/* binding */ issuedAtTime),
-/* harmony export */   "jsonEval": () => (/* binding */ jsonEval),
-/* harmony export */   "map": () => (/* binding */ map),
-/* harmony export */   "ordinal": () => (/* binding */ ordinal),
-/* harmony export */   "promiseWithTimeout": () => (/* binding */ promiseWithTimeout),
-/* harmony export */   "querystring": () => (/* binding */ querystring),
-/* harmony export */   "querystringDecode": () => (/* binding */ querystringDecode),
-/* harmony export */   "safeGet": () => (/* binding */ safeGet),
-/* harmony export */   "stringLength": () => (/* binding */ stringLength),
-/* harmony export */   "stringToByteArray": () => (/* binding */ stringToByteArray),
-/* harmony export */   "stringify": () => (/* binding */ stringify),
-/* harmony export */   "uuidv4": () => (/* binding */ uuidv4),
-/* harmony export */   "validateArgCount": () => (/* binding */ validateArgCount),
-/* harmony export */   "validateCallback": () => (/* binding */ validateCallback),
-/* harmony export */   "validateContextObject": () => (/* binding */ validateContextObject),
-/* harmony export */   "validateIndexedDBOpenable": () => (/* binding */ validateIndexedDBOpenable),
-/* harmony export */   "validateNamespace": () => (/* binding */ validateNamespace)
+/* harmony export */   CONSTANTS: () => (/* binding */ CONSTANTS),
+/* harmony export */   DecodeBase64StringError: () => (/* binding */ DecodeBase64StringError),
+/* harmony export */   Deferred: () => (/* binding */ Deferred),
+/* harmony export */   ErrorFactory: () => (/* binding */ ErrorFactory),
+/* harmony export */   FirebaseError: () => (/* binding */ FirebaseError),
+/* harmony export */   MAX_VALUE_MILLIS: () => (/* binding */ MAX_VALUE_MILLIS),
+/* harmony export */   RANDOM_FACTOR: () => (/* binding */ RANDOM_FACTOR),
+/* harmony export */   Sha1: () => (/* binding */ Sha1),
+/* harmony export */   areCookiesEnabled: () => (/* binding */ areCookiesEnabled),
+/* harmony export */   assert: () => (/* binding */ assert),
+/* harmony export */   assertionError: () => (/* binding */ assertionError),
+/* harmony export */   async: () => (/* binding */ async),
+/* harmony export */   base64: () => (/* binding */ base64),
+/* harmony export */   base64Decode: () => (/* binding */ base64Decode),
+/* harmony export */   base64Encode: () => (/* binding */ base64Encode),
+/* harmony export */   base64urlEncodeWithoutPadding: () => (/* binding */ base64urlEncodeWithoutPadding),
+/* harmony export */   calculateBackoffMillis: () => (/* binding */ calculateBackoffMillis),
+/* harmony export */   contains: () => (/* binding */ contains),
+/* harmony export */   createMockUserToken: () => (/* binding */ createMockUserToken),
+/* harmony export */   createSubscribe: () => (/* binding */ createSubscribe),
+/* harmony export */   decode: () => (/* binding */ decode),
+/* harmony export */   deepCopy: () => (/* binding */ deepCopy),
+/* harmony export */   deepEqual: () => (/* binding */ deepEqual),
+/* harmony export */   deepExtend: () => (/* binding */ deepExtend),
+/* harmony export */   errorPrefix: () => (/* binding */ errorPrefix),
+/* harmony export */   extractQuerystring: () => (/* binding */ extractQuerystring),
+/* harmony export */   getDefaultAppConfig: () => (/* binding */ getDefaultAppConfig),
+/* harmony export */   getDefaultEmulatorHost: () => (/* binding */ getDefaultEmulatorHost),
+/* harmony export */   getDefaultEmulatorHostnameAndPort: () => (/* binding */ getDefaultEmulatorHostnameAndPort),
+/* harmony export */   getDefaults: () => (/* binding */ getDefaults),
+/* harmony export */   getExperimentalSetting: () => (/* binding */ getExperimentalSetting),
+/* harmony export */   getGlobal: () => (/* binding */ getGlobal),
+/* harmony export */   getModularInstance: () => (/* binding */ getModularInstance),
+/* harmony export */   getUA: () => (/* binding */ getUA),
+/* harmony export */   isAdmin: () => (/* binding */ isAdmin),
+/* harmony export */   isBrowser: () => (/* binding */ isBrowser),
+/* harmony export */   isBrowserExtension: () => (/* binding */ isBrowserExtension),
+/* harmony export */   isElectron: () => (/* binding */ isElectron),
+/* harmony export */   isEmpty: () => (/* binding */ isEmpty),
+/* harmony export */   isIE: () => (/* binding */ isIE),
+/* harmony export */   isIndexedDBAvailable: () => (/* binding */ isIndexedDBAvailable),
+/* harmony export */   isMobileCordova: () => (/* binding */ isMobileCordova),
+/* harmony export */   isNode: () => (/* binding */ isNode),
+/* harmony export */   isNodeSdk: () => (/* binding */ isNodeSdk),
+/* harmony export */   isReactNative: () => (/* binding */ isReactNative),
+/* harmony export */   isSafari: () => (/* binding */ isSafari),
+/* harmony export */   isUWP: () => (/* binding */ isUWP),
+/* harmony export */   isValidFormat: () => (/* binding */ isValidFormat),
+/* harmony export */   isValidTimestamp: () => (/* binding */ isValidTimestamp),
+/* harmony export */   issuedAtTime: () => (/* binding */ issuedAtTime),
+/* harmony export */   jsonEval: () => (/* binding */ jsonEval),
+/* harmony export */   map: () => (/* binding */ map),
+/* harmony export */   ordinal: () => (/* binding */ ordinal),
+/* harmony export */   promiseWithTimeout: () => (/* binding */ promiseWithTimeout),
+/* harmony export */   querystring: () => (/* binding */ querystring),
+/* harmony export */   querystringDecode: () => (/* binding */ querystringDecode),
+/* harmony export */   safeGet: () => (/* binding */ safeGet),
+/* harmony export */   stringLength: () => (/* binding */ stringLength),
+/* harmony export */   stringToByteArray: () => (/* binding */ stringToByteArray),
+/* harmony export */   stringify: () => (/* binding */ stringify),
+/* harmony export */   uuidv4: () => (/* binding */ uuidv4),
+/* harmony export */   validateArgCount: () => (/* binding */ validateArgCount),
+/* harmony export */   validateCallback: () => (/* binding */ validateCallback),
+/* harmony export */   validateContextObject: () => (/* binding */ validateContextObject),
+/* harmony export */   validateIndexedDBOpenable: () => (/* binding */ validateIndexedDBOpenable),
+/* harmony export */   validateNamespace: () => (/* binding */ validateNamespace)
 /* harmony export */ });
 /**
  * @license
@@ -2201,48 +2201,48 @@ function getModularInstance(service) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "API_KEY": () => (/* binding */ API_KEY),
-/* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
-/* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
-/* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
-/* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
-/* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
-/* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
-/* harmony export */   "EDIT_PREVIEW_LENGTH": () => (/* binding */ EDIT_PREVIEW_LENGTH),
-/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
-/* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
-/* harmony export */   "IMAGE_THUMBNAIL_DIM": () => (/* binding */ IMAGE_THUMBNAIL_DIM),
-/* harmony export */   "IMMEDIATE_P2P_SUBSCRIPTION": () => (/* binding */ IMMEDIATE_P2P_SUBSCRIPTION),
-/* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
-/* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
-/* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
-/* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
-/* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE),
-/* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
-/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
-/* harmony export */   "MAX_DURATION": () => (/* binding */ MAX_DURATION),
-/* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
-/* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
-/* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
-/* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
-/* harmony export */   "MAX_PEER_TITLE_LENGTH": () => (/* binding */ MAX_PEER_TITLE_LENGTH),
-/* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
-/* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
-/* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
-/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
-/* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
-/* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
-/* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
-/* harmony export */   "MIN_DURATION": () => (/* binding */ MIN_DURATION),
-/* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
-/* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
-/* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
-/* harmony export */   "NO_DIMENSIONS_VIDEO": () => (/* binding */ NO_DIMENSIONS_VIDEO),
-/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
-/* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
-/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
-/* harmony export */   "VIDEO_PREVIEW_DIM": () => (/* binding */ VIDEO_PREVIEW_DIM),
-/* harmony export */   "VIDEO_THUMBNAIL_WIDTH": () => (/* binding */ VIDEO_THUMBNAIL_WIDTH)
+/* harmony export */   API_KEY: () => (/* binding */ API_KEY),
+/* harmony export */   APP_NAME: () => (/* binding */ APP_NAME),
+/* harmony export */   AVATAR_SIZE: () => (/* binding */ AVATAR_SIZE),
+/* harmony export */   BROKEN_IMAGE_SIZE: () => (/* binding */ BROKEN_IMAGE_SIZE),
+/* harmony export */   CHANNEL_ACCESS_MODE: () => (/* binding */ CHANNEL_ACCESS_MODE),
+/* harmony export */   DEFAULT_HOST: () => (/* binding */ DEFAULT_HOST),
+/* harmony export */   DEFAULT_P2P_ACCESS_MODE: () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
+/* harmony export */   EDIT_PREVIEW_LENGTH: () => (/* binding */ EDIT_PREVIEW_LENGTH),
+/* harmony export */   FORWARDED_PREVIEW_LENGTH: () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
+/* harmony export */   IMAGE_PREVIEW_DIM: () => (/* binding */ IMAGE_PREVIEW_DIM),
+/* harmony export */   IMAGE_THUMBNAIL_DIM: () => (/* binding */ IMAGE_THUMBNAIL_DIM),
+/* harmony export */   IMMEDIATE_P2P_SUBSCRIPTION: () => (/* binding */ IMMEDIATE_P2P_SUBSCRIPTION),
+/* harmony export */   KEYPRESS_DELAY: () => (/* binding */ KEYPRESS_DELAY),
+/* harmony export */   KNOWN_HOSTS: () => (/* binding */ KNOWN_HOSTS),
+/* harmony export */   LINK_CONTACT_US: () => (/* binding */ LINK_CONTACT_US),
+/* harmony export */   LINK_PRIVACY_POLICY: () => (/* binding */ LINK_PRIVACY_POLICY),
+/* harmony export */   LINK_TERMS_OF_SERVICE: () => (/* binding */ LINK_TERMS_OF_SERVICE),
+/* harmony export */   LOGGING_ENABLED: () => (/* binding */ LOGGING_ENABLED),
+/* harmony export */   MAX_AVATAR_BYTES: () => (/* binding */ MAX_AVATAR_BYTES),
+/* harmony export */   MAX_DURATION: () => (/* binding */ MAX_DURATION),
+/* harmony export */   MAX_EXTERN_ATTACHMENT_SIZE: () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
+/* harmony export */   MAX_IMAGE_DIM: () => (/* binding */ MAX_IMAGE_DIM),
+/* harmony export */   MAX_INBAND_ATTACHMENT_SIZE: () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
+/* harmony export */   MAX_ONLINE_IN_TOPIC: () => (/* binding */ MAX_ONLINE_IN_TOPIC),
+/* harmony export */   MAX_PEER_TITLE_LENGTH: () => (/* binding */ MAX_PEER_TITLE_LENGTH),
+/* harmony export */   MAX_TAG_COUNT: () => (/* binding */ MAX_TAG_COUNT),
+/* harmony export */   MAX_TAG_LENGTH: () => (/* binding */ MAX_TAG_LENGTH),
+/* harmony export */   MAX_TITLE_LENGTH: () => (/* binding */ MAX_TITLE_LENGTH),
+/* harmony export */   MAX_TOPIC_DESCRIPTION_LENGTH: () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
+/* harmony export */   MEDIA_BREAKPOINT: () => (/* binding */ MEDIA_BREAKPOINT),
+/* harmony export */   MESSAGES_PAGE: () => (/* binding */ MESSAGES_PAGE),
+/* harmony export */   MESSAGE_PREVIEW_LENGTH: () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
+/* harmony export */   MIN_DURATION: () => (/* binding */ MIN_DURATION),
+/* harmony export */   MIN_TAG_LENGTH: () => (/* binding */ MIN_TAG_LENGTH),
+/* harmony export */   NEW_GRP_ACCESS_MODE: () => (/* binding */ NEW_GRP_ACCESS_MODE),
+/* harmony export */   NO_ACCESS_MODE: () => (/* binding */ NO_ACCESS_MODE),
+/* harmony export */   NO_DIMENSIONS_VIDEO: () => (/* binding */ NO_DIMENSIONS_VIDEO),
+/* harmony export */   QUOTED_REPLY_LENGTH: () => (/* binding */ QUOTED_REPLY_LENGTH),
+/* harmony export */   READ_DELAY: () => (/* binding */ READ_DELAY),
+/* harmony export */   REM_SIZE: () => (/* binding */ REM_SIZE),
+/* harmony export */   VIDEO_PREVIEW_DIM: () => (/* binding */ VIDEO_PREVIEW_DIM),
+/* harmony export */   VIDEO_THUMBNAIL_WIDTH: () => (/* binding */ VIDEO_THUMBNAIL_WIDTH)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -2302,11 +2302,11 @@ const IMMEDIATE_P2P_SUBSCRIPTION = false;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CALL_HEAD_STARTED": () => (/* binding */ CALL_HEAD_STARTED),
-/* harmony export */   "CALL_STATE_INCOMING_RECEIVED": () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
-/* harmony export */   "CALL_STATE_IN_PROGRESS": () => (/* binding */ CALL_STATE_IN_PROGRESS),
-/* harmony export */   "CALL_STATE_NONE": () => (/* binding */ CALL_STATE_NONE),
-/* harmony export */   "CALL_STATE_OUTGOING_INITATED": () => (/* binding */ CALL_STATE_OUTGOING_INITATED)
+/* harmony export */   CALL_HEAD_STARTED: () => (/* binding */ CALL_HEAD_STARTED),
+/* harmony export */   CALL_STATE_INCOMING_RECEIVED: () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
+/* harmony export */   CALL_STATE_IN_PROGRESS: () => (/* binding */ CALL_STATE_IN_PROGRESS),
+/* harmony export */   CALL_STATE_NONE: () => (/* binding */ CALL_STATE_NONE),
+/* harmony export */   CALL_STATE_OUTGOING_INITATED: () => (/* binding */ CALL_STATE_OUTGOING_INITATED)
 /* harmony export */ });
 const CALL_STATE_NONE = 0;
 const CALL_STATE_OUTGOING_INITATED = 1;
@@ -2324,23 +2324,23 @@ const CALL_HEAD_STARTED = 'started';
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "MIME_EXTENSIONS": () => (/* binding */ MIME_EXTENSIONS),
-/* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
-/* harmony export */   "base64DecodedLen": () => (/* binding */ base64DecodedLen),
-/* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
-/* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
-/* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob),
-/* harmony export */   "base64ToIntArray": () => (/* binding */ base64ToIntArray),
-/* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
-/* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
-/* harmony export */   "filePasted": () => (/* binding */ filePasted),
-/* harmony export */   "fileToBase64": () => (/* binding */ fileToBase64),
-/* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
-/* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
-/* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
-/* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
-/* harmony export */   "intArrayToBase64": () => (/* binding */ intArrayToBase64),
-/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl)
+/* harmony export */   MIME_EXTENSIONS: () => (/* binding */ MIME_EXTENSIONS),
+/* harmony export */   SUPPORTED_IMAGE_FORMATS: () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
+/* harmony export */   base64DecodedLen: () => (/* binding */ base64DecodedLen),
+/* harmony export */   base64EncodedLen: () => (/* binding */ base64EncodedLen),
+/* harmony export */   base64ReEncode: () => (/* binding */ base64ReEncode),
+/* harmony export */   base64ToBlob: () => (/* binding */ base64ToBlob),
+/* harmony export */   base64ToIntArray: () => (/* binding */ base64ToIntArray),
+/* harmony export */   blobToBase64: () => (/* binding */ blobToBase64),
+/* harmony export */   fileNameForMime: () => (/* binding */ fileNameForMime),
+/* harmony export */   filePasted: () => (/* binding */ filePasted),
+/* harmony export */   fileToBase64: () => (/* binding */ fileToBase64),
+/* harmony export */   fitImageSize: () => (/* binding */ fitImageSize),
+/* harmony export */   getMimeType: () => (/* binding */ getMimeType),
+/* harmony export */   imageCrop: () => (/* binding */ imageCrop),
+/* harmony export */   imageScaled: () => (/* binding */ imageScaled),
+/* harmony export */   intArrayToBase64: () => (/* binding */ intArrayToBase64),
+/* harmony export */   makeImageUrl: () => (/* binding */ makeImageUrl)
 /* harmony export */ });
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -2607,9 +2607,9 @@ function base64ToIntArray(b64) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
-/* harmony export */   "previewFormatter": () => (/* binding */ previewFormatter),
-/* harmony export */   "replyFormatter": () => (/* binding */ replyFormatter)
+/* harmony export */   fullFormatter: () => (/* binding */ fullFormatter),
+/* harmony export */   previewFormatter: () => (/* binding */ previewFormatter),
+/* harmony export */   replyFormatter: () => (/* binding */ replyFormatter)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -3141,9 +3141,9 @@ function replyFormatter(style, data, values, key, stack) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "detectServerAddress": () => (/* binding */ detectServerAddress),
-/* harmony export */   "isLocalHost": () => (/* binding */ isLocalHost),
-/* harmony export */   "isSecureConnection": () => (/* binding */ isSecureConnection)
+/* harmony export */   detectServerAddress: () => (/* binding */ detectServerAddress),
+/* harmony export */   isLocalHost: () => (/* binding */ isLocalHost),
+/* harmony export */   isSecureConnection: () => (/* binding */ isSecureConnection)
 /* harmony export */ });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
@@ -3293,14 +3293,14 @@ class HashNavigation {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
-/* harmony export */   "flagEmoji": () => (/* binding */ flagEmoji),
-/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass),
-/* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
-/* harmony export */   "relativeDateFormat": () => (/* binding */ relativeDateFormat),
-/* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
-/* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
-/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
+/* harmony export */   bytesToHumanSize: () => (/* binding */ bytesToHumanSize),
+/* harmony export */   flagEmoji: () => (/* binding */ flagEmoji),
+/* harmony export */   idToColorClass: () => (/* binding */ idToColorClass),
+/* harmony export */   letterTileColorId: () => (/* binding */ letterTileColorId),
+/* harmony export */   relativeDateFormat: () => (/* binding */ relativeDateFormat),
+/* harmony export */   secondsToTime: () => (/* binding */ secondsToTime),
+/* harmony export */   shortDateFormat: () => (/* binding */ shortDateFormat),
+/* harmony export */   shortenFileName: () => (/* binding */ shortenFileName)
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -3402,17 +3402,17 @@ function flagEmoji(countryCode) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "arrayEqual": () => (/* binding */ arrayEqual),
-/* harmony export */   "asEmail": () => (/* binding */ asEmail),
-/* harmony export */   "asPhone": () => (/* binding */ asPhone),
-/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise),
-/* harmony export */   "clipStr": () => (/* binding */ clipStr),
-/* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
-/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
-/* harmony export */   "sanitizeUrlForMime": () => (/* binding */ sanitizeUrlForMime),
-/* harmony export */   "theCard": () => (/* binding */ theCard),
-/* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon)
+/* harmony export */   arrayEqual: () => (/* binding */ arrayEqual),
+/* harmony export */   asEmail: () => (/* binding */ asEmail),
+/* harmony export */   asPhone: () => (/* binding */ asPhone),
+/* harmony export */   cancelablePromise: () => (/* binding */ cancelablePromise),
+/* harmony export */   clipStr: () => (/* binding */ clipStr),
+/* harmony export */   deliveryMarker: () => (/* binding */ deliveryMarker),
+/* harmony export */   isUrlRelative: () => (/* binding */ isUrlRelative),
+/* harmony export */   sanitizeUrl: () => (/* binding */ sanitizeUrl),
+/* harmony export */   sanitizeUrlForMime: () => (/* binding */ sanitizeUrlForMime),
+/* harmony export */   theCard: () => (/* binding */ theCard),
+/* harmony export */   updateFavicon: () => (/* binding */ updateFavicon)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -3591,7 +3591,7 @@ function clipStr(str, length) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
+/* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
 const PACKAGE_VERSION = "0.23.0-rc1";
 
@@ -5373,7 +5373,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         showGoToLastButton: false,
         dragging: false,
         pins: [],
-        selectedPin: 0
+        selectedPin: 0,
+        subsVersion: 0
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -5716,7 +5717,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
       const newState = {
-        onlineSubs: subs
+        onlineSubs: subs,
+        subsVersion: this.state.subsVersion + 1
       };
       const peer = topic.p2pPeerDesc();
       if (peer) {
@@ -7422,6 +7424,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Confirmed successfully"
     }]
+  },
+  password_reset_success: {
+    id: "password_reset_success",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Password reset successfully"
+    }]
   }
 });
 class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -8865,7 +8874,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.connect().then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {
         scheme: tempAuth.scheme,
         secret: secret
-      })).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('')).catch(err => {
+      })).then(_ => {
+        this.handleError(this.props.intl.formatMessage(messages.password_reset_success), 'info');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
+      }).catch(err => {
         this.handleError(err.message, 'err');
       });
     }
@@ -16731,24 +16743,24 @@ module.exports = tinode;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError),
-/* harmony export */   "SDK_VERSION": () => (/* binding */ SDK_VERSION),
-/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* binding */ DEFAULT_ENTRY_NAME),
-/* harmony export */   "_addComponent": () => (/* binding */ _addComponent),
-/* harmony export */   "_addOrOverwriteComponent": () => (/* binding */ _addOrOverwriteComponent),
-/* harmony export */   "_apps": () => (/* binding */ _apps),
-/* harmony export */   "_clearComponents": () => (/* binding */ _clearComponents),
-/* harmony export */   "_components": () => (/* binding */ _components),
-/* harmony export */   "_getProvider": () => (/* binding */ _getProvider),
-/* harmony export */   "_registerComponent": () => (/* binding */ _registerComponent),
-/* harmony export */   "_removeServiceInstance": () => (/* binding */ _removeServiceInstance),
-/* harmony export */   "deleteApp": () => (/* binding */ deleteApp),
-/* harmony export */   "getApp": () => (/* binding */ getApp),
-/* harmony export */   "getApps": () => (/* binding */ getApps),
-/* harmony export */   "initializeApp": () => (/* binding */ initializeApp),
-/* harmony export */   "onLog": () => (/* binding */ onLog),
-/* harmony export */   "registerVersion": () => (/* binding */ registerVersion),
-/* harmony export */   "setLogLevel": () => (/* binding */ setLogLevel)
+/* harmony export */   FirebaseError: () => (/* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError),
+/* harmony export */   SDK_VERSION: () => (/* binding */ SDK_VERSION),
+/* harmony export */   _DEFAULT_ENTRY_NAME: () => (/* binding */ DEFAULT_ENTRY_NAME),
+/* harmony export */   _addComponent: () => (/* binding */ _addComponent),
+/* harmony export */   _addOrOverwriteComponent: () => (/* binding */ _addOrOverwriteComponent),
+/* harmony export */   _apps: () => (/* binding */ _apps),
+/* harmony export */   _clearComponents: () => (/* binding */ _clearComponents),
+/* harmony export */   _components: () => (/* binding */ _components),
+/* harmony export */   _getProvider: () => (/* binding */ _getProvider),
+/* harmony export */   _registerComponent: () => (/* binding */ _registerComponent),
+/* harmony export */   _removeServiceInstance: () => (/* binding */ _removeServiceInstance),
+/* harmony export */   deleteApp: () => (/* binding */ deleteApp),
+/* harmony export */   getApp: () => (/* binding */ getApp),
+/* harmony export */   getApps: () => (/* binding */ getApps),
+/* harmony export */   initializeApp: () => (/* binding */ initializeApp),
+/* harmony export */   onLog: () => (/* binding */ onLog),
+/* harmony export */   registerVersion: () => (/* binding */ registerVersion),
+/* harmony export */   setLogLevel: () => (/* binding */ setLogLevel)
 /* harmony export */ });
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js");
@@ -16814,7 +16826,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.7";
+const version$1 = "0.9.12";
 
 /**
  * @license
@@ -16881,7 +16893,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.19.1";
+const version = "9.22.2";
 
 /**
  * @license
@@ -17057,7 +17069,7 @@ function _clearComponents() {
  */
 const ERRORS = {
     ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
-        'call Firebase App.initializeApp()',
+        'call initializeApp() first',
     ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}",
     ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
     ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
@@ -17228,7 +17240,7 @@ function initializeApp(_options, rawConfig = {}) {
  */
 function getApp(name = DEFAULT_ENTRY_NAME) {
     const app = _apps.get(name);
-    if (!app && name === DEFAULT_ENTRY_NAME) {
+    if (!app && name === DEFAULT_ENTRY_NAME && (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)()) {
         return initializeApp();
     }
     if (!app) {
@@ -17377,10 +17389,11 @@ function getDbPromise() {
 async function readHeartbeatsFromIndexedDB(app) {
     try {
         const db = await getDbPromise();
-        return db
+        const result = await db
             .transaction(STORE_NAME)
             .objectStore(STORE_NAME)
             .get(computeKey(app));
+        return result;
     }
     catch (e) {
         if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
@@ -17400,7 +17413,7 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const objectStore = tx.objectStore(STORE_NAME);
         await objectStore.put(heartbeatObject, computeKey(app));
-        return tx.done;
+        await tx.done;
     }
     catch (e) {
         if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
@@ -17699,9 +17712,9 @@ registerCoreComponents('');
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Component": () => (/* binding */ Component),
-/* harmony export */   "ComponentContainer": () => (/* binding */ ComponentContainer),
-/* harmony export */   "Provider": () => (/* binding */ Provider)
+/* harmony export */   Component: () => (/* binding */ Component),
+/* harmony export */   ComponentContainer: () => (/* binding */ ComponentContainer),
+/* harmony export */   Provider: () => (/* binding */ Provider)
 /* harmony export */ });
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
 
@@ -18125,16 +18138,16 @@ class ComponentContainer {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteInstallations": () => (/* binding */ deleteInstallations),
-/* harmony export */   "getId": () => (/* binding */ getId),
-/* harmony export */   "getInstallations": () => (/* binding */ getInstallations),
-/* harmony export */   "getToken": () => (/* binding */ getToken),
-/* harmony export */   "onIdChange": () => (/* binding */ onIdChange)
+/* harmony export */   deleteInstallations: () => (/* binding */ deleteInstallations),
+/* harmony export */   getId: () => (/* binding */ getId),
+/* harmony export */   getInstallations: () => (/* binding */ getInstallations),
+/* harmony export */   getToken: () => (/* binding */ getToken),
+/* harmony export */   onIdChange: () => (/* binding */ onIdChange)
 /* harmony export */ });
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/@firebase/installations/node_modules/idb/build/index.js");
 
 
 
@@ -19293,6 +19306,315 @@ registerInstallations();
 
 /***/ }),
 
+/***/ "./node_modules/@firebase/installations/node_modules/idb/build/index.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@firebase/installations/node_modules/idb/build/index.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
+/* harmony export */   openDB: () => (/* binding */ openDB),
+/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
+/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
+/* harmony export */ });
+/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/@firebase/installations/node_modules/idb/build/wrap-idb-value.js");
+
+
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction));
+        });
+    }
+    if (blocked)
+        request.addEventListener('blocked', () => blocked());
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking)
+            db.addEventListener('versionchange', () => blocking());
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked)
+        request.addEventListener('blocked', () => blocked());
+    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/installations/node_modules/idb/build/wrap-idb-value.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/@firebase/installations/node_modules/idb/build/wrap-idb-value.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   a: () => (/* binding */ reverseTransformCache),
+/* harmony export */   i: () => (/* binding */ instanceOfAny),
+/* harmony export */   r: () => (/* binding */ replaceTraps),
+/* harmony export */   u: () => (/* binding */ unwrap),
+/* harmony export */   w: () => (/* binding */ wrap)
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const cursorRequestMap = new WeakMap();
+const transactionDoneMap = new WeakMap();
+const transactionStoreNamesMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    promise
+        .then((value) => {
+        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
+        // (see wrapFunction).
+        if (value instanceof IDBCursor) {
+            cursorRequestMap.set(value, request);
+        }
+        // Catching to avoid "Uncaught Promise exceptions"
+    })
+        .catch(() => { });
+    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Polyfill for objectStoreNames because of Edge.
+            if (prop === 'objectStoreNames') {
+                return target.objectStoreNames || transactionStoreNamesMap.get(target);
+            }
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
+    if (func === IDBDatabase.prototype.transaction &&
+        !('objectStoreNames' in IDBTransaction.prototype)) {
+        return function (storeNames, ...args) {
+            const tx = func.call(unwrap(this), storeNames, ...args);
+            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
+            return wrap(tx);
+        };
+    }
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(cursorRequestMap.get(this));
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/@firebase/logger/dist/esm/index.esm2017.js ***!
@@ -19301,10 +19623,10 @@ registerInstallations();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "LogLevel": () => (/* binding */ LogLevel),
-/* harmony export */   "Logger": () => (/* binding */ Logger),
-/* harmony export */   "setLogLevel": () => (/* binding */ setLogLevel),
-/* harmony export */   "setUserLogHandler": () => (/* binding */ setUserLogHandler)
+/* harmony export */   LogLevel: () => (/* binding */ LogLevel),
+/* harmony export */   Logger: () => (/* binding */ Logger),
+/* harmony export */   setLogLevel: () => (/* binding */ setLogLevel),
+/* harmony export */   setUserLogHandler: () => (/* binding */ setUserLogHandler)
 /* harmony export */ });
 /**
  * @license
@@ -19537,15 +19859,15 @@ function setUserLogHandler(logCallback, options) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteToken": () => (/* binding */ deleteToken),
-/* harmony export */   "getMessaging": () => (/* binding */ getMessagingInWindow),
-/* harmony export */   "getToken": () => (/* binding */ getToken),
-/* harmony export */   "isSupported": () => (/* binding */ isWindowSupported),
-/* harmony export */   "onMessage": () => (/* binding */ onMessage)
+/* harmony export */   deleteToken: () => (/* binding */ deleteToken),
+/* harmony export */   getMessaging: () => (/* binding */ getMessagingInWindow),
+/* harmony export */   getToken: () => (/* binding */ getToken),
+/* harmony export */   isSupported: () => (/* binding */ isWindowSupported),
+/* harmony export */   onMessage: () => (/* binding */ onMessage)
 /* harmony export */ });
 /* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/@firebase/messaging/node_modules/idb/build/index.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
@@ -20786,97 +21108,20 @@ registerMessagingInWindow();
 
 /***/ }),
 
-/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
-  \*********************************************************/
+/***/ "./node_modules/@firebase/messaging/node_modules/idb/build/index.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@firebase/messaging/node_modules/idb/build/index.js ***!
+  \**************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
-/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
-/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
-/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
-/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
-/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
-/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
-/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
-/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
-/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
-/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
-/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
-/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
-/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
-/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
-/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
-/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
-/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
+/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
+/* harmony export */   openDB: () => (/* binding */ openDB),
+/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
+/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
 /* harmony export */ });
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
-
-
-var name = "firebase";
-var version = "9.19.1";
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
-/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
-/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
-/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
-/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
-/* harmony export */ });
-/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
-
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/idb/build/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/idb/build/index.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
-/* harmony export */   "openDB": () => (/* binding */ openDB),
-/* harmony export */   "unwrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
-/* harmony export */   "wrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
-/* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
+/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js");
 
 
 
@@ -20969,6 +21214,399 @@ function getMethod(target, prop) {
 
 /***/ }),
 
+/***/ "./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   a: () => (/* binding */ reverseTransformCache),
+/* harmony export */   i: () => (/* binding */ instanceOfAny),
+/* harmony export */   r: () => (/* binding */ replaceTraps),
+/* harmony export */   u: () => (/* binding */ unwrap),
+/* harmony export */   w: () => (/* binding */ wrap)
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const cursorRequestMap = new WeakMap();
+const transactionDoneMap = new WeakMap();
+const transactionStoreNamesMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    promise
+        .then((value) => {
+        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
+        // (see wrapFunction).
+        if (value instanceof IDBCursor) {
+            cursorRequestMap.set(value, request);
+        }
+        // Catching to avoid "Uncaught Promise exceptions"
+    })
+        .catch(() => { });
+    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Polyfill for objectStoreNames because of Edge.
+            if (prop === 'objectStoreNames') {
+                return target.objectStoreNames || transactionStoreNamesMap.get(target);
+            }
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
+    if (func === IDBDatabase.prototype.transaction &&
+        !('objectStoreNames' in IDBTransaction.prototype)) {
+        return function (storeNames, ...args) {
+            const tx = func.call(unwrap(this), storeNames, ...args);
+            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
+            return wrap(tx);
+        };
+    }
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(cursorRequestMap.get(this));
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FirebaseError: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
+/* harmony export */   SDK_VERSION: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
+/* harmony export */   _DEFAULT_ENTRY_NAME: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
+/* harmony export */   _addComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
+/* harmony export */   _addOrOverwriteComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
+/* harmony export */   _apps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
+/* harmony export */   _clearComponents: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
+/* harmony export */   _components: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
+/* harmony export */   _getProvider: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
+/* harmony export */   _registerComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
+/* harmony export */   _removeServiceInstance: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
+/* harmony export */   deleteApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
+/* harmony export */   getApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
+/* harmony export */   getApps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
+/* harmony export */   initializeApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
+/* harmony export */   onLog: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
+/* harmony export */   registerVersion: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
+/* harmony export */   setLogLevel: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
+
+
+var name = "firebase";
+var version = "9.22.2";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteToken: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
+/* harmony export */   getMessaging: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
+/* harmony export */   getToken: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
+/* harmony export */   isSupported: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
+/* harmony export */   onMessage: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
+/* harmony export */ });
+/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
+/* harmony export */   openDB: () => (/* binding */ openDB),
+/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
+/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
+/* harmony export */ });
+/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
+
+
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction), event);
+        });
+    }
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event.newVersion, event));
+    }
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking) {
+            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
+        }
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event));
+    }
+    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/idb/build/wrap-idb-value.js":
 /*!**************************************************!*\
   !*** ./node_modules/idb/build/wrap-idb-value.js ***!
@@ -20977,11 +21615,11 @@ function getMethod(target, prop) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => (/* binding */ reverseTransformCache),
-/* harmony export */   "i": () => (/* binding */ instanceOfAny),
-/* harmony export */   "r": () => (/* binding */ replaceTraps),
-/* harmony export */   "u": () => (/* binding */ unwrap),
-/* harmony export */   "w": () => (/* binding */ wrap)
+/* harmony export */   a: () => (/* binding */ reverseTransformCache),
+/* harmony export */   i: () => (/* binding */ instanceOfAny),
+/* harmony export */   r: () => (/* binding */ replaceTraps),
+/* harmony export */   u: () => (/* binding */ unwrap),
+/* harmony export */   w: () => (/* binding */ wrap)
 /* harmony export */ });
 const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
 
@@ -21401,7 +22039,7 @@ const unwrap = (value) => reverseTransformCache.get(value);
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};

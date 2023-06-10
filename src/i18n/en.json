@@ -1420,7 +1420,7 @@
   "cred_confirmed_successfully": {
     "translation": "Confirmed successfully",
     "defaultMessage": "Confirmed successfully",
-    "description": "Message explaining that the credential was successfully validated.",
+    "description": "Notification message that the credential was successfully validated.",
     "missing": false,
     "obsolete": false
   },
@@ -1645,6 +1645,13 @@
     "translation": "Unpin",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the message.",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_success": {
+    "translation": "Password reset successfully",
+    "defaultMessage": "Password reset successfully",
+    "description": "Notification message that the password was successfully reset.",
     "missing": false,
     "obsolete": false
   }
