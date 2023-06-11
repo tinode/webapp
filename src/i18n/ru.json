@@ -1628,17 +1628,17 @@
     "obsolete": false
   },
   "pin_message": {
-    "translation": "",
+    "translation": "Закрепить",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning message to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_message": {
-    "translation": "",
+    "translation": "Открепить",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the message.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "failed_to_init_audio": {
@@ -1663,10 +1663,10 @@
     "obsolete": false
   },
   "join_conference": {
-    "translation": "",
+    "translation": "+ Присоединиться",
     "defaultMessage": "+ Join",
     "description": "Call to action to join a conference call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
