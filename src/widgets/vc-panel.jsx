@@ -1,16 +1,11 @@
 // Video conference or broadcast: local and/or peer viewports and controls.
 import React from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import {
-  connect,
-  LocalParticipant,
   MediaDeviceFailure,
-  Participant,
   ParticipantEvent,
   RemoteParticipant,
-  RemoteTrack,
-  RemoteTrackPublication,
   Room,
   RoomEvent,
   Track,

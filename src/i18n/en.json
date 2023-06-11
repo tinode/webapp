@@ -1661,5 +1661,12 @@
     "description": "Notification message that the password was successfully reset.",
     "missing": false,
     "obsolete": false
+  },
+  "join_conference": {
+    "translation": "+ Join",
+    "defaultMessage": "+ Join",
+    "description": "Call to action to join a conference call",
+    "missing": false,
+    "obsolete": false
   }
 }

@@ -1649,10 +1649,10 @@
     "obsolete": false
   },
   "calls_conference": {
-    "translation": "",
+    "translation": "Conferencia",
     "defaultMessage": "Conference call",
     "description": "Conference call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_reset_success": {
@@ -1660,6 +1660,13 @@
     "defaultMessage": "Password reset successfully",
     "description": "Notification message that the password was successfully reset.",
     "missing": false,
+    "obsolete": false
+  },
+  "join_conference": {
+    "translation": "",
+    "defaultMessage": "+ Join",
+    "description": "Call to action to join a conference call",
+    "missing": true,
     "obsolete": false
   }
 }

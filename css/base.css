@@ -2575,7 +2575,7 @@ ul.tabbar li.active > a {
 .material-icons.big {
   font-size: 2.2rem;
 }
-.material-icons.bigger {
+.material-icons.x-big {
   font-size: 3rem;
 }
 .material-icons.huge {
@@ -2585,12 +2585,25 @@ ul.tabbar li.active > a {
   display: inline-block;
   position: relative;
 }
-.composed-material i:nth-child(2) {
+.composed-material .second {
   position: absolute;
   font-size: 85%;
   top: 7%;
   left: 39%;
   font-weight: bold;
+}
+.composed-material .second-small {
+  position: absolute;
+  font-size: 62%;
+  top: 14%;
+  left: 30%;
+  font-weight: bold;
+}
+
+/* White outline */
+.material-icons.outline {
+  position: relative;
+  text-shadow: -1px 1px #FFF, 1px 1px #FFF, 1px -1px #FFF, -1px -1px #FFF;
 }
 
 #self-avatar .material-icons {

@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Track } from 'livekit-client';
 
-import LetterTile from './letter-tile.jsx';
 import VCCarouselItem from './vc-carousel-item.jsx';
 
 import { VC_CAROUSEL_ITEM_GAP } from '../constants.js';
@@ -12,7 +11,7 @@ export default class VCCarousel extends React.Component {
     super(props);
     this.handlePrevClick = this.handlePrevClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
- 
+
     this.carouselRef = React.createRef();
     this.contentRef = React.createRef();
     this.prevRef = React.createRef();

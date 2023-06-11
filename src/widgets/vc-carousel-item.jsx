@@ -1,6 +1,5 @@
 // Video conference carousel item.
 import React from 'react';
-import Track from 'livekit-client';
 
 import LetterTile from './letter-tile.jsx';
 
@@ -25,7 +24,7 @@ export default class VCCarouselItem extends React.PureComponent {
       this.props.micPub.audioTrack.attach(this.state.audioRef);
     }
   }
-  
+
   handleVideoRefChange(node) {
     if (!node) { return; }
     this.setState({videoRef: node});

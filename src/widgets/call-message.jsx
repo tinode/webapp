@@ -7,7 +7,13 @@ import { secondsToTime } from '../lib/strformat.js';
 
 export default class CallMessage extends React.PureComponent {
   render() {
-    const bigIcon = this.props.vc ? 'video_call' : 'call';
+    const bigIcon = this.props.vc ?
+      <div className="composed-material">
+        <i className="material-icons gray second-small">group</i>
+        <i className="material-icons gray big outline">call</i>
+      </div>
+      :
+      <div><i className="material-icons big gray">call</i></div>;
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ?
@@ -46,7 +52,9 @@ export default class CallMessage extends React.PureComponent {
         <div>{title}</div>
         <div className="duration"><i className={successClass}>{callIcon}</i> {duration}</div>
         {allowJoin ?
-          <a onClick={this.props.onCallJoin}>Join</a>
+          <a onClick={this.props.onCallJoin}>
+            <FormattedMessage id="join_conference" defaultMessage="+ Join" description="Call to action to join a conference call" />
+          </a>
           : null}
       </div>
     </div>;
