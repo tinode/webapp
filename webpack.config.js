@@ -64,6 +64,7 @@ module.exports = (env, argv) => {
       }),
     ],
     externals: {
+      'livekit-client': 'LivekitClient',
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',
