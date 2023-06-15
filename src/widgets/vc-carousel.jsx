@@ -9,37 +9,54 @@ import { VC_CAROUSEL_ITEM_GAP } from '../constants.js';
 export default class VCCarousel extends React.Component {
   constructor(props) {
     super(props);
-    this.handlePrevClick = this.handlePrevClick.bind(this);
-    this.handleNextClick = this.handleNextClick.bind(this);
 
-    this.carouselRef = React.createRef();
+    this.state = {
+      prevVisible: false,
+      nextVisible: false
+    };
+
+    this.handleScrollReference = this.handleScrollReference.bind(this);
+    this.handleScrollEvent = this.handleScrollEvent.bind(this);
+    this.handleScrollClick = this.handleScrollClick.bind(this);
+
+    this.carouselRef = null;
     this.contentRef = React.createRef();
-    this.prevRef = React.createRef();
-    this.nextRef = React.createRef();
   }
 
-  handlePrevClick() {
-    const gap = VC_CAROUSEL_ITEM_GAP;
-    const width = this.carouselRef.current.offsetWidth;
-    this.carouselRef.current.scrollBy(-(width + gap), 0);
-    if (this.carouselRef.current.scrollLeft - width - gap <= 0) {
-      this.prevRef.current.style.display = 'none';
-    }
-    if (!this.contentRef.current.scrollWidth - width - gap <= this.carouselRef.current.scrollLeft + width) {
-      this.nextRef.current.style.display = 'flex';
+  componentDidUpdate(prevProps) {
+    if (this.carouselRef && this.props.viewportWidth != prevProps.viewportWidth) {
+      this.handleScrollEvent({target: this.carouselRef});
     }
   }
 
-  handleNextClick() {
-    const gap = VC_CAROUSEL_ITEM_GAP;
-    const width = this.carouselRef.current.offsetWidth;
-    this.carouselRef.current.scrollBy(width + gap, 0);
-    if (this.carouselRef.current.scrollWidth !== 0) {
-      this.prevRef.current.style.display = 'flex';
+  componentWillUnmount() {
+    if (this.carouselRef) {
+      this.carouselRef.removeEventListener('scroll', this.handleScrollEvent);
     }
-    if (this.contentRef.current.scrollWidth - width - gap <= this.carouselRef.current.scrollLeft + width) {
-      this.nextRef.current.style.display = 'none';
+  }
+
+  // Don't use React.createRef as the ref.current is not available in componentDidMount in this component.
+  handleScrollReference(node) {
+    if (node) {
+      this.carouselRef = node;
+      this.carouselRef.addEventListener('scroll', this.handleScrollEvent);
+      this.handleScrollEvent({target: this.carouselRef});
     }
+  }
+
+  // Get older messages and show/hide [go to latest message] button.
+  handleScrollEvent(event) {
+    this.setState({
+      // Show [prev] / [next] as appropriate.
+      prevVisible: event.target.scrollLeft > VC_CAROUSEL_ITEM_GAP,
+      nextVisible: event.target.scrollWidth - event.target.scrollLeft - event.target.offsetWidth > VC_CAROUSEL_ITEM_GAP
+    });
+  }
+
+  handleScrollClick(next) {
+    // this.carouselRef.offsetWidth - is the width of the visible window.
+    const val = this.carouselRef.offsetWidth + VC_CAROUSEL_ITEM_GAP;
+    this.carouselRef.scrollBy(next ? val : -val, 0);
   }
 
   render() {
@@ -56,44 +73,32 @@ export default class VCCarousel extends React.Component {
           cameraPub={cameraPub ? cameraPub : null}
           micPub={micPub ? micPub : null}
           name={party.name}
-          identity={identity}
+          userId={identity}
           photo={party.photo}
           key={i}
         />);
       });
     }
     return (
-      <>
-        <div id="carousel-wrapper">
-          <div id="carousel" ref={this.carouselRef}>
-            <div id="carousel-content" ref={this.contentRef}>
-              {peers}
-            </div>
+      <div id="carousel-wrapper">
+        <div id="carousel" ref={this.handleScrollReference}>
+          <div id="carousel-content" ref={this.contentRef}>
+            {peers}
           </div>
-          <button id="carousel-prev" ref={this.prevRef} onClick={this.handlePrevClick}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="none" d="M0 0h24v24H0V0z" />
-              <path d="M15.61 7.41L14.2 6l-6 6 6 6 1.41-1.41L11.03 12l4.58-4.59z" />
-            </svg>
-          </button>
-          <button id="carousel-next" ref={this.nextRef} onClick={this.handleNextClick}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="none" d="M0 0h24v24H0V0z" />
-              <path d="M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z" />
-            </svg>
-          </button>
         </div>
-      </>
+        {this.state.prevVisible ?
+          <button id="carousel-prev" className="action-button" onClick={_ => this.handleScrollClick(false)}>
+            <i className="material-icons">navigate_before</i>
+          </button>
+          :
+          null}
+        {this.state.nextVisible ?
+          <button id="carousel-next" className="action-button" onClick={_ => this.handleScrollClick(true)}>
+            <i className="material-icons">navigate_next</i>
+          </button>
+          :
+          null}
+      </div>
     );
   }
 }
