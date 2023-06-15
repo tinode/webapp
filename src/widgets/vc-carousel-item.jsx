@@ -73,28 +73,24 @@ export default class VCCarouselItem extends React.PureComponent {
     const cameraPub = this.props.cameraPub;
     return (
       <div className={classes}>
-        <>
-          <video ref={this.handleVideoRefChange}></video>
-          <audio ref={this.handleAudioRefChange}></audio>
-          {micPub && micPub.isMuted ?
-            <i className="material-icons muted">mic_off</i>
-            : null
-          }
-          {cameraPub && cameraPub.isMuted ?
-            <>
-              <div className="avatar-box carousel-item">
-                <LetterTile
-                  tinode={this.props.tinode}
-                  avatar={this.props.photo}
-                  topic={this.props.userId}
-                  title={this.props.name} />
-              </div>
-            </>
-            : null}
-          <div className="caller-name inactive">
-            {this.props.name}
+        <video ref={this.handleVideoRefChange}></video>
+        <audio ref={this.handleAudioRefChange}></audio>
+        {micPub && micPub.isMuted ?
+          <i className="material-icons muted">mic_off</i>
+          : null
+        }
+        {cameraPub && cameraPub.isMuted ?
+          <div className="avatar-box">
+            <LetterTile
+              tinode={this.props.tinode}
+              avatar={this.props.photo || true}
+              topic={this.props.userId}
+              title={this.props.name} />
           </div>
-        </>
+          : null}
+        <div className="caller-name inactive">
+          {this.props.name}
+        </div>
       </div>
     );
   }
