@@ -77,7 +77,9 @@ class VCPanel extends React.PureComponent {
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onInfo = this.previousOnInfo;
+    if (topic) {
+      topic.onInfo = this.previousOnInfo;
+    }
     this.stop();
   }
 
@@ -358,58 +360,54 @@ class VCPanel extends React.PureComponent {
     const remoteActive = this.remoteRef.current && (this.remoteRef.current.src || this.remoteRef.current.srcObject)
 
     return (
-      <>
-        <div id="video-container">
-          {!this.isBroadcast && Object.keys(this.state.participants).length > 0 ?
-            <VCCarousel
-              tinode={this.props.tinode}
-              participants={this.state.participants} /> :
-            null
-          }
-          <div id="video-container-panel">
-            {isPublishing ?
-              <div className="call-party self" disabled={this.state.audioOnly}>
-                <video ref={this.localRef} autoPlay muted playsInline />
-                <div className="caller-name inactive">
-                  <FormattedMessage id="calls_you_label"
-                    defaultMessage="You" description="Shown over the local video screen" />
+      <div id="video-container">
+        {!this.isBroadcast && Object.keys(this.state.participants).length > 0 ?
+          <VCCarousel
+            viewportWidth={this.props.viewportWidth}
+            tinode={this.props.tinode}
+            participants={this.state.participants} /> :
+          null
+        }
+        <div id="video-container-panel">
+          {isPublishing ?
+            <div className="call-party self" disabled={this.state.audioOnly}>
+              <video ref={this.localRef} autoPlay muted playsInline />
+              <div className="caller-name inactive">
+                <FormattedMessage id="calls_you_label"
+                  defaultMessage="You" description="Shown over the local video screen" />
+              </div>
+            </div> :
+            null }
+          <div className="call-party peer" disabled={!remoteActive}>
+            <video ref={this.remoteRef} autoPlay playsInline />
+            {remoteActive ?
+              <div className="caller-name inactive">{peerTitle}</div>
+              :
+              <div className="caller-card">
+                <div className="avatar-box">
+                  <LetterTile
+                    tinode={this.props.tinode}
+                    avatar={this.props.avatar}
+                    topic={this.props.topic}
+                    title={this.props.title} />
                 </div>
-              </div> :
-              null }
-            <div className="call-party peer" disabled={!remoteActive}>
-              <video ref={this.remoteRef} autoPlay playsInline />
-              {remoteActive ?
-                <>
-                  <div className="caller-name inactive">{peerTitle}</div>
-                </> :
-                <>
-                  <div className="caller-card">
-                    <div className="avatar-box">
-                      <LetterTile
-                        tinode={this.props.tinode}
-                        avatar={this.props.avatar}
-                        topic={this.props.topic}
-                        title={this.props.title} />
-                    </div>
-                    <div className="caller-name">{peerTitle}</div>
-                  </div>
-                </>
-              }
-            </div>
-          </div>
-          <div className="controls">
-            <button className="danger" onClick={this.handleCloseClick}>
-              <i className="material-icons">call_end</i>
-            </button>
-            <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
-              <i className="material-icons">{videoIcon}</i>
-            </button>
-            <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
-              <i className="material-icons">{audioIcon}</i>
-            </button>
+                <div className="caller-name">{peerTitle}</div>
+              </div>
+            }
           </div>
         </div>
-      </>
+        <div className="controls">
+          <button className="danger" onClick={this.handleCloseClick}>
+            <i className="material-icons">call_end</i>
+          </button>
+          <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
+            <i className="material-icons">{videoIcon}</i>
+          </button>
+          <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
+            <i className="material-icons">{audioIcon}</i>
+          </button>
+        </div>
+      </div>
     );
   }
 };

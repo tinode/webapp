@@ -2280,7 +2280,7 @@ const VIDEO_THUMBNAIL_WIDTH = 48;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
-const MAX_PEER_TITLE_LENGTH = 20;
+const MAX_PEER_TITLE_LENGTH = 24;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
@@ -6391,6 +6391,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             title: this.state.title,
             avatar: this.state.avatar || true,
             myUid: this.props.myUserId,
+            viewportWidth: this.props.viewportWidth,
             onError: this.props.onError,
             onHangup: this.handleCallHangup,
             onCreateCall: this.props.onCallInvite,
@@ -6528,6 +6529,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+          id: "go-to-latest",
           className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
           onClick: this.goToLatestMessage
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -16523,28 +16525,24 @@ __webpack_require__.r(__webpack_exports__);
 class VCCarouselItem extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    this.state = {
-      videoRef: undefined,
-      audioRef: undefined
-    };
     this.handleVideoRefChange = this.handleVideoRefChange.bind(this);
     this.handleAudioRefChange = this.handleAudioRefChange.bind(this);
+    this.videoRef = null;
+    this.audioRef = null;
   }
   componentDidUpdate(prevProps) {
-    if (this.state.videoRef && !this.state.videoRef.srcObject && this.props.cameraPub && this.props.cameraPub.videoTrack) {
-      this.props.cameraPub.videoTrack.attach(this.state.videoRef);
+    if (this.videoRef && !this.videoRef.srcObject && this.props.cameraPub && this.props.cameraPub.videoTrack) {
+      this.props.cameraPub.videoTrack.attach(this.videoRef);
     }
-    if (this.state.audioRef && !this.state.audioRef.srcObject && this.props.micPub && this.props.micPub.audioTrack) {
-      this.props.micPub.audioTrack.attach(this.state.audioRef);
+    if (this.audioRef && !this.audioRef.srcObject && this.props.micPub && this.props.micPub.audioTrack) {
+      this.props.micPub.audioTrack.attach(this.audioRef);
     }
   }
   handleVideoRefChange(node) {
     if (!node) {
       return;
     }
-    this.setState({
-      videoRef: node
-    });
+    this.videoRef = node;
     const cameraPub = this.props.cameraPub;
     const cameraEnabled = cameraPub && cameraPub.isSubscribed && !cameraPub.isMuted;
     if (cameraEnabled && cameraPub.videoTrack) {
@@ -16555,13 +16553,11 @@ class VCCarouselItem extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     if (!node) {
       return;
     }
-    this.setState({
-      audioRef: node
-    });
+    this.audioRef = node;
     const micPub = this.props.micPub;
     const micEnabled = micPub && micPub.isSubscribed && !micPub.isMuted;
-    if (micEnabled && this.state.audioTrack) {
-      this.state.audioTrack.attach(node);
+    if (micEnabled && micPub.audioTrack) {
+      micPub.audioTrack.attach(node);
     }
   }
   render() {
@@ -16573,22 +16569,22 @@ class VCCarouselItem extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const cameraPub = this.props.cameraPub;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: classes
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.handleVideoRefChange
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("audio", {
       ref: this.handleAudioRefChange
     }), micPub && micPub.isMuted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons muted"
-    }, "mic_off") : null, cameraPub && cameraPub.isMuted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box carousel-item"
+    }, "mic_off") : null, cameraPub && cameraPub.isMuted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       tinode: this.props.tinode,
-      avatar: this.props.photo,
-      topic: this.props.identity,
+      avatar: this.props.photo || true,
+      topic: this.props.userId,
       title: this.props.name
-    }))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
-    }, this.props.name)));
+    }, this.props.name));
   }
 }
 
@@ -16617,34 +16613,46 @@ __webpack_require__.r(__webpack_exports__);
 class VCCarousel extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
-    this.handlePrevClick = this.handlePrevClick.bind(this);
-    this.handleNextClick = this.handleNextClick.bind(this);
-    this.carouselRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.state = {
+      prevVisible: false,
+      nextVisible: false
+    };
+    this.handleScrollReference = this.handleScrollReference.bind(this);
+    this.handleScrollEvent = this.handleScrollEvent.bind(this);
+    this.handleScrollClick = this.handleScrollClick.bind(this);
+    this.carouselRef = null;
     this.contentRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.prevRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.nextRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
   }
-  handlePrevClick() {
-    const gap = _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP;
-    const width = this.carouselRef.current.offsetWidth;
-    this.carouselRef.current.scrollBy(-(width + gap), 0);
-    if (this.carouselRef.current.scrollLeft - width - gap <= 0) {
-      this.prevRef.current.style.display = 'none';
-    }
-    if (!this.contentRef.current.scrollWidth - width - gap <= this.carouselRef.current.scrollLeft + width) {
-      this.nextRef.current.style.display = 'flex';
+  componentDidUpdate(prevProps) {
+    if (this.carouselRef && this.props.viewportWidth != prevProps.viewportWidth) {
+      this.handleScrollEvent({
+        target: this.carouselRef
+      });
     }
   }
-  handleNextClick() {
-    const gap = _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP;
-    const width = this.carouselRef.current.offsetWidth;
-    this.carouselRef.current.scrollBy(width + gap, 0);
-    if (this.carouselRef.current.scrollWidth !== 0) {
-      this.prevRef.current.style.display = 'flex';
+  componentWillUnmount() {
+    if (this.carouselRef) {
+      this.carouselRef.removeEventListener('scroll', this.handleScrollEvent);
     }
-    if (this.contentRef.current.scrollWidth - width - gap <= this.carouselRef.current.scrollLeft + width) {
-      this.nextRef.current.style.display = 'none';
+  }
+  handleScrollReference(node) {
+    if (node) {
+      this.carouselRef = node;
+      this.carouselRef.addEventListener('scroll', this.handleScrollEvent);
+      this.handleScrollEvent({
+        target: this.carouselRef
+      });
     }
+  }
+  handleScrollEvent(event) {
+    this.setState({
+      prevVisible: event.target.scrollLeft > _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP,
+      nextVisible: event.target.scrollWidth - event.target.scrollLeft - event.target.offsetWidth > _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP
+    });
+  }
+  handleScrollClick(next) {
+    const val = this.carouselRef.offsetWidth + _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP;
+    this.carouselRef.scrollBy(next ? val : -val, 0);
   }
   render() {
     let peers = [];
@@ -16660,49 +16668,33 @@ class VCCarousel extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
           cameraPub: cameraPub ? cameraPub : null,
           micPub: micPub ? micPub : null,
           name: party.name,
-          identity: identity,
+          userId: identity,
           photo: party.photo,
           key: i
         }));
       });
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "carousel-wrapper"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "carousel",
-      ref: this.carouselRef
+      ref: this.handleScrollReference
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "carousel-content",
       ref: this.contentRef
-    }, peers)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    }, peers)), this.state.prevVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       id: "carousel-prev",
-      ref: this.prevRef,
-      onClick: this.handlePrevClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-      fill: "none",
-      d: "M0 0h24v24H0V0z"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-      d: "M15.61 7.41L14.2 6l-6 6 6 6 1.41-1.41L11.03 12l4.58-4.59z"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "action-button",
+      onClick: _ => this.handleScrollClick(false)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "navigate_before")) : null, this.state.nextVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       id: "carousel-next",
-      ref: this.nextRef,
-      onClick: this.handleNextClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-      fill: "none",
-      d: "M0 0h24v24H0V0z"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-      d: "M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z"
-    })))));
+      className: "action-button",
+      onClick: _ => this.handleScrollClick(true)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "navigate_next")) : null);
   }
 }
 
@@ -16782,7 +16774,9 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
   }
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onInfo = this.previousOnInfo;
+    if (topic) {
+      topic.onInfo = this.previousOnInfo;
+    }
     this.stop();
   }
   onInfo(info) {
@@ -17005,9 +16999,10 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
     const videoIcon = !disabled && this.state.room.localParticipant.isCameraEnabled ? 'videocam' : 'videocam_off';
     const peerTitle = this.state.activeSpeaker ? this.state.activeSpeaker : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_PEER_TITLE_LENGTH);
     const remoteActive = this.remoteRef.current && (this.remoteRef.current.src || this.remoteRef.current.srcObject);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container"
     }, !this.isBroadcast && Object.keys(this.state.participants).length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_vc_carousel_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      viewportWidth: this.props.viewportWidth,
       tinode: this.props.tinode,
       participants: this.state.participants
     }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -17035,9 +17030,9 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
       ref: this.remoteRef,
       autoPlay: true,
       playsInline: true
-    }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
-    }, peerTitle)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-card"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
@@ -17048,7 +17043,7 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
       title: this.props.title
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name"
-    }, peerTitle))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, peerTitle)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "controls"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "danger",
@@ -17067,7 +17062,7 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
       disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, audioIcon)))));
+    }, audioIcon))));
   }
 }
 ;
