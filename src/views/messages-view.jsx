@@ -1484,6 +1484,7 @@ class MessagesView extends React.Component {
               title={this.state.title}
               avatar={this.state.avatar || true}
               myUid={this.props.myUserId}
+              viewportWidth={this.props.viewportWidth}
 
               onError={this.props.onError}
               onHangup={this.handleCallHangup}
@@ -1630,7 +1631,7 @@ class MessagesView extends React.Component {
         let messagesComponent = (
           <>
             <div id="messages-container">
-              <button className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
+              <button id="go-to-latest" className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
                 <i className="material-icons">arrow_downward</i>
               </button>
