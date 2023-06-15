@@ -3204,7 +3204,7 @@ ul.phone-country-selector span.country {
 
 /* Video conferencing. */
 .call-party-speaking {
-  border: 2px solid green;
+  border: 2.5px solid #2196f3;
 }
 
 .carousel-item .caller-name.inactive {
