@@ -64,8 +64,6 @@ class VCPanel extends React.PureComponent {
     this.handleData = this.handleData.bind(this);
     this.handleDevicesChanged = this.handleDevicesChanged.bind(this);
     this.startRoom = this.startRoom.bind(this);
-
-    this.participants = {};
   }
 
   componentDidMount() {
@@ -124,23 +122,21 @@ class VCPanel extends React.PureComponent {
 
       const me = this.props.tinode.getMeTopic();
       const c = me.getContact(participant.identity);
-      const name = c && c.public && c.public.fn ? c.public.fn : participant.identity;
-      const photo = makeImageUrl(c && c.public ? c.public.photo : null);
-      const p = {
-        name: name,
-        photo: photo,
+
+      const participants = Object.assign({}, this.state.participants);
+      participants[participant.identity] = {
+        name: c && c.public && c.public.fn ? c.public.fn : participant.identity,
+        photo: makeImageUrl(c && c.public ? c.public.photo : null),
         participant: participant
       };
-      this.participants[participant.identity] = p
-      console.log('participant connected', this.participants);
-      this.setState({participants: this.participants}, _ => { this.forceUpdate(); });
+      this.setState({participants: participants});
     }
   }
 
   handleParticipantDisconnected(participant) {
-    console.log('Deleting participant ', participant.identity);
-    delete this.participants[participant.identity];
-    this.setState({participants: this.participants});
+    const participants = Object.assign({}, this.state.participants);
+    delete participants[participant.identity];
+    this.setState({participants: participants});
   }
 
   handleData(msg, participant) {

@@ -16764,7 +16764,6 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
     this.handleData = this.handleData.bind(this);
     this.handleDevicesChanged = this.handleDevicesChanged.bind(this);
     this.startRoom = this.startRoom.bind(this);
-    this.participants = {};
   }
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
@@ -16815,27 +16814,22 @@ class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponen
       });
       const me = this.props.tinode.getMeTopic();
       const c = me.getContact(participant.identity);
-      const name = c && c.public && c.public.fn ? c.public.fn : participant.identity;
-      const photo = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c && c.public ? c.public.photo : null);
-      const p = {
-        name: name,
-        photo: photo,
+      const participants = Object.assign({}, this.state.participants);
+      participants[participant.identity] = {
+        name: c && c.public && c.public.fn ? c.public.fn : participant.identity,
+        photo: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c && c.public ? c.public.photo : null),
         participant: participant
       };
-      this.participants[participant.identity] = p;
-      console.log('participant connected', this.participants);
       this.setState({
-        participants: this.participants
-      }, _ => {
-        this.forceUpdate();
+        participants: participants
       });
     }
   }
   handleParticipantDisconnected(participant) {
-    console.log('Deleting participant ', participant.identity);
-    delete this.participants[participant.identity];
+    const participants = Object.assign({}, this.state.participants);
+    delete participants[participant.identity];
     this.setState({
-      participants: this.participants
+      participants: participants
     });
   }
   handleData(msg, participant) {
