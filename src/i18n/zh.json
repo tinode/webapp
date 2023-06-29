@@ -1420,7 +1420,7 @@
   "cred_confirmed_successfully": {
     "translation": "确认成功",
     "defaultMessage": "Confirmed successfully",
-    "description": "Message explaining that the credential was successfully validated.",
+    "description": "Notification message that the credential was successfully validated.",
     "missing": false,
     "obsolete": false
   },
@@ -1628,17 +1628,17 @@
     "obsolete": false
   },
   "pin_message": {
-    "translation": "",
+    "translation": "置顶消息",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning message to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_message": {
-    "translation": "",
+    "translation": "取消置顶消息",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the message.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "failed_to_init_audio": {
@@ -1649,10 +1649,24 @@
     "obsolete": false
   },
   "calls_conference": {
-    "translation": "",
+    "translation": "电话会议",
     "defaultMessage": "Conference call",
     "description": "Conference call label",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_success": {
+    "translation": "密码重置成功",
+    "defaultMessage": "Password reset successfully",
+    "description": "Notification message that the password was successfully reset.",
+    "missing": false,
+    "obsolete": false
+  },
+  "join_conference": {
+    "translation": "+ 加入通话",
+    "defaultMessage": "+ Join",
+    "description": "Call to action to join a conference call",
+    "missing": false,
     "obsolete": false
   }
 }

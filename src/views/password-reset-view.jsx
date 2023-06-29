@@ -48,7 +48,23 @@ class PasswordResetView extends React.PureComponent {
 
   componentDidMount() {
     const parsed = HashNavigation.parseUrlHash(window.location.hash);
-    this.setState({token: parsed.params.token, scheme: parsed.params.scheme});
+    const newState = {
+      token: parsed.params.token,
+      scheme: parsed.params.scheme,
+      code: parsed.params.code || ''
+    }
+
+    this.savedCred = parsed.params.cred;
+    if (this.props.reqCredMethod && parsed.params.cred) {
+      newState[this.props.reqCredMethod] = this.savedCred;
+    }
+    this.setState(newState);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.reqCredMethod != this.props.reqCredMethod && this.props.reqCredMethod) {
+      this.setState({[this.props.reqCredMethod]: this.savedCred || ''});
+    }
   }
 
   handleSubmit(e) {
@@ -62,7 +78,7 @@ class PasswordResetView extends React.PureComponent {
     } else if (this.state.code && this.props.reqCredMethod) {
       // Reset using security code.
       // The secret is structured as <code>:<cred_method>:<cred_value>, "123456:email:alice@example.com".
-      const cred = this.state.email.trim() || this.state.tel.trim();
+      const cred = this.props.reqCredMethod == 'email' ? this.state.email.trim() : this.state.tel.trim();
       this.props.onReset(this.state.password.trim(), {
         scheme: 'code',
         secret: btoa(`${this.state.code}:${this.props.reqCredMethod}:${cred}`)
@@ -102,7 +118,7 @@ class PasswordResetView extends React.PureComponent {
   }
 
   render() {
-    const showCredentialInput = !(this.state.token && this.state.scheme);
+    const showCredentialInput = !((this.state.token || (this.state.code && this.props.reqCredMethod)) && this.state.scheme);
     const showPasswordInput = !showCredentialInput || this.state.haveCode || this.state.sent;
 
     const passwordInput = (<>
@@ -193,7 +209,7 @@ class PasswordResetView extends React.PureComponent {
         {this.state.haveCode || this.state.sent ? codeInput : null}
         {showPasswordInput ? passwordInput : null}
         <div className="dialog-buttons">
-          {this.state.haveCode || this.state.sent || this.state.token ? null :
+          {this.state.haveCode || this.state.sent || this.state.token || this.state.code ? null :
             <a href="#" onClick={this.handleShowCodeField} style={{marginRight: 'auto'}}>
               <FormattedMessage id="password_i_have_code" defaultMessage="I have code"
                 description="Call to open field to enter password reset code" />

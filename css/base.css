@@ -522,8 +522,6 @@ div.trusted-badge {
   color: #999;
   font-size: 1.8rem;
   background-color: #fafafa;
-  right: 1rem;
-  bottom: 1rem;
   border-radius: 50%;
   width: 3.25rem;
   height: 3.25rem;
@@ -1749,11 +1747,15 @@ video {
 
 /* Badge with "You" for current user or peer's name. */
 .call-party .caller-name {
+  max-width: 12rem;
   padding: 0.15rem 0.5rem;
   border-radius: 0.35rem;
   z-index: 1;
   text-shadow: 0 0 1px white;
   background-color: rgba(255, 255, 255, 0.7);
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .call-party.self .caller-name.inactive {
@@ -1820,6 +1822,10 @@ video {
   font-weight: lighter;
 }
 
+#go-to-latest {
+  right: 1.5rem;
+  bottom: 1rem;
+}
 
 @keyframes active-call {
   0% {
@@ -2575,7 +2581,7 @@ ul.tabbar li.active > a {
 .material-icons.big {
   font-size: 2.2rem;
 }
-.material-icons.bigger {
+.material-icons.x-big {
   font-size: 3rem;
 }
 .material-icons.huge {
@@ -2585,12 +2591,25 @@ ul.tabbar li.active > a {
   display: inline-block;
   position: relative;
 }
-.composed-material i:nth-child(2) {
+.composed-material .second {
   position: absolute;
   font-size: 85%;
   top: 7%;
   left: 39%;
   font-weight: bold;
+}
+.composed-material .second-small {
+  position: absolute;
+  font-size: 62%;
+  top: 14%;
+  left: 30%;
+  font-weight: bold;
+}
+
+/* White outline */
+.material-icons.outline {
+  position: relative;
+  text-shadow: -1px 1px #FFF, 1px 1px #FFF, 1px -1px #FFF, -1px -1px #FFF;
 }
 
 #self-avatar .material-icons {
@@ -3183,6 +3202,80 @@ ul.phone-country-selector span.country {
   overflow-x: hidden;
 }
 
+/* Video conferencing. */
+.call-party-speaking {
+  border: 2.5px solid #2196f3;
+}
+
+.carousel-item .caller-name.inactive {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+  max-width: 6.5rem;
+}
+
+.carousel-item .muted {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+}
+
+.carousel-item .avatar-box {
+  width: 45px;
+  height: 45px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* Center the avatar in parent view. */
+  transform: translate(-50%, -50%);
+}
+
+#carousel-wrapper {
+  width: 100%;
+  max-width: 54rem;
+  position: relative;
+  align-self: center;
+  padding-top: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-grow: 0;
+  scrollbar-width: none;  /* Firefox */
+}
+
+#carousel {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+#carousel::-webkit-scrollbar {
+  display: none;  /* Hide scrollbar in Safari and Chrome */
+}
+
+#carousel-content {
+  display: grid;
+  grid-gap: 1rem;
+  grid-auto-flow: column;
+}
+
+#carousel-prev {
+  top: 50%;
+  left: 0;
+  transform: translate(50%, -50%);
+}
+
+#carousel-next {
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
+}
+
+.carousel-item {
+  position: relative;
+  width: 8rem;
+  height: 8rem;
+}
+
 /*
  Very wide monitor.
  */
@@ -3246,88 +3339,8 @@ ul.phone-country-selector span.country {
   .pinned {
     width: unset;
   }
-}
 
-/* Video conferencing. */
-.call-party-speaking {
-  border: 2px solid red;
-}
-
-.call-party.carousel-item .caller-name.inactive {
-  position: absolute;
-  bottom: 0.25rem;
-  right: 0.25rem;
-}
-
-.call-party.carousel-item .muted {
-  position: absolute;
-  top: 0.25rem;
-  right: 0.25rem;
-}
-
-.avatar-box.carousel-item {
-  /* Center the avatar in parent view. */
-  width: 45px;
-  height: 45px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#carousel-wrapper {
-  width: 100%;
-  max-width: 800px;
-  position: relative;
-  align-self: center;
-  padding-top: 1rem;
-}
-
-#carousel {
-  overflow: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-}
-
-#carousel-prev, #carousel-next {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  background: white;
-  border: none;
-  padding: 8px;
-  border-radius: 50%;
-  outline: 0;
-  cursor: pointer;
-  position: absolute;
-  min-width: unset;
-  height: unset;
-}
-
-#carousel-prev {
-  top: 50%;
-  left: 0;
-  transform: translate(50%, -50%);
-  display: none;
-}
-
-#carousel-next {
-  top: 50%;
-  right: 0;
-  transform: translate(-50%, -50%);
-}
-
-#carousel-content {
-  display: grid;
-  justify-content: center;
-  grid-gap: 16px;
-  grid-auto-flow: column;
-  margin: auto;
-  box-sizing: border-box;
-}
-
-.carousel-item {
-  width: 180px;
-  height: 100px;
-  position: relative;
+  .call-party.self {
+    bottom: 8.5rem;
+  }
 }

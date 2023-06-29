@@ -1,17 +1,12 @@
 // Video conference or broadcast: local and/or peer viewports and controls.
 import React from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import {
-  connect,
-  LocalParticipant,
   LocalVideoTrack,
   MediaDeviceFailure,
-  Participant,
   ParticipantEvent,
   RemoteParticipant,
-  RemoteTrack,
-  RemoteTrackPublication,
   Room,
   RoomEvent,
   Track,
@@ -70,8 +65,6 @@ class VCPanel extends React.PureComponent {
     this.handleData = this.handleData.bind(this);
     this.handleDevicesChanged = this.handleDevicesChanged.bind(this);
     this.startRoom = this.startRoom.bind(this);
-
-    this.participants = {};
   }
 
   componentDidMount() {
@@ -83,7 +76,9 @@ class VCPanel extends React.PureComponent {
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onInfo = this.previousOnInfo;
+    if (topic) {
+      topic.onInfo = this.previousOnInfo;
+    }
     this.stop();
   }
 
@@ -128,23 +123,21 @@ class VCPanel extends React.PureComponent {
 
       const me = this.props.tinode.getMeTopic();
       const c = me.getContact(participant.identity);
-      const name = c && c.public && c.public.fn ? c.public.fn : participant.identity;
-      const photo = makeImageUrl(c && c.public ? c.public.photo : null);
-      const p = {
-        name: name,
-        photo: photo,
+
+      const participants = Object.assign({}, this.state.participants);
+      participants[participant.identity] = {
+        name: c && c.public && c.public.fn ? c.public.fn : participant.identity,
+        photo: makeImageUrl(c && c.public ? c.public.photo : null),
         participant: participant
       };
-      this.participants[participant.identity] = p
-      console.log('participant connected', this.participants);
-      this.setState({participants: this.participants}, _ => { this.forceUpdate(); });
+      this.setState({participants: participants});
     }
   }
 
   handleParticipantDisconnected(participant) {
-    console.log('Deleting participant ', participant.identity);
-    delete this.participants[participant.identity];
-    this.setState({participants: this.participants});
+    const participants = Object.assign({}, this.state.participants);
+    delete participants[participant.identity];
+    this.setState({participants: participants});
   }
 
   handleData(msg, participant) {
@@ -364,58 +357,54 @@ class VCPanel extends React.PureComponent {
     const remoteActive = this.remoteRef.current && (this.remoteRef.current.src || this.remoteRef.current.srcObject)
 
     return (
-      <>
-        <div id="video-container">
-          {!this.isBroadcast && Object.keys(this.state.participants).length > 0 ?
-            <VCCarousel
-              tinode={this.props.tinode}
-              participants={this.state.participants} /> :
-            null
-          }
-          <div id="video-container-panel">
-            {isPublishing ?
-              <div className="call-party self" disabled={this.state.audioOnly}>
-                <video ref={this.localRef} autoPlay muted playsInline />
-                <div className="caller-name inactive">
-                  <FormattedMessage id="calls_you_label"
-                    defaultMessage="You" description="Shown over the local video screen" />
+      <div id="video-container">
+        {!this.isBroadcast && Object.keys(this.state.participants).length > 0 ?
+          <VCCarousel
+            viewportWidth={this.props.viewportWidth}
+            tinode={this.props.tinode}
+            participants={this.state.participants} /> :
+          null
+        }
+        <div id="video-container-panel">
+          {isPublishing ?
+            <div className="call-party self" disabled={this.state.audioOnly}>
+              <video ref={this.localRef} autoPlay muted playsInline />
+              <div className="caller-name inactive">
+                <FormattedMessage id="calls_you_label"
+                  defaultMessage="You" description="Shown over the local video screen" />
+              </div>
+            </div> :
+            null }
+          <div className="call-party peer" disabled={!remoteActive}>
+            <video ref={this.remoteRef} autoPlay playsInline />
+            {remoteActive ?
+              <div className="caller-name inactive">{peerTitle}</div>
+              :
+              <div className="caller-card">
+                <div className="avatar-box">
+                  <LetterTile
+                    tinode={this.props.tinode}
+                    avatar={this.props.avatar}
+                    topic={this.props.topic}
+                    title={this.props.title} />
                 </div>
-              </div> :
-              null }
-            <div className="call-party peer" disabled={!remoteActive}>
-              <video ref={this.remoteRef} autoPlay playsInline />
-              {remoteActive ?
-                <>
-                  <div className="caller-name inactive">{peerTitle}</div>
-                </> :
-                <>
-                  <div className="caller-card">
-                    <div className="avatar-box">
-                      <LetterTile
-                        tinode={this.props.tinode}
-                        avatar={this.props.avatar}
-                        topic={this.props.topic}
-                        title={this.props.title} />
-                    </div>
-                    <div className="caller-name">{peerTitle}</div>
-                  </div>
-                </>
-              }
-            </div>
-          </div>
-          <div className="controls">
-            <button className="danger" onClick={this.handleCloseClick}>
-              <i className="material-icons">call_end</i>
-            </button>
-            <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
-              <i className="material-icons">{videoIcon}</i>
-            </button>
-            <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
-              <i className="material-icons">{audioIcon}</i>
-            </button>
+                <div className="caller-name">{peerTitle}</div>
+              </div>
+            }
           </div>
         </div>
-      </>
+        <div className="controls">
+          <button className="danger" onClick={this.handleCloseClick}>
+            <i className="material-icons">call_end</i>
+          </button>
+          <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
+            <i className="material-icons">{videoIcon}</i>
+          </button>
+          <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
+            <i className="material-icons">{audioIcon}</i>
+          </button>
+        </div>
+      </div>
     );
   }
 };

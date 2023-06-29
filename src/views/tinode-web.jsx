@@ -83,7 +83,12 @@ const messages = defineMessages({
   cred_confirmed_successfully: {
     id: 'cred_confirmed_successfully',
     defaultMessage: 'Confirmed successfully',
-    description: 'Message explaining that the credential was successfully validated.'
+    description: 'Notification message that the credential was successfully validated.'
+  },
+  password_reset_success: {
+    id: 'password_reset_success',
+    defaultMessage: 'Password reset successfully',
+    description: 'Notification message that the password was successfully reset.'
   }
 });
 
@@ -1737,9 +1742,11 @@ class TinodeWeb extends React.Component {
     } else {
       this.tinode.connect()
         .then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {scheme: tempAuth.scheme, secret: secret}))
-        .then(_ => HashNavigation.navigateTo(''))
+        .then(_ => {
+          this.handleError(this.props.intl.formatMessage(messages.password_reset_success), 'info');
+          HashNavigation.navigateTo('');
+        })
         .catch(err => {
-          // Socket error
           this.handleError(err.message, 'err');
         });
     }

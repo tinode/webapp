@@ -6,7 +6,8 @@ import { secondsToTime } from '../lib/strformat.js';
 
 // Props:
 //  incoming: true | false.
-//  success: true | false.
+//  callState: 'busy' | 'declined' | 'disconnected' | 'missed'.
+//  duration: <number> (call duration in milliseconds).
 export default class CallStatus extends React.PureComponent {
   render() {
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);

@@ -186,16 +186,23 @@ class MessagesView extends React.Component {
 
   getVisibleMessageRange(holderRect) {
     let min = Number.MAX_SAFE_INTEGER, max = -1;
-    this.chatMessageRefs.forEach((ref, seq) => {
+    let visibilityStatus = false;
+    this.chatMessageRefs.every((ref, seq) => {
       if (ref.current) {
         const { top, bottom, height } = ref.current.getBoundingClientRect();
         const visible = top <= holderRect.top ? holderRect.top - top <= height : bottom - holderRect.bottom <= height;
         if (visible) {
+          visibilityStatus = true;
           min = Math.min(min, seq);
           max = Math.max(max, seq);
+        } else if (visibilityStatus) {
+          // The remaining elements are no longer visible, no need to iterate them.
+          return false;
         }
       }
+      return true;
     });
+
     return max >= min ? {min: min, max: max} : {min: 0, max: 0};
   }
 
@@ -321,7 +328,8 @@ class MessagesView extends React.Component {
         showGoToLastButton: false,
         dragging: false,
         pins: [],
-        selectedPin: 0
+        selectedPin: 0,
+        subsVersion: 0
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -578,13 +586,14 @@ class MessagesView extends React.Component {
       showGoToLastButton: (pos > SHOW_GO_TO_LAST_DIST) && (pos < this.state.scrollPosition),
     });
 
-    if (this.state.fetchingMessages) {
+    if (this.state.fetchingMessages || this.processingScrollEvent) {
       return;
     }
 
     if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
       const topic = this.props.tinode.getTopic(this.state.topic);
       if (topic && topic.isSubscribed()) {
+        this.processingScrollEvent = true;
         const {min, max} = this.getVisibleMessageRange(event.target.getBoundingClientRect());
         const gaps = topic.msgHasMoreMessages(min, max, false);
         if (gaps.length > 0) {
@@ -596,6 +605,7 @@ class MessagesView extends React.Component {
         }
       }
     }
+    this.processingScrollEvent = false;
   }
 
   /* Mount drag and drop events */
@@ -707,12 +717,12 @@ class MessagesView extends React.Component {
     if (this.state.topic) {
       const subs = [];
       const topic = this.props.tinode.getTopic(this.state.topic);
-      topic.subscribers((sub) => {
+      topic.subscribers(sub => {
         if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
-      const newState = {onlineSubs: subs};
+      const newState = {onlineSubs: subs, subsVersion: this.state.subsVersion + 1};
       const peer = topic.p2pPeerDesc();
       if (peer) {
         Object.assign(newState, {
@@ -1474,6 +1484,7 @@ class MessagesView extends React.Component {
               title={this.state.title}
               avatar={this.state.avatar || true}
               myUid={this.props.myUserId}
+              viewportWidth={this.props.viewportWidth}
 
               onError={this.props.onError}
               onHangup={this.handleCallHangup}
@@ -1620,7 +1631,7 @@ class MessagesView extends React.Component {
         let messagesComponent = (
           <>
             <div id="messages-container">
-              <button className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
+              <button id="go-to-latest" className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
                 <i className="material-icons">arrow_downward</i>
               </button>

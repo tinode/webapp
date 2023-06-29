@@ -1,34 +1,44 @@
 // Video conference carousel item.
 import React from 'react';
-import Track from 'livekit-client';
 
 import LetterTile from './letter-tile.jsx';
 
+/**
+ * Props:
+ *  - cameraPub
+ *  - micPub
+ *  - isSpeaking
+ *  - tinode
+ *  - photo
+ *  - userId
+ *  - name
+ */
 export default class VCCarouselItem extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      videoRef: undefined,
-      audioRef: undefined
-    };
-
     this.handleVideoRefChange = this.handleVideoRefChange.bind(this);
     this.handleAudioRefChange = this.handleAudioRefChange.bind(this);
+
+    this.videoRef = null;
+    this.audioRef = null;
   }
 
   componentDidUpdate(prevProps) {
-    if (this.state.videoRef && !this.state.videoRef.srcObject && this.props.cameraPub && this.props.cameraPub.videoTrack) {
-      this.props.cameraPub.videoTrack.attach(this.state.videoRef);
+    if (this.videoRef && !this.videoRef.srcObject && this.props.cameraPub && this.props.cameraPub.videoTrack) {
+      this.props.cameraPub.videoTrack.attach(this.videoRef);
     }
-    if (this.state.audioRef && !this.state.audioRef.srcObject && this.props.micPub && this.props.micPub.audioTrack) {
-      this.props.micPub.audioTrack.attach(this.state.audioRef);
+    if (this.audioRef && !this.audioRef.srcObject && this.props.micPub && this.props.micPub.audioTrack) {
+      this.props.micPub.audioTrack.attach(this.audioRef);
     }
   }
-  
+
   handleVideoRefChange(node) {
-    if (!node) { return; }
-    this.setState({videoRef: node});
+    if (!node) {
+      return;
+    }
+
+    this.videoRef = node;
 
     // Attach video track to video element.
     const cameraPub = this.props.cameraPub;
@@ -39,14 +49,17 @@ export default class VCCarouselItem extends React.PureComponent {
   }
 
   handleAudioRefChange(node) {
-    if (!node) { return; }
-    this.setState({audioRef: node});
+    if (!node) {
+      return;
+    }
+
+    this.audioRef = node;
 
     // Attach audio track to audio element.
     const micPub = this.props.micPub;
     const micEnabled = micPub && micPub.isSubscribed && !micPub.isMuted;
-    if (micEnabled && this.state.audioTrack) {
-      this.state.audioTrack.attach(node);
+    if (micEnabled && micPub.audioTrack) {
+      micPub.audioTrack.attach(node);
     }
   }
 
@@ -60,28 +73,24 @@ export default class VCCarouselItem extends React.PureComponent {
     const cameraPub = this.props.cameraPub;
     return (
       <div className={classes}>
-        <>
-          <video ref={this.handleVideoRefChange}></video>
-          <audio ref={this.handleAudioRefChange}></audio>
-          {micPub && micPub.isMuted ?
-            <i className="material-icons muted">mic_off</i>
-            : null
-          }
-          {cameraPub && cameraPub.isMuted ?
-            <>
-              <div className="avatar-box carousel-item">
-                <LetterTile
-                  tinode={this.props.tinode}
-                  avatar={this.props.photo}
-                  topic={this.props.identity}
-                  title={this.props.name} />
-              </div>
-            </>
-            : null}
-          <div className="caller-name inactive">
-            {this.props.name}
+        <video ref={this.handleVideoRefChange}></video>
+        <audio ref={this.handleAudioRefChange}></audio>
+        {micPub && micPub.isMuted ?
+          <i className="material-icons muted">mic_off</i>
+          : null
+        }
+        {cameraPub && cameraPub.isMuted ?
+          <div className="avatar-box">
+            <LetterTile
+              tinode={this.props.tinode}
+              avatar={this.props.photo || true}
+              topic={this.props.userId}
+              title={this.props.name} />
           </div>
-        </>
+          : null}
+        <div className="caller-name inactive">
+          {this.props.name}
+        </div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.23.0-rc1",
+  "version": "0.23.0-rc2",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/webapp.git"
@@ -67,8 +67,7 @@
   "dependencies": {
     "firebase": "^9.17.2",
     "libphonenumber-js": "^1.10.24",
-    "livekit-client": "^1.9.3",
-    "npm-check-updates": "^16.7.12",
+    "livekit-client": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.3.0",
@@ -84,8 +83,8 @@
     "babel-plugin-formatjs": "^10.4.0",
     "browserslist": "^4.21.5",
     "copy-webpack-plugin": "^11.0.0",
-    "cssnano": "^5.1.15",
-    "glob": "^9.3.0",
+    "cssnano": "^6.0.1",
+    "glob": "^10.2.7",
     "postcss": "^8.4.21",
     "postcss-cli": "^10.1.0",
     "webpack": "^5.76.1",
