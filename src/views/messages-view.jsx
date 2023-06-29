@@ -19,6 +19,7 @@ import LogoView from './logo-view.jsx';
 import MetaMessage from '../widgets/meta-message.jsx';
 import PinnedMessages from '../widgets/pinned-messages.jsx';
 import SendMessage from '../widgets/send-message.jsx';
+import VCPanel from '../widgets/vc-panel.jsx';
 import VideoPreview from '../widgets/video-preview.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, IMMEDIATE_P2P_SUBSCRIPTION,
@@ -1452,23 +1453,45 @@ class MessagesView extends React.Component {
             onSendMessage={this.sendFileAttachment} />
         );
       } else if (this.state.rtcPanel) {
-        component2 = (
-          <CallPanel
-            topic={this.state.topic}
-            seq={this.props.callSeq}
-            callState={this.props.callState}
-            callAudioOnly={this.props.callAudioOnly}
-            tinode={this.props.tinode}
-            title={this.state.title}
-            avatar={this.state.avatar || true}
+        // P2P call.
+        if (Tinode.isP2PTopicName(this.state.rtcPanel)) {
+          component2 = (
+            <CallPanel
+              topic={this.state.topic}
+              seq={this.props.callSeq}
+              callState={this.props.callState}
+              callAudioOnly={this.props.callAudioOnly}
+              tinode={this.props.tinode}
+              title={this.state.title}
+              avatar={this.state.avatar || true}
 
-            onError={this.props.onError}
-            onHangup={this.handleCallHangup}
-            onInvite={this.props.onCallInvite}
-            onSendOffer={this.props.onCallSendOffer}
-            onIceCandidate={this.props.onCallIceCandidate}
-            onSendAnswer={this.props.onCallSendAnswer} />
-        );
+              onError={this.props.onError}
+              onHangup={this.handleCallHangup}
+              onInvite={this.props.onCallInvite}
+              onSendOffer={this.props.onCallSendOffer}
+              onIceCandidate={this.props.onCallIceCandidate}
+              onSendAnswer={this.props.onCallSendAnswer} />
+          );
+        } else {
+          // Video conference or stream.
+          component2 = (
+            <VCPanel
+              topic={this.state.topic}
+              seq={this.props.callSeq}
+              callState={this.props.callState}
+              callAudioOnly={this.props.callAudioOnly}
+              tinode={this.props.tinode}
+              title={this.state.title}
+              avatar={this.state.avatar || true}
+              myUid={this.props.myUserId}
+              viewportWidth={this.props.viewportWidth}
+
+              onError={this.props.onError}
+              onHangup={this.handleCallHangup}
+              onCreateCall={this.props.onCallInvite}
+              onJoin={this.props.onVCJoin} />
+          );
+        }
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType();
@@ -1549,6 +1572,7 @@ class MessagesView extends React.Component {
             messageNodes.push(
               <ChatMessage
                 tinode={this.props.tinode}
+                topic={this.state.topic}
                 content={msg.content}
                 mimeType={msg.head && msg.head.mime}
                 replyToSeq={replyToSeq}
@@ -1575,6 +1599,7 @@ class MessagesView extends React.Component {
                 pickReply={this.handlePickReply}
                 editMessage={this.handleEditMessage}
                 onQuoteClick={this.handleQuoteClick}
+                onAcceptCall={this.props.onAcceptCall}
                 onError={this.props.onError}
                 ref={ref}
                 key={msg.seq} />
@@ -1606,7 +1631,7 @@ class MessagesView extends React.Component {
         let messagesComponent = (
           <>
             <div id="messages-container">
-              <button className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
+              <button id="go-to-latest" className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
                 <i className="material-icons">arrow_downward</i>
               </button>

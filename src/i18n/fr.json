@@ -1628,17 +1628,17 @@
     "obsolete": false
   },
   "pin_message": {
-    "translation": "",
+    "translation": "Épingler",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning message to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_message": {
-    "translation": "",
+    "translation": "Détacher",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the message.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "failed_to_init_audio": {
@@ -1648,10 +1648,24 @@
     "missing": false,
     "obsolete": false
   },
+  "calls_conference": {
+    "translation": "Conférence téléphonique",
+    "defaultMessage": "Conference call",
+    "description": "Conference call label",
+    "missing": false,
+    "obsolete": false
+  },
   "password_reset_success": {
     "translation": "Mot de passe réinitialisé avec succès",
     "defaultMessage": "Password reset successfully",
     "description": "Notification message that the password was successfully reset.",
+    "missing": false,
+    "obsolete": false
+  },
+  "join_conference": {
+    "translation": "+ Rejoindre",
+    "defaultMessage": "+ Join",
+    "description": "Call to action to join a conference call",
     "missing": false,
     "obsolete": false
   }

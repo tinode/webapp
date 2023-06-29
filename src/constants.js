@@ -6,3 +6,6 @@ export const CALL_STATE_IN_PROGRESS = 3;
 
 // Video call message headers representing call state.
 export const CALL_HEAD_STARTED = 'started';
+
+// Gap between video conference carousel items.
+export const VC_CAROUSEL_ITEM_GAP = 16;

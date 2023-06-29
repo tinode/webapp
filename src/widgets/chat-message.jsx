@@ -29,6 +29,7 @@ class BaseChatMessage extends React.PureComponent {
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleCallJoin = this.handleCallJoin.bind(this);
 
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
@@ -38,7 +39,8 @@ class BaseChatMessage extends React.PureComponent {
       onImagePreview: this.handleExpandImage,
       onVideoPreview: this.handlePlayVideo,
       onFormButtonClick: this.handleFormButtonClick,
-      onQuoteClick: this.handleQuoteClick
+      onQuoteClick: this.handleQuoteClick,
+      onCallJoin: this.handleCallJoin
     };
   }
 
@@ -147,6 +149,10 @@ class BaseChatMessage extends React.PureComponent {
     if (replyToSeq) {
       this.props.onQuoteClick(replyToSeq);
     }
+  }
+
+  handleCallJoin() {
+    this.props.onAcceptCall(this.props.topic, true, this.props.seq);
   }
 
   render() {

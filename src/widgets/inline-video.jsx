@@ -29,7 +29,7 @@ export default class InlineVideo extends React.PureComponent {
         {React.createElement('img', this.props)}
         <div className="play-control">
         {this.props.onClick ?
-          <i className="material-icons white bigger">play_arrow</i>
+          <i className="material-icons white x-big">play_arrow</i>
           :
           <img src="img/broken_video.png" style={{filter: 'invert(100%)'}} width="36" height="36" />}
         </div>

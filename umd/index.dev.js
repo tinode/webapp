@@ -10,72 +10,72 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CONSTANTS: () => (/* binding */ CONSTANTS),
-/* harmony export */   DecodeBase64StringError: () => (/* binding */ DecodeBase64StringError),
-/* harmony export */   Deferred: () => (/* binding */ Deferred),
-/* harmony export */   ErrorFactory: () => (/* binding */ ErrorFactory),
-/* harmony export */   FirebaseError: () => (/* binding */ FirebaseError),
-/* harmony export */   MAX_VALUE_MILLIS: () => (/* binding */ MAX_VALUE_MILLIS),
-/* harmony export */   RANDOM_FACTOR: () => (/* binding */ RANDOM_FACTOR),
-/* harmony export */   Sha1: () => (/* binding */ Sha1),
-/* harmony export */   areCookiesEnabled: () => (/* binding */ areCookiesEnabled),
-/* harmony export */   assert: () => (/* binding */ assert),
-/* harmony export */   assertionError: () => (/* binding */ assertionError),
-/* harmony export */   async: () => (/* binding */ async),
-/* harmony export */   base64: () => (/* binding */ base64),
-/* harmony export */   base64Decode: () => (/* binding */ base64Decode),
-/* harmony export */   base64Encode: () => (/* binding */ base64Encode),
-/* harmony export */   base64urlEncodeWithoutPadding: () => (/* binding */ base64urlEncodeWithoutPadding),
-/* harmony export */   calculateBackoffMillis: () => (/* binding */ calculateBackoffMillis),
-/* harmony export */   contains: () => (/* binding */ contains),
-/* harmony export */   createMockUserToken: () => (/* binding */ createMockUserToken),
-/* harmony export */   createSubscribe: () => (/* binding */ createSubscribe),
-/* harmony export */   decode: () => (/* binding */ decode),
-/* harmony export */   deepCopy: () => (/* binding */ deepCopy),
-/* harmony export */   deepEqual: () => (/* binding */ deepEqual),
-/* harmony export */   deepExtend: () => (/* binding */ deepExtend),
-/* harmony export */   errorPrefix: () => (/* binding */ errorPrefix),
-/* harmony export */   extractQuerystring: () => (/* binding */ extractQuerystring),
-/* harmony export */   getDefaultAppConfig: () => (/* binding */ getDefaultAppConfig),
-/* harmony export */   getDefaultEmulatorHost: () => (/* binding */ getDefaultEmulatorHost),
-/* harmony export */   getDefaultEmulatorHostnameAndPort: () => (/* binding */ getDefaultEmulatorHostnameAndPort),
-/* harmony export */   getDefaults: () => (/* binding */ getDefaults),
-/* harmony export */   getExperimentalSetting: () => (/* binding */ getExperimentalSetting),
-/* harmony export */   getGlobal: () => (/* binding */ getGlobal),
-/* harmony export */   getModularInstance: () => (/* binding */ getModularInstance),
-/* harmony export */   getUA: () => (/* binding */ getUA),
-/* harmony export */   isAdmin: () => (/* binding */ isAdmin),
-/* harmony export */   isBrowser: () => (/* binding */ isBrowser),
-/* harmony export */   isBrowserExtension: () => (/* binding */ isBrowserExtension),
-/* harmony export */   isElectron: () => (/* binding */ isElectron),
-/* harmony export */   isEmpty: () => (/* binding */ isEmpty),
-/* harmony export */   isIE: () => (/* binding */ isIE),
-/* harmony export */   isIndexedDBAvailable: () => (/* binding */ isIndexedDBAvailable),
-/* harmony export */   isMobileCordova: () => (/* binding */ isMobileCordova),
-/* harmony export */   isNode: () => (/* binding */ isNode),
-/* harmony export */   isNodeSdk: () => (/* binding */ isNodeSdk),
-/* harmony export */   isReactNative: () => (/* binding */ isReactNative),
-/* harmony export */   isSafari: () => (/* binding */ isSafari),
-/* harmony export */   isUWP: () => (/* binding */ isUWP),
-/* harmony export */   isValidFormat: () => (/* binding */ isValidFormat),
-/* harmony export */   isValidTimestamp: () => (/* binding */ isValidTimestamp),
-/* harmony export */   issuedAtTime: () => (/* binding */ issuedAtTime),
-/* harmony export */   jsonEval: () => (/* binding */ jsonEval),
-/* harmony export */   map: () => (/* binding */ map),
-/* harmony export */   ordinal: () => (/* binding */ ordinal),
-/* harmony export */   promiseWithTimeout: () => (/* binding */ promiseWithTimeout),
-/* harmony export */   querystring: () => (/* binding */ querystring),
-/* harmony export */   querystringDecode: () => (/* binding */ querystringDecode),
-/* harmony export */   safeGet: () => (/* binding */ safeGet),
-/* harmony export */   stringLength: () => (/* binding */ stringLength),
-/* harmony export */   stringToByteArray: () => (/* binding */ stringToByteArray),
-/* harmony export */   stringify: () => (/* binding */ stringify),
-/* harmony export */   uuidv4: () => (/* binding */ uuidv4),
-/* harmony export */   validateArgCount: () => (/* binding */ validateArgCount),
-/* harmony export */   validateCallback: () => (/* binding */ validateCallback),
-/* harmony export */   validateContextObject: () => (/* binding */ validateContextObject),
-/* harmony export */   validateIndexedDBOpenable: () => (/* binding */ validateIndexedDBOpenable),
-/* harmony export */   validateNamespace: () => (/* binding */ validateNamespace)
+/* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
+/* harmony export */   "DecodeBase64StringError": () => (/* binding */ DecodeBase64StringError),
+/* harmony export */   "Deferred": () => (/* binding */ Deferred),
+/* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
+/* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
+/* harmony export */   "MAX_VALUE_MILLIS": () => (/* binding */ MAX_VALUE_MILLIS),
+/* harmony export */   "RANDOM_FACTOR": () => (/* binding */ RANDOM_FACTOR),
+/* harmony export */   "Sha1": () => (/* binding */ Sha1),
+/* harmony export */   "areCookiesEnabled": () => (/* binding */ areCookiesEnabled),
+/* harmony export */   "assert": () => (/* binding */ assert),
+/* harmony export */   "assertionError": () => (/* binding */ assertionError),
+/* harmony export */   "async": () => (/* binding */ async),
+/* harmony export */   "base64": () => (/* binding */ base64),
+/* harmony export */   "base64Decode": () => (/* binding */ base64Decode),
+/* harmony export */   "base64Encode": () => (/* binding */ base64Encode),
+/* harmony export */   "base64urlEncodeWithoutPadding": () => (/* binding */ base64urlEncodeWithoutPadding),
+/* harmony export */   "calculateBackoffMillis": () => (/* binding */ calculateBackoffMillis),
+/* harmony export */   "contains": () => (/* binding */ contains),
+/* harmony export */   "createMockUserToken": () => (/* binding */ createMockUserToken),
+/* harmony export */   "createSubscribe": () => (/* binding */ createSubscribe),
+/* harmony export */   "decode": () => (/* binding */ decode),
+/* harmony export */   "deepCopy": () => (/* binding */ deepCopy),
+/* harmony export */   "deepEqual": () => (/* binding */ deepEqual),
+/* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
+/* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
+/* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
+/* harmony export */   "getDefaultAppConfig": () => (/* binding */ getDefaultAppConfig),
+/* harmony export */   "getDefaultEmulatorHost": () => (/* binding */ getDefaultEmulatorHost),
+/* harmony export */   "getDefaultEmulatorHostnameAndPort": () => (/* binding */ getDefaultEmulatorHostnameAndPort),
+/* harmony export */   "getDefaults": () => (/* binding */ getDefaults),
+/* harmony export */   "getExperimentalSetting": () => (/* binding */ getExperimentalSetting),
+/* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
+/* harmony export */   "getModularInstance": () => (/* binding */ getModularInstance),
+/* harmony export */   "getUA": () => (/* binding */ getUA),
+/* harmony export */   "isAdmin": () => (/* binding */ isAdmin),
+/* harmony export */   "isBrowser": () => (/* binding */ isBrowser),
+/* harmony export */   "isBrowserExtension": () => (/* binding */ isBrowserExtension),
+/* harmony export */   "isElectron": () => (/* binding */ isElectron),
+/* harmony export */   "isEmpty": () => (/* binding */ isEmpty),
+/* harmony export */   "isIE": () => (/* binding */ isIE),
+/* harmony export */   "isIndexedDBAvailable": () => (/* binding */ isIndexedDBAvailable),
+/* harmony export */   "isMobileCordova": () => (/* binding */ isMobileCordova),
+/* harmony export */   "isNode": () => (/* binding */ isNode),
+/* harmony export */   "isNodeSdk": () => (/* binding */ isNodeSdk),
+/* harmony export */   "isReactNative": () => (/* binding */ isReactNative),
+/* harmony export */   "isSafari": () => (/* binding */ isSafari),
+/* harmony export */   "isUWP": () => (/* binding */ isUWP),
+/* harmony export */   "isValidFormat": () => (/* binding */ isValidFormat),
+/* harmony export */   "isValidTimestamp": () => (/* binding */ isValidTimestamp),
+/* harmony export */   "issuedAtTime": () => (/* binding */ issuedAtTime),
+/* harmony export */   "jsonEval": () => (/* binding */ jsonEval),
+/* harmony export */   "map": () => (/* binding */ map),
+/* harmony export */   "ordinal": () => (/* binding */ ordinal),
+/* harmony export */   "promiseWithTimeout": () => (/* binding */ promiseWithTimeout),
+/* harmony export */   "querystring": () => (/* binding */ querystring),
+/* harmony export */   "querystringDecode": () => (/* binding */ querystringDecode),
+/* harmony export */   "safeGet": () => (/* binding */ safeGet),
+/* harmony export */   "stringLength": () => (/* binding */ stringLength),
+/* harmony export */   "stringToByteArray": () => (/* binding */ stringToByteArray),
+/* harmony export */   "stringify": () => (/* binding */ stringify),
+/* harmony export */   "uuidv4": () => (/* binding */ uuidv4),
+/* harmony export */   "validateArgCount": () => (/* binding */ validateArgCount),
+/* harmony export */   "validateCallback": () => (/* binding */ validateCallback),
+/* harmony export */   "validateContextObject": () => (/* binding */ validateContextObject),
+/* harmony export */   "validateIndexedDBOpenable": () => (/* binding */ validateIndexedDBOpenable),
+/* harmony export */   "validateNamespace": () => (/* binding */ validateNamespace)
 /* harmony export */ });
 /**
  * @license
@@ -2201,48 +2201,48 @@ function getModularInstance(service) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   API_KEY: () => (/* binding */ API_KEY),
-/* harmony export */   APP_NAME: () => (/* binding */ APP_NAME),
-/* harmony export */   AVATAR_SIZE: () => (/* binding */ AVATAR_SIZE),
-/* harmony export */   BROKEN_IMAGE_SIZE: () => (/* binding */ BROKEN_IMAGE_SIZE),
-/* harmony export */   CHANNEL_ACCESS_MODE: () => (/* binding */ CHANNEL_ACCESS_MODE),
-/* harmony export */   DEFAULT_HOST: () => (/* binding */ DEFAULT_HOST),
-/* harmony export */   DEFAULT_P2P_ACCESS_MODE: () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
-/* harmony export */   EDIT_PREVIEW_LENGTH: () => (/* binding */ EDIT_PREVIEW_LENGTH),
-/* harmony export */   FORWARDED_PREVIEW_LENGTH: () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
-/* harmony export */   IMAGE_PREVIEW_DIM: () => (/* binding */ IMAGE_PREVIEW_DIM),
-/* harmony export */   IMAGE_THUMBNAIL_DIM: () => (/* binding */ IMAGE_THUMBNAIL_DIM),
-/* harmony export */   IMMEDIATE_P2P_SUBSCRIPTION: () => (/* binding */ IMMEDIATE_P2P_SUBSCRIPTION),
-/* harmony export */   KEYPRESS_DELAY: () => (/* binding */ KEYPRESS_DELAY),
-/* harmony export */   KNOWN_HOSTS: () => (/* binding */ KNOWN_HOSTS),
-/* harmony export */   LINK_CONTACT_US: () => (/* binding */ LINK_CONTACT_US),
-/* harmony export */   LINK_PRIVACY_POLICY: () => (/* binding */ LINK_PRIVACY_POLICY),
-/* harmony export */   LINK_TERMS_OF_SERVICE: () => (/* binding */ LINK_TERMS_OF_SERVICE),
-/* harmony export */   LOGGING_ENABLED: () => (/* binding */ LOGGING_ENABLED),
-/* harmony export */   MAX_AVATAR_BYTES: () => (/* binding */ MAX_AVATAR_BYTES),
-/* harmony export */   MAX_DURATION: () => (/* binding */ MAX_DURATION),
-/* harmony export */   MAX_EXTERN_ATTACHMENT_SIZE: () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
-/* harmony export */   MAX_IMAGE_DIM: () => (/* binding */ MAX_IMAGE_DIM),
-/* harmony export */   MAX_INBAND_ATTACHMENT_SIZE: () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
-/* harmony export */   MAX_ONLINE_IN_TOPIC: () => (/* binding */ MAX_ONLINE_IN_TOPIC),
-/* harmony export */   MAX_PEER_TITLE_LENGTH: () => (/* binding */ MAX_PEER_TITLE_LENGTH),
-/* harmony export */   MAX_TAG_COUNT: () => (/* binding */ MAX_TAG_COUNT),
-/* harmony export */   MAX_TAG_LENGTH: () => (/* binding */ MAX_TAG_LENGTH),
-/* harmony export */   MAX_TITLE_LENGTH: () => (/* binding */ MAX_TITLE_LENGTH),
-/* harmony export */   MAX_TOPIC_DESCRIPTION_LENGTH: () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
-/* harmony export */   MEDIA_BREAKPOINT: () => (/* binding */ MEDIA_BREAKPOINT),
-/* harmony export */   MESSAGES_PAGE: () => (/* binding */ MESSAGES_PAGE),
-/* harmony export */   MESSAGE_PREVIEW_LENGTH: () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
-/* harmony export */   MIN_DURATION: () => (/* binding */ MIN_DURATION),
-/* harmony export */   MIN_TAG_LENGTH: () => (/* binding */ MIN_TAG_LENGTH),
-/* harmony export */   NEW_GRP_ACCESS_MODE: () => (/* binding */ NEW_GRP_ACCESS_MODE),
-/* harmony export */   NO_ACCESS_MODE: () => (/* binding */ NO_ACCESS_MODE),
-/* harmony export */   NO_DIMENSIONS_VIDEO: () => (/* binding */ NO_DIMENSIONS_VIDEO),
-/* harmony export */   QUOTED_REPLY_LENGTH: () => (/* binding */ QUOTED_REPLY_LENGTH),
-/* harmony export */   READ_DELAY: () => (/* binding */ READ_DELAY),
-/* harmony export */   REM_SIZE: () => (/* binding */ REM_SIZE),
-/* harmony export */   VIDEO_PREVIEW_DIM: () => (/* binding */ VIDEO_PREVIEW_DIM),
-/* harmony export */   VIDEO_THUMBNAIL_WIDTH: () => (/* binding */ VIDEO_THUMBNAIL_WIDTH)
+/* harmony export */   "API_KEY": () => (/* binding */ API_KEY),
+/* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
+/* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
+/* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
+/* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
+/* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
+/* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
+/* harmony export */   "EDIT_PREVIEW_LENGTH": () => (/* binding */ EDIT_PREVIEW_LENGTH),
+/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
+/* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
+/* harmony export */   "IMAGE_THUMBNAIL_DIM": () => (/* binding */ IMAGE_THUMBNAIL_DIM),
+/* harmony export */   "IMMEDIATE_P2P_SUBSCRIPTION": () => (/* binding */ IMMEDIATE_P2P_SUBSCRIPTION),
+/* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
+/* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
+/* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
+/* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
+/* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE),
+/* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
+/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
+/* harmony export */   "MAX_DURATION": () => (/* binding */ MAX_DURATION),
+/* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
+/* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
+/* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
+/* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
+/* harmony export */   "MAX_PEER_TITLE_LENGTH": () => (/* binding */ MAX_PEER_TITLE_LENGTH),
+/* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
+/* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
+/* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
+/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
+/* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
+/* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
+/* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
+/* harmony export */   "MIN_DURATION": () => (/* binding */ MIN_DURATION),
+/* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
+/* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
+/* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
+/* harmony export */   "NO_DIMENSIONS_VIDEO": () => (/* binding */ NO_DIMENSIONS_VIDEO),
+/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
+/* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
+/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
+/* harmony export */   "VIDEO_PREVIEW_DIM": () => (/* binding */ VIDEO_PREVIEW_DIM),
+/* harmony export */   "VIDEO_THUMBNAIL_WIDTH": () => (/* binding */ VIDEO_THUMBNAIL_WIDTH)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -2280,7 +2280,7 @@ const VIDEO_THUMBNAIL_WIDTH = 48;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
-const MAX_PEER_TITLE_LENGTH = 20;
+const MAX_PEER_TITLE_LENGTH = 24;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
@@ -2302,17 +2302,19 @@ const IMMEDIATE_P2P_SUBSCRIPTION = false;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CALL_HEAD_STARTED: () => (/* binding */ CALL_HEAD_STARTED),
-/* harmony export */   CALL_STATE_INCOMING_RECEIVED: () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
-/* harmony export */   CALL_STATE_IN_PROGRESS: () => (/* binding */ CALL_STATE_IN_PROGRESS),
-/* harmony export */   CALL_STATE_NONE: () => (/* binding */ CALL_STATE_NONE),
-/* harmony export */   CALL_STATE_OUTGOING_INITATED: () => (/* binding */ CALL_STATE_OUTGOING_INITATED)
+/* harmony export */   "CALL_HEAD_STARTED": () => (/* binding */ CALL_HEAD_STARTED),
+/* harmony export */   "CALL_STATE_INCOMING_RECEIVED": () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
+/* harmony export */   "CALL_STATE_IN_PROGRESS": () => (/* binding */ CALL_STATE_IN_PROGRESS),
+/* harmony export */   "CALL_STATE_NONE": () => (/* binding */ CALL_STATE_NONE),
+/* harmony export */   "CALL_STATE_OUTGOING_INITATED": () => (/* binding */ CALL_STATE_OUTGOING_INITATED),
+/* harmony export */   "VC_CAROUSEL_ITEM_GAP": () => (/* binding */ VC_CAROUSEL_ITEM_GAP)
 /* harmony export */ });
 const CALL_STATE_NONE = 0;
 const CALL_STATE_OUTGOING_INITATED = 1;
 const CALL_STATE_INCOMING_RECEIVED = 2;
 const CALL_STATE_IN_PROGRESS = 3;
 const CALL_HEAD_STARTED = 'started';
+const VC_CAROUSEL_ITEM_GAP = 16;
 
 /***/ }),
 
@@ -2324,23 +2326,23 @@ const CALL_HEAD_STARTED = 'started';
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   MIME_EXTENSIONS: () => (/* binding */ MIME_EXTENSIONS),
-/* harmony export */   SUPPORTED_IMAGE_FORMATS: () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
-/* harmony export */   base64DecodedLen: () => (/* binding */ base64DecodedLen),
-/* harmony export */   base64EncodedLen: () => (/* binding */ base64EncodedLen),
-/* harmony export */   base64ReEncode: () => (/* binding */ base64ReEncode),
-/* harmony export */   base64ToBlob: () => (/* binding */ base64ToBlob),
-/* harmony export */   base64ToIntArray: () => (/* binding */ base64ToIntArray),
-/* harmony export */   blobToBase64: () => (/* binding */ blobToBase64),
-/* harmony export */   fileNameForMime: () => (/* binding */ fileNameForMime),
-/* harmony export */   filePasted: () => (/* binding */ filePasted),
-/* harmony export */   fileToBase64: () => (/* binding */ fileToBase64),
-/* harmony export */   fitImageSize: () => (/* binding */ fitImageSize),
-/* harmony export */   getMimeType: () => (/* binding */ getMimeType),
-/* harmony export */   imageCrop: () => (/* binding */ imageCrop),
-/* harmony export */   imageScaled: () => (/* binding */ imageScaled),
-/* harmony export */   intArrayToBase64: () => (/* binding */ intArrayToBase64),
-/* harmony export */   makeImageUrl: () => (/* binding */ makeImageUrl)
+/* harmony export */   "MIME_EXTENSIONS": () => (/* binding */ MIME_EXTENSIONS),
+/* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
+/* harmony export */   "base64DecodedLen": () => (/* binding */ base64DecodedLen),
+/* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
+/* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
+/* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob),
+/* harmony export */   "base64ToIntArray": () => (/* binding */ base64ToIntArray),
+/* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
+/* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
+/* harmony export */   "filePasted": () => (/* binding */ filePasted),
+/* harmony export */   "fileToBase64": () => (/* binding */ fileToBase64),
+/* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
+/* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
+/* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
+/* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
+/* harmony export */   "intArrayToBase64": () => (/* binding */ intArrayToBase64),
+/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl)
 /* harmony export */ });
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -2607,9 +2609,9 @@ function base64ToIntArray(b64) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   fullFormatter: () => (/* binding */ fullFormatter),
-/* harmony export */   previewFormatter: () => (/* binding */ previewFormatter),
-/* harmony export */   replyFormatter: () => (/* binding */ replyFormatter)
+/* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
+/* harmony export */   "previewFormatter": () => (/* binding */ previewFormatter),
+/* harmony export */   "replyFormatter": () => (/* binding */ replyFormatter)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -2746,6 +2748,8 @@ function fullFormatter(style, data, values, key, stack) {
         attr.callState = data.state;
         attr.incoming = data.incoming;
         attr.duration = data.duration;
+        attr.vc = data.vc;
+        attr.onCallJoin = this.onCallJoin;
       }
       break;
     case 'VD':
@@ -3141,9 +3145,9 @@ function replyFormatter(style, data, values, key, stack) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   detectServerAddress: () => (/* binding */ detectServerAddress),
-/* harmony export */   isLocalHost: () => (/* binding */ isLocalHost),
-/* harmony export */   isSecureConnection: () => (/* binding */ isSecureConnection)
+/* harmony export */   "detectServerAddress": () => (/* binding */ detectServerAddress),
+/* harmony export */   "isLocalHost": () => (/* binding */ isLocalHost),
+/* harmony export */   "isSecureConnection": () => (/* binding */ isSecureConnection)
 /* harmony export */ });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
@@ -3293,14 +3297,14 @@ class HashNavigation {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   bytesToHumanSize: () => (/* binding */ bytesToHumanSize),
-/* harmony export */   flagEmoji: () => (/* binding */ flagEmoji),
-/* harmony export */   idToColorClass: () => (/* binding */ idToColorClass),
-/* harmony export */   letterTileColorId: () => (/* binding */ letterTileColorId),
-/* harmony export */   relativeDateFormat: () => (/* binding */ relativeDateFormat),
-/* harmony export */   secondsToTime: () => (/* binding */ secondsToTime),
-/* harmony export */   shortDateFormat: () => (/* binding */ shortDateFormat),
-/* harmony export */   shortenFileName: () => (/* binding */ shortenFileName)
+/* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
+/* harmony export */   "flagEmoji": () => (/* binding */ flagEmoji),
+/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass),
+/* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
+/* harmony export */   "relativeDateFormat": () => (/* binding */ relativeDateFormat),
+/* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
+/* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
+/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -3402,17 +3406,17 @@ function flagEmoji(countryCode) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   arrayEqual: () => (/* binding */ arrayEqual),
-/* harmony export */   asEmail: () => (/* binding */ asEmail),
-/* harmony export */   asPhone: () => (/* binding */ asPhone),
-/* harmony export */   cancelablePromise: () => (/* binding */ cancelablePromise),
-/* harmony export */   clipStr: () => (/* binding */ clipStr),
-/* harmony export */   deliveryMarker: () => (/* binding */ deliveryMarker),
-/* harmony export */   isUrlRelative: () => (/* binding */ isUrlRelative),
-/* harmony export */   sanitizeUrl: () => (/* binding */ sanitizeUrl),
-/* harmony export */   sanitizeUrlForMime: () => (/* binding */ sanitizeUrlForMime),
-/* harmony export */   theCard: () => (/* binding */ theCard),
-/* harmony export */   updateFavicon: () => (/* binding */ updateFavicon)
+/* harmony export */   "arrayEqual": () => (/* binding */ arrayEqual),
+/* harmony export */   "asEmail": () => (/* binding */ asEmail),
+/* harmony export */   "asPhone": () => (/* binding */ asPhone),
+/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise),
+/* harmony export */   "clipStr": () => (/* binding */ clipStr),
+/* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
+/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
+/* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
+/* harmony export */   "sanitizeUrlForMime": () => (/* binding */ sanitizeUrlForMime),
+/* harmony export */   "theCard": () => (/* binding */ theCard),
+/* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -3591,9 +3595,9 @@ function clipStr(str, length) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
+/* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.23.0-rc1";
+const PACKAGE_VERSION = "0.23.0-rc2";
 
 /***/ }),
 
@@ -5062,12 +5066,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/meta-message.jsx */ "./src/widgets/meta-message.jsx");
 /* harmony import */ var _widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../widgets/pinned-messages.jsx */ "./src/widgets/pinned-messages.jsx");
 /* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_vc_panel_jsx__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../widgets/vc-panel.jsx */ "./src/widgets/vc-panel.jsx");
+/* harmony import */ var _widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
 
 
 
@@ -5179,7 +5185,7 @@ function isPeerRestricted(acs) {
   return false;
 }
 function shouldPresentCallPanel(callState) {
-  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_19__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_19__.CALL_STATE_IN_PROGRESS;
+  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_20__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_20__.CALL_STATE_IN_PROGRESS;
 }
 class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -5332,7 +5338,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (topic) {
       if (this.state.topic != prevState.topic || this.props.myUserId && !prevProps.myUserId) {
         const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-        if (topic.isP2PType() && newTopic && !_config_js__WEBPACK_IMPORTED_MODULE_18__.IMMEDIATE_P2P_SUBSCRIPTION) {
+        if (topic.isP2PType() && newTopic && !_config_js__WEBPACK_IMPORTED_MODULE_19__.IMMEDIATE_P2P_SUBSCRIPTION) {
           topic.getMeta(topic.startMetaQuery().withDesc().build());
         } else if (this.props.myUserId) {
           this.subscribe(topic);
@@ -5418,7 +5424,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.makeImageUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -5512,7 +5518,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
     let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withAux();
     if (this.state.isReader || newTopic) {
-      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE);
+      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_19__.MESSAGES_PAGE);
       if (this.state.isReader) {
         getQuery = getQuery.withLaterDel();
       }
@@ -5523,7 +5529,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__["default"].setUrlTopic('', ctrl.params.topic));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_22__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_22__["default"].setUrlTopic('', ctrl.params.topic));
         return;
       }
       if (this.state.topic != ctrl.topic) {
@@ -5610,7 +5616,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           this.setState({
             fetchingMessages: true
           }, _ => {
-            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE, gaps, min, max).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
+            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_19__.MESSAGES_PAGE, gaps, min, max).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
               fetchingMessages: false
             }));
           });
@@ -5641,7 +5647,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.makeImageUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -5697,7 +5703,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.readNotificationQueue.push({
       topicName: this.state.topic,
       seq: seq,
-      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_18__.READ_DELAY)
+      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_19__.READ_DELAY)
     });
   }
   clearNotificationQueue() {
@@ -5799,7 +5805,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           clearTimeout(this.keyPressTimer);
           this.keyPressTimer = setTimeout(_ => this.setState({
             typingIndicator: false
-          }), _config_js__WEBPACK_IMPORTED_MODULE_18__.KEYPRESS_DELAY + 1000);
+          }), _config_js__WEBPACK_IMPORTED_MODULE_19__.KEYPRESS_DELAY + 1000);
           if (!this.state.typingIndicator) {
             this.setState({
               typingIndicator: true
@@ -5901,7 +5907,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   handleEnablePeer(e) {
     e.preventDefault();
-    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_18__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
+    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_19__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
   sendKeyPress(audio) {
     const topic = this.props.tinode.getTopic(this.state.topic);
@@ -5948,7 +5954,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
   sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -5964,7 +5970,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: b64.mime,
         data: b64.bits,
         filename: b64.name,
@@ -5973,11 +5979,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_EXTERN_ATTACHMENT_SIZE);
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.bytesToHumanSize)(file.size),
-        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.bytesToHumanSize)(maxExternAttachmentSize)
+        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_23__.bytesToHumanSize)(file.size),
+        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_23__.bytesToHumanSize)(maxExternAttachmentSize)
       }), 'err');
     } else {
       this.setState({
@@ -6002,7 +6008,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.filename;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -6010,7 +6016,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         return;
       }
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_18__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob)).then(b64 => {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_19__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_19__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(scaled.blob)).then(b64 => {
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
@@ -6029,7 +6035,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }).catch(err => this.props.onError(err, 'err'));
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(blob).then(b64 => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(blob).then(b64 => {
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
         bits: b64.bits,
@@ -6048,7 +6054,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   sendVideoAttachment(caption, videoBlob, previewBlob, params) {
     const width = params.width;
     const height = params.height;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     const uploads = [];
     let uploader;
     if (videoBlob.size + previewBlob.size > maxInbandAttachmentSize) {
@@ -6061,7 +6067,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
     }
     if (uploads.length == 0) {
-      Promise.all([(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(previewBlob)]).then(b64s => {
+      Promise.all([(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(previewBlob)]).then(b64s => {
         const [v64, i64] = b64s;
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
           mime: v64.mime,
@@ -6084,9 +6090,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     const uploadCompletionPromise = Promise.all(uploads);
     const b64conv = [];
-    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(videoBlob);
-    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob));
-    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_18__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob));
+    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(videoBlob);
+    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(scaled.blob));
+    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_19__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_19__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(scaled.blob));
     Promise.all(b64conv).then(b64s => {
       const [video, img, preview] = b64s;
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
@@ -6110,7 +6116,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }).catch(err => this.props.onError(err.message, 'err'));
   }
   handleAttachImageOrVideo(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_EXTERN_ATTACHMENT_SIZE);
     if (file.type.startsWith('video/')) {
       this.setState({
         videoPreview: {
@@ -6123,7 +6129,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),
@@ -6152,7 +6158,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendAudioAttachment(url, preview, duration) {
     fetch(url).then(result => result.blob()).then(blob => {
-      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_19__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
       if (blob.size > maxInbandAttachmentSize) {
         const uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
@@ -6169,7 +6175,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
         this.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(blob).then(b64 => {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.blobToBase64)(blob).then(b64 => {
           this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
             mime: b64.mime,
             bits: b64.bits,
@@ -6201,7 +6207,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_18__.QUOTED_REPLY_LENGTH);
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_19__.QUOTED_REPLY_LENGTH);
     } else {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -6223,7 +6229,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
     const editable = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.toMarkdown(content);
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_18__.EDIT_PREVIEW_LENGTH);
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_19__.EDIT_PREVIEW_LENGTH);
     } else {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -6328,7 +6334,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendImageAttachment
         });
       } else if (this.state.videoPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_18__["default"], {
           content: this.state.videoPreview,
           tinode: this.props.tinode,
           reply: this.state.reply,
@@ -6343,7 +6349,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClose: this.handleClosePreview
         });
       } else if (this.state.videoPostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_18__["default"], {
           content: this.state.videoPostview,
           tinode: this.props.tinode,
           onError: this.props.onError,
@@ -6359,21 +6365,39 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendFileAttachment
         });
       } else if (this.state.rtcPanel) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          topic: this.state.topic,
-          seq: this.props.callSeq,
-          callState: this.props.callState,
-          callAudioOnly: this.props.callAudioOnly,
-          tinode: this.props.tinode,
-          title: this.state.title,
-          avatar: this.state.avatar || true,
-          onError: this.props.onError,
-          onHangup: this.handleCallHangup,
-          onInvite: this.props.onCallInvite,
-          onSendOffer: this.props.onCallSendOffer,
-          onIceCandidate: this.props.onCallIceCandidate,
-          onSendAnswer: this.props.onCallSendAnswer
-        });
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(this.state.rtcPanel)) {
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            topic: this.state.topic,
+            seq: this.props.callSeq,
+            callState: this.props.callState,
+            callAudioOnly: this.props.callAudioOnly,
+            tinode: this.props.tinode,
+            title: this.state.title,
+            avatar: this.state.avatar || true,
+            onError: this.props.onError,
+            onHangup: this.handleCallHangup,
+            onInvite: this.props.onCallInvite,
+            onSendOffer: this.props.onCallSendOffer,
+            onIceCandidate: this.props.onCallIceCandidate,
+            onSendAnswer: this.props.onCallSendAnswer
+          });
+        } else {
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_vc_panel_jsx__WEBPACK_IMPORTED_MODULE_17__["default"], {
+            topic: this.state.topic,
+            seq: this.props.callSeq,
+            callState: this.props.callState,
+            callAudioOnly: this.props.callAudioOnly,
+            tinode: this.props.tinode,
+            title: this.state.title,
+            avatar: this.state.avatar || true,
+            myUid: this.props.myUserId,
+            viewportWidth: this.props.viewportWidth,
+            onError: this.props.onError,
+            onHangup: this.handleCallHangup,
+            onCreateCall: this.props.onCallInvite,
+            onJoin: this.props.onVCJoin
+          });
+        }
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType();
@@ -6427,7 +6451,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           const user = topic.userDesc(thisFrom);
           if (user && user.public) {
             userName = user.public.fn;
-            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(user.public.photo);
+            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_21__.makeImageUrl)(user.public.photo);
           }
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
           const ref = this.getOrCreateMessageRef(msg.seq);
@@ -6444,7 +6468,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             const thisDate = new Date(msg.ts);
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.relativeDateFormat)(msg.ts),
+                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_23__.relativeDateFormat)(msg.ts),
                 locale: this.props.intl.locale,
                 key: 'date-' + msg.seq
               }));
@@ -6452,6 +6476,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             }
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
               tinode: this.props.tinode,
+              topic: this.state.topic,
               content: msg.content,
               mimeType: msg.head && msg.head.mime,
               replyToSeq: replyToSeq,
@@ -6478,6 +6503,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               pickReply: this.handlePickReply,
               editMessage: this.handleEditMessage,
               onQuoteClick: this.handleQuoteClick,
+              onAcceptCall: this.props.onAcceptCall,
               onError: this.props.onError,
               ref: ref,
               key: msg.seq
@@ -6493,7 +6519,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
             } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
+              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_23__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
             }
           }
         }
@@ -6503,6 +6529,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+          id: "go-to-latest",
           className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
           onClick: this.goToLatestMessage
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -7516,6 +7543,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
     this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
+    this.handleVCCallJoin = this.handleVCCallJoin.bind(this);
     this.handleCallAccept = this.handleCallAccept.bind(this);
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
     this.callTimeoutTimer = null;
@@ -8754,7 +8782,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       subscribed = false,
       deleter = false,
       archived = false,
-      webrtc = false;
+      webrtc = false,
+      writer = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
@@ -8764,17 +8793,20 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         blocked = !acs.isJoiner();
         self_blocked = !acs.isJoiner('want');
         deleter = acs.isDeleter();
+        writer = acs.isWriter();
       }
     }
-    webrtc = !!this.tinode.getServerParam('iceServers');
+    webrtc = writer && !!this.tinode.getServerParam('iceServers');
+    const mediaServerAvailable = !!this.tinode.getServerParam('vcEndpoint');
     return [subscribed ? {
       title: this.props.intl.formatMessage(messages.menu_item_info),
       handler: this.handleShowInfoView
     } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_audio_call),
       handler: this.handleStartAudioCall
-    } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) && webrtc ? {
+    } : null, subscribed && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_video_call),
+      disabled: tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isGroupTopicName(topicName) && !mediaServerAvailable,
       handler: this.handleStartVideoCall
     } : null, subscribed ? 'messages_clear' : null, subscribed && deleter ? 'messages_clear_hard' : null, muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
   }
@@ -8922,14 +8954,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED,
           aonly: !!audioOnly
         };
-        this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(audioOnly), undefined, undefined, head).then(ctrl => {
+        const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(audioOnly);
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isGroupTopicName(callTopic)) {
+          head.vc = true;
+        }
+        return this.handleSendMessage(msg, undefined, undefined, head).then(ctrl => {
           if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
             this.handleCallClose();
-            return;
+            return ctrl;
           }
           this.setState({
             callSeq: ctrl.params['seq']
           });
+          return ctrl;
         });
         break;
       case _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_IN_PROGRESS:
@@ -8976,6 +9013,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     topic.videoCall('answer', callSeq, sdp);
   }
+  handleVCCallJoin(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+    topic.videoCall('vc-join', callSeq);
+  }
   handleCallClose() {
     if (this.callTimeoutTimer) {
       clearTimeout(this.callTimeoutTimer);
@@ -8986,16 +9030,21 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       callAudioOnly: undefined
     });
   }
-  handleCallAccept(topicName) {
+  handleCallAccept(topicName, setCallTopic, callSeq) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
     if (topic.isSubscribed()) {
-      this.handleTopicSelected(this.state.callTopic);
-      this.setState({
+      this.handleTopicSelected(setCallTopic ? topicName : this.state.callTopic);
+      const upd = {
         callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_IN_PROGRESS
-      });
+      };
+      if (setCallTopic) {
+        upd.callTopic = topicName;
+        upd.callSeq = callSeq;
+      }
+      this.setState(upd);
     } else {
       this.setState({
         callShouldStart: true
@@ -9029,7 +9078,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleDataMessage(data) {
-    if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
+    if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(data.topic)) {
       const topic = this.tinode.getTopic(data.topic);
       if (topic) {
         const msg = topic.latestMsgVersion(data.seq) || data;
@@ -9191,10 +9240,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       callState: this.state.callState,
       callAudioOnly: this.state.callAudioOnly,
       onCallHangup: this.handleCallHangup,
+      onAcceptCall: this.handleCallAccept,
       onCallInvite: this.handleCallInvite,
       onCallSendOffer: this.handleCallSendOffer,
       onCallIceCandidate: this.handleCallIceCandidate,
       onCallSendAnswer: this.handleCallSendAnswer,
+      onVCJoin: this.handleVCCallJoin,
       errorText: this.state.errorText,
       errorLevel: this.state.errorLevel,
       errorAction: this.state.errorAction,
@@ -10341,9 +10392,37 @@ __webpack_require__.r(__webpack_exports__);
 
 class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
+    const bigIcon = this.props.vc ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "composed-material"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons gray second-small"
+    }, "group"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons gray big outline"
+    }, "call")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons big gray"
+    }, "call"));
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
+    const title = this.props.vc ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "calls_conference",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Conference call"
+      }]
+    }) : this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "calls_incoming",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Incoming call"
+      }]
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "calls_outgoing",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Outgoing call"
+      }]
+    });
     let duration;
     if (isCallDropped) {
       switch (this.props.callState) {
@@ -10393,29 +10472,26 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     } else {
       duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
     }
+    const allowJoin = this.props.vc && this.props.callState == 'started';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-message"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons big gray"
-    }, "call")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, bigIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column narrow"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "calls_incoming",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Incoming call"
-      }]
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "calls_outgoing",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Outgoing call"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, title), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "duration"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: successClass
-    }, callIcon), " ", duration)));
+    }, callIcon), " ", duration), allowJoin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      onClick: this.props.onCallJoin
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "join_conference",
+      defaultMessage: [{
+        "type": 0,
+        "value": "+ Join"
+      }]
+    })) : null));
   }
 }
 
@@ -11160,6 +11236,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleCallJoin = this.handleCallJoin.bind(this);
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
@@ -11167,7 +11244,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onImagePreview: this.handleExpandImage,
       onVideoPreview: this.handlePlayVideo,
       onFormButtonClick: this.handleFormButtonClick,
-      onQuoteClick: this.handleQuoteClick
+      onQuoteClick: this.handleQuoteClick,
+      onCallJoin: this.handleCallJoin
     };
   }
   handleExpandImage(e) {
@@ -11269,6 +11347,9 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     if (replyToSeq) {
       this.props.onQuoteClick(replyToSeq);
     }
+  }
+  handleCallJoin() {
+    this.props.onAcceptCall(this.props.topic, true, this.props.seq);
   }
   render() {
     const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
@@ -12539,10 +12620,12 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         item = this.MenuItems[item];
       }
       if (item && item.title) {
+        const className = item.disabled ? 'disabled' : undefined;
         menu.push(item.title == '-' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
           className: "separator",
           key: count
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+          className: className,
           onClick: this.handleClick,
           "data-id": count,
           key: count
@@ -13842,7 +13925,7 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "play-control"
     }, this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons white bigger"
+      className: "material-icons white x-big"
     }, "play_arrow") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: "img/broken_video.png",
       style: {
@@ -16424,6 +16507,563 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
 
 /***/ }),
 
+/***/ "./src/widgets/vc-carousel-item.jsx":
+/*!******************************************!*\
+  !*** ./src/widgets/vc-carousel-item.jsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ VCCarouselItem)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+
+
+class VCCarouselItem extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.handleVideoRefChange = this.handleVideoRefChange.bind(this);
+    this.handleAudioRefChange = this.handleAudioRefChange.bind(this);
+    this.videoRef = null;
+    this.audioRef = null;
+  }
+  componentDidUpdate(prevProps) {
+    if (this.videoRef && !this.videoRef.srcObject && this.props.cameraPub && this.props.cameraPub.videoTrack) {
+      this.props.cameraPub.videoTrack.attach(this.videoRef);
+    }
+    if (this.audioRef && !this.audioRef.srcObject && this.props.micPub && this.props.micPub.audioTrack) {
+      this.props.micPub.audioTrack.attach(this.audioRef);
+    }
+  }
+  handleVideoRefChange(node) {
+    if (!node) {
+      return;
+    }
+    this.videoRef = node;
+    const cameraPub = this.props.cameraPub;
+    const cameraEnabled = cameraPub && cameraPub.isSubscribed && !cameraPub.isMuted;
+    if (cameraEnabled && cameraPub.videoTrack) {
+      cameraPub.videoTrack.attach(node);
+    }
+  }
+  handleAudioRefChange(node) {
+    if (!node) {
+      return;
+    }
+    this.audioRef = node;
+    const micPub = this.props.micPub;
+    const micEnabled = micPub && micPub.isSubscribed && !micPub.isMuted;
+    if (micEnabled && micPub.audioTrack) {
+      micPub.audioTrack.attach(node);
+    }
+  }
+  render() {
+    let classes = 'call-party carousel-item';
+    if (this.props.isSpeaking) {
+      classes += ' call-party-speaking';
+    }
+    const micPub = this.props.micPub;
+    const cameraPub = this.props.cameraPub;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: classes
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      ref: this.handleVideoRefChange
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("audio", {
+      ref: this.handleAudioRefChange
+    }), micPub && micPub.isMuted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons muted"
+    }, "mic_off") : null, cameraPub && cameraPub.isMuted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      tinode: this.props.tinode,
+      avatar: this.props.photo || true,
+      topic: this.props.userId,
+      title: this.props.name
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-name inactive"
+    }, this.props.name));
+  }
+}
+
+/***/ }),
+
+/***/ "./src/widgets/vc-carousel.jsx":
+/*!*************************************!*\
+  !*** ./src/widgets/vc-carousel.jsx ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ VCCarousel)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var livekit_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! livekit-client */ "livekit-client");
+/* harmony import */ var livekit_client__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(livekit_client__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _vc_carousel_item_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./vc-carousel-item.jsx */ "./src/widgets/vc-carousel-item.jsx");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+
+
+
+
+class VCCarousel extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      prevVisible: false,
+      nextVisible: false
+    };
+    this.handleScrollReference = this.handleScrollReference.bind(this);
+    this.handleScrollEvent = this.handleScrollEvent.bind(this);
+    this.handleScrollClick = this.handleScrollClick.bind(this);
+    this.carouselRef = null;
+    this.contentRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+  }
+  componentDidUpdate(prevProps) {
+    if (this.carouselRef && this.props.viewportWidth != prevProps.viewportWidth) {
+      this.handleScrollEvent({
+        target: this.carouselRef
+      });
+    }
+  }
+  componentWillUnmount() {
+    if (this.carouselRef) {
+      this.carouselRef.removeEventListener('scroll', this.handleScrollEvent);
+    }
+  }
+  handleScrollReference(node) {
+    if (node) {
+      this.carouselRef = node;
+      this.carouselRef.addEventListener('scroll', this.handleScrollEvent);
+      this.handleScrollEvent({
+        target: this.carouselRef
+      });
+    }
+  }
+  handleScrollEvent(event) {
+    this.setState({
+      prevVisible: event.target.scrollLeft > _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP,
+      nextVisible: event.target.scrollWidth - event.target.scrollLeft - event.target.offsetWidth > _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP
+    });
+  }
+  handleScrollClick(next) {
+    const val = this.carouselRef.offsetWidth + _constants_js__WEBPACK_IMPORTED_MODULE_3__.VC_CAROUSEL_ITEM_GAP;
+    this.carouselRef.scrollBy(next ? val : -val, 0);
+  }
+  render() {
+    let peers = [];
+    if (this.props.participants) {
+      Object.entries(this.props.participants).forEach((_ref, i) => {
+        let [identity, party] = _ref;
+        const participant = party.participant;
+        const cameraPub = participant.getTrack(livekit_client__WEBPACK_IMPORTED_MODULE_1__.Track.Source.Camera);
+        const micPub = participant.getTrack(livekit_client__WEBPACK_IMPORTED_MODULE_1__.Track.Source.Microphone);
+        peers.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_vc_carousel_item_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          tinode: this.props.tinode,
+          isSpeaking: participant.isSpeaking,
+          cameraPub: cameraPub ? cameraPub : null,
+          micPub: micPub ? micPub : null,
+          name: party.name,
+          userId: identity,
+          photo: party.photo,
+          key: i
+        }));
+      });
+    }
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "carousel-wrapper"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "carousel",
+      ref: this.handleScrollReference
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "carousel-content",
+      ref: this.contentRef
+    }, peers)), this.state.prevVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      id: "carousel-prev",
+      className: "action-button",
+      onClick: _ => this.handleScrollClick(false)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "navigate_before")) : null, this.state.nextVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      id: "carousel-next",
+      className: "action-button",
+      onClick: _ => this.handleScrollClick(true)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "navigate_next")) : null);
+  }
+}
+
+/***/ }),
+
+/***/ "./src/widgets/vc-panel.jsx":
+/*!**********************************!*\
+  !*** ./src/widgets/vc-panel.jsx ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var livekit_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! livekit-client */ "livekit-client");
+/* harmony import */ var livekit_client__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(livekit_client__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _vc_carousel_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./vc-carousel.jsx */ "./src/widgets/vc-carousel.jsx");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+
+
+
+
+class VCPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      room: undefined,
+      participants: {},
+      activeSpeaker: undefined,
+      previousOnInfo: undefined
+    };
+    this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_7__.CALL_STATE_OUTGOING_INITATED;
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    this.isBroadcast = topic && topic.chan;
+    this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.onInfo = this.onInfo.bind(this);
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+    this.reportError = this.reportError.bind(this);
+    this.handleCloseClick = this.handleCloseClick.bind(this);
+    this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
+    this.handleToggleMicClick = this.handleToggleMicClick.bind(this);
+    this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
+    this.handleTrackSubscribed = this.handleTrackSubscribed.bind(this);
+    this.handleTrackUnsubscribed = this.handleTrackUnsubscribed.bind(this);
+    this.handleActiveSpeakerChange = this.handleActiveSpeakerChange.bind(this);
+    this.handleDisconnect = this.handleDisconnect.bind(this);
+    this.handleLocalTrackUnpublished = this.handleLocalTrackUnpublished.bind(this);
+    this.handleLocalTrackPublished = this.handleLocalTrackPublished.bind(this);
+    this.handleParticipantConnected = this.handleParticipantConnected.bind(this);
+    this.handleParticipantDisconnected = this.handleParticipantDisconnected.bind(this);
+    this.handleData = this.handleData.bind(this);
+    this.handleDevicesChanged = this.handleDevicesChanged.bind(this);
+    this.startRoom = this.startRoom.bind(this);
+  }
+  componentDidMount() {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    this.previousOnInfo = topic.onInfo;
+    topic.onInfo = this.onInfo;
+    this.start();
+  }
+  componentWillUnmount() {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    if (topic) {
+      topic.onInfo = this.previousOnInfo;
+    }
+    this.stop();
+  }
+  onInfo(info) {
+    if (info.what != 'call') {
+      return;
+    }
+    switch (info.event) {
+      case 'vc-token':
+        const ts = info.payload;
+        this.setState({
+          token: ts.token
+        });
+        this.startRoom(ts.token);
+        break;
+      case 'hang-up':
+        this.handleRemoteHangup(info);
+        break;
+      default:
+        console.warn("Unknown call event", info.event);
+        break;
+    }
+  }
+  handleParticipantConnected(participant) {
+    if (!participant) return;
+    if (participant instanceof livekit_client__WEBPACK_IMPORTED_MODULE_2__.RemoteParticipant) {
+      participant.on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.ParticipantEvent.TrackMuted, pub => {
+        console.log('track was muted', pub.trackSid, participant.identity);
+        this.forceUpdate();
+      }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.ParticipantEvent.TrackUnmuted, pub => {
+        console.log('track was unmuted', pub.trackSid, participant.identity);
+        this.forceUpdate();
+      }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.ParticipantEvent.IsSpeakingChanged, _ => {
+        this.forceUpdate();
+      }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.ParticipantEvent.ConnectionQualityChanged, _ => {
+        this.forceUpdate();
+      });
+      const me = this.props.tinode.getMeTopic();
+      const c = me.getContact(participant.identity);
+      const participants = Object.assign({}, this.state.participants);
+      participants[participant.identity] = {
+        name: c && c.public && c.public.fn ? c.public.fn : participant.identity,
+        photo: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c && c.public ? c.public.photo : null),
+        participant: participant
+      };
+      this.setState({
+        participants: participants
+      });
+    }
+  }
+  handleParticipantDisconnected(participant) {
+    const participants = Object.assign({}, this.state.participants);
+    delete participants[participant.identity];
+    this.setState({
+      participants: participants
+    });
+  }
+  handleData(msg, participant) {
+    console.log('Data message ', msg, participant);
+  }
+  handleTrackSubscribed(track, publication, participant) {
+    if (participant instanceof livekit_client__WEBPACK_IMPORTED_MODULE_2__.RemoteParticipant) {
+      if (this.remoteRef.current && !(this.remoteRef.current.src != '' || this.remoteRef.srcObject)) {
+        track.attach(this.remoteRef.current);
+      }
+    }
+    this.forceUpdate();
+  }
+  handleTrackUnsubscribed(track, publication, participant) {
+    console.log('handleTrackUnsubscribed', track);
+    track.detach();
+    this.forceUpdate();
+  }
+  handleLocalTrackPublished(pub) {
+    console.log('Local track published', pub);
+    const track = pub.track;
+    if (track instanceof livekit_client__WEBPACK_IMPORTED_MODULE_2__.LocalVideoTrack && this.localRef.current) {
+      const elem = this.localRef.current;
+      track.attach(elem);
+      elem.style.transform = 'scale(-1, 1)';
+    }
+  }
+  handleLocalTrackUnpublished(pub) {
+    const track = pub.track;
+    console.log('handleLocalTrackUnpublished', track);
+    track.detach();
+    this.forceUpdate();
+  }
+  handleActiveSpeakerChange(speakers) {
+    console.log('handleActiveSpeakerChange', speakers);
+    speakers.forEach(s => {
+      if (s.isSpeaking) {
+        console.log('Speaking participant ', s);
+        const elem = this.remoteRef.current;
+        const me = this.props.tinode.getMeTopic();
+        const c = me.getContact(s.identity);
+        const name = c && c.public && c.public.fn ? c.public.fn : undefined;
+        this.setState({
+          activeSpeaker: name
+        });
+        const cameraPub = s.getTrack(livekit_client__WEBPACK_IMPORTED_MODULE_2__.Track.Source.Camera);
+        const cameraEnabled = cameraPub && cameraPub.isSubscribed && !cameraPub.isMuted;
+        if (cameraEnabled && cameraPub.videoTrack) {
+          cameraPub.videoTrack.attach(elem);
+        }
+      }
+    });
+  }
+  handleDevicesChanged() {
+    console.log('devices changed');
+  }
+  handleDisconnect() {
+    console.log('disconnected from room');
+    this.handleCloseClick();
+  }
+  startRoom(token) {
+    const roomOpts = {
+      adaptiveStream: true,
+      dynacast: true,
+      publishDefaults: {
+        simulcast: true,
+        videoSimulcastLayers: [livekit_client__WEBPACK_IMPORTED_MODULE_2__.VideoPresets.h90, livekit_client__WEBPACK_IMPORTED_MODULE_2__.VideoPresets.h216],
+        videoCodec: 'vp8'
+      },
+      videoCaptureDefaults: {
+        resolution: livekit_client__WEBPACK_IMPORTED_MODULE_2__.VideoPresets.h720.resolution
+      }
+    };
+    const connectOpts = {
+      autoSubscribe: true
+    };
+    const room = new livekit_client__WEBPACK_IMPORTED_MODULE_2__.Room(roomOpts);
+    this.setState({
+      room: room
+    });
+    const startTime = Date.now();
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    const shouldPublish = this.isOutgoingCall || !this.isBroadcast;
+    room.on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.ParticipantConnected, this.handleParticipantConnected).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.ParticipantDisconnected, this.handleParticipantDisconnected).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.DataReceived, this.handleData).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.TrackSubscribed, this.handleTrackSubscribed).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.TrackUnsubscribed, this.handleTrackUnsubscribed).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.ActiveSpeakersChanged, this.handleActiveSpeakerChange).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.Disconnected, this.handleDisconnect).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.LocalTrackUnpublished, this.handleLocalTrackUnpublished).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.LocalTrackPublished, this.handleLocalTrackPublished).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.RoomMetadataChanged, metadata => {
+      console.log('VC room new metadata ', metadata);
+    }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.MediaDevicesChanged, this.handleDevicesChanged).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.AudioPlaybackStatusChanged, e => {
+      console.log('Audio playback status change: ', e);
+    }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.MediaDevicesError, e => {
+      const failure = livekit_client__WEBPACK_IMPORTED_MODULE_2__.MediaDeviceFailure.getFailure(e);
+      this.reportError(failure);
+    }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.ConnectionQualityChanged, (quality, participant) => {
+      const id = participant ? participant.identity : 'nil';
+      console.log('Connection quality changed', id, ' -> ', quality);
+    }).on(livekit_client__WEBPACK_IMPORTED_MODULE_2__.RoomEvent.SignalConnected, _ => {
+      const signalConnectionTime = Date.now() - startTime;
+      console.log(`signal connection established in ${signalConnectionTime}ms`);
+      if (shouldPublish) {
+        room.localParticipant.enableCameraAndMicrophone();
+        console.log(`tracks published in ${Date.now() - startTime}ms`);
+      }
+    });
+    const vcEndpoint = this.props.tinode.getServerParam('vcEndpoint', null);
+    room.connect(vcEndpoint, token, connectOpts).then(_ => {
+      console.log('Connected to VC room', room.name, '. Access token', token);
+      room.participants.forEach(participant => {
+        this.handleParticipantConnected(participant);
+      });
+      this.handleParticipantConnected(room.localParticipant);
+    });
+  }
+  start() {
+    if (this.state.localStream) {
+      this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
+      return;
+    }
+    if (this.isOutgoingCall) {
+      this.props.onCreateCall(this.props.topic, this.props.seq, this.props.callState, this.props.callAudioOnly).then(ctrl => {
+        const token = ctrl.params.token;
+        const seq = ctrl.params.seq;
+        this.setState({
+          callSeq: seq,
+          token: token
+        });
+        this.startRoom(token);
+      });
+    } else {
+      this.props.onJoin(this.props.topic, this.props.seq);
+    }
+  }
+  stop() {
+    if (this.state.room) {
+      this.state.room.disconnect();
+    }
+  }
+  reportError(err) {
+    this.props.onError(err.message, 'err');
+  }
+  handleRemoteHangup() {
+    this.handleCloseClick();
+  }
+  handleCloseClick() {
+    this.stop();
+    this.props.onHangup(this.props.topic, this.props.seq);
+  }
+  handleToggleCameraClick() {
+    if (!this.state.room) return;
+    const enabled = this.state.room.localParticipant.isCameraEnabled;
+    this.state.room.localParticipant.setCameraEnabled(!enabled).then(_ => this.forceUpdate());
+    this.forceUpdate();
+  }
+  handleToggleMicClick() {
+    if (!this.state.room) return;
+    const enabled = this.state.room.localParticipant.isMicrophoneEnabled;
+    this.state.room.localParticipant.setMicrophoneEnabled(!enabled).then(_ => this.forceUpdate());
+    this.forceUpdate();
+  }
+  render() {
+    const isPublishing = this.isOutgoingCall || !this.isBroadcast;
+    const disabled = !isPublishing || !this.state.room || !this.state.room.localParticipant;
+    const audioIcon = !disabled && this.state.room.localParticipant.isMicrophoneEnabled ? 'mic' : 'mic_off';
+    const videoIcon = !disabled && this.state.room.localParticipant.isCameraEnabled ? 'videocam' : 'videocam_off';
+    const peerTitle = this.state.activeSpeaker ? this.state.activeSpeaker : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_PEER_TITLE_LENGTH);
+    const remoteActive = this.remoteRef.current && (this.remoteRef.current.src || this.remoteRef.current.srcObject);
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "video-container"
+    }, !this.isBroadcast && Object.keys(this.state.participants).length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_vc_carousel_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      viewportWidth: this.props.viewportWidth,
+      tinode: this.props.tinode,
+      participants: this.state.participants
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "video-container-panel"
+    }, isPublishing ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "call-party self",
+      disabled: this.state.audioOnly
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      ref: this.localRef,
+      autoPlay: true,
+      muted: true,
+      playsInline: true
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-name inactive"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "calls_you_label",
+      defaultMessage: [{
+        "type": 0,
+        "value": "You"
+      }]
+    }))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "call-party peer",
+      disabled: !remoteActive
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      ref: this.remoteRef,
+      autoPlay: true,
+      playsInline: true
+    }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-name inactive"
+    }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-card"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      tinode: this.props.tinode,
+      avatar: this.props.avatar,
+      topic: this.props.topic,
+      title: this.props.title
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-name"
+    }, peerTitle)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "controls"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "danger",
+      onClick: this.handleCloseClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "secondary",
+      onClick: this.handleToggleCameraClick,
+      disabled: disabled
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "secondary",
+      onClick: this.handleToggleMicClick,
+      disabled: disabled
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, audioIcon))));
+  }
+}
+;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(VCPanel));
+
+/***/ }),
+
 /***/ "./src/widgets/video-preview.jsx":
 /*!***************************************!*\
   !*** ./src/widgets/video-preview.jsx ***!
@@ -16695,6 +17335,16 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "livekit-client":
+/*!********************************!*\
+  !*** external "LivekitClient" ***!
+  \********************************/
+/***/ ((module) => {
+
+module.exports = LivekitClient;
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -16743,24 +17393,24 @@ module.exports = tinode;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FirebaseError: () => (/* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError),
-/* harmony export */   SDK_VERSION: () => (/* binding */ SDK_VERSION),
-/* harmony export */   _DEFAULT_ENTRY_NAME: () => (/* binding */ DEFAULT_ENTRY_NAME),
-/* harmony export */   _addComponent: () => (/* binding */ _addComponent),
-/* harmony export */   _addOrOverwriteComponent: () => (/* binding */ _addOrOverwriteComponent),
-/* harmony export */   _apps: () => (/* binding */ _apps),
-/* harmony export */   _clearComponents: () => (/* binding */ _clearComponents),
-/* harmony export */   _components: () => (/* binding */ _components),
-/* harmony export */   _getProvider: () => (/* binding */ _getProvider),
-/* harmony export */   _registerComponent: () => (/* binding */ _registerComponent),
-/* harmony export */   _removeServiceInstance: () => (/* binding */ _removeServiceInstance),
-/* harmony export */   deleteApp: () => (/* binding */ deleteApp),
-/* harmony export */   getApp: () => (/* binding */ getApp),
-/* harmony export */   getApps: () => (/* binding */ getApps),
-/* harmony export */   initializeApp: () => (/* binding */ initializeApp),
-/* harmony export */   onLog: () => (/* binding */ onLog),
-/* harmony export */   registerVersion: () => (/* binding */ registerVersion),
-/* harmony export */   setLogLevel: () => (/* binding */ setLogLevel)
+/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError),
+/* harmony export */   "SDK_VERSION": () => (/* binding */ SDK_VERSION),
+/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* binding */ DEFAULT_ENTRY_NAME),
+/* harmony export */   "_addComponent": () => (/* binding */ _addComponent),
+/* harmony export */   "_addOrOverwriteComponent": () => (/* binding */ _addOrOverwriteComponent),
+/* harmony export */   "_apps": () => (/* binding */ _apps),
+/* harmony export */   "_clearComponents": () => (/* binding */ _clearComponents),
+/* harmony export */   "_components": () => (/* binding */ _components),
+/* harmony export */   "_getProvider": () => (/* binding */ _getProvider),
+/* harmony export */   "_registerComponent": () => (/* binding */ _registerComponent),
+/* harmony export */   "_removeServiceInstance": () => (/* binding */ _removeServiceInstance),
+/* harmony export */   "deleteApp": () => (/* binding */ deleteApp),
+/* harmony export */   "getApp": () => (/* binding */ getApp),
+/* harmony export */   "getApps": () => (/* binding */ getApps),
+/* harmony export */   "initializeApp": () => (/* binding */ initializeApp),
+/* harmony export */   "onLog": () => (/* binding */ onLog),
+/* harmony export */   "registerVersion": () => (/* binding */ registerVersion),
+/* harmony export */   "setLogLevel": () => (/* binding */ setLogLevel)
 /* harmony export */ });
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js");
@@ -16826,7 +17476,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.12";
+const version$1 = "0.9.5";
 
 /**
  * @license
@@ -16893,7 +17543,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.22.2";
+const version = "9.18.0";
 
 /**
  * @license
@@ -17069,7 +17719,7 @@ function _clearComponents() {
  */
 const ERRORS = {
     ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
-        'call initializeApp() first',
+        'call Firebase App.initializeApp()',
     ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}",
     ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
     ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
@@ -17240,7 +17890,7 @@ function initializeApp(_options, rawConfig = {}) {
  */
 function getApp(name = DEFAULT_ENTRY_NAME) {
     const app = _apps.get(name);
-    if (!app && name === DEFAULT_ENTRY_NAME && (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)()) {
+    if (!app && name === DEFAULT_ENTRY_NAME) {
         return initializeApp();
     }
     if (!app) {
@@ -17389,11 +18039,10 @@ function getDbPromise() {
 async function readHeartbeatsFromIndexedDB(app) {
     try {
         const db = await getDbPromise();
-        const result = await db
+        return db
             .transaction(STORE_NAME)
             .objectStore(STORE_NAME)
             .get(computeKey(app));
-        return result;
     }
     catch (e) {
         if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
@@ -17413,7 +18062,7 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const objectStore = tx.objectStore(STORE_NAME);
         await objectStore.put(heartbeatObject, computeKey(app));
-        await tx.done;
+        return tx.done;
     }
     catch (e) {
         if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
@@ -17712,9 +18361,9 @@ registerCoreComponents('');
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Component: () => (/* binding */ Component),
-/* harmony export */   ComponentContainer: () => (/* binding */ ComponentContainer),
-/* harmony export */   Provider: () => (/* binding */ Provider)
+/* harmony export */   "Component": () => (/* binding */ Component),
+/* harmony export */   "ComponentContainer": () => (/* binding */ ComponentContainer),
+/* harmony export */   "Provider": () => (/* binding */ Provider)
 /* harmony export */ });
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
 
@@ -18138,16 +18787,16 @@ class ComponentContainer {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteInstallations: () => (/* binding */ deleteInstallations),
-/* harmony export */   getId: () => (/* binding */ getId),
-/* harmony export */   getInstallations: () => (/* binding */ getInstallations),
-/* harmony export */   getToken: () => (/* binding */ getToken),
-/* harmony export */   onIdChange: () => (/* binding */ onIdChange)
+/* harmony export */   "deleteInstallations": () => (/* binding */ deleteInstallations),
+/* harmony export */   "getId": () => (/* binding */ getId),
+/* harmony export */   "getInstallations": () => (/* binding */ getInstallations),
+/* harmony export */   "getToken": () => (/* binding */ getToken),
+/* harmony export */   "onIdChange": () => (/* binding */ onIdChange)
 /* harmony export */ });
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/@firebase/installations/node_modules/idb/build/index.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
 
 
 
@@ -19306,315 +19955,6 @@ registerInstallations();
 
 /***/ }),
 
-/***/ "./node_modules/@firebase/installations/node_modules/idb/build/index.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@firebase/installations/node_modules/idb/build/index.js ***!
-  \******************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
-/* harmony export */   openDB: () => (/* binding */ openDB),
-/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
-/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
-/* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/@firebase/installations/node_modules/idb/build/wrap-idb-value.js");
-
-
-
-/**
- * Open a database.
- *
- * @param name Name of the database.
- * @param version Schema version.
- * @param callbacks Additional callbacks.
- */
-function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
-    const request = indexedDB.open(name, version);
-    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
-    if (upgrade) {
-        request.addEventListener('upgradeneeded', (event) => {
-            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction));
-        });
-    }
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
-    openPromise
-        .then((db) => {
-        if (terminated)
-            db.addEventListener('close', () => terminated());
-        if (blocking)
-            db.addEventListener('versionchange', () => blocking());
-    })
-        .catch(() => { });
-    return openPromise;
-}
-/**
- * Delete a database.
- *
- * @param name Name of the database.
- */
-function deleteDB(name, { blocked } = {}) {
-    const request = indexedDB.deleteDatabase(name);
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
-    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
-}
-
-const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
-const writeMethods = ['put', 'add', 'delete', 'clear'];
-const cachedMethods = new Map();
-function getMethod(target, prop) {
-    if (!(target instanceof IDBDatabase &&
-        !(prop in target) &&
-        typeof prop === 'string')) {
-        return;
-    }
-    if (cachedMethods.get(prop))
-        return cachedMethods.get(prop);
-    const targetFuncName = prop.replace(/FromIndex$/, '');
-    const useIndex = prop !== targetFuncName;
-    const isWrite = writeMethods.includes(targetFuncName);
-    if (
-    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
-    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
-        !(isWrite || readMethods.includes(targetFuncName))) {
-        return;
-    }
-    const method = async function (storeName, ...args) {
-        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
-        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
-        let target = tx.store;
-        if (useIndex)
-            target = target.index(args.shift());
-        // Must reject if op rejects.
-        // If it's a write operation, must reject if tx.done rejects.
-        // Must reject with op rejection first.
-        // Must resolve with op value.
-        // Must handle both promises (no unhandled rejections)
-        return (await Promise.all([
-            target[targetFuncName](...args),
-            isWrite && tx.done,
-        ]))[0];
-    };
-    cachedMethods.set(prop, method);
-    return method;
-}
-(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
-    ...oldTraps,
-    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
-    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
-}));
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/installations/node_modules/idb/build/wrap-idb-value.js":
-/*!***************************************************************************************!*\
-  !*** ./node_modules/@firebase/installations/node_modules/idb/build/wrap-idb-value.js ***!
-  \***************************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   a: () => (/* binding */ reverseTransformCache),
-/* harmony export */   i: () => (/* binding */ instanceOfAny),
-/* harmony export */   r: () => (/* binding */ replaceTraps),
-/* harmony export */   u: () => (/* binding */ unwrap),
-/* harmony export */   w: () => (/* binding */ wrap)
-/* harmony export */ });
-const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
-
-let idbProxyableTypes;
-let cursorAdvanceMethods;
-// This is a function to prevent it throwing up in node environments.
-function getIdbProxyableTypes() {
-    return (idbProxyableTypes ||
-        (idbProxyableTypes = [
-            IDBDatabase,
-            IDBObjectStore,
-            IDBIndex,
-            IDBCursor,
-            IDBTransaction,
-        ]));
-}
-// This is a function to prevent it throwing up in node environments.
-function getCursorAdvanceMethods() {
-    return (cursorAdvanceMethods ||
-        (cursorAdvanceMethods = [
-            IDBCursor.prototype.advance,
-            IDBCursor.prototype.continue,
-            IDBCursor.prototype.continuePrimaryKey,
-        ]));
-}
-const cursorRequestMap = new WeakMap();
-const transactionDoneMap = new WeakMap();
-const transactionStoreNamesMap = new WeakMap();
-const transformCache = new WeakMap();
-const reverseTransformCache = new WeakMap();
-function promisifyRequest(request) {
-    const promise = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            request.removeEventListener('success', success);
-            request.removeEventListener('error', error);
-        };
-        const success = () => {
-            resolve(wrap(request.result));
-            unlisten();
-        };
-        const error = () => {
-            reject(request.error);
-            unlisten();
-        };
-        request.addEventListener('success', success);
-        request.addEventListener('error', error);
-    });
-    promise
-        .then((value) => {
-        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
-        // (see wrapFunction).
-        if (value instanceof IDBCursor) {
-            cursorRequestMap.set(value, request);
-        }
-        // Catching to avoid "Uncaught Promise exceptions"
-    })
-        .catch(() => { });
-    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
-    // is because we create many promises from a single IDBRequest.
-    reverseTransformCache.set(promise, request);
-    return promise;
-}
-function cacheDonePromiseForTransaction(tx) {
-    // Early bail if we've already created a done promise for this transaction.
-    if (transactionDoneMap.has(tx))
-        return;
-    const done = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            tx.removeEventListener('complete', complete);
-            tx.removeEventListener('error', error);
-            tx.removeEventListener('abort', error);
-        };
-        const complete = () => {
-            resolve();
-            unlisten();
-        };
-        const error = () => {
-            reject(tx.error || new DOMException('AbortError', 'AbortError'));
-            unlisten();
-        };
-        tx.addEventListener('complete', complete);
-        tx.addEventListener('error', error);
-        tx.addEventListener('abort', error);
-    });
-    // Cache it for later retrieval.
-    transactionDoneMap.set(tx, done);
-}
-let idbProxyTraps = {
-    get(target, prop, receiver) {
-        if (target instanceof IDBTransaction) {
-            // Special handling for transaction.done.
-            if (prop === 'done')
-                return transactionDoneMap.get(target);
-            // Polyfill for objectStoreNames because of Edge.
-            if (prop === 'objectStoreNames') {
-                return target.objectStoreNames || transactionStoreNamesMap.get(target);
-            }
-            // Make tx.store return the only store in the transaction, or undefined if there are many.
-            if (prop === 'store') {
-                return receiver.objectStoreNames[1]
-                    ? undefined
-                    : receiver.objectStore(receiver.objectStoreNames[0]);
-            }
-        }
-        // Else transform whatever we get back.
-        return wrap(target[prop]);
-    },
-    set(target, prop, value) {
-        target[prop] = value;
-        return true;
-    },
-    has(target, prop) {
-        if (target instanceof IDBTransaction &&
-            (prop === 'done' || prop === 'store')) {
-            return true;
-        }
-        return prop in target;
-    },
-};
-function replaceTraps(callback) {
-    idbProxyTraps = callback(idbProxyTraps);
-}
-function wrapFunction(func) {
-    // Due to expected object equality (which is enforced by the caching in `wrap`), we
-    // only create one new func per func.
-    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
-    if (func === IDBDatabase.prototype.transaction &&
-        !('objectStoreNames' in IDBTransaction.prototype)) {
-        return function (storeNames, ...args) {
-            const tx = func.call(unwrap(this), storeNames, ...args);
-            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
-            return wrap(tx);
-        };
-    }
-    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
-    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
-    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
-    // with real promises, so each advance methods returns a new promise for the cursor object, or
-    // undefined if the end of the cursor has been reached.
-    if (getCursorAdvanceMethods().includes(func)) {
-        return function (...args) {
-            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-            // the original object.
-            func.apply(unwrap(this), args);
-            return wrap(cursorRequestMap.get(this));
-        };
-    }
-    return function (...args) {
-        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-        // the original object.
-        return wrap(func.apply(unwrap(this), args));
-    };
-}
-function transformCachableValue(value) {
-    if (typeof value === 'function')
-        return wrapFunction(value);
-    // This doesn't return, it just creates a 'done' promise for the transaction,
-    // which is later returned for transaction.done (see idbObjectHandler).
-    if (value instanceof IDBTransaction)
-        cacheDonePromiseForTransaction(value);
-    if (instanceOfAny(value, getIdbProxyableTypes()))
-        return new Proxy(value, idbProxyTraps);
-    // Return the same value back if we're not going to transform it.
-    return value;
-}
-function wrap(value) {
-    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
-    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
-    if (value instanceof IDBRequest)
-        return promisifyRequest(value);
-    // If we've already transformed this value before, reuse the transformed value.
-    // This is faster, but it also provides object equality.
-    if (transformCache.has(value))
-        return transformCache.get(value);
-    const newValue = transformCachableValue(value);
-    // Not all types are transformed.
-    // These may be primitive types, so they can't be WeakMap keys.
-    if (newValue !== value) {
-        transformCache.set(value, newValue);
-        reverseTransformCache.set(newValue, value);
-    }
-    return newValue;
-}
-const unwrap = (value) => reverseTransformCache.get(value);
-
-
-
-
-/***/ }),
-
 /***/ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/@firebase/logger/dist/esm/index.esm2017.js ***!
@@ -19623,10 +19963,10 @@ const unwrap = (value) => reverseTransformCache.get(value);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LogLevel: () => (/* binding */ LogLevel),
-/* harmony export */   Logger: () => (/* binding */ Logger),
-/* harmony export */   setLogLevel: () => (/* binding */ setLogLevel),
-/* harmony export */   setUserLogHandler: () => (/* binding */ setUserLogHandler)
+/* harmony export */   "LogLevel": () => (/* binding */ LogLevel),
+/* harmony export */   "Logger": () => (/* binding */ Logger),
+/* harmony export */   "setLogLevel": () => (/* binding */ setLogLevel),
+/* harmony export */   "setUserLogHandler": () => (/* binding */ setUserLogHandler)
 /* harmony export */ });
 /**
  * @license
@@ -19859,15 +20199,15 @@ function setUserLogHandler(logCallback, options) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteToken: () => (/* binding */ deleteToken),
-/* harmony export */   getMessaging: () => (/* binding */ getMessagingInWindow),
-/* harmony export */   getToken: () => (/* binding */ getToken),
-/* harmony export */   isSupported: () => (/* binding */ isWindowSupported),
-/* harmony export */   onMessage: () => (/* binding */ onMessage)
+/* harmony export */   "deleteToken": () => (/* binding */ deleteToken),
+/* harmony export */   "getMessaging": () => (/* binding */ getMessagingInWindow),
+/* harmony export */   "getToken": () => (/* binding */ getToken),
+/* harmony export */   "isSupported": () => (/* binding */ isWindowSupported),
+/* harmony export */   "onMessage": () => (/* binding */ onMessage)
 /* harmony export */ });
 /* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/@firebase/messaging/node_modules/idb/build/index.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
@@ -21108,20 +21448,97 @@ registerMessagingInWindow();
 
 /***/ }),
 
-/***/ "./node_modules/@firebase/messaging/node_modules/idb/build/index.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@firebase/messaging/node_modules/idb/build/index.js ***!
-  \**************************************************************************/
+/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
-/* harmony export */   openDB: () => (/* binding */ openDB),
-/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
-/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
+/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
+/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
+/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
+/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
+/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
+/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
+/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
+/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
+/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
+/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
+/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
+/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
+/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
+/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
+/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
+/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
+/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
+/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
 /* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
+
+
+var name = "firebase";
+var version = "9.18.0";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
+/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
+/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
+/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
+/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
+/* harmony export */ });
+/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
+/* harmony export */   "openDB": () => (/* binding */ openDB),
+/* harmony export */   "unwrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
+/* harmony export */   "wrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
+/* harmony export */ });
+/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
 
 
 
@@ -21214,399 +21631,6 @@ function getMethod(target, prop) {
 
 /***/ }),
 
-/***/ "./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js ***!
-  \***********************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   a: () => (/* binding */ reverseTransformCache),
-/* harmony export */   i: () => (/* binding */ instanceOfAny),
-/* harmony export */   r: () => (/* binding */ replaceTraps),
-/* harmony export */   u: () => (/* binding */ unwrap),
-/* harmony export */   w: () => (/* binding */ wrap)
-/* harmony export */ });
-const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
-
-let idbProxyableTypes;
-let cursorAdvanceMethods;
-// This is a function to prevent it throwing up in node environments.
-function getIdbProxyableTypes() {
-    return (idbProxyableTypes ||
-        (idbProxyableTypes = [
-            IDBDatabase,
-            IDBObjectStore,
-            IDBIndex,
-            IDBCursor,
-            IDBTransaction,
-        ]));
-}
-// This is a function to prevent it throwing up in node environments.
-function getCursorAdvanceMethods() {
-    return (cursorAdvanceMethods ||
-        (cursorAdvanceMethods = [
-            IDBCursor.prototype.advance,
-            IDBCursor.prototype.continue,
-            IDBCursor.prototype.continuePrimaryKey,
-        ]));
-}
-const cursorRequestMap = new WeakMap();
-const transactionDoneMap = new WeakMap();
-const transactionStoreNamesMap = new WeakMap();
-const transformCache = new WeakMap();
-const reverseTransformCache = new WeakMap();
-function promisifyRequest(request) {
-    const promise = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            request.removeEventListener('success', success);
-            request.removeEventListener('error', error);
-        };
-        const success = () => {
-            resolve(wrap(request.result));
-            unlisten();
-        };
-        const error = () => {
-            reject(request.error);
-            unlisten();
-        };
-        request.addEventListener('success', success);
-        request.addEventListener('error', error);
-    });
-    promise
-        .then((value) => {
-        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
-        // (see wrapFunction).
-        if (value instanceof IDBCursor) {
-            cursorRequestMap.set(value, request);
-        }
-        // Catching to avoid "Uncaught Promise exceptions"
-    })
-        .catch(() => { });
-    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
-    // is because we create many promises from a single IDBRequest.
-    reverseTransformCache.set(promise, request);
-    return promise;
-}
-function cacheDonePromiseForTransaction(tx) {
-    // Early bail if we've already created a done promise for this transaction.
-    if (transactionDoneMap.has(tx))
-        return;
-    const done = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            tx.removeEventListener('complete', complete);
-            tx.removeEventListener('error', error);
-            tx.removeEventListener('abort', error);
-        };
-        const complete = () => {
-            resolve();
-            unlisten();
-        };
-        const error = () => {
-            reject(tx.error || new DOMException('AbortError', 'AbortError'));
-            unlisten();
-        };
-        tx.addEventListener('complete', complete);
-        tx.addEventListener('error', error);
-        tx.addEventListener('abort', error);
-    });
-    // Cache it for later retrieval.
-    transactionDoneMap.set(tx, done);
-}
-let idbProxyTraps = {
-    get(target, prop, receiver) {
-        if (target instanceof IDBTransaction) {
-            // Special handling for transaction.done.
-            if (prop === 'done')
-                return transactionDoneMap.get(target);
-            // Polyfill for objectStoreNames because of Edge.
-            if (prop === 'objectStoreNames') {
-                return target.objectStoreNames || transactionStoreNamesMap.get(target);
-            }
-            // Make tx.store return the only store in the transaction, or undefined if there are many.
-            if (prop === 'store') {
-                return receiver.objectStoreNames[1]
-                    ? undefined
-                    : receiver.objectStore(receiver.objectStoreNames[0]);
-            }
-        }
-        // Else transform whatever we get back.
-        return wrap(target[prop]);
-    },
-    set(target, prop, value) {
-        target[prop] = value;
-        return true;
-    },
-    has(target, prop) {
-        if (target instanceof IDBTransaction &&
-            (prop === 'done' || prop === 'store')) {
-            return true;
-        }
-        return prop in target;
-    },
-};
-function replaceTraps(callback) {
-    idbProxyTraps = callback(idbProxyTraps);
-}
-function wrapFunction(func) {
-    // Due to expected object equality (which is enforced by the caching in `wrap`), we
-    // only create one new func per func.
-    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
-    if (func === IDBDatabase.prototype.transaction &&
-        !('objectStoreNames' in IDBTransaction.prototype)) {
-        return function (storeNames, ...args) {
-            const tx = func.call(unwrap(this), storeNames, ...args);
-            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
-            return wrap(tx);
-        };
-    }
-    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
-    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
-    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
-    // with real promises, so each advance methods returns a new promise for the cursor object, or
-    // undefined if the end of the cursor has been reached.
-    if (getCursorAdvanceMethods().includes(func)) {
-        return function (...args) {
-            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-            // the original object.
-            func.apply(unwrap(this), args);
-            return wrap(cursorRequestMap.get(this));
-        };
-    }
-    return function (...args) {
-        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-        // the original object.
-        return wrap(func.apply(unwrap(this), args));
-    };
-}
-function transformCachableValue(value) {
-    if (typeof value === 'function')
-        return wrapFunction(value);
-    // This doesn't return, it just creates a 'done' promise for the transaction,
-    // which is later returned for transaction.done (see idbObjectHandler).
-    if (value instanceof IDBTransaction)
-        cacheDonePromiseForTransaction(value);
-    if (instanceOfAny(value, getIdbProxyableTypes()))
-        return new Proxy(value, idbProxyTraps);
-    // Return the same value back if we're not going to transform it.
-    return value;
-}
-function wrap(value) {
-    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
-    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
-    if (value instanceof IDBRequest)
-        return promisifyRequest(value);
-    // If we've already transformed this value before, reuse the transformed value.
-    // This is faster, but it also provides object equality.
-    if (transformCache.has(value))
-        return transformCache.get(value);
-    const newValue = transformCachableValue(value);
-    // Not all types are transformed.
-    // These may be primitive types, so they can't be WeakMap keys.
-    if (newValue !== value) {
-        transformCache.set(value, newValue);
-        reverseTransformCache.set(newValue, value);
-    }
-    return newValue;
-}
-const unwrap = (value) => reverseTransformCache.get(value);
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FirebaseError: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
-/* harmony export */   SDK_VERSION: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
-/* harmony export */   _DEFAULT_ENTRY_NAME: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
-/* harmony export */   _addComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
-/* harmony export */   _addOrOverwriteComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
-/* harmony export */   _apps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
-/* harmony export */   _clearComponents: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
-/* harmony export */   _components: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
-/* harmony export */   _getProvider: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
-/* harmony export */   _registerComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
-/* harmony export */   _removeServiceInstance: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
-/* harmony export */   deleteApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
-/* harmony export */   getApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
-/* harmony export */   getApps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
-/* harmony export */   initializeApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
-/* harmony export */   onLog: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
-/* harmony export */   registerVersion: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
-/* harmony export */   setLogLevel: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
-/* harmony export */ });
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
-
-
-var name = "firebase";
-var version = "9.22.2";
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteToken: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
-/* harmony export */   getMessaging: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
-/* harmony export */   getToken: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
-/* harmony export */   isSupported: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
-/* harmony export */   onMessage: () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
-/* harmony export */ });
-/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
-
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/idb/build/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/idb/build/index.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
-/* harmony export */   openDB: () => (/* binding */ openDB),
-/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
-/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
-/* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
-
-
-
-/**
- * Open a database.
- *
- * @param name Name of the database.
- * @param version Schema version.
- * @param callbacks Additional callbacks.
- */
-function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
-    const request = indexedDB.open(name, version);
-    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
-    if (upgrade) {
-        request.addEventListener('upgradeneeded', (event) => {
-            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction), event);
-        });
-    }
-    if (blocked) {
-        request.addEventListener('blocked', (event) => blocked(
-        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
-        event.oldVersion, event.newVersion, event));
-    }
-    openPromise
-        .then((db) => {
-        if (terminated)
-            db.addEventListener('close', () => terminated());
-        if (blocking) {
-            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
-        }
-    })
-        .catch(() => { });
-    return openPromise;
-}
-/**
- * Delete a database.
- *
- * @param name Name of the database.
- */
-function deleteDB(name, { blocked } = {}) {
-    const request = indexedDB.deleteDatabase(name);
-    if (blocked) {
-        request.addEventListener('blocked', (event) => blocked(
-        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
-        event.oldVersion, event));
-    }
-    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
-}
-
-const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
-const writeMethods = ['put', 'add', 'delete', 'clear'];
-const cachedMethods = new Map();
-function getMethod(target, prop) {
-    if (!(target instanceof IDBDatabase &&
-        !(prop in target) &&
-        typeof prop === 'string')) {
-        return;
-    }
-    if (cachedMethods.get(prop))
-        return cachedMethods.get(prop);
-    const targetFuncName = prop.replace(/FromIndex$/, '');
-    const useIndex = prop !== targetFuncName;
-    const isWrite = writeMethods.includes(targetFuncName);
-    if (
-    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
-    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
-        !(isWrite || readMethods.includes(targetFuncName))) {
-        return;
-    }
-    const method = async function (storeName, ...args) {
-        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
-        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
-        let target = tx.store;
-        if (useIndex)
-            target = target.index(args.shift());
-        // Must reject if op rejects.
-        // If it's a write operation, must reject if tx.done rejects.
-        // Must reject with op rejection first.
-        // Must resolve with op value.
-        // Must handle both promises (no unhandled rejections)
-        return (await Promise.all([
-            target[targetFuncName](...args),
-            isWrite && tx.done,
-        ]))[0];
-    };
-    cachedMethods.set(prop, method);
-    return method;
-}
-(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
-    ...oldTraps,
-    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
-    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
-}));
-
-
-
-
-/***/ }),
-
 /***/ "./node_modules/idb/build/wrap-idb-value.js":
 /*!**************************************************!*\
   !*** ./node_modules/idb/build/wrap-idb-value.js ***!
@@ -21615,11 +21639,11 @@ function getMethod(target, prop) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   a: () => (/* binding */ reverseTransformCache),
-/* harmony export */   i: () => (/* binding */ instanceOfAny),
-/* harmony export */   r: () => (/* binding */ replaceTraps),
-/* harmony export */   u: () => (/* binding */ unwrap),
-/* harmony export */   w: () => (/* binding */ wrap)
+/* harmony export */   "a": () => (/* binding */ reverseTransformCache),
+/* harmony export */   "i": () => (/* binding */ instanceOfAny),
+/* harmony export */   "r": () => (/* binding */ replaceTraps),
+/* harmony export */   "u": () => (/* binding */ unwrap),
+/* harmony export */   "w": () => (/* binding */ wrap)
 /* harmony export */ });
 const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
 
@@ -22039,7 +22063,7 @@ const unwrap = (value) => reverseTransformCache.get(value);
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						}
+/******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
 /******/ 		};

@@ -143,6 +143,10 @@
     "defaultMessage": "missed",
     "description": "Label for missed incoming call"
   },
+  "calls_conference": {
+    "defaultMessage": "Conference call",
+    "description": "Conference call label"
+  },
   "calls_incoming": {
     "defaultMessage": "Incoming call",
     "description": "Incoming call label"
@@ -369,6 +373,10 @@
   "invalid_security_token": {
     "defaultMessage": "Invalid security token",
     "description": "Error message when resetting password."
+  },
+  "join_conference": {
+    "defaultMessage": "+ Join",
+    "description": "Call to action to join a conference call"
   },
   "label_client": {
     "defaultMessage": "Client:",
