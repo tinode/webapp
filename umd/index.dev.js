@@ -3593,7 +3593,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.8";
+const PACKAGE_VERSION = "0.22.9";
 
 /***/ }),
 
@@ -16574,7 +16574,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.12";
+const version$1 = "0.9.14";
 
 /**
  * @license
@@ -16641,7 +16641,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.22.2";
+const version = "10.0.0";
 
 /**
  * @license
@@ -21197,7 +21197,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.22.2";
+var version = "10.0.0";
 
 /**
  * @license
@@ -21706,6 +21706,7 @@ const unwrap = (value) => reverseTransformCache.get(value);
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
