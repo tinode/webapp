@@ -6488,6 +6488,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           id: "hide-message-view",
           onClick: e => {
             e.preventDefault();
+            this.leave(this.state.topic);
             this.props.onHideMessagesView();
           }
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {

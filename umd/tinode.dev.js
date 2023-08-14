@@ -2279,7 +2279,7 @@ Drafty.attachments = function (content, callback, context) {
     return;
   }
   let count = 0;
-  for (let i in content.ent) {
+  for (let i in content.fmt) {
     let fmt = content.fmt[i];
     if (fmt && fmt.at < 0) {
       const ent = content.ent[fmt.key | 0];
