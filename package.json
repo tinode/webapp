@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.22.9",
+  "version": "0.22.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/webapp.git"
@@ -70,7 +70,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.4.4",
-    "tinode-sdk": "^0.22.9",
+    "tinode-sdk": "^0.22.10",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {
