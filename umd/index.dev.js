@@ -2206,6 +2206,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AVATAR_SIZE: () => (/* binding */ AVATAR_SIZE),
 /* harmony export */   BROKEN_IMAGE_SIZE: () => (/* binding */ BROKEN_IMAGE_SIZE),
 /* harmony export */   CHANNEL_ACCESS_MODE: () => (/* binding */ CHANNEL_ACCESS_MODE),
+/* harmony export */   CLICKABLE_URL_SCHEMES: () => (/* binding */ CLICKABLE_URL_SCHEMES),
 /* harmony export */   DEFAULT_HOST: () => (/* binding */ DEFAULT_HOST),
 /* harmony export */   DEFAULT_P2P_ACCESS_MODE: () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
 /* harmony export */   EDIT_PREVIEW_LENGTH: () => (/* binding */ EDIT_PREVIEW_LENGTH),
@@ -2291,6 +2292,7 @@ const LINK_CONTACT_US = 'mailto:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 const IMMEDIATE_P2P_SUBSCRIPTION = false;
+const CLICKABLE_URL_SCHEMES = ['http', 'https', 'ftp', 'ftps'];
 
 /***/ }),
 
@@ -2723,6 +2725,11 @@ function fullFormatter(style, data, values, key, stack) {
         inner = [attr.name];
       }
       attr['data-title'] = inner.join('');
+      break;
+    case 'LN':
+      if (attr) {
+        attr.href = typeof attr.href == 'string' ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrl)(attr.href, _config_js__WEBPACK_IMPORTED_MODULE_9__.CLICKABLE_URL_SCHEMES) : '';
+      }
       break;
     case 'MN':
       attr.className = 'mention';
@@ -3498,13 +3505,14 @@ function asEmail(val) {
   return null;
 }
 function isUrlRelative(url) {
-  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
+  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url.replace(/\\/g, '/'));
 }
 function sanitizeUrl(url, allowedSchemes) {
   if (typeof url != 'string') {
     return url;
   }
-  url = url.replace(/[^\x20-\x7E]/gmi, '').trim();
+  url = url.replace(/[^\x21-\x7E]/gmi, '').trim();
+  url = url.replace(/\\/g, '/');
   if (!/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) {
     return url;
   }
@@ -3593,7 +3601,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.10";
+const PACKAGE_VERSION = "0.22.11";
 
 /***/ }),
 
@@ -16575,7 +16583,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.15";
+const version$1 = "0.9.25";
 
 /**
  * @license
@@ -16642,7 +16650,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "10.1.0";
+const version = "10.7.1";
 
 /**
  * @license
@@ -17227,6 +17235,7 @@ class HeartbeatServiceImpl {
      * already logged, subsequent calls to this function in the same day will be ignored.
      */
     async triggerHeartbeat() {
+        var _a, _b;
         const platformLogger = this.container
             .getProvider('platform-logger')
             .getImmediate();
@@ -17234,8 +17243,12 @@ class HeartbeatServiceImpl {
         // service, not the browser user agent.
         const agent = platformLogger.getPlatformInfoString();
         const date = getUTCDateString();
-        if (this._heartbeatsCache === null) {
+        if (((_a = this._heartbeatsCache) === null || _a === void 0 ? void 0 : _a.heartbeats) == null) {
             this._heartbeatsCache = await this._heartbeatsCachePromise;
+            // If we failed to construct a heartbeats cache, then return immediately.
+            if (((_b = this._heartbeatsCache) === null || _b === void 0 ? void 0 : _b.heartbeats) == null) {
+                return;
+            }
         }
         // Do not store a heartbeat if one is already stored for this day
         // or if a header has already been sent today.
@@ -17263,11 +17276,12 @@ class HeartbeatServiceImpl {
      * returns an empty string.
      */
     async getHeartbeatsHeader() {
+        var _a;
         if (this._heartbeatsCache === null) {
             await this._heartbeatsCachePromise;
         }
         // If it's still null or the array is empty, there is no data to send.
-        if (this._heartbeatsCache === null ||
+        if (((_a = this._heartbeatsCache) === null || _a === void 0 ? void 0 : _a.heartbeats) == null ||
             this._heartbeatsCache.heartbeats.length === 0) {
             return '';
         }
@@ -17363,7 +17377,12 @@ class HeartbeatStorageImpl {
         }
         else {
             const idbHeartbeatObject = await readHeartbeatsFromIndexedDB(this.app);
-            return idbHeartbeatObject || { heartbeats: [] };
+            if (idbHeartbeatObject === null || idbHeartbeatObject === void 0 ? void 0 : idbHeartbeatObject.heartbeats) {
+                return idbHeartbeatObject;
+            }
+            else {
+                return { heartbeats: [] };
+            }
         }
     }
     // overwrite the storage with the provided heartbeats
@@ -19616,7 +19635,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/@firebase/messaging/node_modules/idb/build/index.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
@@ -20617,7 +20636,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.4";
+const version = "0.12.5";
 
 /**
  * @license
@@ -20794,15 +20813,15 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
     return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
 }
 /**
- * Subscribes the {@link Messaging} instance to push notifications. Returns an Firebase Cloud
+ * Subscribes the {@link Messaging} instance to push notifications. Returns a Firebase Cloud
  * Messaging registration token that can be used to send push messages to that {@link Messaging}
  * instance.
  *
- * If a notification permission isn't already granted, this method asks the user for permission. The
+ * If notification permission isn't already granted, this method asks the user for permission. The
  * returned promise rejects if the user does not allow the app to show notifications.
  *
  * @param messaging - The {@link Messaging} instance.
- * @param options - Provides an optional vapid key and an optinoal service worker registration
+ * @param options - Provides an optional vapid key and an optional service worker registration.
  *
  * @returns The promise resolves with an FCM registration token.
  *
@@ -20845,7 +20864,8 @@ function onMessage(messaging, nextOrObserver) {
 }
 
 /**
- * Firebase Cloud Messaging
+ * The Firebase Cloud Messaging Web SDK.
+ * This SDK does not work in a Node.js environment.
  *
  * @packageDocumentation
  */
@@ -20853,315 +20873,6 @@ registerMessagingInWindow();
 
 
 //# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/messaging/node_modules/idb/build/index.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@firebase/messaging/node_modules/idb/build/index.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
-/* harmony export */   openDB: () => (/* binding */ openDB),
-/* harmony export */   unwrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
-/* harmony export */   wrap: () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
-/* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js");
-
-
-
-/**
- * Open a database.
- *
- * @param name Name of the database.
- * @param version Schema version.
- * @param callbacks Additional callbacks.
- */
-function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
-    const request = indexedDB.open(name, version);
-    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
-    if (upgrade) {
-        request.addEventListener('upgradeneeded', (event) => {
-            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction));
-        });
-    }
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
-    openPromise
-        .then((db) => {
-        if (terminated)
-            db.addEventListener('close', () => terminated());
-        if (blocking)
-            db.addEventListener('versionchange', () => blocking());
-    })
-        .catch(() => { });
-    return openPromise;
-}
-/**
- * Delete a database.
- *
- * @param name Name of the database.
- */
-function deleteDB(name, { blocked } = {}) {
-    const request = indexedDB.deleteDatabase(name);
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
-    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
-}
-
-const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
-const writeMethods = ['put', 'add', 'delete', 'clear'];
-const cachedMethods = new Map();
-function getMethod(target, prop) {
-    if (!(target instanceof IDBDatabase &&
-        !(prop in target) &&
-        typeof prop === 'string')) {
-        return;
-    }
-    if (cachedMethods.get(prop))
-        return cachedMethods.get(prop);
-    const targetFuncName = prop.replace(/FromIndex$/, '');
-    const useIndex = prop !== targetFuncName;
-    const isWrite = writeMethods.includes(targetFuncName);
-    if (
-    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
-    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
-        !(isWrite || readMethods.includes(targetFuncName))) {
-        return;
-    }
-    const method = async function (storeName, ...args) {
-        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
-        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
-        let target = tx.store;
-        if (useIndex)
-            target = target.index(args.shift());
-        // Must reject if op rejects.
-        // If it's a write operation, must reject if tx.done rejects.
-        // Must reject with op rejection first.
-        // Must resolve with op value.
-        // Must handle both promises (no unhandled rejections)
-        return (await Promise.all([
-            target[targetFuncName](...args),
-            isWrite && tx.done,
-        ]))[0];
-    };
-    cachedMethods.set(prop, method);
-    return method;
-}
-(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
-    ...oldTraps,
-    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
-    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
-}));
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/@firebase/messaging/node_modules/idb/build/wrap-idb-value.js ***!
-  \***********************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   a: () => (/* binding */ reverseTransformCache),
-/* harmony export */   i: () => (/* binding */ instanceOfAny),
-/* harmony export */   r: () => (/* binding */ replaceTraps),
-/* harmony export */   u: () => (/* binding */ unwrap),
-/* harmony export */   w: () => (/* binding */ wrap)
-/* harmony export */ });
-const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
-
-let idbProxyableTypes;
-let cursorAdvanceMethods;
-// This is a function to prevent it throwing up in node environments.
-function getIdbProxyableTypes() {
-    return (idbProxyableTypes ||
-        (idbProxyableTypes = [
-            IDBDatabase,
-            IDBObjectStore,
-            IDBIndex,
-            IDBCursor,
-            IDBTransaction,
-        ]));
-}
-// This is a function to prevent it throwing up in node environments.
-function getCursorAdvanceMethods() {
-    return (cursorAdvanceMethods ||
-        (cursorAdvanceMethods = [
-            IDBCursor.prototype.advance,
-            IDBCursor.prototype.continue,
-            IDBCursor.prototype.continuePrimaryKey,
-        ]));
-}
-const cursorRequestMap = new WeakMap();
-const transactionDoneMap = new WeakMap();
-const transactionStoreNamesMap = new WeakMap();
-const transformCache = new WeakMap();
-const reverseTransformCache = new WeakMap();
-function promisifyRequest(request) {
-    const promise = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            request.removeEventListener('success', success);
-            request.removeEventListener('error', error);
-        };
-        const success = () => {
-            resolve(wrap(request.result));
-            unlisten();
-        };
-        const error = () => {
-            reject(request.error);
-            unlisten();
-        };
-        request.addEventListener('success', success);
-        request.addEventListener('error', error);
-    });
-    promise
-        .then((value) => {
-        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
-        // (see wrapFunction).
-        if (value instanceof IDBCursor) {
-            cursorRequestMap.set(value, request);
-        }
-        // Catching to avoid "Uncaught Promise exceptions"
-    })
-        .catch(() => { });
-    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
-    // is because we create many promises from a single IDBRequest.
-    reverseTransformCache.set(promise, request);
-    return promise;
-}
-function cacheDonePromiseForTransaction(tx) {
-    // Early bail if we've already created a done promise for this transaction.
-    if (transactionDoneMap.has(tx))
-        return;
-    const done = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            tx.removeEventListener('complete', complete);
-            tx.removeEventListener('error', error);
-            tx.removeEventListener('abort', error);
-        };
-        const complete = () => {
-            resolve();
-            unlisten();
-        };
-        const error = () => {
-            reject(tx.error || new DOMException('AbortError', 'AbortError'));
-            unlisten();
-        };
-        tx.addEventListener('complete', complete);
-        tx.addEventListener('error', error);
-        tx.addEventListener('abort', error);
-    });
-    // Cache it for later retrieval.
-    transactionDoneMap.set(tx, done);
-}
-let idbProxyTraps = {
-    get(target, prop, receiver) {
-        if (target instanceof IDBTransaction) {
-            // Special handling for transaction.done.
-            if (prop === 'done')
-                return transactionDoneMap.get(target);
-            // Polyfill for objectStoreNames because of Edge.
-            if (prop === 'objectStoreNames') {
-                return target.objectStoreNames || transactionStoreNamesMap.get(target);
-            }
-            // Make tx.store return the only store in the transaction, or undefined if there are many.
-            if (prop === 'store') {
-                return receiver.objectStoreNames[1]
-                    ? undefined
-                    : receiver.objectStore(receiver.objectStoreNames[0]);
-            }
-        }
-        // Else transform whatever we get back.
-        return wrap(target[prop]);
-    },
-    set(target, prop, value) {
-        target[prop] = value;
-        return true;
-    },
-    has(target, prop) {
-        if (target instanceof IDBTransaction &&
-            (prop === 'done' || prop === 'store')) {
-            return true;
-        }
-        return prop in target;
-    },
-};
-function replaceTraps(callback) {
-    idbProxyTraps = callback(idbProxyTraps);
-}
-function wrapFunction(func) {
-    // Due to expected object equality (which is enforced by the caching in `wrap`), we
-    // only create one new func per func.
-    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
-    if (func === IDBDatabase.prototype.transaction &&
-        !('objectStoreNames' in IDBTransaction.prototype)) {
-        return function (storeNames, ...args) {
-            const tx = func.call(unwrap(this), storeNames, ...args);
-            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
-            return wrap(tx);
-        };
-    }
-    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
-    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
-    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
-    // with real promises, so each advance methods returns a new promise for the cursor object, or
-    // undefined if the end of the cursor has been reached.
-    if (getCursorAdvanceMethods().includes(func)) {
-        return function (...args) {
-            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-            // the original object.
-            func.apply(unwrap(this), args);
-            return wrap(cursorRequestMap.get(this));
-        };
-    }
-    return function (...args) {
-        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-        // the original object.
-        return wrap(func.apply(unwrap(this), args));
-    };
-}
-function transformCachableValue(value) {
-    if (typeof value === 'function')
-        return wrapFunction(value);
-    // This doesn't return, it just creates a 'done' promise for the transaction,
-    // which is later returned for transaction.done (see idbObjectHandler).
-    if (value instanceof IDBTransaction)
-        cacheDonePromiseForTransaction(value);
-    if (instanceOfAny(value, getIdbProxyableTypes()))
-        return new Proxy(value, idbProxyTraps);
-    // Return the same value back if we're not going to transform it.
-    return value;
-}
-function wrap(value) {
-    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
-    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
-    if (value instanceof IDBRequest)
-        return promisifyRequest(value);
-    // If we've already transformed this value before, reuse the transformed value.
-    // This is faster, but it also provides object equality.
-    if (transformCache.has(value))
-        return transformCache.get(value);
-    const newValue = transformCachableValue(value);
-    // Not all types are transformed.
-    // These may be primitive types, so they can't be WeakMap keys.
-    if (newValue !== value) {
-        transformCache.set(value, newValue);
-        reverseTransformCache.set(newValue, value);
-    }
-    return newValue;
-}
-const unwrap = (value) => reverseTransformCache.get(value);
-
-
 
 
 /***/ }),
@@ -21198,7 +20909,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "10.1.0";
+var version = "10.7.1";
 
 /**
  * @license
@@ -21875,6 +21586,8 @@ const messageLoader = {
   'ko': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ko_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19)),
   'ro': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ro_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ro.json */ "./src/i18n.min/ro.json", 19)),
   'ru': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ru_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ru.json */ "./src/i18n.min/ru.json", 19)),
+  'th': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_th_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/th.json */ "./src/i18n.min/th.json", 19)),
+  'uk': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_uk_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/uk.json */ "./src/i18n.min/uk.json", 19)),
   'zh': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/zh.json */ "./src/i18n.min/zh.json", 19)),
   'zh-TW': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh-TW_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/zh-TW.json */ "./src/i18n.min/zh-TW.json", 19))
 };
