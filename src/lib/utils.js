@@ -108,9 +108,12 @@ export function asEmail(val) {
 // example.html - ok
 // https:example.com - not ok.
 // http:/example.com - not ok.
+// //example.com or \\example.com - not ok.
 // ' ↲ https://example.com' - not ok. (↲ means carriage return)
 export function isUrlRelative(url) {
-  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
+  // Replacing backslashes with forward slashes to mimic JS URL parser then testing for
+  // 'scheme:' and '//' with optional space at the start.
+  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url.replace(/\\/g, '/'));
 }
 
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
@@ -121,7 +124,10 @@ export function sanitizeUrl(url, allowedSchemes) {
   }
 
   // Strip control characters and whitespace. They are not valid URL characters anyway.
-  url = url.replace(/[^\x20-\x7E]/gmi, '').trim();
+  url = url.replace(/[^\x21-\x7E]/gmi, '').trim();
+
+  // Replace backslashes with forward slashes. They will be replaced in the URL parser anyway.
+  url = url.replace(/\\/g, '/');
 
   // Relative URLs are safe.
   // Relative URL does not start with ':', abcd123: or '//'.
