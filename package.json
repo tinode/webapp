@@ -4,7 +4,7 @@
   "version": "0.22.11",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinode/webapp.git"
+    "url": "git+https://github.com/tinode/webapp.git"
   },
   "scripts": {
     "start": "echo 'Read installation instructions'",
