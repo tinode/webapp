@@ -126,3 +126,6 @@ export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 // happen until the first message. Setting this option to true enables
 // immediate subscription.
 export const IMMEDIATE_P2P_SUBSCRIPTION = false;
+
+// URL schemes permitted to appear in links (i.e. no javascript: scheme).
+export const CLICKABLE_URL_SCHEMES = ['http', 'https', 'ftp', 'ftps'];
