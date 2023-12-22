@@ -172,6 +172,36 @@ export function sanitizeUrlForMime(url, mimeMajor) {
   return null;
 }
 
+// Append query parameter 'asatt=1' to the URL.
+// It will cause Tinode server to add 'Content-Disposition: attachment' header when serving it.
+// The URL here is always absolute.
+export function urlAsAttachment(url) {
+  // TODO: check if URL is local or remote, i.e. compare to window.location.origin.
+  /*
+  if (typeof window.location == 'object') {
+    if (!url.startsWith(window.location.origin)) {
+      return url;
+    }
+  }
+  */
+  // Split URL into host+path, query, fragment.
+  let query = '', fragment = '';
+  const idxF = url.indexOf('#');
+  if (idxF > 0) {
+    fragment = url.substring(idxF+1);
+    url = url.substring(0, idxF);
+  }
+  const idxQ = url.indexOf('?');
+  if (idxQ > 0) {
+    query = url.substring(idxQ+1);
+    url = url.substring(0, idxQ);
+  }
+  // Add parameter and reassemble.
+  const params = new URLSearchParams(query);
+  params.append('asatt', '1');
+  return `${url}?${params.toString()}` + (fragment ? `#${fragment}` : '');
+}
+
 // Given message's received status, return name and color of a delivery indicator icon.
 export function deliveryMarker(received) {
   switch (received) {

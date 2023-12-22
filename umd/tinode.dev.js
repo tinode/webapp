@@ -2359,7 +2359,7 @@ Drafty.tagName = function (style) {
   return FORMAT_TAGS[style] && FORMAT_TAGS[style].html_tag;
 };
 Drafty.attrValue = function (style, data) {
-  if (data && DECORATORS[style]) {
+  if (data && DECORATORS[style] && DECORATORS[style].props) {
     return DECORATORS[style].props(data);
   }
   return undefined;

@@ -3419,7 +3419,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sanitizeUrl: () => (/* binding */ sanitizeUrl),
 /* harmony export */   sanitizeUrlForMime: () => (/* binding */ sanitizeUrlForMime),
 /* harmony export */   theCard: () => (/* binding */ theCard),
-/* harmony export */   updateFavicon: () => (/* binding */ updateFavicon)
+/* harmony export */   updateFavicon: () => (/* binding */ updateFavicon),
+/* harmony export */   urlAsAttachment: () => (/* binding */ urlAsAttachment)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -3539,6 +3540,23 @@ function sanitizeUrlForMime(url, mimeMajor) {
     return url;
   }
   return null;
+}
+function urlAsAttachment(url) {
+  let query = '',
+    fragment = '';
+  const idxF = url.indexOf('#');
+  if (idxF > 0) {
+    fragment = url.substring(idxF + 1);
+    url = url.substring(0, idxF);
+  }
+  const idxQ = url.indexOf('?');
+  if (idxQ > 0) {
+    query = url.substring(idxQ + 1);
+    url = url.substring(0, idxQ);
+  }
+  const params = new URLSearchParams(query);
+  params.append('asatt', '1');
+  return `${url}?${params.toString()}` + (fragment ? `#${fragment}` : '');
 }
 function deliveryMarker(received) {
   switch (received) {
@@ -13408,6 +13426,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -13471,12 +13491,13 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.filename, maxlength) || '-';
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
+    const download_url = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.urlAsAttachment)(this.props.content.url);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-caption-panel"
     }, this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: this.props.content.url,
+      href: download_url,
       download: this.props.content.filename
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
