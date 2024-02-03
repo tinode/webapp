@@ -113,6 +113,7 @@ class NewTopicView extends React.Component {
             onError={this.props.onError} /> :
           this.state.tabSelected === 'byid' ?
             <NewTopicById
+              myURI={Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.getCurrentUserID()}
               onSubmit={this.handleGroupByID}
               onError={this.props.onError} /> :
             <div className="flex-column">

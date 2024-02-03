@@ -64,6 +64,7 @@ module.exports = (env, argv) => {
       }),
     ],
     externals: {
+      'qrcodejs': 'QRCode',
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',

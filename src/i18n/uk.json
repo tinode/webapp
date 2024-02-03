@@ -1640,5 +1640,12 @@
     "description": "Notification message that the password was successfully reset.",
     "missing": false,
     "obsolete": false
+  },
+  "scan_qr_code": {
+    "translation": "Відскануйте QR-код",
+    "defaultMessage": "Scan QR Code",
+    "description": "Title for scanning QR code",
+    "missing": false,
+    "obsolete": false
   }
 }

@@ -1,5 +1,8 @@
+import QRCode from 'qrcodejs';
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+
+import { QRCODE_SIZE } from '../config';
 
 const messages = defineMessages({
   invalid_id: {
@@ -13,6 +16,8 @@ class NewTopicById extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.qrCodeRef = React.createRef();
+
     this.state = {
       groupId: '',
     };
@@ -20,6 +25,14 @@ class NewTopicById extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    new QRCode(this.qrCodeRef.current, {
+      text: this.props.myURI,
+      width: QRCODE_SIZE,
+      height: QRCODE_SIZE,
+    });
   }
 
   handleChange(e) {
@@ -36,7 +49,7 @@ class NewTopicById extends React.PureComponent {
     e.preventDefault();
     if (this.state.groupId) {
       const name = this.state.groupId.trim();
-      const prefix = name.substr(0, 3);
+      const prefix = name.substring(0, 3);
       if (name.length > 3 && ['usr', 'grp', 'chn'].includes(prefix)) {
         this.props.onSubmit(name);
       } else {
@@ -53,7 +66,7 @@ class NewTopicById extends React.PureComponent {
           description="Prompt for entering user or group ID">{
           (prompt) => <input type="text" placeholder={prompt}
             value={this.state.groupId} onChange={this.handleChange}
-            onKeyPress={this.handleKeyPress} required autoFocus />
+            onKeyDown={this.handleKeyPress} required autoFocus />
         }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
@@ -61,6 +74,11 @@ class NewTopicById extends React.PureComponent {
             <FormattedMessage id="button_subscribe" defaultMessage="Subscribe"
               description="Button [Subscribe]" />
           </button>
+        </div>
+        <br />
+        <div className="panel-form-column">
+        <label className="small">Scan my ID:</label>
+          <div className="qr-code" ref={this.qrCodeRef} />
         </div>
       </div>
     );

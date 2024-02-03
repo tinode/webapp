@@ -129,3 +129,6 @@ export const IMMEDIATE_P2P_SUBSCRIPTION = false;
 
 // URL schemes permitted to appear in links (i.e. no javascript: scheme).
 export const CLICKABLE_URL_SCHEMES = ['http', 'https', 'ftp', 'ftps'];
+
+// Size of the QR code in the app.
+export const QRCODE_SIZE = 128;

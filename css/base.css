@@ -1203,7 +1203,7 @@ img.channel {
   flex-grow: 0;
   padding: 0.5rem 0.75rem;
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Make sure padding is only applied at the top level panel */
@@ -1408,6 +1408,11 @@ img.channel {
 #topic-users > span {
   line-height: 2rem;
   vertical-align: top;
+}
+
+/* Div holding QR code */
+.qr-code {
+  align-self: center;
 }
 
 /* Scrollable panel where the messages are shown */
