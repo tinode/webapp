@@ -2359,7 +2359,7 @@ Drafty.tagName = function (style) {
   return FORMAT_TAGS[style] && FORMAT_TAGS[style].html_tag;
 };
 Drafty.attrValue = function (style, data) {
-  if (data && DECORATORS[style] && DECORATORS[style].props) {
+  if (data && DECORATORS[style]) {
     return DECORATORS[style].props(data);
   }
   return undefined;
@@ -6188,7 +6188,6 @@ Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
 Tinode.MAX_TAG_COUNT = 'maxTagCount';
 Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
 Tinode.REQ_CRED_VALIDATORS = 'reqCred';
-Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
 })();
 
 /******/ 	return __webpack_exports__;
