@@ -4,7 +4,7 @@
     "namespace": "android_app",
     "package_name": "co.tinode.tindroidx",
     "sha256_cert_fingerprints":
-    ["5B:BE:6A:C4:A7:66:A8:BB:4B:C1:52:66:E5:A4:BD:66:3C:33:50:04:11:CB:17:44:45:89:5E:3C:8D:55:77:7A"]
+    ["25:9A:71:EE:BD:2E:9F:D3:2D:64:1E:90:49:33:BD:F3:E3:42:BD:C4:DD:FA:BA:68:EE:D2:EB:76:65:33:DC:92"]
   }
 },
 {
@@ -22,4 +22,5 @@
     "sha256_cert_fingerprints":
     ["5B:BE:6A:C4:A7:66:A8:BB:4B:C1:52:66:E5:A4:BD:66:3C:33:50:04:11:CB:17:44:45:89:5E:3C:8D:55:77:7A"]
   }
-}]
+}
+]
