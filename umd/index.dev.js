@@ -3545,6 +3545,9 @@ function sanitizeUrlForMime(url, mimeMajor) {
   return null;
 }
 function urlAsAttachment(url) {
+  if (url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
   let query = '',
     fragment = '';
   const idxF = url.indexOf('#');
