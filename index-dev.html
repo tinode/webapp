@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
+    <!-- Polyfill Intl.Segmenter for Firefox 124 and earlier. This can be safely removed in the end of 2024. -->
+    <script crossorigin="anonymous" src="https://polyfill-fastly.io/v3/polyfill.min.js?features=Intl.Segmenter"></script>
     <!-- ReactJS -->
     <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
     <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>

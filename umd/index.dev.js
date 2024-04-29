@@ -3545,6 +3545,9 @@ function sanitizeUrlForMime(url, mimeMajor) {
   return null;
 }
 function urlAsAttachment(url) {
+  if (url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
   let query = '',
     fragment = '';
   const idxF = url.indexOf('#');
@@ -3622,7 +3625,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.12";
+const PACKAGE_VERSION = "0.22.13";
 
 /***/ }),
 
@@ -16657,12 +16660,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   _clearComponents: () => (/* binding */ _clearComponents),
 /* harmony export */   _components: () => (/* binding */ _components),
 /* harmony export */   _getProvider: () => (/* binding */ _getProvider),
+/* harmony export */   _isFirebaseApp: () => (/* binding */ _isFirebaseApp),
+/* harmony export */   _isFirebaseServerApp: () => (/* binding */ _isFirebaseServerApp),
 /* harmony export */   _registerComponent: () => (/* binding */ _registerComponent),
 /* harmony export */   _removeServiceInstance: () => (/* binding */ _removeServiceInstance),
+/* harmony export */   _serverApps: () => (/* binding */ _serverApps),
 /* harmony export */   deleteApp: () => (/* binding */ deleteApp),
 /* harmony export */   getApp: () => (/* binding */ getApp),
 /* harmony export */   getApps: () => (/* binding */ getApps),
 /* harmony export */   initializeApp: () => (/* binding */ initializeApp),
+/* harmony export */   initializeServerApp: () => (/* binding */ initializeServerApp),
 /* harmony export */   onLog: () => (/* binding */ onLog),
 /* harmony export */   registerVersion: () => (/* binding */ registerVersion),
 /* harmony export */   setLogLevel: () => (/* binding */ setLogLevel)
@@ -16731,7 +16738,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.27";
+const version$1 = "0.10.2";
 
 /**
  * @license
@@ -16798,7 +16805,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "10.8.0";
+const version = "10.11.1";
 
 /**
  * @license
@@ -16872,6 +16879,10 @@ const PLATFORM_LOG_STRING = {
  */
 const _apps = new Map();
 /**
+ * @internal
+ */
+const _serverApps = new Map();
+/**
  * Registered components.
  *
  * @internal
@@ -16916,6 +16927,9 @@ function _registerComponent(component) {
     for (const app of _apps.values()) {
         _addComponent(app, component);
     }
+    for (const serverApp of _serverApps.values()) {
+        _addComponent(serverApp, component);
+    }
     return true;
 }
 /**
@@ -16948,6 +16962,28 @@ function _removeServiceInstance(app, name, instanceIdentifier = DEFAULT_ENTRY_NA
     _getProvider(app, name).clearInstance(instanceIdentifier);
 }
 /**
+ *
+ * @param obj - an object of type FirebaseApp or FirebaseOptions.
+ *
+ * @returns true if the provide object is of type FirebaseApp.
+ *
+ * @internal
+ */
+function _isFirebaseApp(obj) {
+    return obj.options !== undefined;
+}
+/**
+ *
+ * @param obj - an object of type FirebaseApp.
+ *
+ * @returns true if the provided object is of type FirebaseServerAppImpl.
+ *
+ * @internal
+ */
+function _isFirebaseServerApp(obj) {
+    return obj.settings !== undefined;
+}
+/**
  * Test only
  *
  * @internal
@@ -16975,9 +17011,10 @@ function _clearComponents() {
 const ERRORS = {
     ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
         'call initializeApp() first',
-    ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}",
+    ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}'",
     ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
     ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
+    ["server-app-deleted" /* AppError.SERVER_APP_DELETED */]: 'Firebase Server App has been deleted',
     ["no-options" /* AppError.NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
     ["invalid-app-argument" /* AppError.INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
         'Firebase App instance.',
@@ -16985,7 +17022,9 @@ const ERRORS = {
     ["idb-open" /* AppError.IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
     ["idb-get" /* AppError.IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
     ["idb-set" /* AppError.IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-delete" /* AppError.IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.'
+    ["idb-delete" /* AppError.IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.',
+    ["finalization-registry-not-supported" /* AppError.FINALIZATION_REGISTRY_NOT_SUPPORTED */]: 'FirebaseServerApp deleteOnDeref field defined but the JS runtime does not support FinalizationRegistry.',
+    ["invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */]: 'FirebaseServerApp is not for use in browser environments.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
 
@@ -17058,6 +17097,99 @@ class FirebaseAppImpl {
 
 /**
  * @license
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class FirebaseServerAppImpl extends FirebaseAppImpl {
+    constructor(options, serverConfig, name, container) {
+        // Build configuration parameters for the FirebaseAppImpl base class.
+        const automaticDataCollectionEnabled = serverConfig.automaticDataCollectionEnabled !== undefined
+            ? serverConfig.automaticDataCollectionEnabled
+            : false;
+        // Create the FirebaseAppSettings object for the FirebaseAppImp constructor.
+        const config = {
+            name,
+            automaticDataCollectionEnabled
+        };
+        if (options.apiKey !== undefined) {
+            // Construct the parent FirebaseAppImp object.
+            super(options, config, container);
+        }
+        else {
+            const appImpl = options;
+            super(appImpl.options, config, container);
+        }
+        // Now construct the data for the FirebaseServerAppImpl.
+        this._serverConfig = Object.assign({ automaticDataCollectionEnabled }, serverConfig);
+        this._finalizationRegistry = new FinalizationRegistry(() => {
+            this.automaticCleanup();
+        });
+        this._refCount = 0;
+        this.incRefCount(this._serverConfig.releaseOnDeref);
+        // Do not retain a hard reference to the dref object, otherwise the FinalizationRegisry
+        // will never trigger.
+        this._serverConfig.releaseOnDeref = undefined;
+        serverConfig.releaseOnDeref = undefined;
+        registerVersion(name$o, version$1, 'serverapp');
+    }
+    toJSON() {
+        return undefined;
+    }
+    get refCount() {
+        return this._refCount;
+    }
+    // Increment the reference count of this server app. If an object is provided, register it
+    // with the finalization registry.
+    incRefCount(obj) {
+        if (this.isDeleted) {
+            return;
+        }
+        this._refCount++;
+        if (obj !== undefined) {
+            this._finalizationRegistry.register(obj, this);
+        }
+    }
+    // Decrement the reference count.
+    decRefCount() {
+        if (this.isDeleted) {
+            return 0;
+        }
+        return --this._refCount;
+    }
+    // Invoked by the FinalizationRegistry callback to note that this app should go through its
+    // reference counts and delete itself if no reference count remain. The coordinating logic that
+    // handles this is in deleteApp(...).
+    automaticCleanup() {
+        void deleteApp(this);
+    }
+    get settings() {
+        this.checkDestroyed();
+        return this._serverConfig;
+    }
+    /**
+     * This function will throw an Error if the App has already been deleted -
+     * use before performing API actions on the App.
+     */
+    checkDestroyed() {
+        if (this.isDeleted) {
+            throw ERROR_FACTORY.create("server-app-deleted" /* AppError.SERVER_APP_DELETED */);
+        }
+    }
+}
+
+/**
+ * @license
  * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17112,6 +17244,50 @@ function initializeApp(_options, rawConfig = {}) {
     }
     const newApp = new FirebaseAppImpl(options, config, container);
     _apps.set(name, newApp);
+    return newApp;
+}
+function initializeServerApp(_options, _serverAppConfig) {
+    if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isBrowser)()) {
+        // FirebaseServerApp isn't designed to be run in browsers.
+        throw ERROR_FACTORY.create("invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */);
+    }
+    if (_serverAppConfig.automaticDataCollectionEnabled === undefined) {
+        _serverAppConfig.automaticDataCollectionEnabled = false;
+    }
+    let appOptions;
+    if (_isFirebaseApp(_options)) {
+        appOptions = _options.options;
+    }
+    else {
+        appOptions = _options;
+    }
+    // Build an app name based on a hash of the configuration options.
+    const nameObj = Object.assign(Object.assign({}, _serverAppConfig), appOptions);
+    // However, Do not mangle the name based on releaseOnDeref, since it will vary between the
+    // construction of FirebaseServerApp instances. For example, if the object is the request headers.
+    if (nameObj.releaseOnDeref !== undefined) {
+        delete nameObj.releaseOnDeref;
+    }
+    const hashCode = (s) => {
+        return [...s].reduce((hash, c) => (Math.imul(31, hash) + c.charCodeAt(0)) | 0, 0);
+    };
+    if (_serverAppConfig.releaseOnDeref !== undefined) {
+        if (typeof FinalizationRegistry === 'undefined') {
+            throw ERROR_FACTORY.create("finalization-registry-not-supported" /* AppError.FINALIZATION_REGISTRY_NOT_SUPPORTED */, {});
+        }
+    }
+    const nameString = '' + hashCode(JSON.stringify(nameObj));
+    const existingApp = _serverApps.get(nameString);
+    if (existingApp) {
+        existingApp.incRefCount(_serverAppConfig.releaseOnDeref);
+        return existingApp;
+    }
+    const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(nameString);
+    for (const component of _components.values()) {
+        container.addComponent(component);
+    }
+    const newApp = new FirebaseServerAppImpl(appOptions, _serverAppConfig, nameString, container);
+    _serverApps.set(nameString, newApp);
     return newApp;
 }
 /**
@@ -17178,9 +17354,20 @@ function getApps() {
  * @public
  */
 async function deleteApp(app) {
+    let cleanupProviders = false;
     const name = app.name;
     if (_apps.has(name)) {
+        cleanupProviders = true;
         _apps.delete(name);
+    }
+    else if (_serverApps.has(name)) {
+        const firebaseServerApp = app;
+        if (firebaseServerApp.decRefCount() <= 0) {
+            _serverApps.delete(name);
+            cleanupProviders = true;
+        }
+    }
+    if (cleanupProviders) {
         await Promise.all(app.container
             .getProviders()
             .map(provider => provider.delete()));
@@ -18079,7 +18266,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.5";
+const version = "0.6.6";
 
 /**
  * @license
@@ -20032,7 +20219,6 @@ async function updateToken(messaging, tokenDetails) {
         return updatedToken;
     }
     catch (e) {
-        await deleteTokenInternal(messaging);
         throw e;
     }
 }
@@ -20485,7 +20671,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.6";
+const version = "0.12.8";
 
 /**
  * @license
@@ -20743,12 +20929,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   _clearComponents: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
 /* harmony export */   _components: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
 /* harmony export */   _getProvider: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
+/* harmony export */   _isFirebaseApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseApp),
+/* harmony export */   _isFirebaseServerApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseServerApp),
 /* harmony export */   _registerComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
 /* harmony export */   _removeServiceInstance: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
+/* harmony export */   _serverApps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._serverApps),
 /* harmony export */   deleteApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
 /* harmony export */   getApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
 /* harmony export */   getApps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
 /* harmony export */   initializeApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
+/* harmony export */   initializeServerApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeServerApp),
 /* harmony export */   onLog: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
 /* harmony export */   registerVersion: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
 /* harmony export */   setLogLevel: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
@@ -20758,7 +20948,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "10.8.0";
+var version = "10.11.1";
 
 /**
  * @license

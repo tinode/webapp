@@ -174,7 +174,7 @@ export function sanitizeUrlForMime(url, mimeMajor) {
 
 // Append query parameter 'asatt=1' to the URL.
 // It will cause Tinode server to add 'Content-Disposition: attachment' header when serving it.
-// The URL here is always absolute.
+// The URL is a string. The URL here is always absolute.
 export function urlAsAttachment(url) {
   // TODO: check if URL is local or remote, i.e. compare to window.location.origin.
   /*
@@ -184,6 +184,11 @@ export function urlAsAttachment(url) {
     }
   }
   */
+  // Check if the URL is a data or blob. Do not alter such URLs.
+  if (url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
+
   // Split URL into host+path, query, fragment.
   let query = '', fragment = '';
   const idxF = url.indexOf('#');
