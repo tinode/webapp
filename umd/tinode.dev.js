@@ -2359,7 +2359,7 @@ Drafty.tagName = function (style) {
   return FORMAT_TAGS[style] && FORMAT_TAGS[style].html_tag;
 };
 Drafty.attrValue = function (style, data) {
-  if (data && DECORATORS[style]) {
+  if (data && DECORATORS[style] && DECORATORS[style].props) {
     return DECORATORS[style].props(data);
   }
   return undefined;
@@ -4857,7 +4857,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.11";
+const PACKAGE_VERSION = "0.22.12";
 
 /***/ })
 
@@ -6188,6 +6188,7 @@ Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
 Tinode.MAX_TAG_COUNT = 'maxTagCount';
 Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
 Tinode.REQ_CRED_VALIDATORS = 'reqCred';
+Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
 })();
 
 /******/ 	return __webpack_exports__;
