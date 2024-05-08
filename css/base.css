@@ -2008,21 +2008,21 @@ video {
 }
 
 /* Increase font size when the message contains only emojis.
-Font from largest to normal, from 1 to 5 emojis in a message */
+Font from 3x to almost normal, from 1 to 5 emojis in a message */
 .bubble div.message-content.emoji-1 {
-  font-size: xxx-large;
+  font-size: 300%;
 }
 .bubble div.message-content.emoji-2 {
-  font-size: xx-large;
+  font-size: 241%;
 }
 .bubble div.message-content.emoji-3 {
-  font-size: x-large;
+  font-size: 193%;
 }
 .bubble div.message-content.emoji-4 {
-  font-size: large;
+  font-size: 155%;
 }
 .bubble div.message-content.emoji-5 {
-  font-size: larger;
+  font-size: 125%;
 }
 
 /* The timestamp is a floating element. Need to ensure div.message-content is expanded

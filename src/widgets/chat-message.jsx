@@ -178,7 +178,7 @@ class BaseChatMessage extends React.PureComponent {
     } else if (typeof content == 'string') {
       // Make font bigger for emoji-only messages.
       // Must use 'new RegExp(...)' because React does not like /{1-5}/.
-      if (new RegExp('^[\p{RGI_Emoji}]{1-5}$', 'v').test(content || '')) {
+      if (new RegExp('^\\p{RGI_Emoji}{1,5}$', 'v').test(content || '')) {
         // Content consists of 1-5 emoji characters. Count how many and use it to increase the font size.
         textSizeClass += ' emoji-' + (content || '').match(/\p{RGI_Emoji}/vg).length;
       }
