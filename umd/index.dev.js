@@ -3625,7 +3625,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.13";
+const PACKAGE_VERSION = "0.23.0-rc1";
 
 /***/ }),
 
@@ -11103,7 +11103,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
 
 
@@ -16742,8 +16742,8 @@ function isVersionServiceProvider(provider) {
     return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* ComponentType.VERSION */;
 }
 
-const name$o = "@firebase/app";
-const version$1 = "0.10.2";
+const name$p = "@firebase/app";
+const version$1 = "0.10.5";
 
 /**
  * @license
@@ -16763,54 +16763,56 @@ const version$1 = "0.10.2";
  */
 const logger = new _firebase_logger__WEBPACK_IMPORTED_MODULE_1__.Logger('@firebase/app');
 
-const name$n = "@firebase/app-compat";
+const name$o = "@firebase/app-compat";
 
-const name$m = "@firebase/analytics-compat";
+const name$n = "@firebase/analytics-compat";
 
-const name$l = "@firebase/analytics";
+const name$m = "@firebase/analytics";
 
-const name$k = "@firebase/app-check-compat";
+const name$l = "@firebase/app-check-compat";
 
-const name$j = "@firebase/app-check";
+const name$k = "@firebase/app-check";
 
-const name$i = "@firebase/auth";
+const name$j = "@firebase/auth";
 
-const name$h = "@firebase/auth-compat";
+const name$i = "@firebase/auth-compat";
 
-const name$g = "@firebase/database";
+const name$h = "@firebase/database";
 
-const name$f = "@firebase/database-compat";
+const name$g = "@firebase/database-compat";
 
-const name$e = "@firebase/functions";
+const name$f = "@firebase/functions";
 
-const name$d = "@firebase/functions-compat";
+const name$e = "@firebase/functions-compat";
 
-const name$c = "@firebase/installations";
+const name$d = "@firebase/installations";
 
-const name$b = "@firebase/installations-compat";
+const name$c = "@firebase/installations-compat";
 
-const name$a = "@firebase/messaging";
+const name$b = "@firebase/messaging";
 
-const name$9 = "@firebase/messaging-compat";
+const name$a = "@firebase/messaging-compat";
 
-const name$8 = "@firebase/performance";
+const name$9 = "@firebase/performance";
 
-const name$7 = "@firebase/performance-compat";
+const name$8 = "@firebase/performance-compat";
 
-const name$6 = "@firebase/remote-config";
+const name$7 = "@firebase/remote-config";
 
-const name$5 = "@firebase/remote-config-compat";
+const name$6 = "@firebase/remote-config-compat";
 
-const name$4 = "@firebase/storage";
+const name$5 = "@firebase/storage";
 
-const name$3 = "@firebase/storage-compat";
+const name$4 = "@firebase/storage-compat";
 
-const name$2 = "@firebase/firestore";
+const name$3 = "@firebase/firestore";
+
+const name$2 = "@firebase/vertexai-preview";
 
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "10.11.1";
+const version = "10.12.2";
 
 /**
  * @license
@@ -16835,30 +16837,31 @@ const version = "10.11.1";
  */
 const DEFAULT_ENTRY_NAME = '[DEFAULT]';
 const PLATFORM_LOG_STRING = {
-    [name$o]: 'fire-core',
-    [name$n]: 'fire-core-compat',
-    [name$l]: 'fire-analytics',
-    [name$m]: 'fire-analytics-compat',
-    [name$j]: 'fire-app-check',
-    [name$k]: 'fire-app-check-compat',
-    [name$i]: 'fire-auth',
-    [name$h]: 'fire-auth-compat',
-    [name$g]: 'fire-rtdb',
-    [name$f]: 'fire-rtdb-compat',
-    [name$e]: 'fire-fn',
-    [name$d]: 'fire-fn-compat',
-    [name$c]: 'fire-iid',
-    [name$b]: 'fire-iid-compat',
-    [name$a]: 'fire-fcm',
-    [name$9]: 'fire-fcm-compat',
-    [name$8]: 'fire-perf',
-    [name$7]: 'fire-perf-compat',
-    [name$6]: 'fire-rc',
-    [name$5]: 'fire-rc-compat',
-    [name$4]: 'fire-gcs',
-    [name$3]: 'fire-gcs-compat',
-    [name$2]: 'fire-fst',
+    [name$p]: 'fire-core',
+    [name$o]: 'fire-core-compat',
+    [name$m]: 'fire-analytics',
+    [name$n]: 'fire-analytics-compat',
+    [name$k]: 'fire-app-check',
+    [name$l]: 'fire-app-check-compat',
+    [name$j]: 'fire-auth',
+    [name$i]: 'fire-auth-compat',
+    [name$h]: 'fire-rtdb',
+    [name$g]: 'fire-rtdb-compat',
+    [name$f]: 'fire-fn',
+    [name$e]: 'fire-fn-compat',
+    [name$d]: 'fire-iid',
+    [name$c]: 'fire-iid-compat',
+    [name$b]: 'fire-fcm',
+    [name$a]: 'fire-fcm-compat',
+    [name$9]: 'fire-perf',
+    [name$8]: 'fire-perf-compat',
+    [name$7]: 'fire-rc',
+    [name$6]: 'fire-rc-compat',
+    [name$5]: 'fire-gcs',
+    [name$4]: 'fire-gcs-compat',
+    [name$3]: 'fire-fst',
     [name$1]: 'fire-fst-compat',
+    [name$2]: 'fire-vertex',
     'fire-js': 'fire-js',
     [name]: 'fire-js-all'
 };
@@ -17146,7 +17149,7 @@ class FirebaseServerAppImpl extends FirebaseAppImpl {
         // will never trigger.
         this._serverConfig.releaseOnDeref = undefined;
         serverConfig.releaseOnDeref = undefined;
-        registerVersion(name$o, version$1, 'serverapp');
+        registerVersion(name$p, version$1, 'serverapp');
     }
     toJSON() {
         return undefined;
@@ -17800,9 +17803,9 @@ function registerCoreComponents(variant) {
     _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
     _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
     // Register `app` package.
-    registerVersion(name$o, version$1, variant);
+    registerVersion(name$p, version$1, variant);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
-    registerVersion(name$o, version$1, 'esm2017');
+    registerVersion(name$p, version$1, 'esm2017');
     // Register platform SDK identifier (no version).
     registerVersion('fire-js', '');
 }
@@ -18271,7 +18274,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.6";
+const version = "0.6.7";
 
 /**
  * @license
@@ -20676,7 +20679,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.8";
+const version = "0.12.9";
 
 /**
  * @license
@@ -20953,7 +20956,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "10.11.1";
+var version = "10.12.2";
 
 /**
  * @license
