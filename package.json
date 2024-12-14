@@ -34,7 +34,6 @@
     "index.html",
     "manifest.json",
     "service-worker.js",
-    "firebase-init.js",
     "version.js"
   ],
   "keywords": [

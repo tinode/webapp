@@ -34,6 +34,11 @@ import { updateFavicon } from '../lib/utils.js';
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.m4a');
 
+// How much time has to pass to consider conputer awoken from sleep (50 sec).
+const WAKE_UP_TIMEOUT = 50000;
+// Timer interval to check if computer woke up from sleep (5 sec).
+const WAKE_UP_TICK = 5000;
+
 const messages = defineMessages({
   reconnect_countdown: {
     id: 'reconnect_countdown',
@@ -297,6 +302,18 @@ class TinodeWeb extends React.Component {
       console.warn("Your browser does not support BroadcastChannel. Some features will not be available");
     }
 
+    // Detect if computer just woke up from sleep. Checks how much time has passed since the last tick.
+    // If too much time has passed then the computer was asleep.
+    this.lastWakeUpCheck = new Date().getTime();
+    this.wakeUpTicker = setInterval(_ => {
+      const now = new Date().getTime();
+      if (now - this.lastWakeUpCheck > WAKE_UP_TIMEOUT) {
+        // Trigger reconnect.
+        this.handleOnlineOn();
+      }
+      this.lastWakeUpCheck = now;
+    }, WAKE_UP_TICK);
+
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
@@ -338,9 +355,6 @@ class TinodeWeb extends React.Component {
         });
       }
 
-      this.readTimer = null;
-      this.readTimerCallback = null;
-
       // Parse the hash navigation params.
       const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
       // Maybe navigate to home screen.
@@ -363,6 +377,8 @@ class TinodeWeb extends React.Component {
     window.removeEventListener('online', this.handleOnlineOn);
     window.removeEventListener('offline', this.handleOnlineOff);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+
+    clearInterval(this.wakeUpTicker);
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
