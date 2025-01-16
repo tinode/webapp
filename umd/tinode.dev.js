@@ -235,7 +235,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 
 class CBuffer {
-  #comparator = undefined;
+  #comparator = (() => undefined)();
   #unique = false;
   buffer = [];
   constructor(compare_, unique_) {
@@ -758,10 +758,10 @@ class Connection {
       return this.#socket && this.#socket.readyState == this.#socket.OPEN;
     };
   }
-  onMessage = undefined;
-  onDisconnect = undefined;
-  onOpen = undefined;
-  onAutoreconnectIteration = undefined;
+  onMessage = (() => undefined)();
+  onDisconnect = (() => undefined)();
+  onOpen = (() => undefined)();
+  onAutoreconnectIteration = (() => undefined)();
 }
 Connection.NETWORK_ERROR = NETWORK_ERROR;
 Connection.NETWORK_ERROR_TEXT = NETWORK_ERROR_TEXT;
@@ -4915,7 +4915,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.23.0-rc1";
+const PACKAGE_VERSION = "0.23.0";
 
 /***/ })
 
@@ -5000,7 +5000,7 @@ const PACKAGE_VERSION = "0.23.0-rc1";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!***********************!*\
   !*** ./src/tinode.js ***!
@@ -5252,7 +5252,7 @@ class Tinode {
   _login = null;
   _authToken = null;
   _inPacketCount = 0;
-  _messageId = Math.floor(Math.random() * 0xFFFF + 0xFFFF);
+  _messageId = (() => Math.floor(Math.random() * 0xFFFF + 0xFFFF))();
   _serverInfo = null;
   _deviceToken = null;
   _pendingPromises = {};
@@ -6218,17 +6218,17 @@ class Tinode {
       this._messageId = 0;
     }
   }
-  onWebsocketOpen = undefined;
-  onConnect = undefined;
-  onDisconnect = undefined;
-  onLogin = undefined;
-  onCtrlMessage = undefined;
-  onDataMessage = undefined;
-  onPresMessage = undefined;
-  onMessage = undefined;
-  onRawMessage = undefined;
-  onNetworkProbe = undefined;
-  onAutoreconnectIteration = undefined;
+  onWebsocketOpen = (() => undefined)();
+  onConnect = (() => undefined)();
+  onDisconnect = (() => undefined)();
+  onLogin = (() => undefined)();
+  onCtrlMessage = (() => undefined)();
+  onDataMessage = (() => undefined)();
+  onPresMessage = (() => undefined)();
+  onMessage = (() => undefined)();
+  onRawMessage = (() => undefined)();
+  onNetworkProbe = (() => undefined)();
+  onAutoreconnectIteration = (() => undefined)();
 }
 ;
 Tinode.MESSAGE_STATUS_NONE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_NONE;
