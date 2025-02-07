@@ -19,7 +19,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT } from '../config.js';
+  MEDIA_BREAKPOINT, WAKE_UP_TICK, WAKE_UP_TIMEOUT } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
          CALL_HEAD_STARTED }  from '../constants.js';
@@ -33,11 +33,6 @@ import { updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.m4a');
-
-// How much time has to pass to consider conputer awoken from sleep (50 sec).
-const WAKE_UP_TIMEOUT = 50000;
-// Timer interval to check if computer woke up from sleep (5 sec).
-const WAKE_UP_TICK = 5000;
 
 const messages = defineMessages({
   reconnect_countdown: {

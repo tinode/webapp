@@ -692,6 +692,7 @@ class Connection {
       this.#boffClosed = false;
       if (this.#socket) {
         if (!force && this.#socket.readyState == this.#socket.OPEN) {
+          this.probe();
           return Promise.resolve();
         }
         this.#socket.close();

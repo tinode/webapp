@@ -3151,7 +3151,7 @@ ul.phone-country-selector span.country {
     width: 100%;
   }
 
-  /* Bottom sheet rathar than a dialog */
+  /* Bottom sheet rather than a dialog */
   .forward-dialog {
     border-radius: 0.3rem 0.3rem 0 0;
     margin: auto 0 0 0;
