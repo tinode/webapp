@@ -65,6 +65,7 @@ module.exports = (env, argv) => {
     ],
     externals: {
       'livekit-client': 'LivekitClient',
+      'qrcodejs': 'QRCode',
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',

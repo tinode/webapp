@@ -19,7 +19,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT } from '../config.js';
+  MEDIA_BREAKPOINT, WAKE_UP_TICK, WAKE_UP_TIMEOUT } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
          CALL_HEAD_STARTED }  from '../constants.js';
@@ -298,6 +298,18 @@ class TinodeWeb extends React.Component {
       console.warn("Your browser does not support BroadcastChannel. Some features will not be available");
     }
 
+    // Detect if computer just woke up from sleep. Checks how much time has passed since the last tick.
+    // If too much time has passed then the computer was asleep.
+    this.lastWakeUpCheck = new Date().getTime();
+    this.wakeUpTicker = setInterval(_ => {
+      const now = new Date().getTime();
+      if (now - this.lastWakeUpCheck > WAKE_UP_TIMEOUT) {
+        // Trigger reconnect.
+        this.handleOnlineOn();
+      }
+      this.lastWakeUpCheck = now;
+    }, WAKE_UP_TICK);
+
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
@@ -339,9 +351,6 @@ class TinodeWeb extends React.Component {
         });
       }
 
-      this.readTimer = null;
-      this.readTimerCallback = null;
-
       // Parse the hash navigation params.
       const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
       // Maybe navigate to home screen.
@@ -364,6 +373,8 @@ class TinodeWeb extends React.Component {
     window.removeEventListener('online', this.handleOnlineOn);
     window.removeEventListener('offline', this.handleOnlineOff);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+
+    clearInterval(this.wakeUpTicker);
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.

@@ -1668,5 +1668,12 @@
     "description": "Call to action to join a conference call",
     "missing": false,
     "obsolete": false
+  },
+  "scan_qr_code": {
+    "translation": "掃描二維碼",
+    "defaultMessage": "Scan QR Code",
+    "description": "Title for scanning QR code",
+    "missing": false,
+    "obsolete": false
   }
 }

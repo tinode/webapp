@@ -126,3 +126,16 @@ export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 // happen until the first message. Setting this option to true enables
 // immediate subscription.
 export const IMMEDIATE_P2P_SUBSCRIPTION = false;
+
+// URL schemes permitted to appear in links (i.e. no javascript: scheme).
+export const CLICKABLE_URL_SCHEMES = ['http', 'https', 'ftp', 'ftps'];
+
+// Size of the QR code in the app.
+export const QRCODE_SIZE = 128;
+
+// How much time has to pass to consider computer awoken from sleep (80 sec).
+// Chrome throttles ticker events in inactive tabs to once per minute. This
+// value ensures that these once-a-minute events do not trigger a reconnect.
+export const WAKE_UP_TIMEOUT = 80000;
+// Timer interval between checks if computer woke up from sleep (1 sec).
+export const WAKE_UP_TICK = 1000;

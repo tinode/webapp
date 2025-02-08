@@ -37,18 +37,20 @@ This is _NOT_ a standalone app, this is just a frontend, a client. It requires a
 
 ## Internationalization
 
-The app is fully internationalized using [React-Intl](https://github.com/formatjs/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `#?hl=XX` parameter to the URL when starting the app, e.g. https://web.tinode.co/#?hl=ru.
+The app is fully internationalized using [React-Intl](https://github.com/formatjs/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `#?hl=XX` parameter to the URL when starting the app, e.g. https://web.tinode.co/#?hl=fr.
 
 The app is currently available in the following languages:
- * English
- * Chinese (simplified)
- * Chinese (traditional)
+ * English - default
+ * Chinese simplified
+ * Chinese traditional
  * French
  * German
  * Korean
  * Romanian
  * Russian
  * Spanish
+ * Thai
+ * Ukrainian
 
 More translations are welcome. See [instructions](https://github.com/tinode/chat/blob/devel/docs/translations.md#webapp).
 

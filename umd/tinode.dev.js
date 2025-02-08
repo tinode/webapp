@@ -235,7 +235,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 
 class CBuffer {
-  #comparator = undefined;
+  #comparator = (() => undefined)();
   #unique = false;
   buffer = [];
   constructor(compare_, unique_) {
@@ -319,8 +319,8 @@ class CBuffer {
     this.buffer = [];
   }
   forEach(callback, startIdx, beforeIdx, context) {
-    startIdx = Math.max(0, startIdx | 0);
-    beforeIdx = Math.min(beforeIdx || this.buffer.length, this.buffer.length);
+    startIdx = startIdx | 0;
+    beforeIdx = beforeIdx || this.buffer.length;
     for (let i = startIdx; i < beforeIdx; i++) {
       callback.call(context, this.buffer[i], i > startIdx ? this.buffer[i - 1] : undefined, i < beforeIdx - 1 ? this.buffer[i + 1] : undefined, i);
     }
@@ -378,34 +378,33 @@ class CommError extends Error {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DEFAULT_MESSAGES_PAGE": () => (/* binding */ DEFAULT_MESSAGES_PAGE),
-/* harmony export */   "DEL_CHAR": () => (/* binding */ DEL_CHAR),
-/* harmony export */   "EXPIRE_PROMISES_PERIOD": () => (/* binding */ EXPIRE_PROMISES_PERIOD),
-/* harmony export */   "EXPIRE_PROMISES_TIMEOUT": () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
-/* harmony export */   "LIBRARY": () => (/* binding */ LIBRARY),
-/* harmony export */   "LOCAL_SEQID": () => (/* binding */ LOCAL_SEQID),
-/* harmony export */   "MAX_PINNED_COUNT": () => (/* binding */ MAX_PINNED_COUNT),
-/* harmony export */   "MESSAGE_STATUS_FAILED": () => (/* binding */ MESSAGE_STATUS_FAILED),
-/* harmony export */   "MESSAGE_STATUS_FATAL": () => (/* binding */ MESSAGE_STATUS_FATAL),
-/* harmony export */   "MESSAGE_STATUS_NONE": () => (/* binding */ MESSAGE_STATUS_NONE),
-/* harmony export */   "MESSAGE_STATUS_QUEUED": () => (/* binding */ MESSAGE_STATUS_QUEUED),
-/* harmony export */   "MESSAGE_STATUS_READ": () => (/* binding */ MESSAGE_STATUS_READ),
-/* harmony export */   "MESSAGE_STATUS_RECEIVED": () => (/* binding */ MESSAGE_STATUS_RECEIVED),
-/* harmony export */   "MESSAGE_STATUS_SENDING": () => (/* binding */ MESSAGE_STATUS_SENDING),
-/* harmony export */   "MESSAGE_STATUS_SENT": () => (/* binding */ MESSAGE_STATUS_SENT),
-/* harmony export */   "MESSAGE_STATUS_TO_ME": () => (/* binding */ MESSAGE_STATUS_TO_ME),
-/* harmony export */   "PROTOCOL_VERSION": () => (/* binding */ PROTOCOL_VERSION),
-/* harmony export */   "RECV_TIMEOUT": () => (/* binding */ RECV_TIMEOUT),
-/* harmony export */   "TOPIC_CHAN": () => (/* binding */ TOPIC_CHAN),
-/* harmony export */   "TOPIC_FND": () => (/* binding */ TOPIC_FND),
-/* harmony export */   "TOPIC_GRP": () => (/* binding */ TOPIC_GRP),
-/* harmony export */   "TOPIC_ME": () => (/* binding */ TOPIC_ME),
-/* harmony export */   "TOPIC_NEW": () => (/* binding */ TOPIC_NEW),
-/* harmony export */   "TOPIC_NEW_CHAN": () => (/* binding */ TOPIC_NEW_CHAN),
-/* harmony export */   "TOPIC_P2P": () => (/* binding */ TOPIC_P2P),
-/* harmony export */   "TOPIC_SYS": () => (/* binding */ TOPIC_SYS),
-/* harmony export */   "USER_NEW": () => (/* binding */ USER_NEW),
-/* harmony export */   "VERSION": () => (/* binding */ VERSION)
+/* harmony export */   DEFAULT_MESSAGES_PAGE: () => (/* binding */ DEFAULT_MESSAGES_PAGE),
+/* harmony export */   DEL_CHAR: () => (/* binding */ DEL_CHAR),
+/* harmony export */   EXPIRE_PROMISES_PERIOD: () => (/* binding */ EXPIRE_PROMISES_PERIOD),
+/* harmony export */   EXPIRE_PROMISES_TIMEOUT: () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
+/* harmony export */   LIBRARY: () => (/* binding */ LIBRARY),
+/* harmony export */   LOCAL_SEQID: () => (/* binding */ LOCAL_SEQID),
+/* harmony export */   MESSAGE_STATUS_FAILED: () => (/* binding */ MESSAGE_STATUS_FAILED),
+/* harmony export */   MESSAGE_STATUS_FATAL: () => (/* binding */ MESSAGE_STATUS_FATAL),
+/* harmony export */   MESSAGE_STATUS_NONE: () => (/* binding */ MESSAGE_STATUS_NONE),
+/* harmony export */   MESSAGE_STATUS_QUEUED: () => (/* binding */ MESSAGE_STATUS_QUEUED),
+/* harmony export */   MESSAGE_STATUS_READ: () => (/* binding */ MESSAGE_STATUS_READ),
+/* harmony export */   MESSAGE_STATUS_RECEIVED: () => (/* binding */ MESSAGE_STATUS_RECEIVED),
+/* harmony export */   MESSAGE_STATUS_SENDING: () => (/* binding */ MESSAGE_STATUS_SENDING),
+/* harmony export */   MESSAGE_STATUS_SENT: () => (/* binding */ MESSAGE_STATUS_SENT),
+/* harmony export */   MESSAGE_STATUS_TO_ME: () => (/* binding */ MESSAGE_STATUS_TO_ME),
+/* harmony export */   PROTOCOL_VERSION: () => (/* binding */ PROTOCOL_VERSION),
+/* harmony export */   RECV_TIMEOUT: () => (/* binding */ RECV_TIMEOUT),
+/* harmony export */   TOPIC_CHAN: () => (/* binding */ TOPIC_CHAN),
+/* harmony export */   TOPIC_FND: () => (/* binding */ TOPIC_FND),
+/* harmony export */   TOPIC_GRP: () => (/* binding */ TOPIC_GRP),
+/* harmony export */   TOPIC_ME: () => (/* binding */ TOPIC_ME),
+/* harmony export */   TOPIC_NEW: () => (/* binding */ TOPIC_NEW),
+/* harmony export */   TOPIC_NEW_CHAN: () => (/* binding */ TOPIC_NEW_CHAN),
+/* harmony export */   TOPIC_P2P: () => (/* binding */ TOPIC_P2P),
+/* harmony export */   TOPIC_SYS: () => (/* binding */ TOPIC_SYS),
+/* harmony export */   USER_NEW: () => (/* binding */ USER_NEW),
+/* harmony export */   VERSION: () => (/* binding */ VERSION)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../version.js */ "./version.js");
 
@@ -438,7 +437,6 @@ const EXPIRE_PROMISES_PERIOD = 1000;
 const RECV_TIMEOUT = 100;
 const DEFAULT_MESSAGES_PAGE = 24;
 const DEL_CHAR = '\u2421';
-const MAX_PINNED_COUNT = 5;
 
 /***/ }),
 
@@ -760,10 +758,10 @@ class Connection {
       return this.#socket && this.#socket.readyState == this.#socket.OPEN;
     };
   }
-  onMessage = undefined;
-  onDisconnect = undefined;
-  onOpen = undefined;
-  onAutoreconnectIteration = undefined;
+  onMessage = (() => undefined)();
+  onDisconnect = (() => undefined)();
+  onOpen = (() => undefined)();
+  onAutoreconnectIteration = (() => undefined)();
 }
 Connection.NETWORK_ERROR = NETWORK_ERROR;
 Connection.NETWORK_ERROR_TEXT = NETWORK_ERROR_TEXT;
@@ -782,17 +780,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ DB)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 
-
-const DB_VERSION = 3;
+const DB_VERSION = 1;
 const DB_NAME = 'tinode-web';
 let IDBProvider;
 class DB {
   #onError = _ => {};
   #logger = _ => {};
   db = null;
-  disabled = false;
+  disabled = true;
   constructor(onError, logger) {
     this.#onError = onError || this.#onError;
     this.#logger = logger || this.#logger;
@@ -848,12 +844,6 @@ class DB {
         this.db.createObjectStore('message', {
           keyPath: ['topic', 'seq']
         });
-        const dellog = this.db.createObjectStore('dellog', {
-          keyPath: ['topic', 'low', 'hi']
-        });
-        dellog.createIndex('topic_clear', ['topic', 'clear'], {
-          unique: false
-        });
       };
     });
   }
@@ -906,7 +896,7 @@ class DB {
       };
     });
   }
-  markTopicAsDeleted(name) {
+  markTopicAsDeleted(name, deleted) {
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
     }
@@ -922,8 +912,10 @@ class DB {
       const req = trx.objectStore('topic').get(name);
       req.onsuccess = event => {
         const topic = event.target.result;
-        topic._deleted = true;
-        trx.objectStore('topic').put(topic);
+        if (topic && topic._deleted != deleted) {
+          topic._deleted = deleted;
+          trx.objectStore('topic').put(topic);
+        }
         trx.commit();
       };
     });
@@ -1127,47 +1119,18 @@ class DB {
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
     }
-    const trx = this.db.transaction(['message']);
-    let result = [];
-    if (Array.isArray(query.ranges)) {
-      return new Promise((resolve, reject) => {
-        trx.onerror = event => {
-          this.#logger('PCache', 'readMessages', event.target.error);
-          reject(event.target.error);
-        };
-        let count = 0;
-        query.ranges.forEach(range => {
-          const key = range.hi ? IDBKeyRange.bound([topicName, range.low], [topicName, range.hi], false, true) : IDBKeyRange.only([topicName, range.low]);
-          trx.objectStore('message').getAll(key).onsuccess = event => {
-            const msgs = event.target.result;
-            if (msgs) {
-              if (callback) {
-                callback.call(context, msgs);
-              }
-              if (Array.isArray(msgs)) {
-                result = result.concat(msgs);
-              } else {
-                result.push(msgs);
-              }
-            }
-            count++;
-            if (count == query.ranges.length) {
-              resolve(result);
-            }
-          };
-        });
-      });
-    }
     return new Promise((resolve, reject) => {
       query = query || {};
       const since = query.since > 0 ? query.since : 0;
       const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
       const limit = query.limit | 0;
+      const result = [];
+      const range = IDBKeyRange.bound([topicName, since], [topicName, before], false, true);
+      const trx = this.db.transaction(['message']);
       trx.onerror = event => {
         this.#logger('PCache', 'readMessages', event.target.error);
         reject(event.target.error);
       };
-      const range = IDBKeyRange.bound([topicName, since], [topicName, before], false, true);
       trx.objectStore('message').openCursor(range, 'prev').onsuccess = event => {
         const cursor = event.target.result;
         if (cursor) {
@@ -1186,83 +1149,7 @@ class DB {
       };
     });
   }
-  addDelLog(topicName, delId, ranges) {
-    if (!this.isReady()) {
-      return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
-    }
-    return new Promise((resolve, reject) => {
-      const trx = this.db.transaction(['dellog'], 'readwrite');
-      trx.onsuccess = event => {
-        resolve(event.target.result);
-      };
-      trx.onerror = event => {
-        this.#logger('PCache', 'addDelLog', event.target.error);
-        reject(event.target.error);
-      };
-      ranges.forEach(r => trx.objectStore('dellog').add({
-        topic: topicName,
-        clear: delId,
-        low: r.low,
-        hi: r.hi || r.low + 1
-      }));
-      trx.commit();
-    });
-  }
-  readDelLog(topicName, query) {
-    query = query || {};
-    const since = query.since > 0 ? query.since : 0;
-    const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
-    const limit = query.limit | 0;
-    if (!this.isReady()) {
-      return this.disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
-    }
-    return new Promise((resolve, reject) => {
-      const trx = this.db.transaction(['dellog']);
-      trx.onerror = event => {
-        this.#logger('PCache', 'readDelLog', event.target.error);
-        reject(event.target.error);
-      };
-      let count = 0;
-      const result = [];
-      const range = IDBKeyRange.bound([topicName, 0, since], [topicName, before, Number.MAX_SAFE_INTEGER], false, true);
-      trx.objectStore('dellog').openCursor(range, 'prev').onsuccess = event => {
-        const cursor = event.target.result;
-        if (cursor) {
-          result.push({
-            low: cursor.value.low,
-            hi: cursor.value.hi
-          });
-          count += cursor.value.hi - cursor.value.low;
-          if (limit <= 0 || count < limit) {
-            cursor.continue();
-          } else {
-            resolve(result);
-          }
-        } else {
-          resolve(result);
-        }
-      };
-    });
-  }
-  maxDelId(topicName) {
-    if (!this.isReady()) {
-      return this.disabled ? Promise.resolve(0) : Promise.reject(new Error("not initialized"));
-    }
-    return new Promise((resolve, reject) => {
-      const trx = this.db.transaction(['dellog']);
-      trx.onerror = event => {
-        this.#logger('PCache', 'maxDelId', event.target.error);
-        reject(event.target.error);
-      };
-      const index = trx.objectStore('dellog').index('topic_clear');
-      index.openCursor(IDBKeyRange.bound([topicName, 0], [topicName, Number.MAX_SAFE_INTEGER]), 'prev').onsuccess = event => {
-        if (event.target.result) {
-          resolve(event.target.result.value);
-        }
-      };
-    });
-  }
-  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted'];
+  static #topic_fields = ['created', 'updated', 'deleted', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', 'touched', '_deleted'];
   static #deserializeTopic(topic, src) {
     DB.#topic_fields.forEach(f => {
       if (src.hasOwnProperty(f)) {
@@ -1333,7 +1220,7 @@ class DB {
 /***/ ((module) => {
 
 /**
- * @copyright 2015-2022 Tinode LLC.
+ * @copyright 2015-2024 Tinode LLC.
  * @summary Minimally rich text representation and formatting for Tinode.
  * @license Apache 2.0
  *
@@ -1393,6 +1280,7 @@ const MAX_PREVIEW_DATA_SIZE = 64;
 const JSON_MIME_TYPE = 'application/json';
 const DRAFTY_MIME_TYPE = 'text/x-drafty';
 const ALLOWED_ENT_FIELDS = ['act', 'height', 'duration', 'incoming', 'mime', 'name', 'premime', 'preref', 'preview', 'ref', 'size', 'state', 'url', 'val', 'width'];
+const segmenter = new Intl.Segmenter();
 const INLINE_STYLES = [{
   name: 'ST',
   start: /(?:^|[\W_])(\*)[^\s*]/,
@@ -1680,7 +1568,7 @@ const DECORATORS = {
         'data-width': data.width,
         'data-height': data.height,
         'data-name': data.name,
-        'data-size': data.val ? data.val.length * 0.75 | 0 : data.size | 0,
+        'data-size': data.ref ? data.size | 0 : data.val ? data.val.length * 0.75 | 0 : data.size | 0,
         'data-mime': data.mime
       };
     }
@@ -1730,7 +1618,7 @@ const DECORATORS = {
         'data-preview': poster,
         'data-duration': data.duration | 0,
         'data-name': data.name,
-        'data-size': data.val ? data.val.length * 0.75 | 0 : data.size | 0,
+        'data-size': data.ref ? data.size | 0 : data.val ? data.val.length * 0.75 | 0 : data.size | 0,
         'data-mime': data.mime
       };
     }
@@ -1813,24 +1701,48 @@ Drafty.parse = function (content) {
   if (blx.length > 0) {
     result.txt = blx[0].txt;
     result.fmt = (blx[0].fmt || []).concat(blx[0].ent || []);
+    if (result.fmt.length) {
+      const segments = segmenter.segment(result.txt);
+      for (const ele of result.fmt) {
+        ({
+          at: ele.at,
+          len: ele.len
+        } = toGraphemeValues(ele, segments, result.txt));
+      }
+    }
     for (let i = 1; i < blx.length; i++) {
       const block = blx[i];
-      const offset = result.txt.length + 1;
+      const offset = stringToGraphemes(result.txt).length + 1;
       result.fmt.push({
         tp: 'BR',
         len: 1,
         at: offset - 1
       });
+      let segments = {};
       result.txt += ' ' + block.txt;
       if (block.fmt) {
+        segments = segmenter.segment(block.txt);
         result.fmt = result.fmt.concat(block.fmt.map(s => {
-          s.at += offset;
+          const {
+            at: correctAt,
+            len: correctLen
+          } = toGraphemeValues(s, segments, block.txt);
+          s.at = correctAt + offset;
+          s.len = correctLen;
           return s;
         }));
       }
       if (block.ent) {
+        if (isEmptyObject(segments)) {
+          segments = segmenter.segment(block.txt);
+        }
         result.fmt = result.fmt.concat(block.ent.map(s => {
-          s.at += offset;
+          const {
+            at: correctAt,
+            len: correctLen
+          } = toGraphemeValues(s, segments, block.txt);
+          s.at = correctAt + offset;
+          s.len = correctLen;
           return s;
         }));
       }
@@ -1852,7 +1764,7 @@ Drafty.append = function (first, second) {
     return first;
   }
   first.txt = first.txt || '';
-  const len = first.txt.length;
+  const len = stringToGraphemes(first.txt).length;
   if (typeof second == 'string') {
     first.txt += second;
   } else if (second.txt) {
@@ -2040,7 +1952,7 @@ Drafty.quote = function (header, uid, body) {
   const quote = Drafty.append(Drafty.appendLineBreak(Drafty.mention(header, uid)), body);
   quote.fmt.push({
     at: 0,
-    len: quote.txt.length,
+    len: stringToGraphemes(quote.txt).length,
     tp: 'QQ'
   });
   return quote;
@@ -2050,7 +1962,7 @@ Drafty.mention = function (name, uid) {
     txt: name || '',
     fmt: [{
       at: 0,
-      len: (name || '').length,
+      len: stringToGraphemes(name || '').length,
       key: 0
     }],
     ent: [{
@@ -2214,7 +2126,7 @@ Drafty.appendLineBreak = function (content) {
   };
   content.fmt = content.fmt || [];
   content.fmt.push({
-    at: content.txt.length,
+    at: stringToGraphemes(content.txt).length,
     len: 1,
     tp: 'BR'
   });
@@ -2392,7 +2304,7 @@ Drafty.attachments = function (content, callback, context) {
     return;
   }
   let count = 0;
-  for (let i in content.ent) {
+  for (let i in content.fmt) {
     let fmt = content.fmt[i];
     if (fmt && fmt.at < 0) {
       const ent = content.ent[fmt.key | 0];
@@ -2472,7 +2384,7 @@ Drafty.tagName = function (style) {
   return FORMAT_TAGS[style] && FORMAT_TAGS[style].html_tag;
 };
 Drafty.attrValue = function (style, data) {
-  if (data && DECORATORS[style]) {
+  if (data && DECORATORS[style] && DECORATORS[style].props) {
     return DECORATORS[style].props(data);
   }
   return undefined;
@@ -2617,7 +2529,7 @@ function draftyToTree(doc) {
         key: key
       });
       return;
-    } else if (at + len > txt.length) {
+    } else if (at + len > stringToGraphemes(txt).length) {
       return;
     }
     if (!span.tp) {
@@ -2659,7 +2571,8 @@ function draftyToTree(doc) {
       span.type = 'HD';
     }
   });
-  let tree = spansToTree({}, txt, 0, txt.length, spans);
+  const graphemes = stringToGraphemes(txt);
+  let tree = spansToTree({}, graphemes, 0, graphemes.length, spans);
   const flatten = function (node) {
     if (Array.isArray(node.children) && node.children.length == 1) {
       const child = node.children[0];
@@ -2695,11 +2608,11 @@ function addNode(parent, n) {
   parent.children.push(n);
   return parent;
 }
-function spansToTree(parent, text, start, end, spans) {
+function spansToTree(parent, graphemes, start, end, spans) {
   if (!spans || spans.length == 0) {
     if (start < end) {
       addNode(parent, {
-        text: text.substring(start, end)
+        text: graphemes.slice(start, end).map(segment => segment.segment).join('')
       });
     }
     return parent;
@@ -2717,7 +2630,7 @@ function spansToTree(parent, text, start, end, spans) {
     }
     if (start < span.start) {
       addNode(parent, {
-        text: text.substring(start, span.start)
+        text: graphemes.slice(start, span.start).map(segment => segment.segment).join('')
       });
       start = span.start;
     }
@@ -2742,12 +2655,12 @@ function spansToTree(parent, text, start, end, spans) {
       type: span.type,
       data: span.data,
       key: span.key
-    }, text, start, span.end, subspans));
+    }, graphemes, start, span.end, subspans));
     start = span.end;
   }
   if (start < end) {
     addNode(parent, {
-      text: text.substring(start, end)
+      text: graphemes.slice(start, end).map(segment => segment.segment).join('')
     });
   }
   return parent;
@@ -2757,7 +2670,7 @@ function treeToDrafty(doc, tree, keymap) {
     return doc;
   }
   doc.txt = doc.txt || '';
-  const start = doc.txt.length;
+  const start = stringToGraphemes(doc.txt).length;
   if (tree.text) {
     doc.txt += tree.text;
   } else if (Array.isArray(tree.children)) {
@@ -2766,7 +2679,7 @@ function treeToDrafty(doc, tree, keymap) {
     });
   }
   if (tree.type) {
-    const len = doc.txt.length - start;
+    const len = stringToGraphemes(doc.txt).length - start;
     doc.fmt = doc.fmt || [];
     if (Object.keys(tree.data || {}).length > 0) {
       doc.ent = doc.ent || [];
@@ -2868,12 +2781,12 @@ function shortenTree(tree, limit, tail) {
       node.text = tail;
       limit = -1;
     } else if (node.text) {
-      const len = node.text.length;
-      if (len > limit) {
-        node.text = node.text.substring(0, limit) + tail;
+      const graphemes = stringToGraphemes(node.text);
+      if (graphemes.length > limit) {
+        node.text = graphemes.slice(0, limit).map(segment => segment.segment).join('') + tail;
         limit = -1;
       } else {
-        limit -= len;
+        limit -= graphemes.length;
       }
     }
     return node;
@@ -3020,72 +2933,40 @@ function copyEntData(data, light, allow) {
   }
   return null;
 }
+function isEmptyObject(obj) {
+  return Object.keys(obj ?? {}).length == 0;
+}
+;
+function graphemeIndices(graphemes) {
+  const result = [];
+  let graphemeIndex = 0;
+  let charIndex = 0;
+  for (const {
+    segment
+  } of graphemes) {
+    for (let i = 0; i < segment.length; i++) {
+      result[charIndex + i] = graphemeIndex;
+    }
+    charIndex += segment.length;
+    graphemeIndex++;
+  }
+  return result;
+}
+function toGraphemeValues(fmt, segments, txt) {
+  segments = segments ?? segmenter.segment(txt);
+  const indices = graphemeIndices(segments);
+  const correctAt = indices[fmt.at];
+  const correctLen = fmt.at + fmt.len <= txt.length ? indices[fmt.at + fmt.len - 1] - correctAt : fmt.len;
+  return {
+    at: correctAt,
+    len: correctLen + 1
+  };
+}
+function stringToGraphemes(str) {
+  return Array.from(segmenter.segment(str));
+}
 if (true) {
   module.exports = Drafty;
-}
-
-/***/ }),
-
-/***/ "./src/fnd-topic.js":
-/*!**************************!*\
-  !*** ./src/fnd-topic.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ TopicFnd)
-/* harmony export */ });
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
-/* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-
-
-
-
-
-class TopicFnd extends _topic_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
-  _contacts = {};
-  constructor(callbacks) {
-    super(_config_js__WEBPACK_IMPORTED_MODULE_0__.TOPIC_FND, callbacks);
-  }
-  _processMetaSub(subs) {
-    let updateCount = Object.getOwnPropertyNames(this._contacts).length;
-    this._contacts = {};
-    for (let idx in subs) {
-      let sub = subs[idx];
-      const indexBy = sub.topic ? sub.topic : sub.user;
-      sub = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.mergeToCache)(this._contacts, indexBy, sub);
-      updateCount++;
-      if (this.onMetaSub) {
-        this.onMetaSub(sub);
-      }
-    }
-    if (updateCount > 0 && this.onSubsUpdated) {
-      this.onSubsUpdated(Object.keys(this._contacts));
-    }
-  }
-  publish() {
-    return Promise.reject(new Error("Publishing to 'fnd' is not supported"));
-  }
-  setMeta(params) {
-    return Object.getPrototypeOf(TopicFnd.prototype).setMeta.call(this, params).then(_ => {
-      if (Object.keys(this._contacts).length > 0) {
-        this._contacts = {};
-        if (this.onSubsUpdated) {
-          this.onSubsUpdated([]);
-        }
-      }
-    });
-  }
-  contacts(callback, context) {
-    const cb = callback || this.onMetaSub;
-    if (cb) {
-      for (let idx in this._contacts) {
-        cb.call(context, this._contacts[idx], idx, this._contacts);
-      }
-    }
-  }
 }
 
 /***/ }),
@@ -3326,287 +3207,6 @@ class LargeFileHelper {
 
 /***/ }),
 
-/***/ "./src/me-topic.js":
-/*!*************************!*\
-  !*** ./src/me-topic.js ***!
-  \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ TopicMe)
-/* harmony export */ });
-/* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
-/* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-
-
-
-
-
-
-class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
-  onContactUpdate;
-  constructor(callbacks) {
-    super(_config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME, callbacks);
-    if (callbacks) {
-      this.onContactUpdate = callbacks.onContactUpdate;
-    }
-  }
-  _processMetaDesc(desc) {
-    const turnOff = desc.acs && !desc.acs.isPresencer() && this.acs && this.acs.isPresencer();
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.mergeObj)(this, desc);
-    this._tinode._db.updTopic(this);
-    this._updateCachedUser(this._tinode._myUID, desc);
-    if (turnOff) {
-      this._tinode.mapTopics(cont => {
-        if (cont.online) {
-          cont.online = false;
-          cont.seen = Object.assign(cont.seen || {}, {
-            when: new Date()
-          });
-          this._refreshContact('off', cont);
-        }
-      });
-    }
-    if (this.onMetaDesc) {
-      this.onMetaDesc(this);
-    }
-  }
-  _processMetaSub(subs) {
-    let updateCount = 0;
-    subs.forEach(sub => {
-      const topicName = sub.topic;
-      if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_FND || topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
-        return;
-      }
-      sub.online = !!sub.online;
-      let cont = null;
-      if (sub.deleted) {
-        cont = sub;
-        this._tinode.cacheRemTopic(topicName);
-        this._tinode._db.remTopic(topicName);
-      } else {
-        if (typeof sub.seq != 'undefined') {
-          sub.seq = sub.seq | 0;
-          sub.recv = sub.recv | 0;
-          sub.read = sub.read | 0;
-          sub.unread = sub.seq - sub.read;
-        }
-        const topic = this._tinode.getTopic(topicName);
-        if (topic._new) {
-          delete topic._new;
-        }
-        cont = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.mergeObj)(topic, sub);
-        this._tinode._db.updTopic(cont);
-        if (_topic_js__WEBPACK_IMPORTED_MODULE_2__["default"].isP2PTopicName(topicName)) {
-          this._cachePutUser(topicName, cont);
-          this._tinode._db.updUser(topicName, cont.public);
-        }
-        if (!sub._noForwarding && topic) {
-          sub._noForwarding = true;
-          topic._processMetaDesc(sub);
-        }
-      }
-      updateCount++;
-      if (this.onMetaSub) {
-        this.onMetaSub(cont);
-      }
-    });
-    if (this.onSubsUpdated && updateCount > 0) {
-      const keys = [];
-      subs.forEach(s => {
-        keys.push(s.topic);
-      });
-      this.onSubsUpdated(keys, updateCount);
-    }
-  }
-  _processMetaCreds(creds, upd) {
-    if (creds.length == 1 && creds[0] == _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR) {
-      creds = [];
-    }
-    if (upd) {
-      creds.forEach(cr => {
-        if (cr.val) {
-          let idx = this._credentials.findIndex(el => {
-            return el.meth == cr.meth && el.val == cr.val;
-          });
-          if (idx < 0) {
-            if (!cr.done) {
-              idx = this._credentials.findIndex(el => {
-                return el.meth == cr.meth && !el.done;
-              });
-              if (idx >= 0) {
-                this._credentials.splice(idx, 1);
-              }
-            }
-            this._credentials.push(cr);
-          } else {
-            this._credentials[idx].done = cr.done;
-          }
-        } else if (cr.resp) {
-          const idx = this._credentials.findIndex(el => {
-            return el.meth == cr.meth && !el.done;
-          });
-          if (idx >= 0) {
-            this._credentials[idx].done = true;
-          }
-        }
-      });
-    } else {
-      this._credentials = creds;
-    }
-    if (this.onCredsUpdated) {
-      this.onCredsUpdated(this._credentials);
-    }
-  }
-  _routePres(pres) {
-    if (pres.what == 'term') {
-      this._resetSub();
-      return;
-    }
-    if (pres.what == 'upd' && pres.src == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
-      this.getMeta(this.startMetaQuery().withDesc().build());
-      return;
-    }
-    const cont = this._tinode.cacheGetTopic(pres.src);
-    if (cont) {
-      switch (pres.what) {
-        case 'on':
-          cont.online = true;
-          break;
-        case 'off':
-          if (cont.online) {
-            cont.online = false;
-            cont.seen = Object.assign(cont.seen || {}, {
-              when: new Date()
-            });
-          }
-          break;
-        case 'msg':
-          cont._updateReceived(pres.seq, pres.act);
-          break;
-        case 'upd':
-          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
-          break;
-        case 'acs':
-          if (cont.acs) {
-            cont.acs.updateAll(pres.dacs);
-          } else {
-            cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
-          }
-          cont.touched = new Date();
-          break;
-        case 'ua':
-          cont.seen = {
-            when: new Date(),
-            ua: pres.ua
-          };
-          break;
-        case 'recv':
-          pres.seq = pres.seq | 0;
-          cont.recv = cont.recv ? Math.max(cont.recv, pres.seq) : pres.seq;
-          break;
-        case 'read':
-          pres.seq = pres.seq | 0;
-          cont.read = cont.read ? Math.max(cont.read, pres.seq) : pres.seq;
-          cont.recv = cont.recv ? Math.max(cont.read, cont.recv) : cont.recv;
-          cont.unread = cont.seq - cont.read;
-          break;
-        case 'gone':
-          if (!cont._deleted) {
-            cont._deleted = true;
-            cont._attached = false;
-            this._tinode._db.markTopicAsDeleted(pres.src);
-          } else {
-            this._tinode._db.remTopic(pres.src);
-          }
-          break;
-        case 'del':
-          break;
-        default:
-          this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
-      }
-      this._refreshContact(pres.what, cont);
-    } else {
-      if (pres.what == 'acs') {
-        const acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"](pres.dacs);
-        if (!acs || acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._INVALID) {
-          this._tinode.logger("ERROR: Invalid access mode update", pres.src, pres.dacs);
-          return;
-        } else if (acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._NONE) {
-          this._tinode.logger("WARNING: Removing non-existent subscription", pres.src, pres.dacs);
-          return;
-        } else {
-          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
-          const dummy = this._tinode.getTopic(pres.src);
-          dummy.topic = pres.src;
-          dummy.online = false;
-          dummy.acs = acs;
-          this._tinode._db.updTopic(dummy);
-        }
-      } else if (pres.what == 'tags') {
-        this.getMeta(this.startMetaQuery().withTags().build());
-      }
-    }
-    if (this.onPres) {
-      this.onPres(pres);
-    }
-  }
-  _refreshContact(what, cont) {
-    if (this.onContactUpdate) {
-      this.onContactUpdate(what, cont);
-    }
-  }
-  publish() {
-    return Promise.reject(new Error("Publishing to 'me' is not supported"));
-  }
-  delCredential(method, value) {
-    if (!this._attached) {
-      return Promise.reject(new Error("Cannot delete credential in inactive 'me' topic"));
-    }
-    return this._tinode.delCredential(method, value).then(ctrl => {
-      const index = this._credentials.findIndex(el => {
-        return el.meth == method && el.val == value;
-      });
-      if (index > -1) {
-        this._credentials.splice(index, 1);
-      }
-      if (this.onCredsUpdated) {
-        this.onCredsUpdated(this._credentials);
-      }
-      return ctrl;
-    });
-  }
-  contacts(callback, filter, context) {
-    this._tinode.mapTopics((c, idx) => {
-      if (c.isCommType() && (!filter || filter(c))) {
-        callback.call(context, c, idx);
-      }
-    });
-  }
-  getContact(name) {
-    return this._tinode.cacheGetTopic(name);
-  }
-  getAccessMode(name) {
-    if (name) {
-      const cont = this._tinode.cacheGetTopic(name);
-      return cont ? cont.acs : null;
-    }
-    return this.acs;
-  }
-  isArchived(name) {
-    const cont = this._tinode.cacheGetTopic(name);
-    return cont && cont.private && !!cont.private.arch;
-  }
-  getCredentials() {
-    return this._credentials;
-  }
-}
-
-/***/ }),
-
 /***/ "./src/meta-builder.js":
 /*!*****************************!*\
   !*** ./src/meta-builder.js ***!
@@ -3617,9 +3217,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MetaGetBuilder)
 /* harmony export */ });
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
-
-
 
 class MetaGetBuilder {
   constructor(parent) {
@@ -3627,13 +3224,13 @@ class MetaGetBuilder {
     this.what = {};
   }
   #get_desc_ims() {
-    return this.topic.updated;
+    return this.topic._deleted ? undefined : this.topic.updated;
   }
   #get_subs_ims() {
     if (this.topic.isP2PType()) {
       return this.#get_desc_ims();
     }
-    return this.topic._lastSubsUpdate;
+    return this.topic._deleted ? undefined : this.topic._lastSubsUpdate;
   }
   withData(since, before, limit) {
     this.what['data'] = {
@@ -3645,16 +3242,6 @@ class MetaGetBuilder {
   }
   withLaterData(limit) {
     return this.withData(this.topic._maxSeq > 0 ? this.topic._maxSeq + 1 : undefined, undefined, limit);
-  }
-  withDataRanges(ranges, limit) {
-    this.what['data'] = {
-      ranges: (0,_utils__WEBPACK_IMPORTED_MODULE_0__.normalizeRanges)(ranges, this.topic._maxSeq),
-      limit: limit
-    };
-    return this;
-  }
-  withDataList(list) {
-    return this.withDataRanges((0,_utils__WEBPACK_IMPORTED_MODULE_0__.listToRanges)(list));
   }
   withEarlierData(limit) {
     return this.withData(undefined, this.topic._minSeq > 0 ? this.topic._minSeq : undefined, limit);
@@ -3702,10 +3289,6 @@ class MetaGetBuilder {
     }
     return this;
   }
-  withAux() {
-    this.what['aux'] = true;
-    return this;
-  }
   withDel(since, limit) {
     if (since || limit) {
       this.what['del'] = {
@@ -3724,7 +3307,7 @@ class MetaGetBuilder {
   build() {
     const what = [];
     let params = {};
-    ['data', 'sub', 'desc', 'tags', 'cred', 'aux', 'del'].forEach(key => {
+    ['data', 'sub', 'desc', 'tags', 'cred', 'del'].forEach(key => {
       if (this.what.hasOwnProperty(key)) {
         what.push(key);
         if (Object.getOwnPropertyNames(this.what[key]).length > 0) {
@@ -3751,7 +3334,9 @@ class MetaGetBuilder {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Topic)
+/* harmony export */   Topic: () => (/* binding */ Topic),
+/* harmony export */   TopicFnd: () => (/* binding */ TopicFnd),
+/* harmony export */   TopicMe: () => (/* binding */ TopicMe)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _cbuffer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cbuffer.js */ "./src/cbuffer.js");
@@ -3790,7 +3375,6 @@ class Topic {
     this._recvNotificationTimer = null;
     this._tags = [];
     this._credentials = [];
-    this._aux = {};
     this._messageVersions = {};
     this._messages = new _cbuffer_js__WEBPACK_IMPORTED_MODULE_1__["default"]((a, b) => {
       return a.seq - b.seq;
@@ -3810,7 +3394,6 @@ class Topic {
       this.onSubsUpdated = callbacks.onSubsUpdated;
       this.onTagsUpdated = callbacks.onTagsUpdated;
       this.onCredsUpdated = callbacks.onCredsUpdated;
-      this.onAuxUpdated = callbacks.onAuxUpdated;
       this.onDeleteTopic = callbacks.onDeleteTopic;
       this.onAllMessagesReceived = callbacks.onAllMessagesReceived;
     }
@@ -3846,9 +3429,6 @@ class Topic {
   static isChannelTopicName(name) {
     return typeof name == 'string' && (name.substring(0, 3) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_CHAN || name.substring(0, 3) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW_CHAN);
   }
-  static #isReplacementMsg(pub) {
-    return pub.head && pub.head.replace;
-  }
   isSubscribed() {
     return this._attached;
   }
@@ -3857,9 +3437,6 @@ class Topic {
     this._delayedLeaveTimer = null;
     if (this._attached) {
       return Promise.resolve(this);
-    }
-    if (this._deleted) {
-      return Promise.reject(new Error("Conversation deleted"));
     }
     return this._tinode.subscribe(this.name || _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW, getParams, setParams).then(ctrl => {
       if (ctrl.code >= 300) {
@@ -3997,11 +3574,10 @@ class Topic {
   getMeta(params) {
     return this._tinode.getMeta(this.name, params);
   }
-  getMessagesPage(limit, gaps, min, max, newer) {
-    let query = gaps ? this.startMetaQuery().withDataRanges(gaps, limit) : newer ? this.startMetaQuery().withData(min, undefined, limit) : this.startMetaQuery().withData(undefined, max, limit);
+  getMessagesPage(limit, forward) {
+    let query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
     return this._loadMessages(this._tinode._db, query.extract('data')).then(count => {
-      gaps = this.msgHasMoreMessages(min, max, newer);
-      if (gaps.length == 0) {
+      if (count == limit) {
         return Promise.resolve({
           topic: this.name,
           code: 200,
@@ -4011,39 +3587,16 @@ class Topic {
         });
       }
       limit -= count;
-      query = this.startMetaQuery().withDataRanges(gaps, limit);
-      return this.getMeta(query.build());
-    });
-  }
-  getPinnedMessages() {
-    const pins = this.aux('pins');
-    if (!Array.isArray(pins)) {
-      return Promise.resolve(0);
-    }
-    const loaded = [];
-    return this._tinode._db.readMessages(this.name, {
-      ranges: (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(pins)
-    }).then(msgs => {
-      msgs.forEach(data => {
-        if (data) {
-          loaded.push(data.seq);
-          this._messages.put(data);
-          this._maybeUpdateMessageVersionsCache(data);
-        }
-      });
-      return loaded.length;
-    }).then(count => {
-      if (count == pins.length) {
-        return Promise.resolve({
-          topic: this.name,
-          code: 200,
-          params: {
-            count: count
+      query = forward ? this.startMetaQuery().withLaterData(limit) : this.startMetaQuery().withEarlierData(limit);
+      let promise = this.getMeta(query.build());
+      if (!forward) {
+        promise = promise.then(ctrl => {
+          if (ctrl && ctrl.params && !ctrl.params.count) {
+            this._noEarlierMsgs = true;
           }
         });
       }
-      const remains = pins.filter(seq => !loaded.includes(seq));
-      return this.getMeta(this.startMetaQuery().withDataList(remains).build());
+      return promise;
     });
   }
   setMeta(params) {
@@ -4067,7 +3620,7 @@ class Topic {
           }
         }
         params.sub._noForwarding = true;
-        this._processMetaSub([params.sub]);
+        this._processMetaSubs([params.sub]);
       }
       if (params.desc) {
         if (ctrl.params && ctrl.params.acs) {
@@ -4081,9 +3634,6 @@ class Topic {
       }
       if (params.cred) {
         this._processMetaCreds([params.cred], true);
-      }
-      if (params.aux) {
-        this._processMetaAux(params.aux);
       }
       return ctrl;
     });
@@ -4118,43 +3668,32 @@ class Topic {
       }
     });
   }
-  pinMessage(seq, pin) {
-    let pinned = this.aux('pins');
-    if (!Array.isArray(pinned)) {
-      pinned = [];
-    }
-    let changed = false;
-    if (pin) {
-      if (!pinned.includes(seq)) {
-        changed = true;
-        if (pinned.length == _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PINNED_COUNT) {
-          pinned.shift();
-        }
-        pinned.push(seq);
-      }
-    } else {
-      if (pinned.includes(seq)) {
-        changed = true;
-        pinned = pinned.filter(id => id != seq);
-        if (pinned.length == 0) {
-          pinned = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
-        }
-      }
-    }
-    if (changed) {
-      return this.setMeta({
-        aux: {
-          pins: pinned
-        }
-      });
-    }
-    return Promise.resolve();
-  }
   delMessages(ranges, hard) {
     if (!this._attached) {
       return Promise.reject(new Error("Cannot delete messages in inactive topic"));
     }
-    const tosend = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.normalizeRanges)(ranges, this._maxSeq);
+    ranges.sort((r1, r2) => {
+      if (r1.low < r2.low) {
+        return true;
+      }
+      if (r1.low == r2.low) {
+        return !r2.hi || r1.hi >= r2.hi;
+      }
+      return false;
+    });
+    let tosend = ranges.reduce((out, r) => {
+      if (r.low < _config_js__WEBPACK_IMPORTED_MODULE_3__.LOCAL_SEQID) {
+        if (!r.hi || r.hi < _config_js__WEBPACK_IMPORTED_MODULE_3__.LOCAL_SEQID) {
+          out.push(r);
+        } else {
+          out.push({
+            low: r.low,
+            hi: this._maxSeq + 1
+          });
+        }
+      }
+      return out;
+    }, []);
     let result;
     if (tosend.length > 0) {
       result = this._tinode.delMessages(this.name, tosend, hard);
@@ -4167,23 +3706,15 @@ class Topic {
     }
     return result.then(ctrl => {
       if (ctrl.params.del > this._maxDel) {
-        this._maxDel = Math.max(ctrl.params.del, this._maxDel);
-        this.clear = Math.max(ctrl.params.del, this.clear);
+        this._maxDel = ctrl.params.del;
       }
-      ranges.forEach(rec => {
-        if (rec.hi) {
-          this.flushMessageRange(rec.low, rec.hi);
+      ranges.forEach(r => {
+        if (r.hi) {
+          this.flushMessageRange(r.low, r.hi);
         } else {
-          this.flushMessage(rec.low);
+          this.flushMessage(r.low);
         }
-        this._messages.put({
-          seq: rec.low,
-          low: rec.low,
-          hi: rec.hi,
-          _deleted: true
-        });
       });
-      this._tinode._db.addDelLog(this.name, ctrl.params.del, ranges);
       if (this.onData) {
         this.onData();
       }
@@ -4201,7 +3732,25 @@ class Topic {
     }], hardDel);
   }
   delMessagesList(list, hardDel) {
-    return this.delMessages((0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(list), hardDel);
+    list.sort((a, b) => a - b);
+    let ranges = list.reduce((out, id) => {
+      if (out.length == 0) {
+        out.push({
+          low: id
+        });
+      } else {
+        let prev = out[out.length - 1];
+        if (!prev.hi && id != prev.low + 1 || id > prev.hi) {
+          out.push({
+            low: id
+          });
+        } else {
+          prev.hi = prev.hi ? Math.max(prev.hi, id + 1) : id + 1;
+        }
+      }
+      return out;
+    }, []);
+    return this.delMessages(ranges, hardDel);
   }
   delMessagesEdits(seq, hardDel) {
     const list = [seq];
@@ -4248,7 +3797,7 @@ class Topic {
     }
     if (update) {
       this._tinode.note(this.name, what, seq);
-      this._updateReadRecv(what, seq);
+      this._updateMyReadRecv(what, seq);
       if (this.acs != null && !this.acs.isMuted()) {
         const me = this._tinode.getMeTopic();
         me._refreshContact(what, this);
@@ -4284,7 +3833,7 @@ class Topic {
     }
     return this._tinode.videoCall(this.name, seq, evt, payload);
   }
-  _updateReadRecv(what, seq, ts) {
+  _updateMyReadRecv(what, seq, ts) {
     let oldVal,
       doUpdate = false;
     seq = seq | 0;
@@ -4348,9 +3897,6 @@ class Topic {
   tags() {
     return this._tags.slice(0);
   }
-  aux(key) {
-    return this._aux[key];
-  }
   subscriber(uid) {
     return this._users[uid];
   }
@@ -4376,10 +3922,7 @@ class Topic {
       if (startIdx != -1 && beforeIdx != -1) {
         let msgs = [];
         this._messages.forEach((msg, unused1, unused2, i) => {
-          if (Topic.#isReplacementMsg(msg)) {
-            return;
-          }
-          if (msg._deleted) {
+          if (this._isReplacementMsg(msg)) {
             return;
           }
           const latest = this.latestMsgVersion(msg.seq) || msg;
@@ -4453,38 +3996,8 @@ class Topic {
   msgRecvCount(seq) {
     return this.msgReceiptCount('recv', seq);
   }
-  msgHasMoreMessages(min, max, newer) {
-    const gaps = [];
-    let maxSeq = 0;
-    let gap;
-    this._messages.forEach((msg, prev) => {
-      const p = prev || {
-        seq: 0
-      };
-      const expected = p._deleted ? p.hi : p.seq + 1;
-      if (msg.seq > expected) {
-        gap = {
-          low: expected,
-          hi: msg.seq
-        };
-      } else {
-        gap = null;
-      }
-      if (gap && (newer ? gap.hi >= min : gap.low < max)) {
-        gaps.push(gap);
-      }
-      maxSeq = expected;
-    });
-    if (maxSeq < this.seq) {
-      gap = {
-        low: maxSeq + 1,
-        hi: this.seq + 1
-      };
-      if (newer ? gap.hi >= min : gap.low < max) {
-        gaps.push(gap);
-      }
-    }
-    return gaps;
+  msgHasMoreMessages(newer) {
+    return newer ? this.seq > this._maxSeq : this._minSeq > 1 && !this._noEarlierMsgs;
   }
   isNewMessage(seqId) {
     return this._maxSeq <= seqId;
@@ -4602,8 +4115,11 @@ class Topic {
     }
     return status;
   }
+  _isReplacementMsg(pub) {
+    return pub.head && pub.head.replace;
+  }
   _maybeUpdateMessageVersionsCache(msg) {
-    if (!Topic.#isReplacementMsg(msg)) {
+    if (!this._isReplacementMsg(msg)) {
       if (this._messageVersions[msg.seq]) {
         this._messageVersions[msg.seq].filter(version => version.from == msg.from);
         if (this._messageVersions[msg.seq].isEmpty()) {
@@ -4647,15 +4163,11 @@ class Topic {
     }
     const outgoing = !this.isChannelType() && !data.from || this._tinode.isMe(data.from);
     if (data.head && data.head.webrtc && data.head.mime == _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().getContentType() && data.content) {
-      const upd = {
+      data.content = _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().updateVideoCall(data.content, {
         state: data.head.webrtc,
         duration: data.head['webrtc-duration'],
         incoming: !outgoing
-      };
-      if (data.head.vc) {
-        upd.vc = true;
-      }
-      data.content = _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().updateVideoCall(data.content, upd);
+      });
     }
     if (!data._noForwarding) {
       this._messages.put(data);
@@ -4666,7 +4178,15 @@ class Topic {
       this.onData(data);
     }
     const what = outgoing ? 'read' : 'msg';
-    this._updateReadRecv(what, data.seq, data.ts);
+    this._updateMyReadRecv(what, data.seq, data.ts);
+    if (!outgoing && data.from) {
+      this._routeInfo({
+        what: 'read',
+        from: data.from,
+        seq: data.seq,
+        _noForwarding: true
+      });
+    }
     this._tinode.getMeTopic()._refreshContact(what, this);
   }
   _routeMeta(meta) {
@@ -4674,7 +4194,7 @@ class Topic {
       this._processMetaDesc(meta.desc);
     }
     if (meta.sub && meta.sub.length > 0) {
-      this._processMetaSub(meta.sub);
+      this._processMetaSubs(meta.sub);
     }
     if (meta.del) {
       this._processDelMessages(meta.del.clear, meta.del.delseq);
@@ -4684,9 +4204,6 @@ class Topic {
     }
     if (meta.cred) {
       this._processMetaCreds(meta.cred);
-    }
-    if (meta.aux) {
-      this._processMetaAux(meta.aux);
     }
     if (this.onMeta) {
       this.onMeta(meta);
@@ -4712,11 +4229,8 @@ class Topic {
         break;
       case 'upd':
         if (pres.src && !this._tinode.isTopicCached(pres.src)) {
-          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
+          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
         }
-        break;
-      case 'aux':
-        this.getMeta(this.startMetaQuery().withAux().build());
         break;
       case 'acs':
         uid = pres.src || this._tinode.getCurrentUserID();
@@ -4735,11 +4249,11 @@ class Topic {
               user.acs = acs;
             }
             user.updated = new Date();
-            this._processMetaSub([user]);
+            this._processMetaSubs([user]);
           }
         } else {
           user.acs.updateAll(pres.dacs);
-          this._processMetaSub([{
+          this._processMetaSubs([{
             user: uid,
             updated: new Date(),
             acs: user.acs
@@ -4768,12 +4282,14 @@ class Topic {
         if (msg) {
           this.msgStatus(msg, true);
         }
-        if (this._tinode.isMe(info.from)) {
-          this._updateReadRecv(info.what, info.seq);
+        if (this._tinode.isMe(info.from) && !info._noForwarding) {
+          this._updateMyReadRecv(info.what, info.seq);
         }
         this._tinode.getMeTopic()._refreshContact(info.what, this);
         break;
       case 'kp':
+      case 'kpa':
+      case 'kpv':
         break;
       case 'call':
         break;
@@ -4804,7 +4320,7 @@ class Topic {
       this.onMetaDesc(this);
     }
   }
-  _processMetaSub(subs) {
+  _processMetaSubs(subs) {
     for (let idx in subs) {
       const sub = subs[idx];
       sub.online = !!sub.online;
@@ -4832,45 +4348,32 @@ class Topic {
     }
   }
   _processMetaTags(tags) {
-    if (tags == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR || tags.length == 1 && tags[0] == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
+    if (tags.length == 1 && tags[0] == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
       tags = [];
     }
     this._tags = tags;
-    this._tinode._db.updTopic(this);
     if (this.onTagsUpdated) {
       this.onTagsUpdated(tags);
     }
   }
   _processMetaCreds(creds) {}
-  _processMetaAux(aux) {
-    aux = !aux || aux == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR ? {} : aux;
-    this._aux = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this._aux, aux);
-    this._tinode._db.updTopic(this);
-    if (this.onAuxUpdated) {
-      this.onAuxUpdated(this._aux);
-    }
-  }
   _processDelMessages(clear, delseq) {
     this._maxDel = Math.max(clear, this._maxDel);
     this.clear = Math.max(clear, this.clear);
+    const topic = this;
     let count = 0;
     if (Array.isArray(delseq)) {
-      delseq.forEach(rec => {
-        if (!rec.hi) {
+      delseq.forEach(function (range) {
+        if (!range.hi) {
           count++;
-          this.flushMessage(rec.low);
+          topic.flushMessage(range.low);
         } else {
-          count += rec.hi - rec.low;
-          this.flushMessageRange(rec.low, rec.hi);
+          for (let i = range.low; i < range.hi; i++) {
+            count++;
+            topic.flushMessage(i);
+          }
         }
-        this._messages.put({
-          seq: rec.low,
-          low: rec.low,
-          hi: rec.hi,
-          _deleted: true
-        });
       });
-      this._tinode._db.addDelLog(this.name, clear, delseq);
     }
     if (count > 0) {
       if (this.onData) {
@@ -4919,11 +4422,17 @@ class Topic {
   _getQueuedSeqId() {
     return this._queuedSeqId++;
   }
-  _loadMessages(db, query) {
-    query = query || {};
-    query.limit = query.limit || _config_js__WEBPACK_IMPORTED_MODULE_3__.DEFAULT_MESSAGES_PAGE;
-    let count = 0;
-    return db.readMessages(this.name, query).then(msgs => {
+  _loadMessages(db, params) {
+    const {
+      since,
+      before,
+      limit
+    } = params || {};
+    return db.readMessages(this.name, {
+      since: since,
+      before: before,
+      limit: limit || _config_js__WEBPACK_IMPORTED_MODULE_3__.DEFAULT_MESSAGES_PAGE
+    }).then(msgs => {
       msgs.forEach(data => {
         if (data.seq > this._maxSeq) {
           this._maxSeq = data.seq;
@@ -4934,18 +4443,7 @@ class Topic {
         this._messages.put(data);
         this._maybeUpdateMessageVersionsCache(data);
       });
-      count = msgs.length;
-    }).then(_ => db.readDelLog(this.name, query)).then(dellog => {
-      return dellog.forEach(rec => {
-        this._messages.put({
-          seq: rec.low,
-          low: rec.low,
-          hi: rec.hi,
-          _deleted: true
-        });
-      });
-    }).then(_ => {
-      return count;
+      return msgs.length;
     });
   }
   _updateReceived(seq, act) {
@@ -4959,6 +4457,315 @@ class Topic {
     this._tinode._db.updTopic(this);
   }
 }
+class TopicMe extends Topic {
+  onContactUpdate;
+  constructor(callbacks) {
+    super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME, callbacks);
+    if (callbacks) {
+      this.onContactUpdate = callbacks.onContactUpdate;
+    }
+  }
+  _processMetaDesc(desc) {
+    const turnOff = desc.acs && !desc.acs.isPresencer() && this.acs && this.acs.isPresencer();
+    (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this, desc);
+    this._tinode._db.updTopic(this);
+    this._updateCachedUser(this._tinode._myUID, desc);
+    if (turnOff) {
+      this._tinode.mapTopics(cont => {
+        if (cont.online) {
+          cont.online = false;
+          cont.seen = Object.assign(cont.seen || {}, {
+            when: new Date()
+          });
+          this._refreshContact('off', cont);
+        }
+      });
+    }
+    if (this.onMetaDesc) {
+      this.onMetaDesc(this);
+    }
+  }
+  _processMetaSubs(subs) {
+    let updateCount = 0;
+    subs.forEach(sub => {
+      const topicName = sub.topic;
+      if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_FND || topicName == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME) {
+        return;
+      }
+      sub.online = !!sub.online;
+      let cont = null;
+      if (sub.deleted) {
+        cont = sub;
+        this._tinode.cacheRemTopic(topicName);
+        this._tinode._db.remTopic(topicName);
+      } else {
+        if (typeof sub.seq != 'undefined') {
+          sub.seq = sub.seq | 0;
+          sub.recv = sub.recv | 0;
+          sub.read = sub.read | 0;
+          sub.unread = sub.seq - sub.read;
+        }
+        const topic = this._tinode.getTopic(topicName);
+        if (topic._new) {
+          delete topic._new;
+        }
+        cont = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(topic, sub);
+        this._tinode._db.updTopic(cont);
+        if (Topic.isP2PTopicName(topicName)) {
+          this._cachePutUser(topicName, cont);
+          this._tinode._db.updUser(topicName, cont.public);
+        }
+        if (!sub._noForwarding && topic) {
+          sub._noForwarding = true;
+          topic._processMetaDesc(sub);
+        }
+      }
+      updateCount++;
+      if (this.onMetaSub) {
+        this.onMetaSub(cont);
+      }
+    });
+    if (this.onSubsUpdated && updateCount > 0) {
+      const keys = [];
+      subs.forEach(s => {
+        keys.push(s.topic);
+      });
+      this.onSubsUpdated(keys, updateCount);
+    }
+  }
+  _processMetaCreds(creds, upd) {
+    if (creds.length == 1 && creds[0] == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
+      creds = [];
+    }
+    if (upd) {
+      creds.forEach(cr => {
+        if (cr.val) {
+          let idx = this._credentials.findIndex(el => {
+            return el.meth == cr.meth && el.val == cr.val;
+          });
+          if (idx < 0) {
+            if (!cr.done) {
+              idx = this._credentials.findIndex(el => {
+                return el.meth == cr.meth && !el.done;
+              });
+              if (idx >= 0) {
+                this._credentials.splice(idx, 1);
+              }
+            }
+            this._credentials.push(cr);
+          } else {
+            this._credentials[idx].done = cr.done;
+          }
+        } else if (cr.resp) {
+          const idx = this._credentials.findIndex(el => {
+            return el.meth == cr.meth && !el.done;
+          });
+          if (idx >= 0) {
+            this._credentials[idx].done = true;
+          }
+        }
+      });
+    } else {
+      this._credentials = creds;
+    }
+    if (this.onCredsUpdated) {
+      this.onCredsUpdated(this._credentials);
+    }
+  }
+  _routePres(pres) {
+    if (pres.what == 'term') {
+      this._resetSub();
+      return;
+    }
+    if (pres.what == 'upd' && pres.src == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME) {
+      this.getMeta(this.startMetaQuery().withDesc().build());
+      return;
+    }
+    const cont = this._tinode.cacheGetTopic(pres.src);
+    if (cont) {
+      switch (pres.what) {
+        case 'on':
+          cont.online = true;
+          break;
+        case 'off':
+          if (cont.online) {
+            cont.online = false;
+            cont.seen = Object.assign(cont.seen || {}, {
+              when: new Date()
+            });
+          }
+          break;
+        case 'msg':
+          cont._updateReceived(pres.seq, pres.act);
+          break;
+        case 'upd':
+          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
+          break;
+        case 'acs':
+          if (!pres.tgt) {
+            if (cont.acs) {
+              cont.acs.updateAll(pres.dacs);
+            } else {
+              cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
+            }
+            cont.touched = new Date();
+          }
+          break;
+        case 'ua':
+          cont.seen = {
+            when: new Date(),
+            ua: pres.ua
+          };
+          break;
+        case 'recv':
+          pres.seq = pres.seq | 0;
+          cont.recv = cont.recv ? Math.max(cont.recv, pres.seq) : pres.seq;
+          break;
+        case 'read':
+          pres.seq = pres.seq | 0;
+          cont.read = cont.read ? Math.max(cont.read, pres.seq) : pres.seq;
+          cont.recv = cont.recv ? Math.max(cont.read, cont.recv) : cont.recv;
+          cont.unread = cont.seq - cont.read;
+          break;
+        case 'gone':
+          this._tinode.cacheRemTopic(pres.src);
+          if (!cont._deleted) {
+            cont._deleted = true;
+            cont._attached = false;
+            this._tinode._db.markTopicAsDeleted(pres.src, true);
+          } else {
+            this._tinode._db.remTopic(pres.src);
+          }
+          break;
+        case 'del':
+          break;
+        default:
+          this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
+      }
+      this._refreshContact(pres.what, cont);
+    } else {
+      if (pres.what == 'acs') {
+        const acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"](pres.dacs);
+        if (!acs || acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._INVALID) {
+          this._tinode.logger("ERROR: Invalid access mode update", pres.src, pres.dacs);
+          return;
+        } else if (acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._NONE) {
+          this._tinode.logger("WARNING: Removing non-existent subscription", pres.src, pres.dacs);
+          return;
+        } else {
+          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
+          const dummy = this._tinode.getTopic(pres.src);
+          dummy.online = false;
+          dummy.acs = acs;
+          this._tinode._db.updTopic(dummy);
+        }
+      } else if (pres.what == 'tags') {
+        this.getMeta(this.startMetaQuery().withTags().build());
+      } else if (pres.what == 'msg') {
+        this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
+        const dummy = this._tinode.getTopic(pres.src);
+        dummy._deleted = false;
+        this._tinode._db.updTopic(dummy);
+      }
+      this._refreshContact(pres.what, cont);
+    }
+    if (this.onPres) {
+      this.onPres(pres);
+    }
+  }
+  _refreshContact(what, cont) {
+    if (this.onContactUpdate) {
+      this.onContactUpdate(what, cont);
+    }
+  }
+  publish() {
+    return Promise.reject(new Error("Publishing to 'me' is not supported"));
+  }
+  delCredential(method, value) {
+    if (!this._attached) {
+      return Promise.reject(new Error("Cannot delete credential in inactive 'me' topic"));
+    }
+    return this._tinode.delCredential(method, value).then(ctrl => {
+      const index = this._credentials.findIndex(el => {
+        return el.meth == method && el.val == value;
+      });
+      if (index > -1) {
+        this._credentials.splice(index, 1);
+      }
+      if (this.onCredsUpdated) {
+        this.onCredsUpdated(this._credentials);
+      }
+      return ctrl;
+    });
+  }
+  contacts(callback, filter, context) {
+    this._tinode.mapTopics((c, idx) => {
+      if (c.isCommType() && (!filter || filter(c))) {
+        callback.call(context, c, idx);
+      }
+    });
+  }
+  getContact(name) {
+    return this._tinode.cacheGetTopic(name);
+  }
+  getAccessMode(name) {
+    if (name) {
+      const cont = this._tinode.cacheGetTopic(name);
+      return cont ? cont.acs : null;
+    }
+    return this.acs;
+  }
+  isArchived(name) {
+    const cont = this._tinode.cacheGetTopic(name);
+    return cont && cont.private && !!cont.private.arch;
+  }
+  getCredentials() {
+    return this._credentials;
+  }
+}
+class TopicFnd extends Topic {
+  _contacts = {};
+  constructor(callbacks) {
+    super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_FND, callbacks);
+  }
+  _processMetaSubs(subs) {
+    let updateCount = Object.getOwnPropertyNames(this._contacts).length;
+    this._contacts = {};
+    for (let idx in subs) {
+      let sub = subs[idx];
+      const indexBy = sub.topic ? sub.topic : sub.user;
+      sub = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeToCache)(this._contacts, indexBy, sub);
+      updateCount++;
+      if (this.onMetaSub) {
+        this.onMetaSub(sub);
+      }
+    }
+    if (updateCount > 0 && this.onSubsUpdated) {
+      this.onSubsUpdated(Object.keys(this._contacts));
+    }
+  }
+  publish() {
+    return Promise.reject(new Error("Publishing to 'fnd' is not supported"));
+  }
+  setMeta(params) {
+    return Object.getPrototypeOf(TopicFnd.prototype).setMeta.call(this, params).then(_ => {
+      if (Object.keys(this._contacts).length > 0) {
+        this._contacts = {};
+        if (this.onSubsUpdated) {
+          this.onSubsUpdated([]);
+        }
+      }
+    });
+  }
+  contacts(callback, context) {
+    const cb = callback || this.onMetaSub;
+    if (cb) {
+      for (let idx in this._contacts) {
+        cb.call(context, this._contacts[idx], idx, this._contacts);
+      }
+    }
+  }
+}
 
 /***/ }),
 
@@ -4970,16 +4777,13 @@ class Topic {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clipRange": () => (/* binding */ clipRange),
-/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "jsonParseHelper": () => (/* binding */ jsonParseHelper),
-/* harmony export */   "listToRanges": () => (/* binding */ listToRanges),
-/* harmony export */   "mergeObj": () => (/* binding */ mergeObj),
-/* harmony export */   "mergeToCache": () => (/* binding */ mergeToCache),
-/* harmony export */   "normalizeArray": () => (/* binding */ normalizeArray),
-/* harmony export */   "normalizeRanges": () => (/* binding */ normalizeRanges),
-/* harmony export */   "rfc3339DateString": () => (/* binding */ rfc3339DateString),
-/* harmony export */   "simplify": () => (/* binding */ simplify)
+/* harmony export */   isUrlRelative: () => (/* binding */ isUrlRelative),
+/* harmony export */   jsonParseHelper: () => (/* binding */ jsonParseHelper),
+/* harmony export */   mergeObj: () => (/* binding */ mergeObj),
+/* harmony export */   mergeToCache: () => (/* binding */ mergeToCache),
+/* harmony export */   normalizeArray: () => (/* binding */ normalizeArray),
+/* harmony export */   rfc3339DateString: () => (/* binding */ rfc3339DateString),
+/* harmony export */   simplify: () => (/* binding */ simplify)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
@@ -5089,7 +4893,7 @@ function normalizeArray(arr) {
         }
       }
     }
-    out.sort().filter((item, pos, ary) => {
+    out.sort().filter(function (item, pos, ary) {
       return !pos || item != ary[pos - 1];
     });
   }
@@ -5097,78 +4901,6 @@ function normalizeArray(arr) {
     out.push(_config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR);
   }
   return out;
-}
-function normalizeRanges(ranges, maxSeq) {
-  if (!Array.isArray(ranges)) {
-    return [];
-  }
-  ranges.sort((r1, r2) => {
-    if (r1.low < r2.low) {
-      return true;
-    }
-    if (r1.low == r2.low) {
-      return !r2.hi || r1.hi >= r2.hi;
-    }
-    return false;
-  });
-  return ranges.reduce((out, r) => {
-    if (r.low < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID && r.low > 0) {
-      if (!r.hi || r.hi < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID) {
-        out.push(r);
-      } else {
-        out.push({
-          low: r.low,
-          hi: maxSeq + 1
-        });
-      }
-    }
-    return out;
-  }, []);
-}
-function listToRanges(list) {
-  list.sort((a, b) => a - b);
-  return list.reduce((out, id) => {
-    if (out.length == 0) {
-      out.push({
-        low: id
-      });
-    } else {
-      let prev = out[out.length - 1];
-      if (!prev.hi && id != prev.low + 1 || id > prev.hi) {
-        out.push({
-          low: id
-        });
-      } else {
-        prev.hi = prev.hi ? Math.max(prev.hi, id + 1) : id + 1;
-      }
-    }
-    return out;
-  }, []);
-}
-function clipRange(src, clip) {
-  if (clip.hi < src.low || clip.low >= src.hi) {
-    return [src];
-  }
-  if (clip.low <= src.low) {
-    if (clip.hi >= src.hi) {
-      return [];
-    }
-    return [{
-      low: src.low,
-      hi: clip.hi
-    }];
-  }
-  const result = [{
-    low: src.low,
-    hi: clip.low
-  }];
-  if (clip.hi < src.hi) {
-    result.push({
-      low: clip.hi,
-      hi: src.hi
-    });
-  }
-  return result;
 }
 
 /***/ }),
@@ -5181,9 +4913,9 @@ function clipRange(src, clip) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
+/* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.23.0-rc1";
+const PACKAGE_VERSION = "0.23.0";
 
 /***/ })
 
@@ -5268,16 +5000,16 @@ const PACKAGE_VERSION = "0.23.0-rc1";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!***********************!*\
   !*** ./src/tinode.js ***!
   \***********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AccessMode": () => (/* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   "Drafty": () => (/* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a),
-/* harmony export */   "Tinode": () => (/* binding */ Tinode)
+/* harmony export */   AccessMode: () => (/* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   Drafty: () => (/* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a),
+/* harmony export */   Tinode: () => (/* binding */ Tinode)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
@@ -5289,9 +5021,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _large_file_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./large-file.js */ "./src/large-file.js");
 /* harmony import */ var _meta_builder_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./meta-builder.js */ "./src/meta-builder.js");
 /* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
-/* harmony import */ var _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./fnd-topic.js */ "./src/fnd-topic.js");
-/* harmony import */ var _me_topic_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./me-topic.js */ "./src/me-topic.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 /**
  * @module tinode-sdk
  *
@@ -5336,8 +5066,6 @@ __webpack_require__.r(__webpack_exports__);
  * </script>
  * </body>
  */
-
-
 
 
 
@@ -5428,7 +5156,7 @@ function b64EncodeUnicode(str) {
 }
 function jsonBuildHelper(key, val) {
   if (val instanceof Date) {
-    val = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.rfc3339DateString)(val);
+    val = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.rfc3339DateString)(val);
   } else if (val instanceof _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
     val = val.jsonHelper();
   } else if (val === undefined || val === null || val === false || Array.isArray(val) && val.length == 0 || typeof val == 'object' && Object.keys(val).length == 0) {
@@ -5524,7 +5252,7 @@ class Tinode {
   _login = null;
   _authToken = null;
   _inPacketCount = 0;
-  _messageId = Math.floor(Math.random() * 0xFFFF + 0xFFFF);
+  _messageId = (() => Math.floor(Math.random() * 0xFFFF + 0xFFFF))();
   _serverInfo = null;
   _deviceToken = null;
   _pendingPromises = {};
@@ -5561,7 +5289,9 @@ class Tinode {
       }
     };
     this._persist = config.persist;
-    this._db = new _db_js__WEBPACK_IMPORTED_MODULE_4__["default"](this.logger, this.logger);
+    this._db = new _db_js__WEBPACK_IMPORTED_MODULE_4__["default"](err => {
+      this.logger('DB', err);
+    }, this.logger);
     if (this._persist) {
       const prom = [];
       this._db.initDatabase().then(_ => {
@@ -5571,24 +5301,21 @@ class Tinode {
             return;
           }
           if (data.name == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
-            topic = new _me_topic_js__WEBPACK_IMPORTED_MODULE_10__["default"]();
+            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicMe();
           } else if (data.name == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_FND) {
-            topic = new _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
+            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicFnd();
           } else {
-            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"](data.name);
+            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic(data.name);
           }
           this._db.deserializeTopic(topic, data);
           this.#attachCacheToTopic(topic);
           topic._cachePutSelf();
-          this._db.maxDelId(topic.name).then(clear => {
-            topic._maxDel = Math.max(topic._maxDel, clear || 0);
-          });
           delete topic._new;
           prom.push(topic._loadMessages(this._db));
         });
       }).then(_ => {
         return this._db.mapUsers(data => {
-          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, data.public));
+          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, data.public));
         });
       }).then(_ => {
         return Promise.all(prom);
@@ -5652,7 +5379,7 @@ class Tinode {
     if (id) {
       promise = this.#makePromise(id);
     }
-    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.simplify)(pkt);
+    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.simplify)(pkt);
     let msg = JSON.stringify(pkt);
     this.logger("out: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : msg));
     try {
@@ -5678,7 +5405,7 @@ class Tinode {
       }
       return;
     }
-    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_11__.jsonParseHelper);
+    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_9__.jsonParseHelper);
     if (!pkt) {
       this.logger("in: " + data);
       this.logger("ERROR: failed to parse data");
@@ -5712,7 +5439,7 @@ class Tinode {
             } else if (pkt.ctrl.params.what == 'sub') {
               const topic = this.#cacheGet('topic', pkt.ctrl.topic);
               if (topic) {
-                topic._processMetaSub([]);
+                topic._processMetaSubs([]);
               }
             }
           }
@@ -5887,7 +5614,7 @@ class Tinode {
             'desc': {},
             'sub': {},
             'tags': [],
-            'aux': {}
+            'ephemeral': {}
           }
         };
       case 'del':
@@ -5939,13 +5666,13 @@ class Tinode {
       if (pub) {
         return {
           user: uid,
-          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, pub)
+          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, pub)
         };
       }
       return undefined;
     };
     topic._cachePutUser = (uid, user) => {
-      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, user.public));
+      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, user.public));
     };
     topic._cacheDelUser = uid => {
       this.#cacheDel('user', uid);
@@ -5996,25 +5723,25 @@ class Tinode {
     return null;
   }
   static topicType(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].topicType(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.topicType(name);
   }
   static isMeTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isMeTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isMeTopicName(name);
   }
   static isGroupTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isGroupTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isGroupTopicName(name);
   }
   static isP2PTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isP2PTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isP2PTopicName(name);
   }
   static isCommTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isCommTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isCommTopicName(name);
   }
   static isNewGroupTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isNewGroupTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isNewGroupTopicName(name);
   }
   static isChannelTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isChannelTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isChannelTopicName(name);
   }
   static getVersion() {
     return _config_js__WEBPACK_IMPORTED_MODULE_1__.VERSION;
@@ -6072,7 +5799,7 @@ class Tinode {
     if (typeof url != 'string') {
       return url;
     }
-    if ((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(url)) {
+    if ((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(url)) {
       const base = 'scheme://host/';
       const parsed = new URL(url, base);
       if (this._apiKey) {
@@ -6103,7 +5830,7 @@ class Tinode {
       pkt.acc.tmpsecret = params.secret;
       if (Array.isArray(params.attachments) && params.attachments.length > 0) {
         pkt.extra = {
-          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
         };
       }
     }
@@ -6212,14 +5939,11 @@ class Tinode {
       }
       if (Array.isArray(setParams.attachments) && setParams.attachments.length > 0) {
         pkt.extra = {
-          attachments: setParams.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+          attachments: setParams.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
         };
       }
       if (setParams.tags) {
         pkt.sub.set.tags = setParams.tags;
-      }
-      if (setParams.aux) {
-        pkt.sub.set.aux = setParams.aux;
       }
     }
     return this.#send(pkt, pkt.sub.id);
@@ -6255,7 +5979,7 @@ class Tinode {
     };
     if (attachments) {
       msg.extra = {
-        attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+        attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
       };
     }
     return this.#send(msg, pub.id);
@@ -6328,14 +6052,14 @@ class Tinode {
   }
   getMeta(topic, params) {
     const pkt = this.#initPacket('get', topic);
-    pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)(pkt.get, params);
+    pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)(pkt.get, params);
     return this.#send(pkt, pkt.get.id);
   }
   setMeta(topic, params) {
     const pkt = this.#initPacket('set', topic);
     const what = [];
     if (params) {
-      ['desc', 'sub', 'tags', 'cred', 'aux'].forEach(key => {
+      ['desc', 'sub', 'tags', 'cred', 'ephemeral'].forEach(function (key) {
         if (params.hasOwnProperty(key)) {
           what.push(key);
           pkt.set[key] = params[key];
@@ -6343,7 +6067,7 @@ class Tinode {
       });
       if (Array.isArray(params.attachments) && params.attachments.length > 0) {
         pkt.extra = {
-          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
         };
       }
     }
@@ -6414,11 +6138,11 @@ class Tinode {
     let topic = this.#cacheGet('topic', topicName);
     if (!topic && topicName) {
       if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
-        topic = new _me_topic_js__WEBPACK_IMPORTED_MODULE_10__["default"]();
+        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicMe();
       } else if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_FND) {
-        topic = new _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
+        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicFnd();
       } else {
-        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"](topicName);
+        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic(topicName);
       }
       this.#attachCacheToTopic(topic);
       topic._cachePutSelf();
@@ -6494,17 +6218,17 @@ class Tinode {
       this._messageId = 0;
     }
   }
-  onWebsocketOpen = undefined;
-  onConnect = undefined;
-  onDisconnect = undefined;
-  onLogin = undefined;
-  onCtrlMessage = undefined;
-  onDataMessage = undefined;
-  onPresMessage = undefined;
-  onMessage = undefined;
-  onRawMessage = undefined;
-  onNetworkProbe = undefined;
-  onAutoreconnectIteration = undefined;
+  onWebsocketOpen = (() => undefined)();
+  onConnect = (() => undefined)();
+  onDisconnect = (() => undefined)();
+  onLogin = (() => undefined)();
+  onCtrlMessage = (() => undefined)();
+  onDataMessage = (() => undefined)();
+  onPresMessage = (() => undefined)();
+  onMessage = (() => undefined)();
+  onRawMessage = (() => undefined)();
+  onNetworkProbe = (() => undefined)();
+  onAutoreconnectIteration = (() => undefined)();
 }
 ;
 Tinode.MESSAGE_STATUS_NONE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_NONE;
@@ -6522,6 +6246,7 @@ Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
 Tinode.MAX_TAG_COUNT = 'maxTagCount';
 Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
 Tinode.REQ_CRED_VALIDATORS = 'reqCred';
+Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
 })();
 
 /******/ 	return __webpack_exports__;

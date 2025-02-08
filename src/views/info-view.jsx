@@ -12,6 +12,7 @@ import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupManager from '../widgets/group-manager.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
+import ShowQRCode from '../widgets/show-qrcode.jsx';
 import TopicCommonView from './topic-common-view.jsx';
 import TopicSecurity from '../widgets/topic-security.jsx';
 
@@ -76,6 +77,11 @@ const messages = defineMessages({
     defaultMessage: 'Edit permissions',
     description: 'Menu item [Edit permissions]'
   },
+  qrcode: {
+    id: 'scan_qr_code',
+    defaultMessage: 'Scan QR Code',
+    description: 'Title for scanning QR code'
+  },
 });
 
 class InfoView extends React.Component {
@@ -120,6 +126,8 @@ class InfoView extends React.Component {
     this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
+    this.handleCopyID = this.handleCopyID.bind(this);
+    this.handleShowQRCode = this.handleShowQRCode.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
@@ -368,6 +376,16 @@ class InfoView extends React.Component {
     this.props.onNavigate(`perm/${which}`);
   }
 
+  handleCopyID(e) {
+    e.preventDefault();
+    navigator.clipboard.writeText(this.props.myUserId);
+  }
+
+  handleShowQRCode(e) {
+    e.preventDefault();
+    this.props.onNavigate('qrcode');
+  }
+
   handleShowAddMembers(e) {
     e.preventDefault();
     this.props.onInitFind();
@@ -514,6 +532,11 @@ class InfoView extends React.Component {
             onLaunchPermissionsEditor={this.handleLaunchPermissionsEditor}
             onNavigate={this.props.onNavigate} />
           :
+        view == 'qrcode' ?
+          <ShowQRCode
+            uri={Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.myUserId}
+            onCancel={this.handleBackNavigate} />
+          :
           <div id="info-view-content" className="scrollable-panel">
             <div className="panel-form-column">
               <a href="#" className="flat-button float-right" onClick={(e) => {e.preventDefault(); this.props.onNavigate('general');}}>
@@ -546,10 +569,20 @@ class InfoView extends React.Component {
                 </div>
                 : null
               }
-              <div className="group">
-                <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
-                  description="Label for user address (ID)" /></label>&nbsp;
-                <tt>{this.state.address}</tt>
+              <div className="panel-form-row">
+                <div>
+                  <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
+                    description="Label for user address (ID)" /></label>&nbsp;
+                  <tt>{this.state.address}</tt>
+                </div>
+                <div style={{marginLeft: 'auto'}}>
+                  &nbsp;<a href="#" onClick={this.handleCopyID}>
+                    <i className="material-icons">content_copy</i>
+                  </a>&nbsp;
+                  &nbsp;<a href="#" onClick={this.handleShowQRCode}>
+                    <i className="material-icons">qr_code</i>
+                  </a>&nbsp;
+                </div>
               </div>
               <div className="group">
                 <BadgeList trustedBadges={this.state.trustedBadges} />

@@ -108,9 +108,12 @@ export function asEmail(val) {
 // example.html - ok
 // https:example.com - not ok.
 // http:/example.com - not ok.
+// //example.com or \\example.com - not ok.
 // ' ↲ https://example.com' - not ok. (↲ means carriage return)
 export function isUrlRelative(url) {
-  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
+  // Replacing backslashes with forward slashes to mimic JS URL parser then testing for
+  // 'scheme:' and '//' with optional space at the start.
+  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url.replace(/\\/g, '/'));
 }
 
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
@@ -121,7 +124,10 @@ export function sanitizeUrl(url, allowedSchemes) {
   }
 
   // Strip control characters and whitespace. They are not valid URL characters anyway.
-  url = url.replace(/[^\x20-\x7E]/gmi, '').trim();
+  url = url.replace(/[^\x21-\x7E]/gmi, '').trim();
+
+  // Replace backslashes with forward slashes. They will be replaced in the URL parser anyway.
+  url = url.replace(/\\/g, '/');
 
   // Relative URLs are safe.
   // Relative URL does not start with ':', abcd123: or '//'.
@@ -164,6 +170,41 @@ export function sanitizeUrlForMime(url, mimeMajor) {
   }
 
   return null;
+}
+
+// Append query parameter 'asatt=1' to the URL.
+// It will cause Tinode server to add 'Content-Disposition: attachment' header when serving it.
+// The URL is a string. The URL here is always absolute.
+export function urlAsAttachment(url) {
+  // TODO: check if URL is local or remote, i.e. compare to window.location.origin.
+  /*
+  if (typeof window.location == 'object') {
+    if (!url.startsWith(window.location.origin)) {
+      return url;
+    }
+  }
+  */
+  // Check if the URL is a data or blob. Do not alter such URLs.
+  if (url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
+
+  // Split URL into host+path, query, fragment.
+  let query = '', fragment = '';
+  const idxF = url.indexOf('#');
+  if (idxF > 0) {
+    fragment = url.substring(idxF+1);
+    url = url.substring(0, idxF);
+  }
+  const idxQ = url.indexOf('?');
+  if (idxQ > 0) {
+    query = url.substring(idxQ+1);
+    url = url.substring(0, idxQ);
+  }
+  // Add parameter and reassemble.
+  const params = new URLSearchParams(query);
+  params.append('asatt', '1');
+  return `${url}?${params.toString()}` + (fragment ? `#${fragment}` : '');
 }
 
 // Given message's received status, return name and color of a delivery indicator icon.

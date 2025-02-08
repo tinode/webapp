@@ -38,6 +38,14 @@ const i18n = {
     'new_message': "Новое сообщение",
     'new_chat': "Новый чат",
   },
+  'th': {
+    'new_message': "ข้อความใหม่",
+    'new_chat': "แชทใหม่",
+  },
+  'uk': {
+    'new_message': "Нове повідомлення",
+    'new_chat': "Новий чат",
+  },
   'zh': {
     'new_message': "新讯息",
     'new_chat': "新聊天",

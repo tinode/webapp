@@ -1212,7 +1212,7 @@ img.channel {
   flex-grow: 0;
   padding: 0.5rem 0.75rem;
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Make sure padding is only applied at the top level panel */
@@ -1420,6 +1420,11 @@ img.channel {
   vertical-align: top;
 }
 
+/* Div holding QR code */
+.qr-code {
+  align-self: center;
+}
+
 /* Scrollable panel where the messages are shown */
 #messages-panel {
   position: relative;
@@ -1589,8 +1594,10 @@ img.channel {
   justify-content: space-between;
   background-color: #eceff1;
   box-shadow: 0 1px 2px silver; /* Faint shadow under the panel */
-  line-height: 2.5rem;
-  height: 4.6rem;
+  line-height: 2rem;
+  flex-shrink: 0;
+  flex-grow: 0;
+  height: 4rem;
   padding: 1rem 0.75rem 0 0.75rem;
   z-index: 3;
 }
@@ -1620,6 +1627,8 @@ img.channel {
   line-height: 1.5rem;
   background-color: #eceff1;
   box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+  flex-grow: 0;
+  flex-shrink: 0;
   z-index: 1;
 }
 
@@ -2014,6 +2023,24 @@ video {
   max-width: 36rem;
   overflow-wrap: anywhere;
   padding: 0 0.75rem 0 0.75rem;
+}
+
+/* Increase font size when the message contains only emojis.
+Font from 3x to almost normal, from 1 to 5 emojis in a message */
+.bubble div.message-content.emoji-1 {
+  font-size: 300%;
+}
+.bubble div.message-content.emoji-2 {
+  font-size: 241%;
+}
+.bubble div.message-content.emoji-3 {
+  font-size: 193%;
+}
+.bubble div.message-content.emoji-4 {
+  font-size: 155%;
+}
+.bubble div.message-content.emoji-5 {
+  font-size: 125%;
 }
 
 /* The timestamp is a floating element. Need to ensure div.message-content is expanded
@@ -3314,7 +3341,7 @@ ul.phone-country-selector span.country {
     width: 100%;
   }
 
-  /* Bottom sheet rathar than a dialog */
+  /* Bottom sheet rather than a dialog */
   .forward-dialog {
     border-radius: 0.3rem 0.3rem 0 0;
     margin: auto 0 0 0;

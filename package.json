@@ -4,7 +4,7 @@
   "version": "0.23.0-rc2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinode/webapp.git"
+    "url": "git+https://github.com/tinode/webapp.git"
   },
   "scripts": {
     "start": "echo 'Read installation instructions'",
@@ -20,7 +20,7 @@
     "extract": "formatjs extract \"src/**/*.{js,jsx}\" --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
-  "browserslist": "> 0.5%, not IE 11, not op_mini all, not and_uc >0",
+  "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead",
   "files": [
     "umd/*.js",
     "umd/*.map",
@@ -34,7 +34,6 @@
     "index.html",
     "manifest.json",
     "service-worker.js",
-    "firebase-init.js",
     "version.js"
   ],
   "keywords": [
@@ -53,6 +52,8 @@
     "ko",
     "ro",
     "ru",
+    "th",
+    "uk",
     "zh",
     "zh-TW"
   ],
@@ -65,29 +66,30 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^9.17.2",
-    "libphonenumber-js": "^1.10.24",
+    "firebase": "^10.1.0",
+    "libphonenumber-js": "^1.10.40",
+    "qrcodejs": "^1.0.0",
     "livekit-client": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-intl": "^6.3.0",
-    "tinode-sdk": "^0.23.0-rc1",
+    "react-intl": "^6.4.4",
+    "tinode-sdk": "^0.23.0",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6",
-    "@formatjs/cli": "^6.0.4",
-    "babel-loader": "^9.1.2",
-    "babel-plugin-formatjs": "^10.4.0",
-    "browserslist": "^4.21.5",
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "@formatjs/cli": "^6.1.3",
+    "babel-loader": "^9.1.3",
+    "babel-plugin-formatjs": "^10.5.3",
+    "browserslist": "^4.21.10",
     "copy-webpack-plugin": "^11.0.0",
     "cssnano": "^6.0.1",
-    "glob": "^10.2.7",
-    "postcss": "^8.4.21",
+    "glob": "^10.3.3",
+    "postcss": "^8.4.27",
     "postcss-cli": "^10.1.0",
-    "webpack": "^5.76.1",
-    "webpack-cli": "^5.0.1"
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }

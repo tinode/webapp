@@ -10,10 +10,11 @@ import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
-import { BROKEN_IMAGE_SIZE, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO, REM_SIZE, VIDEO_THUMBNAIL_WIDTH } from '../config.js';
+import { BROKEN_IMAGE_SIZE, CLICKABLE_URL_SCHEMES, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO, REM_SIZE,
+    VIDEO_THUMBNAIL_WIDTH } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
 import { idToColorClass, secondsToTime, shortenFileName } from './strformat.js';
-import { cancelablePromise, sanitizeUrlForMime } from './utils.js';
+import { cancelablePromise, sanitizeUrl, sanitizeUrlForMime } from './utils.js';
 
 const messages = defineMessages({
   drafty_form: {
@@ -108,6 +109,12 @@ export function fullFormatter(style, data, values, key, stack) {
       }
       // Get text which will be sent back when the button is clicked.
       attr['data-title'] = inner.join('');
+      break;
+    case 'LN':
+      if (attr) {
+        // Ensure only safe URL schemes are clickable.
+        attr.href = typeof attr.href == 'string' ? sanitizeUrl(attr.href, CLICKABLE_URL_SCHEMES) : '';
+      }
       break;
     case 'MN':
       // Mention

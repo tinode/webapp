@@ -808,6 +808,10 @@
     "defaultMessage": "save",
     "description": "Call to save an attachment"
   },
+  "scan_qr_code": {
+    "defaultMessage": "Scan QR Code",
+    "description": "Title for scanning QR code"
+  },
   "search_for_contacts": {
     "defaultMessage": "Use search to find contacts",
     "description": "Text shown in contacts view when user entered no search query."

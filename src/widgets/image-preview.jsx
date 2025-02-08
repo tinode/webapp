@@ -5,6 +5,7 @@ import SendMessage from './send-message.jsx';
 import { REM_SIZE } from '../config.js';
 import { fitImageSize } from '../lib/blob-helpers.js';
 import { bytesToHumanSize, shortenFileName } from '../lib/strformat.js';
+import { urlAsAttachment } from '../lib/utils.js';
 
 export default class ImagePreview extends React.PureComponent {
   constructor(props) {
@@ -71,13 +72,16 @@ export default class ImagePreview extends React.PureComponent {
 
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
+
+    const download_url = urlAsAttachment(this.props.content.url);
+
     return (
       <div id="image-preview">
         <div id="image-preview-caption-panel">
           {this.props.onSendMessage ?
             <span>{fname}</span>
             :
-            <a href={this.props.content.url} download={this.props.content.filename}>
+            <a href={download_url} download={this.props.content.filename}>
               <i className="material-icons">file_download</i> <FormattedMessage
                 id="download_action" defaultMessage="download" description="Call to action [download]" />
             </a>
