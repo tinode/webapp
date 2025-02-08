@@ -72,7 +72,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   stringLength: function() { return /* binding */ stringLength; },
 /* harmony export */   stringToByteArray: function() { return /* binding */ stringToByteArray; },
 /* harmony export */   stringify: function() { return /* binding */ stringify; },
-/* harmony export */   uuidv4: function() { return /* binding */ uuidv4; },
 /* harmony export */   validateArgCount: function() { return /* binding */ validateArgCount; },
 /* harmony export */   validateCallback: function() { return /* binding */ validateCallback; },
 /* harmony export */   validateContextObject: function() { return /* binding */ validateContextObject; },
@@ -234,6 +233,7 @@ const byteArrayToString = function (bytes) {
 // We define it as an object literal instead of a class because a class compiled down to es5 can't
 // be treeshaked. https://github.com/rollup/rollup/issues/1691
 // Static lookup maps, lazily populated by init_()
+// TODO(dlarocque): Define this as a class, since we no longer target ES5.
 const base64 = {
     /**
      * Maps bytes to characters.
@@ -1053,6 +1053,8 @@ class FirebaseError extends Error {
         this.name = ERROR_NAME;
         // Fix For ES5
         // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+        // TODO(dlarocque): Replace this with `new.target`: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html#support-for-newtarget
+        //                   which we can now use since we no longer target ES5.
         Object.setPrototypeOf(this, FirebaseError.prototype);
         // Maintains proper stack trace for where our error was thrown.
         // Only available on V8.
@@ -2044,34 +2046,6 @@ const stringLength = function (str) {
         }
     }
     return p;
-};
-
-/**
- * @license
- * Copyright 2022 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Copied from https://stackoverflow.com/a/2117523
- * Generates a new uuid.
- * @public
- */
-const uuidv4 = function () {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-        const r = (Math.random() * 16) | 0, v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
 };
 
 /**
@@ -3653,7 +3627,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.23.0-rc2";
+const PACKAGE_VERSION = "0.23.1-rc1";
 
 /***/ }),
 
@@ -17604,7 +17578,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$q = "@firebase/app";
-const version$1 = "0.10.13";
+const version$1 = "0.11.0";
 
 /**
  * @license
@@ -17670,12 +17644,12 @@ const name$4 = "@firebase/storage-compat";
 
 const name$3 = "@firebase/firestore";
 
-const name$2 = "@firebase/vertexai-preview";
+const name$2 = "@firebase/vertexai";
 
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "10.14.1";
+const version = "11.3.0";
 
 /**
  * @license
@@ -17726,7 +17700,7 @@ const PLATFORM_LOG_STRING = {
     [name$3]: 'fire-fst',
     [name$1]: 'fire-fst-compat',
     [name$2]: 'fire-vertex',
-    'fire-js': 'fire-js',
+    'fire-js': 'fire-js', // Platform identifier for JS SDK.
     [name]: 'fire-js-all'
 };
 
@@ -17853,6 +17827,9 @@ function _isFirebaseApp(obj) {
  * @internal
  */
 function _isFirebaseServerApp(obj) {
+    if (obj === null || obj === undefined) {
+        return false;
+    }
     return obj.settings !== undefined;
 }
 /**
@@ -17983,6 +17960,27 @@ class FirebaseAppImpl {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// Parse the token and check to see if the `exp` claim is in the future.
+// Reports an error to the console if the token or claim could not be parsed, or if `exp` is in
+// the past.
+function validateTokenTTL(base64Token, tokenName) {
+    const secondPart = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64Decode)(base64Token.split('.')[1]);
+    if (secondPart === null) {
+        console.error(`FirebaseServerApp ${tokenName} is invalid: second part could not be parsed.`);
+        return;
+    }
+    const expClaim = JSON.parse(secondPart).exp;
+    if (expClaim === undefined) {
+        console.error(`FirebaseServerApp ${tokenName} is invalid: expiration claim could not be parsed`);
+        return;
+    }
+    const exp = JSON.parse(secondPart).exp * 1000;
+    const now = new Date().getTime();
+    const diff = exp - now;
+    if (diff <= 0) {
+        console.error(`FirebaseServerApp ${tokenName} is invalid: the token has expired.`);
+    }
+}
 class FirebaseServerAppImpl extends FirebaseAppImpl {
     constructor(options, serverConfig, name, container) {
         // Build configuration parameters for the FirebaseAppImpl base class.
@@ -18004,6 +18002,14 @@ class FirebaseServerAppImpl extends FirebaseAppImpl {
         }
         // Now construct the data for the FirebaseServerAppImpl.
         this._serverConfig = Object.assign({ automaticDataCollectionEnabled }, serverConfig);
+        // Ensure that the current time is within the `authIdtoken` window of validity.
+        if (this._serverConfig.authIdToken) {
+            validateTokenTTL(this._serverConfig.authIdToken, 'authIdToken');
+        }
+        // Ensure that the current time is within the `appCheckToken` window of validity.
+        if (this._serverConfig.appCheckToken) {
+            validateTokenTTL(this._serverConfig.appCheckToken, 'appCheckToken');
+        }
         this._finalizationRegistry = null;
         if (typeof FinalizationRegistry !== 'undefined') {
             this._finalizationRegistry = new FinalizationRegistry(() => {
@@ -18424,8 +18430,7 @@ function computeKey(app) {
  * limitations under the License.
  */
 const MAX_HEADER_BYTES = 1024;
-// 30 days
-const STORED_HEARTBEAT_RETENTION_MAX_MILLIS = 30 * 24 * 60 * 60 * 1000;
+const MAX_NUM_STORED_HEARTBEATS = 30;
 class HeartbeatServiceImpl {
     constructor(container) {
         this.container = container;
@@ -18479,14 +18484,13 @@ class HeartbeatServiceImpl {
             else {
                 // There is no entry for this date. Create one.
                 this._heartbeatsCache.heartbeats.push({ date, agent });
+                // If the number of stored heartbeats exceeds the maximum number of stored heartbeats, remove the heartbeat with the earliest date.
+                // Since this is executed each time a heartbeat is pushed, the limit can only be exceeded by one, so only one needs to be removed.
+                if (this._heartbeatsCache.heartbeats.length > MAX_NUM_STORED_HEARTBEATS) {
+                    const earliestHeartbeatIdx = getEarliestHeartbeatIdx(this._heartbeatsCache.heartbeats);
+                    this._heartbeatsCache.heartbeats.splice(earliestHeartbeatIdx, 1);
+                }
             }
-            // Remove entries older than 30 days.
-            this._heartbeatsCache.heartbeats =
-                this._heartbeatsCache.heartbeats.filter(singleDateHeartbeat => {
-                    const hbTimestamp = new Date(singleDateHeartbeat.date).valueOf();
-                    const now = Date.now();
-                    return now - hbTimestamp <= STORED_HEARTBEAT_RETENTION_MAX_MILLIS;
-                });
             return this._storage.overwrite(this._heartbeatsCache);
         }
         catch (e) {
@@ -18661,6 +18665,24 @@ function countBytes(heartbeatsCache) {
     // heartbeatsCache wrapper properties
     JSON.stringify({ version: 2, heartbeats: heartbeatsCache })).length;
 }
+/**
+ * Returns the index of the heartbeat with the earliest date.
+ * If the heartbeats array is empty, -1 is returned.
+ */
+function getEarliestHeartbeatIdx(heartbeats) {
+    if (heartbeats.length === 0) {
+        return -1;
+    }
+    let earliestHeartbeatIdx = 0;
+    let earliestHeartbeatDate = heartbeats[0].date;
+    for (let i = 1; i < heartbeats.length; i++) {
+        if (heartbeats[i].date < earliestHeartbeatDate) {
+            earliestHeartbeatDate = heartbeats[i].date;
+            earliestHeartbeatIdx = i;
+        }
+    }
+    return earliestHeartbeatIdx;
+}
 
 /**
  * @license
@@ -18683,7 +18705,7 @@ function registerCoreComponents(variant) {
     _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
     // Register `app` package.
     registerVersion(name$q, version$1, variant);
-    // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+    // BUILD_TARGET will be replaced by values like esm2017, cjs2017, etc during the compilation
     registerVersion(name$q, version$1, 'esm2017');
     // Register platform SDK identifier (no version).
     registerVersion('fire-js', '');
@@ -19153,7 +19175,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.9";
+const version = "0.6.12";
 
 /**
  * @license
@@ -20297,7 +20319,7 @@ function registerInstallations() {
  */
 registerInstallations();
 (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version);
-// BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+// BUILD_TARGET will be replaced by values like esm2017, cjs2017, etc during the compilation
 (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'esm2017');
 
 
@@ -20592,6 +20614,7 @@ const CONSOLE_CAMPAIGN_NAME = 'google.c.a.c_l';
 const CONSOLE_CAMPAIGN_TIME = 'google.c.a.ts';
 /** Set to '1' if Analytics is enabled for the campaign */
 const CONSOLE_CAMPAIGN_ANALYTICS_ENABLED = 'google.c.a.e';
+const DEFAULT_REGISTRATION_TIMEOUT = 10000;
 var MessageType$1;
 (function (MessageType) {
     MessageType[MessageType["DATA_MESSAGE"] = 1] = "DATA_MESSAGE";
@@ -21386,12 +21409,46 @@ async function registerDefaultSw(messaging) {
         messaging.swRegistration.update().catch(() => {
             /* it is non blocking and we don't care if it failed */
         });
+        await waitForRegistrationActive(messaging.swRegistration);
     }
     catch (e) {
         throw ERROR_FACTORY.create("failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */, {
             browserErrorMessage: e === null || e === void 0 ? void 0 : e.message
         });
     }
+}
+/**
+ * Waits for registration to become active. MDN documentation claims that
+ * a service worker registration should be ready to use after awaiting
+ * navigator.serviceWorker.register() but that doesn't seem to be the case in
+ * practice, causing the SDK to throw errors when calling
+ * swRegistration.pushManager.subscribe() too soon after register(). The only
+ * solution seems to be waiting for the service worker registration `state`
+ * to become "active".
+ */
+async function waitForRegistrationActive(registration) {
+    return new Promise((resolve, reject) => {
+        const rejectTimeout = setTimeout(() => reject(new Error(`Service worker not registered after ${DEFAULT_REGISTRATION_TIMEOUT} ms`)), DEFAULT_REGISTRATION_TIMEOUT);
+        const incomingSw = registration.installing || registration.waiting;
+        if (registration.active) {
+            clearTimeout(rejectTimeout);
+            resolve();
+        }
+        else if (incomingSw) {
+            incomingSw.onstatechange = ev => {
+                var _a;
+                if (((_a = ev.target) === null || _a === void 0 ? void 0 : _a.state) === 'activated') {
+                    incomingSw.onstatechange = null;
+                    clearTimeout(rejectTimeout);
+                    resolve();
+                }
+            };
+        }
+        else {
+            clearTimeout(rejectTimeout);
+            reject(new Error('No incoming service worker found.'));
+        }
+    });
 }
 
 /**
@@ -21557,7 +21614,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.12";
+const version = "0.12.16";
 
 /**
  * @license
@@ -21593,7 +21650,7 @@ function registerMessagingInWindow() {
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* ComponentType.PUBLIC */));
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
-    // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+    // BUILD_TARGET will be replaced by values like esm2017, cjs2017, etc during the compilation
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
 }
 
@@ -21834,7 +21891,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "10.14.1";
+var version = "11.3.0";
 
 /**
  * @license
