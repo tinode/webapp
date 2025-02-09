@@ -73,20 +73,24 @@ class PinnedMessages extends React.PureComponent {
         }
         <div className="pinned-scroll">{dots}</div>
         <div className="pinned" onClick={this.handleSelected}><p>{shown}</p></div>
-        {selected > 0 ?
+        <div className="pinned-menu">
           <span className="menuTrigger upper">
-            <a href="#" onClick={this.handleMovePrev}>
-              <i className="material-icons">expand_less</i>
-            </a>
+            {selected > 0 ?
+              <a href="#" onClick={this.handleMovePrev}>
+                <i className="material-icons">expand_less</i>
+              </a>
+              : null
+            }
           </span>
-          : null}
-        {this.props.selected > 0 ?
           <span className="menuTrigger lower">
-            <a href="#" onClick={this.handleMoveNext}>
-              <i className="material-icons">expand_more</i>
-            </a>
+            {this.props.selected > 0 ?
+              <a href="#" onClick={this.handleMoveNext}>
+                <i className="material-icons">expand_more</i>
+              </a>
+              : null
+            }
           </span>
-          : null}
+        </div>
       </div>) : null;
   }
 }

@@ -15091,21 +15091,23 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned",
       onClick: this.handleSelected
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, shown)), selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, shown)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "pinned-menu"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger upper"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleMovePrev
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_less"))) : null, this.props.selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, "expand_less")) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger lower"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, this.props.selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleMoveNext
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more"))) : null) : null;
+    }, "expand_more")) : null))) : null;
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PinnedMessages));

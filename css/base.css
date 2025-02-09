@@ -3146,17 +3146,27 @@ ul.tabbar li.active > a {
   background-color: #039be5;
 }
 
-#pinned-wrapper .menuTrigger.upper {
-  top: 0.25rem;
-}
-#pinned-wrapper .menuTrigger.lower {
-  bottom: 0.25rem;
-}
 #pinned-wrapper:hover .menuTrigger {
   opacity: 0.9;
 }
 #pinned-wrapper:hover .menuTrigger a {
   color: #757575;
+}
+
+.pinned-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8;
+  border-radius: 0 0.25rem 0.25rem 0;
+  justify-content: space-evenly;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.pinned-menu .menuTrigger {
+  position: relative;
 }
 
 /*
