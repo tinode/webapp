@@ -1653,14 +1653,14 @@
     "defaultMessage": "Conference call",
     "description": "Conference call label",
     "missing": true,
-    "obsolete": false
+    "obsolete": true
   },
   "join_conference": {
     "translation": "",
     "defaultMessage": "+ Join",
     "description": "Call to action to join a conference call",
     "missing": true,
-    "obsolete": false
+    "obsolete": true
   },
   "pin_message": {
     "translation": "",

@@ -1653,7 +1653,7 @@
     "defaultMessage": "Conference call",
     "description": "Conference call label",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "password_reset_success": {
     "translation": "비밀번호 재설정 성공",
@@ -1667,7 +1667,7 @@
     "defaultMessage": "+ Join",
     "description": "Call to action to join a conference call",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "scan_qr_code": {
     "translation": "QR 코드 스캔",

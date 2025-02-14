@@ -181,7 +181,6 @@ class TinodeWeb extends React.Component {
     this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
     this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
-    this.handleVCCallJoin = this.handleVCCallJoin.bind(this);
 
     this.handleCallAccept = this.handleCallAccept.bind(this);
 
@@ -1626,7 +1625,6 @@ class TinodeWeb extends React.Component {
     }
 
     webrtc = writer && !!this.tinode.getServerParam('iceServers');
-    const mediaServerAvailable = !!this.tinode.getServerParam('vcEndpoint');
 
     return [
       subscribed ? {
@@ -1637,9 +1635,8 @@ class TinodeWeb extends React.Component {
         title: this.props.intl.formatMessage(messages.menu_item_audio_call),
         handler: this.handleStartAudioCall
       } : null,
-      subscribed && webrtc ? {
+      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_video_call),
-        disabled: Tinode.isGroupTopicName(topicName) && !mediaServerAvailable,
         handler: this.handleStartVideoCall
       } : null,
       subscribed ? 'messages_clear' : null,
@@ -1797,12 +1794,7 @@ class TinodeWeb extends React.Component {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
         const head = { webrtc: CALL_HEAD_STARTED, aonly: !!audioOnly };
-        const msg = Drafty.videoCall(audioOnly);
-        if (Tinode.isGroupTopicName(callTopic)) {
-          // Video conference.
-          head.vc = true;
-        }
-        return this.handleSendMessage(msg, undefined, undefined, head)
+        return this.handleSendMessage(Drafty.videoCall(audioOnly), undefined, undefined, head)
           .then(ctrl => {
             if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
               this.handleCallClose();
@@ -1811,7 +1803,6 @@ class TinodeWeb extends React.Component {
             this.setState({callSeq: ctrl.params['seq']});
             return ctrl
           });
-        break;
       case CALL_STATE_IN_PROGRESS:
         const topic = this.tinode.getTopic(callTopic);
         if (!topic) {
@@ -1867,15 +1858,6 @@ class TinodeWeb extends React.Component {
     topic.videoCall('answer', callSeq, sdp);
   }
 
-  handleVCCallJoin(callTopic, callSeq) {
-    const topic = this.tinode.getTopic(callTopic);
-    if (!topic) {
-      return;
-    }
-
-    topic.videoCall('vc-join', callSeq);
-  }
-
   handleCallClose() {
     if (this.callTimeoutTimer) {
       clearTimeout(this.callTimeoutTimer);
@@ -1896,7 +1878,7 @@ class TinodeWeb extends React.Component {
       this.handleTopicSelected(setCallTopic ? topicName : this.state.callTopic);
       const upd = {
         callState: CALL_STATE_IN_PROGRESS
-      }
+      };
       if (setCallTopic) {
         upd.callTopic = topicName;
         upd.callSeq = callSeq;
@@ -2140,7 +2122,6 @@ class TinodeWeb extends React.Component {
             onCallSendOffer={this.handleCallSendOffer}
             onCallIceCandidate={this.handleCallIceCandidate}
             onCallSendAnswer={this.handleCallSendAnswer}
-            onVCJoin={this.handleVCCallJoin}
 
             errorText={this.state.errorText}
             errorLevel={this.state.errorLevel}

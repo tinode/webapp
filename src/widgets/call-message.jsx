@@ -7,21 +7,12 @@ import { secondsToTime } from '../lib/strformat.js';
 
 export default class CallMessage extends React.PureComponent {
   render() {
-    const bigIcon = this.props.vc ?
-      <div className="composed-material">
-        <i className="material-icons gray second-small">group</i>
-        <i className="material-icons gray big outline">call</i>
-      </div>
-      :
-      <div><i className="material-icons big gray">call</i></div>;
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ?
       (isCallDropped ? 'call_missed' : 'call_received') :
       (isCallDropped ? 'call_missed_outgoing' : 'call_made');
-    const title = this.props.vc ?
-      <FormattedMessage id="calls_conference" defaultMessage="Conference call" description="Conference call label" /> :
-      this.props.incoming ?
+    const title = this.props.incoming ?
           <FormattedMessage id="calls_incoming" defaultMessage="Incoming call" description="Incoming call label" /> :
           <FormattedMessage id="calls_outgoing" defaultMessage="Outgoing call" description="Outgoing call label" />;
     let duration;
@@ -45,17 +36,11 @@ export default class CallMessage extends React.PureComponent {
     } else {
       duration = <span>{secondsToTime(this.props.duration / 1000)}</span>;
     }
-    const allowJoin = this.props.vc && this.props.callState == 'started';
     return <div className="call-message">
-      <div><i className="material-icons big gray">{bigIcon}</i></div>
+      <div><i className="material-icons big gray">call</i></div>
       <div className="flex-column narrow">
         <div>{title}</div>
         <div className="duration"><i className={successClass}>{callIcon}</i> {duration}</div>
-        {allowJoin ?
-          <a onClick={this.props.onCallJoin}>
-            <FormattedMessage id="join_conference" defaultMessage="+ Join" description="Call to action to join a conference call" />
-          </a>
-          : null}
       </div>
     </div>;
   }
