@@ -824,6 +824,7 @@ table.permission-editor td.checkbox {
 .bot-form button:hover,
 .bot-form button:active {
   outline: 0;
+  color: #1565C0;
   background-color: #e3f2fd;
 }
 
@@ -3084,7 +3085,7 @@ ul.tabbar li.active > a {
   display: flex;
   align-items: center;
   height: 100%;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .pinned {
@@ -3128,8 +3129,9 @@ ul.tabbar li.active > a {
   background-color: #eeee;
   justify-content: space-evenly;
   height: 100%;
-  padding: 0.1rem;
+  padding: 0.2rem;
   margin-left: 0.35rem;
+  user-select: none;
 }
 
 .pinned-scroll .dot {
@@ -3137,6 +3139,7 @@ ul.tabbar li.active > a {
   height: 0.3rem;
   border-radius: 50%;
   background-color: #999;
+  user-select: none;
 }
 
 .pinned-scroll .adot {
@@ -3144,6 +3147,7 @@ ul.tabbar li.active > a {
   height: 0.45rem;
   border-radius: 50%;
   background-color: #039be5;
+  user-select: none;
 }
 
 #pinned-wrapper:hover .menuTrigger {
@@ -3167,6 +3171,7 @@ ul.tabbar li.active > a {
 
 .pinned-menu .menuTrigger {
   position: relative;
+  user-select: none;
 }
 
 /*

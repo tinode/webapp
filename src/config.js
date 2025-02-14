@@ -139,3 +139,5 @@ export const QRCODE_SIZE = 128;
 export const WAKE_UP_TIMEOUT = 80000;
 // Timer interval between checks if computer woke up from sleep (1 sec).
 export const WAKE_UP_TICK = 1000;
+
+export const MIN_SWIPE_DISTANCE = REM_SIZE * 3;

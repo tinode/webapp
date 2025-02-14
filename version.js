@@ -1,3 +1,3 @@
 // This is a generated file. Don't edit.
 
-const PACKAGE_VERSION = "0.23.1-rc1";
+const PACKAGE_VERSION = "0.24.0-rc1";

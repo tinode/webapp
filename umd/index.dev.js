@@ -2230,6 +2230,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MESSAGES_PAGE: function() { return /* binding */ MESSAGES_PAGE; },
 /* harmony export */   MESSAGE_PREVIEW_LENGTH: function() { return /* binding */ MESSAGE_PREVIEW_LENGTH; },
 /* harmony export */   MIN_DURATION: function() { return /* binding */ MIN_DURATION; },
+/* harmony export */   MIN_SWIPE_DISTANCE: function() { return /* binding */ MIN_SWIPE_DISTANCE; },
 /* harmony export */   MIN_TAG_LENGTH: function() { return /* binding */ MIN_TAG_LENGTH; },
 /* harmony export */   NEW_GRP_ACCESS_MODE: function() { return /* binding */ NEW_GRP_ACCESS_MODE; },
 /* harmony export */   NO_ACCESS_MODE: function() { return /* binding */ NO_ACCESS_MODE; },
@@ -2294,6 +2295,7 @@ const CLICKABLE_URL_SCHEMES = ['http', 'https', 'ftp', 'ftps'];
 const QRCODE_SIZE = 128;
 const WAKE_UP_TIMEOUT = 80000;
 const WAKE_UP_TICK = 1000;
+const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
 
 /***/ }),
 
@@ -3627,7 +3629,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.23.1-rc1";
+const PACKAGE_VERSION = "0.24.0-rc1";
 
 /***/ }),
 
@@ -15019,6 +15021,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -15026,11 +15030,33 @@ __webpack_require__.r(__webpack_exports__);
 class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    this.touchSurface = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.touchX = null;
+    this.touchY = null;
     this.getSelectedIndex = this.getSelectedIndex.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSelected = this.handleSelected.bind(this);
     this.handleMoveNext = this.handleMoveNext.bind(this);
     this.handleMovePrev = this.handleMovePrev.bind(this);
+    this.handleTouchEventStart = this.handleTouchEventStart.bind(this);
+    this.handleTouchEventEnd = this.handleTouchEventEnd.bind(this);
+    this.handleTouchCancel = this.handleTouchCancel.bind(this);
+  }
+  componentDidMount() {
+    this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {
+      passive: true
+    });
+    this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {
+      passive: true
+    });
+    this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {
+      passive: true
+    });
+  }
+  componentWillUnmount() {
+    this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
+    this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
+    this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
   }
   getSelectedIndex() {
     const list = this.props.messages || [];
@@ -15044,21 +15070,47 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     e.preventDefault();
     this.props.onSelected(this.props.messages[this.getSelectedIndex()].seq);
   }
-  handleMoveNext(e) {
-    e.preventDefault();
+  handleMoveNext(e, isTouch) {
+    isTouch || e.preventDefault();
     e.stopPropagation();
     const idx = Math.max(this.props.selected - 1, 0);
     if (idx != this.props.selected) {
       this.props.setSelected(idx);
     }
   }
-  handleMovePrev(e) {
-    e.preventDefault();
+  handleMovePrev(e, isTouch) {
+    isTouch || e.preventDefault();
     e.stopPropagation();
     const idx = Math.min(this.props.selected + 1, (this.props.messages || []).length - 1);
     if (idx != this.props.selected) {
       this.props.setSelected(idx);
     }
+  }
+  handleTouchEventStart(e) {
+    if (e.touches.length == 1) {
+      this.touchX = e.touches[0].clientX;
+      this.touchY = e.touches[0].clientY;
+    }
+  }
+  handleTouchEventEnd(e) {
+    if (this.touchX === null || e.changedTouches.length != 1) {
+      this.touchX = null;
+      return;
+    }
+    const dX = this.touchX - e.changedTouches[0].clientX;
+    const dY = this.touchY - e.changedTouches[0].clientY;
+    this.touchX = null;
+    if (Math.abs(dX) > Math.abs(dY) || Math.abs(dY) < _config_js__WEBPACK_IMPORTED_MODULE_4__.MIN_SWIPE_DISTANCE) {
+      return;
+    }
+    if (dY > 0) {
+      this.handleMovePrev(e, true);
+    } else {
+      this.handleMoveNext(e, true);
+    }
+  }
+  handleTouchCancel(e) {
+    this.touchX = null;
   }
   render() {
     const selected = this.getSelectedIndex();
@@ -15076,7 +15128,8 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }));
     });
     return shown ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "pinned-wrapper"
+      id: "pinned-wrapper",
+      ref: this.touchSurface
     }, this.props.isAdmin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cancel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
