@@ -1648,26 +1648,12 @@
     "missing": false,
     "obsolete": false
   },
-  "calls_conference": {
-    "translation": "电话会议",
-    "defaultMessage": "Conference call",
-    "description": "Conference call label",
-    "missing": false,
-    "obsolete": true
-  },
   "password_reset_success": {
     "translation": "密码重置成功",
     "defaultMessage": "Password reset successfully",
     "description": "Notification message that the password was successfully reset.",
     "missing": false,
     "obsolete": false
-  },
-  "join_conference": {
-    "translation": "+ 加入通话",
-    "defaultMessage": "+ Join",
-    "description": "Call to action to join a conference call",
-    "missing": false,
-    "obsolete": true
   },
   "scan_qr_code": {
     "translation": "扫描二维码",

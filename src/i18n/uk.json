@@ -1648,32 +1648,18 @@
     "missing": false,
     "obsolete": false
   },
-  "calls_conference": {
-    "translation": "",
-    "defaultMessage": "Conference call",
-    "description": "Conference call label",
-    "missing": true,
-    "obsolete": true
-  },
-  "join_conference": {
-    "translation": "",
-    "defaultMessage": "+ Join",
-    "description": "Call to action to join a conference call",
-    "missing": true,
-    "obsolete": true
-  },
   "pin_message": {
-    "translation": "",
+    "translation": "закріпити",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning message to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_message": {
-    "translation": "",
+    "translation": "відкріпити",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the message.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

@@ -1648,26 +1648,12 @@
     "missing": false,
     "obsolete": false
   },
-  "calls_conference": {
-    "translation": "Conference call",
-    "defaultMessage": "Conference call",
-    "description": "Conference call label",
-    "missing": false,
-    "obsolete": true
-  },
   "password_reset_success": {
     "translation": "Password reset successfully",
     "defaultMessage": "Password reset successfully",
     "description": "Notification message that the password was successfully reset.",
     "missing": false,
     "obsolete": false
-  },
-  "join_conference": {
-    "translation": "+ Join",
-    "defaultMessage": "+ Join",
-    "description": "Call to action to join a conference call",
-    "missing": false,
-    "obsolete": true
   },
   "scan_qr_code": {
     "translation": "Scan QR Code",
