@@ -2239,6 +2239,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   QUOTED_REPLY_LENGTH: function() { return /* binding */ QUOTED_REPLY_LENGTH; },
 /* harmony export */   READ_DELAY: function() { return /* binding */ READ_DELAY; },
 /* harmony export */   REM_SIZE: function() { return /* binding */ REM_SIZE; },
+/* harmony export */   SELF_AVATAR_URI: function() { return /* binding */ SELF_AVATAR_URI; },
 /* harmony export */   VIDEO_PREVIEW_DIM: function() { return /* binding */ VIDEO_PREVIEW_DIM; },
 /* harmony export */   VIDEO_THUMBNAIL_WIDTH: function() { return /* binding */ VIDEO_THUMBNAIL_WIDTH; },
 /* harmony export */   WAKE_UP_TICK: function() { return /* binding */ WAKE_UP_TICK; },
@@ -2246,7 +2247,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.21');
+const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.24');
 const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
@@ -2296,6 +2297,7 @@ const QRCODE_SIZE = 128;
 const WAKE_UP_TIMEOUT = 80000;
 const WAKE_UP_TICK = 1000;
 const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
+const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIwIDAgMTcgMTciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0zLjU2MiAxdjE1LjQ1OWw0LjY4Ni0zLjI3IDQuNzUyIDMuMjZ2LTE1LjQ0OWgtOS40Mzh6TTEyIDE0LjU1MWwtMy43NTYtMi41NzgtMy42ODEgMi41Njh2LTEyLjU0MWg3LjQzN3YxMi41NTF6IiBmaWxsPSIjMzMzMzMzIiAvPgo8L3N2Zz4=';
 
 /***/ }),
 
@@ -3538,7 +3540,7 @@ function sanitizeUrlForMime(url, mimeMajor) {
   if (sanitizedUrl) {
     return sanitizedUrl;
   }
-  const re = new RegExp(`data:${mimeMajor}\/[a-z0-9.-]+;base64,`, 'i');
+  const re = new RegExp(`data:${mimeMajor}\/[-+.a-z0-9]+;base64,`, 'i');
   if (re.test(url.trim())) {
     return url;
   }
@@ -4310,6 +4312,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       muted: false,
       address: null,
       groupTopic: undefined,
+      isSelf: false,
       channel: undefined,
       fullName: undefined,
       description: undefined,
@@ -4408,20 +4411,26 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         }
       }
     }
+    const isSelf = topic.isSelfType();
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
-      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.fn, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TITLE_LENGTH),
-      description: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.note, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TOPIC_DESCRIPTION_LENGTH),
+      fullName: isSelf ? props.intl.formatMessage({
+        id: "self_topic_name"
+      }) : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.fn, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TITLE_LENGTH),
+      description: isSelf ? props.intl.formatMessage({
+        id: "self_topic_comment"
+      }) : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.note, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.private && topic.private.comment, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TITLE_LENGTH),
       archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
+      isSelf: isSelf,
       channel: topic.isChannelType() || topic.chan,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -4725,7 +4734,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "flat-button float-right",
       onClick: e => {
@@ -4740,7 +4749,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "Edit"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       avatar: this.state.avatar,
       readOnly: true,
@@ -4774,7 +4783,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "large ellipsized"
-    }, this.state.private)) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.state.private)) : null, !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -4798,11 +4807,11 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       onClick: this.handleShowQRCode
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "qr_code")), "\xA0")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "qr_code")), "\xA0")) : null, this.state.trustedBadges.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       trustedBadges: this.state.trustedBadges
-    })), this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })) : null, this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -4812,7 +4821,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "Description"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.description)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.description)) : null), !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
@@ -4826,7 +4835,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       name: "P",
       checked: this.state.muted,
       onChange: this.handleMuted
-    })), this.state.archived ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))) : null, this.state.archived ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_unarchive_topic",
@@ -4838,7 +4847,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       name: "archived",
       checked: true,
       onChange: this.handleUnarchive
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })) : null, !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
@@ -4857,7 +4866,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "Security"
       }]
-    }))), this.state.groupTopic && this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })))) : null, this.state.groupTopic && this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
@@ -5474,7 +5483,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         Object.assign(nextState, {
           onlineSubs: subs
         });
-        if (topic.public) {
+        if (topic.isSelfType()) {
+          Object.assign(nextState, {
+            title: nextProps.intl.formatMessage({
+              id: "self_topic_name"
+            }),
+            avatar: true
+          });
+        } else if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(topic.public.photo)
@@ -5697,7 +5713,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   handleDescChange(desc) {
-    if (desc.public) {
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isSelfTopicName(this.props.topic)) {
+      this.setState({
+        title: this.props.intl.formatMessage({
+          id: "self_topic_name"
+        }),
+        avatar: true
+      });
+    } else if (desc.public) {
       this.setState({
         title: desc.public.fn,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(desc.public.photo)
@@ -6559,7 +6582,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         }
         const avatar = this.state.avatar || true;
-        const online = this.state.deleted ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const online = this.state.deleted || topic.isSelfType() ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
         let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
@@ -6878,6 +6901,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       contacts: this.props.searchResults,
       myUserId: this.props.myUserId,
       emptyListMessage: no_contacts_placeholder,
+      showSelfTopic: true,
       showOnline: false,
       showUnread: false,
       showContextMenu: false,
@@ -8817,7 +8841,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       deleter = false,
       archived = false,
       webrtc = false,
-      writer = false;
+      writer = false,
+      p2p = false,
+      self = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
@@ -8831,16 +8857,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     }
     webrtc = writer && !!this.tinode.getServerParam('iceServers');
+    p2p = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName);
+    self = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isSelfTopicName(topicName);
     return [subscribed ? {
       title: this.props.intl.formatMessage(messages.menu_item_info),
       handler: this.handleShowInfoView
-    } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) && webrtc ? {
+    } : null, subscribed && p2p && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_audio_call),
       handler: this.handleStartAudioCall
-    } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) && webrtc ? {
+    } : null, subscribed && p2p && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_video_call),
       handler: this.handleStartVideoCall
-    } : null, subscribed ? 'messages_clear' : null, subscribed && deleter ? 'messages_clear_hard' : null, muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
+    } : null, subscribed ? 'messages_clear' : null, subscribed && deleter && !self ? 'messages_clear_hard' : null, self ? null : muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self ? null : self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
   }
   handleHideContextMenu() {
     this.setState({
@@ -11816,6 +11844,22 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const showCheckmark = Array.isArray(this.props.topicSelected);
     const contactNodes = [];
     let contactsCount = 0;
+    if (this.props.showSelfTopic) {
+      const selected = showCheckmark ? this.props.topicSelected.indexOf('slf') > -1 : this.props.topicSelected === 'slf';
+      contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        tinode: this.props.tinode,
+        avatar: true,
+        showMode: this.props.showMode,
+        selected: selected,
+        showCheckmark: showCheckmark,
+        onSelected: this.props.onTopicSelected,
+        showContextMenu: this.props.showContextMenu,
+        index: contactNodes.length,
+        item: "slf",
+        key: "slf"
+      }));
+      contactsCount++;
+    }
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.forEach(c => {
         if (c.action) {
@@ -11837,6 +11881,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
               filterOn.push(('' + c.public.fn).toLowerCase());
             }
             if (!this.props.filterFunc(this.props.filter, filterOn)) {
+              console.log('Filtered:', key);
               return;
             }
           }
@@ -11935,11 +11980,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
@@ -11950,6 +11995,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  self_topic_name: {
+    id: "self_topic_name",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Saved messages"
+    }]
+  },
+  self_topic_comment: {
+    id: "self_topic_comment",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Notes, messages, links, files saved for posterity"
+    }]
+  }
+});
 class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -11974,14 +12036,19 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   }
   render() {
     let title = this.props.title;
+    const self = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isSelfTopicName(this.props.item);
     if (!title) {
-      title = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "unnamed_topic",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Unnamed"
-        }]
-      }));
+      if (self) {
+        title = this.props.intl.formatMessage(messages.self_topic_name);
+      } else {
+        title = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "unnamed_topic",
+          defaultMessage: [{
+            "type": 0,
+            "value": "Unnamed"
+          }]
+        }));
+      }
     } else if (title.length > 30) {
       title = title.substring(0, 28) + '…';
     }
@@ -12028,8 +12095,8 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     let preview;
     if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
-    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.isValid(this.props.preview)) {
-      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.previewFormatter, {
+    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(this.props.preview)) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.previewFormatter, {
         formatMessage: this.props.intl.formatMessage,
         previewIsResponse: this.props.previewIsResponse
       }));
@@ -12051,12 +12118,13 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
+    const comment = preview || this.props.comment || (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: !this.props.showCheckmark && this.props.selected ? 'selected' : null,
       onClick: this.handleClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       tinode: this.props.tinode,
       avatar: avatar,
       title: this.props.title,
@@ -12064,7 +12132,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       deleted: this.props.deleted
     }), this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "deleted material-icons"
-    }, "cancel") : this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, "cancel") : !self && this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: online
     }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "checkmark material-icons"
@@ -12078,15 +12146,15 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }) : null, !self ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: icon_badges
-    }), !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }) : null, !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       count: this.props.unread
-    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
-    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, preview || this.props.comment || '\u00A0'))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, comment))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
@@ -12682,8 +12750,10 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     this.cutoutRect = this.cutout.current.getBoundingClientRect();
   }
   componentWillUnmount() {
-    this.overlay.current.removeEventListener('mousedown', this.mouseDown);
-    this.overlay.current.removeEventListener('touchstart', this.mouseDown);
+    if (this.overlay.current) {
+      this.overlay.current.removeEventListener('mousedown', this.mouseDown);
+      this.overlay.current.removeEventListener('touchstart', this.mouseDown);
+    }
   }
   positionAll(panX, panY, zoom) {
     this.setState({
@@ -14072,6 +14142,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -14080,21 +14152,29 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   render() {
     let avatar;
     if (this.props.avatar === true) {
-      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isGroupTopicName(this.props.topic);
-      const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
-      if (this.props.topic && this.props.title && this.props.title.trim()) {
-        const letter = this.props.title.trim().charAt(0);
-        const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
-        avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: className
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isSelfTopicName(this.props.topic)) {
+        avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+          className: "avatar self",
+          alt: "avatar",
+          src: _config_js__WEBPACK_IMPORTED_MODULE_4__.SELF_AVATAR_URI
+        });
       } else {
-        const className = 'material-icons ' + iconColor + (this.props.deleted ? ' disabled' : '');
-        avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: className
-        }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: className
-        }, "person");
+        const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isGroupTopicName(this.props.topic);
+        const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
+        if (this.props.topic && this.props.title && this.props.title.trim()) {
+          const letter = this.props.title.trim().charAt(0);
+          const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
+          avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: className
+          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
+        } else {
+          const className = 'material-icons ' + iconColor + (this.props.deleted ? ' disabled' : '');
+          avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: className
+          }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: className
+          }, "person");
+        }
       }
     } else if (this.props.avatar) {
       const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
@@ -14974,20 +15054,24 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.handleTouchCancel = this.handleTouchCancel.bind(this);
   }
   componentDidMount() {
-    this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {
-      passive: true
-    });
-    this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {
-      passive: true
-    });
-    this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {
-      passive: true
-    });
+    if (this.touchSurface.current) {
+      this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {
+        passive: true
+      });
+      this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {
+        passive: true
+      });
+      this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {
+        passive: true
+      });
+    }
   }
   componentWillUnmount() {
-    this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
-    this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
-    this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
+    if (this.touchSurface.current) {
+      this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
+      this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
+      this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
+    }
   }
   getSelectedIndex() {
     const list = this.props.messages || [];
@@ -15966,9 +16050,6 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ TopicDescEdit; }
-/* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
@@ -15997,12 +16078,18 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     super(props);
     const topic = this.props.tinode.getTopic(this.props.topic);
     const acs = topic.getAccessMode();
+    const isSelf = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isSelfTopicName(this.props.topic);
     this.state = {
       isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isMeTopicName(this.props.topic),
+      isSelf: isSelf,
       owner: acs && acs.isOwner(),
-      fullName: topic.public ? topic.public.fn : undefined,
+      fullName: topic.public ? topic.public.fn : isSelf ? this.props.intl.formatMessage({
+        id: "self_topic_name"
+      }) : null,
       private: topic.private ? topic.private.comment : null,
-      description: topic.public ? topic.public.note : undefined,
+      description: topic.public ? topic.public.note : isSelf ? this.props.intl.formatMessage({
+        id: "self_topic_comment"
+      }) : null,
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(topic.public ? topic.public.photo : null),
       tags: topic.tags() || [],
       newAvatar: null,
@@ -16138,7 +16225,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         onError: this.props.onError
       });
     }
-    const editable = this.state.isMe || this.state.owner;
+    const editable = this.state.isMe || this.state.owner && !this.state.isSelf;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -16252,6 +16339,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   }
 }
 ;
+/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(TopicDescEdit));
 
 /***/ }),
 

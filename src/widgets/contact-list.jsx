@@ -30,7 +30,28 @@ class ContactList extends React.Component {
     const { formatMessage } = this.props.intl;
     const showCheckmark = Array.isArray(this.props.topicSelected);
     const contactNodes = [];
+
+    // Count of contacts, excluding action items.
     let contactsCount = 0;
+    if (this.props.showSelfTopic) {
+      const selected = showCheckmark ?
+        (this.props.topicSelected.indexOf('slf') > -1) :
+        (this.props.topicSelected === 'slf');
+      contactNodes.push(
+        <Contact
+          tinode={this.props.tinode}
+          avatar={true}
+          showMode={this.props.showMode}
+          selected={selected}
+          showCheckmark={showCheckmark}
+          onSelected={this.props.onTopicSelected}
+          showContextMenu={this.props.showContextMenu}
+          index={contactNodes.length}
+          item='slf'
+          key='slf' />
+      );
+      contactsCount ++;
+    }
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.forEach(c => {
         if (c.action) {
@@ -55,6 +76,7 @@ class ContactList extends React.Component {
               filterOn.push(('' + c.public.fn).toLowerCase());
             }
             if (!this.props.filterFunc(this.props.filter, filterOn)) {
+              console.log('Filtered:', key);
               return;
             }
           }

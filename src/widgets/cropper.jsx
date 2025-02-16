@@ -75,8 +75,10 @@ export default class Cropper extends React.Component {
   }
 
   componentWillUnmount() {
-    this.overlay.current.removeEventListener('mousedown', this.mouseDown);
-    this.overlay.current.removeEventListener('touchstart', this.mouseDown);
+    if (this.overlay.current) {
+      this.overlay.current.removeEventListener('mousedown', this.mouseDown);
+      this.overlay.current.removeEventListener('touchstart', this.mouseDown);
+    }
   }
 
   // Position all elements.

@@ -97,6 +97,7 @@ class InfoView extends React.Component {
       muted: false,
       address: null,
       groupTopic: undefined,
+      isSelf: false,
       channel: undefined,
       fullName: undefined,
       description: undefined,
@@ -203,6 +204,8 @@ class InfoView extends React.Component {
       }
     }
 
+    const isSelf = topic.isSelfType();
+
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
@@ -210,14 +213,19 @@ class InfoView extends React.Component {
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
-      fullName: clipStr(topic.public && topic.public.fn, MAX_TITLE_LENGTH),
-      description: clipStr(topic.public && topic.public.note, MAX_TOPIC_DESCRIPTION_LENGTH),
+      fullName: isSelf ?
+        props.intl.formatMessage({id: 'self_topic_name'}) :
+        clipStr(topic.public && topic.public.fn, MAX_TITLE_LENGTH),
+      description: isSelf ?
+        props.intl.formatMessage({id: 'self_topic_comment'}) :
+        clipStr(topic.public && topic.public.note, MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: clipStr(topic.private && topic.private.comment, MAX_TITLE_LENGTH),
       archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
+      isSelf: isSelf,
       channel: topic.isChannelType() || topic.chan,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -539,10 +547,13 @@ class InfoView extends React.Component {
           :
           <div id="info-view-content" className="scrollable-panel">
             <div className="panel-form-column">
-              <a href="#" className="flat-button float-right" onClick={(e) => {e.preventDefault(); this.props.onNavigate('general');}}>
-                <i className="material-icons">edit</i>&nbsp;
-                <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
-              </a>
+              {!this.state.isSelf ?
+                <a href="#" className="flat-button float-right" onClick={e => {e.preventDefault(); this.props.onNavigate('general');}}>
+                  <i className="material-icons">edit</i>&nbsp;
+                  <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
+                </a>
+                : null
+              }
               <center>
                 <AvatarUpload
                   tinode={this.props.tinode}
@@ -569,24 +580,30 @@ class InfoView extends React.Component {
                 </div>
                 : null
               }
-              <div className="panel-form-row">
-                <div>
-                  <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
-                    description="Label for user address (ID)" /></label>&nbsp;
-                  <tt>{this.state.address}</tt>
+              {!this.state.isSelf ?
+                <div className="panel-form-row">
+                  <div>
+                    <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
+                      description="Label for user address (ID)" /></label>&nbsp;
+                    <tt>{this.state.address}</tt>
+                  </div>
+                  <div style={{marginLeft: 'auto'}}>
+                    &nbsp;<a href="#" onClick={this.handleCopyID}>
+                      <i className="material-icons">content_copy</i>
+                    </a>&nbsp;
+                    &nbsp;<a href="#" onClick={this.handleShowQRCode}>
+                      <i className="material-icons">qr_code</i>
+                    </a>&nbsp;
+                  </div>
                 </div>
-                <div style={{marginLeft: 'auto'}}>
-                  &nbsp;<a href="#" onClick={this.handleCopyID}>
-                    <i className="material-icons">content_copy</i>
-                  </a>&nbsp;
-                  &nbsp;<a href="#" onClick={this.handleShowQRCode}>
-                    <i className="material-icons">qr_code</i>
-                  </a>&nbsp;
+                : null
+              }
+              {this.state.trustedBadges.length > 0 ?
+                <div className="group">
+                  <BadgeList trustedBadges={this.state.trustedBadges} />
                 </div>
-              </div>
-              <div className="group">
-                <BadgeList trustedBadges={this.state.trustedBadges} />
-              </div>
+                : null
+              }
               {this.state.description ?
                 <div className="group">
                   <label className="small">
@@ -596,14 +613,17 @@ class InfoView extends React.Component {
                   <div>{this.state.description}</div>
                 </div> : null}
             </div>
-            <div className="hr" />
-            <div className="panel-form-row">
-              <label>
-                <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
-                  description="Label for Muting/unmuting the topic" />
-              </label>
-              <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
-            </div>
+            {!this.state.isSelf ?
+              <><div className="hr" />
+              <div className="panel-form-row">
+                <label>
+                  <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
+                    description="Label for Muting/unmuting the topic" />
+                </label>
+                <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
+              </div></>
+              : null
+            }
             {this.state.archived ?
               <div className="panel-form-row">
                 <label>
@@ -615,13 +635,16 @@ class InfoView extends React.Component {
               :
               null
             }
-            <div className="hr" />
-            <div className="panel-form-row">
-              <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
-                <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
-                  defaultMessage="Security" description="Navigaton button for security panel." />
-              </a>
-            </div>
+            {!this.state.isSelf ?
+              <><div className="hr" />
+              <div className="panel-form-row">
+                <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
+                  <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
+                    defaultMessage="Security" description="Navigaton button for security panel." />
+                </a>
+              </div></>
+              : null
+            }
             {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />

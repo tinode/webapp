@@ -26,15 +26,19 @@ class PinnedMessages extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {passive: true});
-    this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {passive: true});
-    this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {passive: true});
+    if (this.touchSurface.current) {
+      this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {passive: true});
+      this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {passive: true});
+      this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {passive: true});
+    }
   }
 
   componentWillUnmount() {
-    this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
-    this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
-    this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
+    if (this.touchSurface.current) {
+      this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
+      this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
+      this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
+    }
   }
 
   getSelectedIndex() {

@@ -403,6 +403,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TOPIC_NEW: () => (/* binding */ TOPIC_NEW),
 /* harmony export */   TOPIC_NEW_CHAN: () => (/* binding */ TOPIC_NEW_CHAN),
 /* harmony export */   TOPIC_P2P: () => (/* binding */ TOPIC_P2P),
+/* harmony export */   TOPIC_SLF: () => (/* binding */ TOPIC_SLF),
 /* harmony export */   TOPIC_SYS: () => (/* binding */ TOPIC_SYS),
 /* harmony export */   USER_NEW: () => (/* binding */ USER_NEW),
 /* harmony export */   VERSION: () => (/* binding */ VERSION)
@@ -412,13 +413,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const PROTOCOL_VERSION = '0';
-const VERSION = _version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.21';
+const VERSION = _version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.24';
 const LIBRARY = 'tinodejs/' + VERSION;
 const TOPIC_NEW = 'new';
 const TOPIC_NEW_CHAN = 'nch';
 const TOPIC_ME = 'me';
 const TOPIC_FND = 'fnd';
 const TOPIC_SYS = 'sys';
+const TOPIC_SLF = 'slf';
 const TOPIC_CHAN = 'chn';
 const TOPIC_GRP = 'grp';
 const TOPIC_P2P = 'p2p';
@@ -3894,12 +3896,16 @@ class Topic {
       'nch': _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_GRP,
       'chn': _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_GRP,
       'usr': _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_P2P,
-      'sys': _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_SYS
+      'sys': _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_SYS,
+      'slf': _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_SLF
     };
     return types[typeof name == 'string' ? name.substring(0, 3) : 'xxx'];
   }
   static isMeTopicName(name) {
     return Topic.topicType(name) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME;
+  }
+  static isSelfTopicName(name) {
+    return Topic.topicType(name) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_SLF;
   }
   static isGroupTopicName(name) {
     return Topic.topicType(name) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_GRP;
@@ -3908,7 +3914,7 @@ class Topic {
     return Topic.topicType(name) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_P2P;
   }
   static isCommTopicName(name) {
-    return Topic.isP2PTopicName(name) || Topic.isGroupTopicName(name);
+    return Topic.isP2PTopicName(name) || Topic.isGroupTopicName(name) || Topic.isSelfTopicName(name);
   }
   static isNewGroupTopicName(name) {
     return typeof name == 'string' && (name.substring(0, 3) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW || name.substring(0, 3) == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_NEW_CHAN);
@@ -4633,6 +4639,9 @@ class Topic {
   isMeType() {
     return Topic.isMeTopicName(this.name);
   }
+  isSelfType() {
+    return Topic.isSelfTopicName(this.name);
+  }
   isChannelType() {
     return Topic.isChannelTopicName(this.name);
   }
@@ -5263,7 +5272,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.23.1-rc1";
+const PACKAGE_VERSION = "0.24.0-rc1";
 
 /***/ })
 
@@ -6080,6 +6089,9 @@ class Tinode {
   }
   static isMeTopicName(name) {
     return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isMeTopicName(name);
+  }
+  static isSelfTopicName(name) {
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isSelfTopicName(name);
   }
   static isGroupTopicName(name) {
     return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isGroupTopicName(name);

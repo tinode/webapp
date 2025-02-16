@@ -1661,5 +1661,15 @@
     "description": "Menu item [Unpin] for un-pinning the message.",
     "missing": false,
     "obsolete": false
+  },
+  "self_topic_comment": {
+    "translation": "",
+    "missing": true,
+    "obsolete": false
+  },
+  "self_topic_name": {
+    "translation": "",
+    "missing": true,
+    "obsolete": false
   }
 }

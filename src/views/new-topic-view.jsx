@@ -125,6 +125,7 @@ class NewTopicView extends React.Component {
                 contacts={this.props.searchResults}
                 myUserId={this.props.myUserId}
                 emptyListMessage={no_contacts_placeholder}
+                showSelfTopic={true}
                 showOnline={false}
                 showUnread={false}
                 showContextMenu={false}

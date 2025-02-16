@@ -164,7 +164,7 @@ export function sanitizeUrlForMime(url, mimeMajor) {
   }
 
   // Is this a data: URL of the appropriate mime type?
-  const re = new RegExp(`data:${mimeMajor}\/[a-z0-9.-]+;base64,`, 'i');
+  const re = new RegExp(`data:${mimeMajor}\/[-+.a-z0-9]+;base64,`, 'i');
   if (re.test(url.trim())) {
     return url;
   }

@@ -1,6 +1,8 @@
 // A single topic or user.
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+
+import { Tinode } from 'tinode-sdk';
 
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -10,6 +12,19 @@ import { Drafty } from 'tinode-sdk';
 
 import { previewFormatter } from '../lib/formatters.js';
 import { deliveryMarker } from '../lib/utils.js';
+
+const messages = defineMessages({
+  self_topic_name: {
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
+  },
+  self_topic_comment: {
+    id: 'self_topic_comment',
+    defaultMessage: 'Notes, messages, links, files saved for posterity',
+    description: 'Comment for self topic for UI'
+  }
+});
 
 class Contact extends React.Component {
   constructor(props) {
@@ -36,9 +51,14 @@ class Contact extends React.Component {
 
   render() {
     let title = this.props.title;
+    const self = Tinode.isSelfTopicName(this.props.item);
     if (!title) {
-      title = <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
-        description="Title shown when the topic has no name" /></i>;
+      if (self) {
+        title = this.props.intl.formatMessage(messages.self_topic_name);
+      } else {
+        title = <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
+          description="Title shown when the topic has no name" /></i>;
+      }
     } else if (title.length > 30) {
       // FIXME: this is probably wrong for RTL languages.
       title = title.substring(0, 28) + '…';
@@ -88,6 +108,8 @@ class Contact extends React.Component {
       (icon.color ? ' ' + icon.color : '')}>{icon.name}</i> : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
 
+    const comment = preview || this.props.comment ||
+      (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
     return (
       <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
         <div className="avatar-box">
@@ -98,7 +120,7 @@ class Contact extends React.Component {
             topic={this.props.item}
             deleted={this.props.deleted} />
           {this.props.deleted ? <i className="deleted material-icons">cancel</i> :
-            this.props.showOnline ? <span className={online} /> :
+            (!self && this.props.showOnline) ? <span className={online} /> :
             (this.props.showCheckmark && this.props.selected) ?
             <i className="checkmark material-icons">check_circle</i>
             : null}
@@ -107,12 +129,12 @@ class Contact extends React.Component {
           <div><span className={titleClass}>{title}</span>
             {this.props.isGroup ? <i className="material-icons as-badge">group</i> : null}
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
-            <ContactBadges badges={icon_badges} />
+            {!self ? <ContactBadges badges={icon_badges} /> : null}
             {!this.props.deleted ? <UnreadBadge count={this.props.unread} /> : null}
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            this.props.small ? null : <div className="contact-comment">{marker}<span>{preview || this.props.comment || '\u00A0'}</span></div>}
+            this.props.small ? null : <div className="contact-comment">{marker}<span>{comment}</span></div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">

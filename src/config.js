@@ -1,7 +1,7 @@
 import { PACKAGE_VERSION } from './version.js';
 
 // Name of this application, used in the User-Agent.
-export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.21');
+export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.24');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
@@ -140,4 +140,8 @@ export const WAKE_UP_TIMEOUT = 80000;
 // Timer interval between checks if computer woke up from sleep (1 sec).
 export const WAKE_UP_TICK = 1000;
 
+// Swipe distance to register as a gesture, in pixels.
 export const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
+
+// Self-topic avatar as an SVG icon encoded as data URI
+export const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIwIDAgMTcgMTciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0zLjU2MiAxdjE1LjQ1OWw0LjY4Ni0zLjI3IDQuNzUyIDMuMjZ2LTE1LjQ0OWgtOS40Mzh6TTEyIDE0LjU1MWwtMy43NTYtMi41NzgtMy42ODEgMi41Njh2LTEyLjU0MWg3LjQzN3YxMi41NTF6IiBmaWxsPSIjMzMzMzMzIiAvPgo8L3N2Zz4=' // eslint-disable-line max-len

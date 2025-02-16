@@ -74,6 +74,10 @@ img.avatar {
   border-radius: 50%;
 }
 
+img.avatar.self {
+  padding: 7%;
+}
+
 /* Input fields and buttons */
 
 button {

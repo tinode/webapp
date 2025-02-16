@@ -76,7 +76,7 @@ const messages = defineMessages({
     id: 'drag_file',
     defaultMessage: 'Drag file here',
     description: 'Prompt on the file drag-n-drop overlay banner'
-  }
+  },
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -377,7 +377,14 @@ class MessagesView extends React.Component {
           onlineSubs: subs
         });
 
-        if (topic.public) {
+        if (topic.isSelfType()) {
+          Object.assign(nextState, {
+            title: nextProps.intl.formatMessage({
+              id: 'self_topic_name'
+            }),
+            avatar: true
+          });
+        } else if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
             avatar: makeImageUrl(topic.public.photo)
@@ -627,7 +634,14 @@ class MessagesView extends React.Component {
   }
 
   handleDescChange(desc) {
-    if (desc.public) {
+    if (Tinode.isSelfTopicName(this.props.topic)) {
+      this.setState({
+        title: this.props.intl.formatMessage({
+          id: 'self_topic_name'
+        }),
+        avatar: true
+      });
+    } else if (desc.public) {
       this.setState({
         title: desc.public.fn,
         avatar: makeImageUrl(desc.public.photo)
@@ -1601,7 +1615,7 @@ class MessagesView extends React.Component {
           }
         }
         const avatar = this.state.avatar || true;
-        const online = this.state.deleted ? null :
+        const online = this.state.deleted || topic.isSelfType() ? null :
           this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
 
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');

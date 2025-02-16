@@ -949,7 +949,7 @@ class TinodeWeb extends React.Component {
       newState.ready = true;
     }
 
-    this.tinode.getMeTopic().contacts((c) => {
+    this.tinode.getMeTopic().contacts(c => {
       if (!c.topic && !c.user) {
         // Contacts expect c.topic to be set.
         c.topic = c.name;
@@ -1609,7 +1609,7 @@ class TinodeWeb extends React.Component {
     }
 
     let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false,
-      archived = false, webrtc = false, writer = false;
+      archived = false, webrtc = false, writer = false, p2p = false, self = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
@@ -1625,24 +1625,26 @@ class TinodeWeb extends React.Component {
     }
 
     webrtc = writer && !!this.tinode.getServerParam('iceServers');
+    p2p = Tinode.isP2PTopicName(topicName);
+    self = Tinode.isSelfTopicName(topicName);
 
     return [
       subscribed ? {
         title: this.props.intl.formatMessage(messages.menu_item_info),
         handler: this.handleShowInfoView
       } : null,
-      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
+      subscribed && p2p && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_audio_call),
         handler: this.handleStartAudioCall
       } : null,
-      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
+      subscribed && p2p && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_video_call),
         handler: this.handleStartVideoCall
       } : null,
       subscribed ? 'messages_clear' : null,
-      subscribed && deleter ? 'messages_clear_hard' : null,
-      muted ? (blocked ? null : 'topic_unmute') : 'topic_mute',
-      self_blocked ? 'topic_unblock' : 'topic_block',
+      subscribed && deleter && !self ? 'messages_clear_hard' : null,
+      self ? null : (muted ? (blocked ? null : 'topic_unmute') : 'topic_mute'),
+      self ? null : (self_blocked ? 'topic_unblock' : 'topic_block'),
       archived ? 'topic_restore' : 'topic_archive',
       'topic_delete'
     ];

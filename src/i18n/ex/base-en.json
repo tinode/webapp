@@ -816,6 +816,10 @@
     "defaultMessage": "List like alice@example.com, +17025550003...",
     "description": "Placeholder in contacts search field"
   },
+  "self_topic_comment": {
+  },
+  "self_topic_name": {
+  },
   "sidepanel_title_acc_notifications": {
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView."

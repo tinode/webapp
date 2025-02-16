@@ -1,7 +1,7 @@
 // Widget for editing topic description.
 
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Tinode } from 'tinode-sdk';
 
@@ -15,18 +15,22 @@ import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LE
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 
-export default class TopicDescEdit extends React.Component {
+class TopicDescEdit extends React.Component {
   constructor(props) {
     super(props);
 
     const topic = this.props.tinode.getTopic(this.props.topic);
     const acs = topic.getAccessMode();
+    const isSelf = Tinode.isSelfTopicName(this.props.topic);
     this.state = {
       isMe: Tinode.isMeTopicName(this.props.topic),
+      isSelf: isSelf,
       owner: acs && acs.isOwner(),
-      fullName: topic.public ? topic.public.fn : undefined,
+      fullName: topic.public ? topic.public.fn :
+        isSelf ? this.props.intl.formatMessage({id: 'self_topic_name'}) : null,
       private: topic.private ? topic.private.comment : null,
-      description: topic.public ? topic.public.note : undefined,
+      description: topic.public ? topic.public.note :
+        isSelf ? this.props.intl.formatMessage({id: 'self_topic_comment'}) : null,
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       tags: topic.tags() || [],
       newAvatar: null,
@@ -161,7 +165,7 @@ export default class TopicDescEdit extends React.Component {
       );
     }
 
-    const editable = this.state.isMe || this.state.owner;
+    const editable = this.state.isMe || (this.state.owner && !this.state.isSelf);
 
     return (
       <>
@@ -272,3 +276,5 @@ export default class TopicDescEdit extends React.Component {
     );
   }
 };
+
+export default injectIntl(TopicDescEdit);

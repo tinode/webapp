@@ -1661,5 +1661,15 @@
     "description": "Title for scanning QR code",
     "missing": false,
     "obsolete": false
+  },
+  "self_topic_comment": {
+    "translation": "",
+    "missing": true,
+    "obsolete": false
+  },
+  "self_topic_name": {
+    "translation": "",
+    "missing": true,
+    "obsolete": false
   }
 }

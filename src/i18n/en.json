@@ -1661,5 +1661,15 @@
     "description": "Title for scanning QR code",
     "missing": false,
     "obsolete": false
+  },
+  "self_topic_comment": {
+    "translation": "Notes, messages, links, files saved for posterity",
+    "missing": false,
+    "obsolete": false
+  },
+  "self_topic_name": {
+    "translation": "Saved messages",
+    "missing": false,
+    "obsolete": false
   }
 }
