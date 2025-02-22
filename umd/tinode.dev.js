@@ -286,9 +286,8 @@ class CBuffer {
   getAt(at) {
     return this.buffer[at];
   }
-  getLast(at) {
-    at |= 0;
-    return this.buffer.length > at ? this.buffer[this.buffer.length - 1 - at] : undefined;
+  getLast(filter) {
+    return filter ? this.buffer.findLast(filter) : this.buffer[this.buffer.length - 1];
   }
   put() {
     let insert;
@@ -1129,6 +1128,7 @@ class DB {
     });
   }
   readMessages(topicName, query, callback, context) {
+    query = query || {};
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
     }
@@ -1164,7 +1164,6 @@ class DB {
       });
     }
     return new Promise((resolve, reject) => {
-      query = query || {};
       const since = query.since > 0 ? query.since : 0;
       const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
       const limit = query.limit | 0;
@@ -1215,14 +1214,50 @@ class DB {
   }
   readDelLog(topicName, query) {
     query = query || {};
-    const since = query.since > 0 ? query.since : 0;
-    const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
-    const limit = query.limit | 0;
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
     }
+    const trx = this.db.transaction(['dellog']);
+    let result = [];
+    if (Array.isArray(query.ranges)) {
+      return new Promise((resolve, reject) => {
+        trx.onerror = event => {
+          this.#logger('PCache', 'readDelLog', event.target.error);
+          reject(event.target.error);
+        };
+        let count = 0;
+        query.ranges.forEach(range => {
+          const hi = range.hi || range.low + 1;
+          const key = IDBKeyRange.bound([topicName, 0, range.low], [topicName, hi, Number.MAX_SAFE_INTEGER], false, true);
+          trx.objectStore('dellog').getAll(key).onsuccess = event => {
+            const entries = event.target.result;
+            if (entries) {
+              if (Array.isArray(entries)) {
+                result = result.concat(array.map(entry => {
+                  return {
+                    low: entry.low,
+                    hi: entry.hi
+                  };
+                }));
+              } else {
+                result.push({
+                  low: entries.low,
+                  hi: entries.hi
+                });
+              }
+            }
+            count++;
+            if (count == query.ranges.length) {
+              resolve(result);
+            }
+          };
+        });
+      });
+    }
     return new Promise((resolve, reject) => {
-      const trx = this.db.transaction(['dellog']);
+      const since = query.since > 0 ? query.since : 0;
+      const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
+      const limit = query.limit | 0;
       trx.onerror = event => {
         this.#logger('PCache', 'readDelLog', event.target.error);
         reject(event.target.error);
@@ -4094,8 +4129,9 @@ class Topic {
       return Promise.resolve(0);
     }
     const loaded = [];
+    let remains = pins;
     return this._tinode._db.readMessages(this.name, {
-      ranges: (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(pins)
+      ranges: (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(remains)
     }).then(msgs => {
       msgs.forEach(data => {
         if (data) {
@@ -4104,18 +4140,31 @@ class Topic {
           this._maybeUpdateMessageVersionsCache(data);
         }
       });
-      return loaded.length;
-    }).then(count => {
-      if (count == pins.length) {
+      if (loaded.length < pins.length) {
+        remains = pins.filter(seq => !loaded.includes(seq));
+        return this._tinode._db.readMessages(this.name, {
+          ranges: (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(remains)
+        });
+      }
+      return null;
+    }).then(ranges => {
+      if (ranges) {
+        remains.forEach(seq => {
+          if (ranges.find(r => r.low <= seq && r.hi > seq)) {
+            loaded.push(seq);
+          }
+        });
+      }
+      if (loaded.length == pins.length) {
         return Promise.resolve({
           topic: this.name,
           code: 200,
           params: {
-            count: count
+            count: loaded.length
           }
         });
       }
-      const remains = pins.filter(seq => !loaded.includes(seq));
+      remains = pins.filter(seq => !loaded.includes(seq));
       return this.getMeta(this.startMetaQuery().withDataList(remains).build());
     });
   }
@@ -4483,7 +4532,7 @@ class Topic {
     return undefined;
   }
   latestMessage() {
-    return this._messages.getLast();
+    return this._messages.getLast(msg => !msg._deleted);
   }
   latestMsgVersion(seq) {
     const versions = this._messageVersions[seq];
@@ -5059,7 +5108,8 @@ class Topic {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   clipRange: () => (/* binding */ clipRange),
+/* harmony export */   clipInRange: () => (/* binding */ clipInRange),
+/* harmony export */   clipOutRange: () => (/* binding */ clipOutRange),
 /* harmony export */   isUrlRelative: () => (/* binding */ isUrlRelative),
 /* harmony export */   jsonParseHelper: () => (/* binding */ jsonParseHelper),
 /* harmony export */   listToRanges: () => (/* binding */ listToRanges),
@@ -5178,7 +5228,7 @@ function normalizeArray(arr) {
         }
       }
     }
-    out.sort().filter((item, pos, ary) => {
+    out = out.sort().filter((item, pos, ary) => {
       return !pos || item != ary[pos - 1];
     });
   }
@@ -5193,14 +5243,14 @@ function normalizeRanges(ranges, maxSeq) {
   }
   ranges.sort((r1, r2) => {
     if (r1.low < r2.low) {
-      return true;
+      return -1;
     }
     if (r1.low == r2.low) {
-      return !r2.hi || r1.hi >= r2.hi;
+      return (r2.hi | 0) - r1.hi;
     }
-    return false;
+    return 1;
   });
-  return ranges.reduce((out, r) => {
+  ranges = ranges.reduce((out, r) => {
     if (r.low < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID && r.low > 0) {
       if (!r.hi || r.hi < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID) {
         out.push(r);
@@ -5213,6 +5263,20 @@ function normalizeRanges(ranges, maxSeq) {
     }
     return out;
   }, []);
+  ranges = ranges.reduce((out, r) => {
+    if (out.length == 0) {
+      out.push(r);
+    } else {
+      let prev = out[out.length - 1];
+      if (r.low <= prev.hi) {
+        prev.hi = Math.max(prev.hi, r.hi);
+      } else {
+        out.push(r);
+      }
+    }
+    return out;
+  }, []);
+  return ranges;
 }
 function listToRanges(list) {
   list.sort((a, b) => a - b);
@@ -5234,8 +5298,8 @@ function listToRanges(list) {
     return out;
   }, []);
 }
-function clipRange(src, clip) {
-  if (clip.hi < src.low || clip.low >= src.hi) {
+function clipOutRange(src, clip) {
+  if (clip.hi <= src.low || clip.low >= src.hi) {
     return [src];
   }
   if (clip.low <= src.low) {
@@ -5243,8 +5307,8 @@ function clipRange(src, clip) {
       return [];
     }
     return [{
-      low: src.low,
-      hi: clip.hi
+      low: clip.hi,
+      hi: src.hi
     }];
   }
   const result = [{
@@ -5257,6 +5321,19 @@ function clipRange(src, clip) {
       hi: src.hi
     });
   }
+  return result;
+}
+function clipInRange(src, clip) {
+  if (clip.hi <= src.low || clip.low >= src.hi) {
+    return null;
+  }
+  if (src.low >= clip.low && src.hi <= clip.hi) {
+    return src;
+  }
+  return {
+    low: Math.max(src.low, clip.low),
+    hi: Math.min(src.hi, clip.hi)
+  };
   return result;
 }
 
@@ -6611,9 +6688,12 @@ Tinode.MESSAGE_STATUS_TO_ME = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_ST
 Tinode.DEL_CHAR = _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR;
 Tinode.MAX_MESSAGE_SIZE = 'maxMessageSize';
 Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
+Tinode.MIN_TAG_LENGTH = 'minTagLength';
+Tinode.MAX_TAG_LENGTH = 'maxTagLength';
 Tinode.MAX_TAG_COUNT = 'maxTagCount';
 Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
 Tinode.REQ_CRED_VALIDATORS = 'reqCred';
+Tinode.MSG_DELETE_AGE = 'msgDelAge';
 Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
 })();
 

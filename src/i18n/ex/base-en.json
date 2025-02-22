@@ -604,9 +604,17 @@
     "defaultMessage": "Video call",
     "description": "Start video call"
   },
+  "message_deleted": {
+    "defaultMessage": "message deleted",
+    "description": "Pinned message is deleted"
+  },
   "message_edited_marker": {
     "defaultMessage": ", edited",
     "description": "Marker indicating that the message was edited"
+  },
+  "message_not_found": {
+    "defaultMessage": "message not found",
+    "description": "Pinned message is not found"
   },
   "message_sending": {
     "defaultMessage": "sending...",

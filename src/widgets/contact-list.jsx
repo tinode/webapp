@@ -76,7 +76,6 @@ class ContactList extends React.Component {
               filterOn.push(('' + c.public.fn).toLowerCase());
             }
             if (!this.props.filterFunc(this.props.filter, filterOn)) {
-              console.log('Filtered:', key);
               return;
             }
           }

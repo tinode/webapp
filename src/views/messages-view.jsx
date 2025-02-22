@@ -327,6 +327,7 @@ class MessagesView extends React.Component {
         showGoToLastButton: false,
         dragging: false,
         pins: [],
+        pinsLoaded: false,
         selectedPin: 0,
         subsVersion: 0
       };
@@ -411,7 +412,8 @@ class MessagesView extends React.Component {
           maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType(),
-          pins: (topic.aux('pins') || []).slice()
+          pins: (topic.aux('pins') || []).slice(),
+          pinsLoaded: false
         });
 
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
@@ -428,7 +430,8 @@ class MessagesView extends React.Component {
           avatar: null,
           peerMessagingDisabled: false,
           channel: false,
-          pins: []
+          pins: [],
+          pinsLoaded: false
         });
       }
     } else {
@@ -798,8 +801,16 @@ class MessagesView extends React.Component {
     }
 
     // Load pinned message too (if any);
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    topic.getPinnedMessages();
+    if (!this.state.pinsLoaded) {
+      // This needs to be guarded to avoid an infinite loop.
+      // The loop may happen if some pinned messages are deleted.
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      this.setState({pinsLoaded: true}, _ => {
+        topic.getPinnedMessages();
+      });
+    } else {
+      this.setState({pinsLoaded: false});
+    }
   }
 
   handleAuxUpdate(aux) {
@@ -896,12 +907,35 @@ class MessagesView extends React.Component {
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
-      if (!topic.isChannelType()) {
-        menuItems.push('message_delete');
-      }
-      const acs = topic.getAccessMode();
-      if (acs && acs.isDeleter()) {
-        menuItems.push('message_delete_hard');
+      // Self -> (1) always hard-delete with [Delete] title.
+      // P2P -> (1) hard-delete if allowed and not too old, (2) always soft-delete.
+      // Group -> (1) hard-delete if allowed and not too old or owner, (2) always soft-delete.
+      if (topic.isSelfType()) {
+        // Hard-delete with plain [Delete] title.
+        menuItems.push('message_delete_generic');
+      } else {
+        if (!topic.isChannelType()) {
+          // P2P or normal group: always allow to soft-delete.
+          menuItems.push('message_delete');
+        }
+
+        const acs = topic.getAccessMode();
+        if (acs && acs.isDeleter()) {
+          // Owner can always hard-delete regardless of age.
+          let canDelete = acs.isOwner();
+          if (!canDelete) {
+            // Not owner: check message age if configured on the server.
+            const maxAge = this.props.tinode.getServerParam(Tinode.MSG_DELETE_AGE, 0) | 0;
+            if (maxAge > 0 && params.timestamp) {
+              // Make sure the message is not too old.
+              canDelete = params.timestamp.getTime() > (new Date().getTime() - maxAge * 1000);
+            }
+          }
+          if (canDelete) {
+            // [Delete for All] title.
+            menuItems.push('message_delete_hard');
+          }
+        }
       }
     }
     this.props.showContextMenu(params, menuItems);
@@ -1700,9 +1734,10 @@ class MessagesView extends React.Component {
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
               <div style={{marginLeft: 'auto'}}/>
-              {!this.props.displayMobile ?
+              {!this.props.displayMobile && this.state.pins.length > 0 ?
                 <PinnedMessages
                   tinode={this.props.tinode}
+                  pins={this.state.pins}
                   messages={pinnedMessages}
                   selected={this.state.selectedPin}
                   isAdmin={this.state.isAdmin}
@@ -1724,14 +1759,18 @@ class MessagesView extends React.Component {
             </div>
             {this.props.displayMobile ?
               <>
-                <PinnedMessages
-                  tinode={this.props.tinode}
-                  messages={pinnedMessages}
-                  selected={this.state.selectedPin}
-                  isAdmin={this.state.isAdmin}
-                  setSelected={index => this.setState({selectedPin: index})}
-                  onSelected={this.handleQuoteClick}
-                  onCancel={this.handleUnpinMessage} />
+                {this.state.pins.length > 0 ?
+                  <PinnedMessages
+                    tinode={this.props.tinode}
+                    pins={this.state.pins}
+                    messages={pinnedMessages}
+                    selected={this.state.selectedPin}
+                    isAdmin={this.state.isAdmin}
+                    setSelected={index => this.setState({selectedPin: index})}
+                    onSelected={this.handleQuoteClick}
+                    onCancel={this.handleUnpinMessage} />
+                    : null
+                }
                 <ErrorPanel
                   level={this.props.errorLevel}
                   text={this.props.errorText}

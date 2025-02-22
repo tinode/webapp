@@ -1671,5 +1671,19 @@
     "translation": "Saved messages",
     "missing": false,
     "obsolete": false
+  },
+  "message_not_found": {
+    "translation": "message not found",
+    "defaultMessage": "message not found",
+    "description": "Pinned message is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_deleted": {
+    "translation": "message deleted",
+    "defaultMessage": "message deleted",
+    "description": "Pinned message is deleted",
+    "missing": false,
+    "obsolete": false
   }
 }

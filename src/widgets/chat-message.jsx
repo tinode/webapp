@@ -129,6 +129,7 @@ class BaseChatMessage extends React.PureComponent {
       x: e.pageX,
       pickReply: this.props.pickReply,
       editMessage: this.props.editMessage,
+      timestamp: this.props.timestamp,
     }, menuItems);
   }
 

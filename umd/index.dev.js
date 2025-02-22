@@ -5441,6 +5441,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         showGoToLastButton: false,
         dragging: false,
         pins: [],
+        pinsLoaded: false,
         selectedPin: 0,
         subsVersion: 0
       };
@@ -5516,7 +5517,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType(),
-          pins: (topic.aux('pins') || []).slice()
+          pins: (topic.aux('pins') || []).slice(),
+          pinsLoaded: false
         });
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           nextState.rtcPanel = nextProps.callTopic;
@@ -5531,7 +5533,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           avatar: null,
           peerMessagingDisabled: false,
           channel: false,
-          pins: []
+          pins: [],
+          pinsLoaded: false
         });
       }
     } else {
@@ -5858,8 +5861,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (count > 0) {
       this.postReadNotification(0);
     }
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    topic.getPinnedMessages();
+    if (!this.state.pinsLoaded) {
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      this.setState({
+        pinsLoaded: true
+      }, _ => {
+        topic.getPinnedMessages();
+      });
+    } else {
+      this.setState({
+        pinsLoaded: false
+      });
+    }
   }
   handleAuxUpdate(aux) {
     const pins = (aux['pins'] || []).slice();
@@ -5968,12 +5981,25 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
-      if (!topic.isChannelType()) {
-        menuItems.push('message_delete');
-      }
-      const acs = topic.getAccessMode();
-      if (acs && acs.isDeleter()) {
-        menuItems.push('message_delete_hard');
+      if (topic.isSelfType()) {
+        menuItems.push('message_delete_generic');
+      } else {
+        if (!topic.isChannelType()) {
+          menuItems.push('message_delete');
+        }
+        const acs = topic.getAccessMode();
+        if (acs && acs.isDeleter()) {
+          let canDelete = acs.isOwner();
+          if (!canDelete) {
+            const maxAge = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MSG_DELETE_AGE, 0) | 0;
+            if (maxAge > 0 && params.timestamp) {
+              canDelete = params.timestamp.getTime() > new Date().getTime() - maxAge * 1000;
+            }
+          }
+          if (canDelete) {
+            menuItems.push('message_delete_hard');
+          }
+        }
       }
     }
     this.props.showContextMenu(params, menuItems);
@@ -6688,8 +6714,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           style: {
             marginLeft: 'auto'
           }
-        }), !this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        }), !this.props.displayMobile && this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
+          pins: this.state.pins,
           messages: pinnedMessages,
           selected: this.state.selectedPin,
           isAdmin: this.state.isAdmin,
@@ -6706,8 +6733,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
+          pins: this.state.pins,
           messages: pinnedMessages,
           selected: this.state.selectedPin,
           isAdmin: this.state.isAdmin,
@@ -6716,7 +6744,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }),
           onSelected: this.handleQuoteClick,
           onCancel: this.handleUnpinMessage
-        }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           level: this.props.errorLevel,
           text: this.props.errorText,
           onClearError: this.props.onError
@@ -11335,7 +11363,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       y: e.pageY,
       x: e.pageX,
       pickReply: this.props.pickReply,
-      editMessage: this.props.editMessage
+      editMessage: this.props.editMessage,
+      timestamp: this.props.timestamp
     }, menuItems);
   }
   handleProgress(ratio) {
@@ -11881,7 +11910,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
               filterOn.push(('' + c.public.fn).toLowerCase());
             }
             if (!this.props.filterFunc(this.props.filter, filterOn)) {
-              console.log('Filtered:', key);
               return;
             }
           }
@@ -12398,6 +12426,13 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       'message_delete_hard': {
         id: 'message_delete_hard',
         title: formatMessage(messages.delete_for_all),
+        handler: (params, errorHandler) => {
+          return this.deleteMessages(false, true, params, errorHandler);
+        }
+      },
+      'message_delete_generic': {
+        id: 'message_delete_generic',
+        title: formatMessage(messages.delete),
         handler: (params, errorHandler) => {
           return this.deleteMessages(false, true, params, errorHandler);
         }
@@ -15038,12 +15073,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  message_not_found: {
+    id: "message_not_found",
+    defaultMessage: [{
+      "type": 0,
+      "value": "message not found"
+    }]
+  },
+  message_deleted: {
+    id: "message_deleted",
+    defaultMessage: [{
+      "type": 0,
+      "value": "message deleted"
+    }]
+  }
+});
 class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    this.touchSurface = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.touchX = null;
     this.touchY = null;
+    this.touchSurface = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.getSelectedIndex = this.getSelectedIndex.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSelected = this.handleSelected.bind(this);
@@ -15054,36 +15105,32 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.handleTouchCancel = this.handleTouchCancel.bind(this);
   }
   componentDidMount() {
-    if (this.touchSurface.current) {
-      this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {
-        passive: true
-      });
-      this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {
-        passive: true
-      });
-      this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {
-        passive: true
-      });
-    }
+    this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {
+      passive: true
+    });
+    this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {
+      passive: true
+    });
+    this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {
+      passive: true
+    });
   }
   componentWillUnmount() {
-    if (this.touchSurface.current) {
-      this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
-      this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
-      this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
-    }
+    this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
+    this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
+    this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
   }
   getSelectedIndex() {
-    const list = this.props.messages || [];
+    const list = this.props.pins || [];
     return list.length - this.props.selected - 1;
   }
   handleCancel(e) {
     e.preventDefault();
-    this.props.onCancel(this.props.messages[this.getSelectedIndex()].seq);
+    this.props.onCancel(this.props.pins[this.getSelectedIndex()]);
   }
   handleSelected(e) {
     e.preventDefault();
-    this.props.onSelected(this.props.messages[this.getSelectedIndex()].seq);
+    this.props.onSelected(this.props.pins[this.getSelectedIndex()]);
   }
   handleMoveNext(e, isTouch) {
     isTouch || e.preventDefault();
@@ -15096,7 +15143,7 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   handleMovePrev(e, isTouch) {
     isTouch || e.preventDefault();
     e.stopPropagation();
-    const idx = Math.min(this.props.selected + 1, (this.props.messages || []).length - 1);
+    const idx = Math.min(this.props.selected + 1, (this.props.pins || []).length - 1);
     if (idx != this.props.selected) {
       this.props.setSelected(idx);
     }
@@ -15124,25 +15171,29 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       this.handleMoveNext(e, true);
     }
   }
-  handleTouchCancel(e) {
+  handleTouchCancel() {
     this.touchX = null;
   }
   render() {
     const selected = this.getSelectedIndex();
-    let shown = (this.props.messages || [])[selected];
-    shown = shown ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(shown.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__.previewFormatter, {
+    let messageShown = (this.props.messages || [])[selected];
+    messageShown = messageShown ? messageShown._deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "gray"
+    }, this.props.intl.formatMessage(messages.message_deleted)) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(messageShown.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__.previewFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-    }) : null;
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "gray"
+    }, this.props.intl.formatMessage(messages.message_not_found));
     const dots = [];
-    this.props.messages.forEach(_ => {
+    this.props.pins.forEach(seq => {
       const cn = dots.length == selected ? 'adot' : 'dot';
       dots.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: dots.length,
+        key: seq,
         className: cn
       }));
     });
-    return shown ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "pinned-wrapper",
       ref: this.touchSurface
     }, this.props.isAdmin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -15159,7 +15210,7 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned",
       onClick: this.handleSelected
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, shown)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, messageShown)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned-menu"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger upper"
@@ -15175,7 +15226,7 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       onClick: this.handleMoveNext
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more")) : null))) : null;
+    }, "expand_more")) : null)));
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PinnedMessages));
@@ -15857,8 +15908,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -15880,7 +15934,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     const tags = nextProps.tags || [];
-    if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.arrayEqual)(tags, prevState.tags) && !prevState.activated) {
+    if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.arrayEqual)(tags, prevState.tags) && !prevState.activated) {
       return {
         tags: tags
       };
@@ -15903,7 +15957,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     }
   }
   handleAddTag(tag) {
-    const maxTagCount = this.props.tinode.getServerParam('maxTagCount', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_COUNT);
+    const maxTagCount = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.MAX_TAG_COUNT, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_TAG_COUNT);
     if (tag.length > 0 && this.state.tags.length < maxTagCount) {
       const tags = this.state.tags.slice(0);
       tags.push(tag);
@@ -15946,8 +16000,8 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     }
   }
   render() {
-    const minTagLength = this.props.tinode.getServerParam('minTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MIN_TAG_LENGTH);
-    const maxTagLength = this.props.tinode.getServerParam('maxTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_LENGTH);
+    const minTagLength = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.MIN_TAG_LENGTH, _config_js__WEBPACK_IMPORTED_MODULE_4__.MIN_TAG_LENGTH);
+    const maxTagLength = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.MAX_TAG_LENGTH, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_TAG_LENGTH);
     let tags = [];
     if (this.state.activated) {
       this.state.tags.forEach(tag => {

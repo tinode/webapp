@@ -1,19 +1,33 @@
 // Send message form.
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
 import { previewFormatter } from '../lib/formatters.js';
 import { MIN_SWIPE_DISTANCE } from '../config.js';
 
+const messages = defineMessages({
+  message_not_found: {
+    id: 'message_not_found',
+    defaultMessage: 'message not found',
+    description: 'Pinned message is not found'
+  },
+  message_deleted: {
+    id: 'message_deleted',
+    defaultMessage: 'message deleted',
+    description: 'Pinned message is deleted'
+  }
+});
+
 class PinnedMessages extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.touchSurface = React.createRef();
     // Starting location of the touch gesture.
     this.touchX = null;
     this.touchY = null;
+
+    this.touchSurface = React.createRef();
 
     this.getSelectedIndex = this.getSelectedIndex.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -26,34 +40,29 @@ class PinnedMessages extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (this.touchSurface.current) {
-      this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {passive: true});
-      this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {passive: true});
-      this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {passive: true});
-    }
+    this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {passive: true});
+    this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {passive: true});
+    this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {passive: true});
   }
 
   componentWillUnmount() {
-    if (this.touchSurface.current) {
-      this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
-      this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
-      this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
-    }
+    this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
+    this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
+    this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
   }
-
   getSelectedIndex() {
-    const list = (this.props.messages || []);
+    const list = (this.props.pins || []);
     return list.length - this.props.selected - 1;
   }
 
   handleCancel(e) {
     e.preventDefault();
-    this.props.onCancel(this.props.messages[this.getSelectedIndex()].seq);
+    this.props.onCancel(this.props.pins[this.getSelectedIndex()]);
   }
 
   handleSelected(e) {
     e.preventDefault();
-    this.props.onSelected(this.props.messages[this.getSelectedIndex()].seq);
+    this.props.onSelected(this.props.pins[this.getSelectedIndex()]);
   }
 
   handleMoveNext(e, isTouch) {
@@ -70,7 +79,7 @@ class PinnedMessages extends React.PureComponent {
     // Don't call preventDefault for touch events.
     isTouch || e.preventDefault();
     e.stopPropagation();
-    const idx = Math.min(this.props.selected + 1, (this.props.messages || []).length - 1);
+    const idx = Math.min(this.props.selected + 1, (this.props.pins || []).length - 1);
     if (idx != this.props.selected) {
       this.props.setSelected(idx);
     }
@@ -105,26 +114,32 @@ class PinnedMessages extends React.PureComponent {
     }
   }
 
-  handleTouchCancel(e) {
+  handleTouchCancel() {
     this.touchX = null;
   }
 
   render() {
     const selected = this.getSelectedIndex();
-    let shown = (this.props.messages || [])[selected];
-    shown = shown ? Drafty.format(shown.content, previewFormatter, {
-      formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-    }) : null;
+    let messageShown = (this.props.messages || [])[selected];
+    messageShown = messageShown ?
+        messageShown._deleted ?
+        <i className="gray">{this.props.intl.formatMessage(messages.message_deleted)}</i>
+        :
+        Drafty.format(messageShown.content, previewFormatter, {
+          formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+          authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+        })
+      :
+      <i className="gray">{this.props.intl.formatMessage(messages.message_not_found)}</i>;
 
     const dots = [];
-    this.props.messages.forEach(_ => {
+    this.props.pins.forEach(seq => {
       const cn = dots.length == selected ? 'adot' : 'dot';
-      dots.push(<div key={dots.length} className={cn} />);
+      dots.push(<div key={seq} className={cn} />);
     });
 
-    return shown ?
-      (<div id="pinned-wrapper" ref={this.touchSurface}>
+    return (
+      <div id="pinned-wrapper" ref={this.touchSurface}>
         {this.props.isAdmin ?
           <div className="cancel">
             <a href="#" onClick={this.handleCancel}><i className="material-icons gray">close</i></a>
@@ -132,7 +147,7 @@ class PinnedMessages extends React.PureComponent {
           <div><i className="material-icons gray">push_pin</i></div>
         }
         <div className="pinned-scroll">{dots}</div>
-        <div className="pinned" onClick={this.handleSelected}><p>{shown}</p></div>
+        <div className="pinned" onClick={this.handleSelected}><p>{messageShown}</p></div>
         <div className="pinned-menu">
           <span className="menuTrigger upper">
             {selected > 0 ?
@@ -151,7 +166,8 @@ class PinnedMessages extends React.PureComponent {
             }
           </span>
         </div>
-      </div>) : null;
+      </div>
+    );
   }
 }
 

@@ -189,6 +189,14 @@ class ContextMenu extends React.Component {
           return this.deleteMessages(false, true, params, errorHandler);
         }
       },
+      // Hard-delete but with just 'Delete' title.
+      'message_delete_generic': {
+        id: 'message_delete_generic',
+        title: formatMessage(messages.delete),
+        handler: (params, errorHandler) => {
+          return this.deleteMessages(false, true, params, errorHandler);
+        }
+      },
       'menu_item_send_retry': {
         id: 'menu_item_send_retry',
         title: formatMessage(messages.send_retry),
