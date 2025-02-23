@@ -4727,7 +4727,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       onLaunchPermissionsEditor: this.handleLaunchPermissionsEditor,
       onNavigate: this.props.onNavigate
     }) : view == 'qrcode' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_show_qrcode_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-      uri: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.myUserId,
+      uri: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.topic,
       onCancel: this.handleBackNavigate
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "info-view-content",
