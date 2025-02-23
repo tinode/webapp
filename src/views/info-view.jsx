@@ -534,7 +534,7 @@ class InfoView extends React.Component {
           :
         view == 'qrcode' ?
           <ShowQRCode
-            uri={Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.myUserId}
+            uri={Tinode.URI_TOPIC_ID_PREFIX + this.props.topic}
             onCancel={this.handleBackNavigate} />
           :
           <div id="info-view-content" className="scrollable-panel">
