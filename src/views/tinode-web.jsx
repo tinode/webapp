@@ -89,6 +89,11 @@ const messages = defineMessages({
     id: 'password_reset_success',
     defaultMessage: 'Password reset successfully',
     description: 'Notification message that the password was successfully reset.'
+  },
+  select_country: {
+    id: 'select_country',
+    defaultMessage: 'Select country',
+    description: 'Placeholder for the country selector'
   }
 });
 
@@ -1763,7 +1768,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleShowCountrySelector(code, dial, selectedCallback) {
-    this.handleShowAlert("Select country",
+    this.handleShowAlert(this.props.intl.formatMessage(messages.select_country),
       <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
         description="Message shown when component is loading"/></div>}>
         <PhoneCountrySelector
@@ -1773,7 +1778,7 @@ class TinodeWeb extends React.Component {
             selectedCallback(c, d);
           }} />
       </Suspense>,
-      null, null, _ => {}, "Cancel");
+      null, null, _ => {}, null);
   }
 
   handleStartVideoCall() {

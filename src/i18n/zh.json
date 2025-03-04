@@ -1685,5 +1685,54 @@
     "description": "Pinned message is deleted",
     "missing": true,
     "obsolete": false
+  },
+  "alias_editing_placeholder": {
+    "translation": "",
+    "defaultMessage": "Alias (optional)",
+    "description": "Placeholder for editing user or topic alias",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_alias": {
+    "translation": "",
+    "defaultMessage": "Alias:",
+    "description": "Label for user or topic alias",
+    "missing": true,
+    "obsolete": false
+  },
+  "alias_already_taken": {
+    "translation": "",
+    "defaultMessage": "(already taken)",
+    "description": "Error message for alias already taken",
+    "missing": true,
+    "obsolete": false
+  },
+  "alias_invalid": {
+    "translation": "",
+    "defaultMessage": "(invalid)",
+    "description": "Error message for invalid alias",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_alias_edit": {
+    "translation": "",
+    "defaultMessage": "Alias",
+    "description": "Label for editing user or topic alias",
+    "missing": true,
+    "obsolete": false
+  },
+  "select_country": {
+    "translation": "",
+    "defaultMessage": "Select country",
+    "description": "Placeholder for the country selector",
+    "missing": true,
+    "obsolete": false
+  },
+  "text_copied": {
+    "translation": "",
+    "defaultMessage": "Copied to clipboard",
+    "description": "Notification that text has been copied to clipboard",
+    "missing": true,
+    "obsolete": false
   }
 }

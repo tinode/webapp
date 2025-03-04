@@ -12,7 +12,8 @@ export default class InPlaceEdit extends React.Component {
     this.state = {
       active: props.active,
       initialValue: props.value || '',
-      value: props.value || ''
+      value: props.value || '',
+      valid: true
     };
 
     this.handeTextChange = this.handeTextChange.bind(this);
@@ -36,6 +37,18 @@ export default class InPlaceEdit extends React.Component {
 
   handeTextChange(e) {
     this.setState({value: e.target.value || ''});
+    if (this.props.validator) {
+      Promise.resolve(this.props.validator(e.target.value))
+        .then(valid => {
+          this.setState({valid: valid});
+        })
+        .catch(err => {
+          // If it's interrupted, then the err is undefined. Ignore it.
+          if (err) {
+            this.setState({valid: false});
+          }
+        });
+    }
   }
 
   handleKeyDown(e) {
@@ -66,7 +79,7 @@ export default class InPlaceEdit extends React.Component {
       return;
     }
     this.setState({active: false});
-    if ((value || this.props.value) && (value !== this.props.value)) {
+    if ((value || this.props.value) && (value !== this.props.value) && this.state.valid) {
       this.props.onFinished(value);
     }
   }
@@ -91,7 +104,9 @@ export default class InPlaceEdit extends React.Component {
       }
 
       return (<span className={spanClass} onClick={this.handleStartEditing}>
+        {this.props.iconLeft && <i className="material-icons light-gray">{this.props.iconLeft}</i>}
         <span>{spanText}</span>
+        {this.props.iconRight && <i className="material-icons light-gray">{this.props.iconRight}</i>}
       </span>);
     }
 
@@ -104,12 +119,18 @@ export default class InPlaceEdit extends React.Component {
       if (this.props.multiline > 1) {
         element = 'textarea';
         attr.rows = this.props.multiline;
-        attr.className = 'inplace-edit';
+        attr.className = 'in-place-edit';
       } else {
         element = 'input';
         attr.type = this.props.type || 'text';
+        attr.className = 'in-place-edit' + (this.props.iconLeft ? ' with-icon-left'
+          : this.props.iconRight ?  ' with-icon-right' : '');
+        if (this.props.maxLength) {
+          attr.maxLength=this.props.maxLength;
+        }
       }
       attr.value = this.state.value;
+      attr.className += this.state.valid ? '' : ' invalid';
       attr.ref = this.selfRef;
       attr.onChange = this.handeTextChange;
       attr.onKeyDown = this.handleKeyDown;
@@ -119,7 +140,19 @@ export default class InPlaceEdit extends React.Component {
     attr.required = this.props.required ? 'required' : '';
     attr.autoComplete = this.props.autoComplete;
     attr.autoFocus = true;
+    if (this.props.spellCheck !== undefined) {
+      attr.spellCheck = this.props.spellCheck ? 'true' : 'false';
+    }
 
+    if (this.props.iconLeft || this.props.iconRight) {
+      return (
+        <>
+          {this.props.iconLeft && <i className="material-icons light-gray">{this.props.iconLeft}</i>}
+          {React.createElement(element, attr, null)}
+          {this.props.iconRight && <i className="material-icons light-gray">{this.props.iconRight}</i>}
+        </>
+      );
+    }
     return React.createElement(element, attr, null);
   }
 };

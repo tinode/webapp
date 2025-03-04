@@ -144,4 +144,7 @@ export const WAKE_UP_TICK = 1000;
 export const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
 
 // Self-topic avatar as an SVG icon encoded as data URI
-export const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIwIDAgMTcgMTciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0zLjU2MiAxdjE1LjQ1OWw0LjY4Ni0zLjI3IDQuNzUyIDMuMjZ2LTE1LjQ0OWgtOS40Mzh6TTEyIDE0LjU1MWwtMy43NTYtMi41NzgtMy42ODEgMi41Njh2LTEyLjU0MWg3LjQzN3YxMi41NTF6IiBmaWxsPSIjMzMzMzMzIiAvPgo8L3N2Zz4=' // eslint-disable-line max-len
+export const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZpZXdCb3g9IjAgMCAxNyAxNyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMy41NjIgMXYxNS40NTlsNC42ODYtMy4yNyA0Ljc1MiAzLjI2di0xNS40NDloLTkuNDM4ek0xMiAxNC41NTFsLTMuNzU2LTIuNTc4LTMuNjgxIDIuNTY4di0xMi41NDFoNy40Mzd2MTIuNTUxeiIgZmlsbD0iIzU1NTU1NSIgLz48L3N2Zz4=' // eslint-disable-line max-len
+
+// Toast display duration, milliseconds.
+export const TOAST_DURATION = 3_000;

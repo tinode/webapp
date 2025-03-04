@@ -16,7 +16,8 @@ import ShowQRCode from '../widgets/show-qrcode.jsx';
 import TopicCommonView from './topic-common-view.jsx';
 import TopicSecurity from '../widgets/topic-security.jsx';
 
-import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
+import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH,
+  NO_ACCESS_MODE, TOAST_DURATION } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { theCard, clipStr } from '../lib/utils.js';
@@ -82,6 +83,11 @@ const messages = defineMessages({
     defaultMessage: 'Scan QR Code',
     description: 'Title for scanning QR code'
   },
+  text_copied: {
+    id: 'text_copied',
+    defaultMessage: 'Copied to clipboard',
+    description: 'Notification that text has been copied to clipboard'
+  }
 });
 
 class InfoView extends React.Component {
@@ -127,8 +133,8 @@ class InfoView extends React.Component {
     this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
-    this.handleCopyID = this.handleCopyID.bind(this);
     this.handleShowQRCode = this.handleShowQRCode.bind(this);
+    this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
@@ -384,14 +390,18 @@ class InfoView extends React.Component {
     this.props.onNavigate(`perm/${which}`);
   }
 
-  handleCopyID(e) {
-    e.preventDefault();
-    navigator.clipboard.writeText(this.props.myUserId);
-  }
-
   handleShowQRCode(e) {
     e.preventDefault();
     this.props.onNavigate('qrcode');
+  }
+
+  handleCopyToClipboard(e, text) {
+    e.preventDefault();
+    navigator.clipboard.writeText(text).then(_ => {
+      this.setState({toast: this.props.intl.formatMessage(messages.text_copied)});
+      setTimeout(_ => { this.setState({toast: ''}); }, TOAST_DURATION);
+    });
+
   }
 
   handleShowAddMembers(e) {
@@ -463,8 +473,12 @@ class InfoView extends React.Component {
     const panelTitle = formatMessage((view == 'perm' ? messages['perm_' + args[0]] : messages[view])
       || messages['info']);
 
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    const alias = topic && topic.alias();
+
     return (
       <div id="info-view">
+        <div className={`toast${this.state.toast ? ' show' : ''}`}>{this.state.toast}</div>
         <div className="caption-panel" id="info-caption-panel">
           <div className="panel-title" id="info-title">{panelTitle}</div>
           <div>
@@ -581,6 +595,7 @@ class InfoView extends React.Component {
                 : null
               }
               {!this.state.isSelf ?
+                <>
                 <div className="panel-form-row">
                   <div>
                     <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
@@ -588,7 +603,7 @@ class InfoView extends React.Component {
                     <tt>{this.state.address}</tt>
                   </div>
                   <div style={{marginLeft: 'auto'}}>
-                    &nbsp;<a href="#" onClick={this.handleCopyID}>
+                    &nbsp;<a href="#" onClick={e => {this.handleCopyToClipboard(e, this.state.address);}}>
                       <i className="material-icons">content_copy</i>
                     </a>&nbsp;
                     &nbsp;<a href="#" onClick={this.handleShowQRCode}>
@@ -596,6 +611,22 @@ class InfoView extends React.Component {
                     </a>&nbsp;
                   </div>
                 </div>
+                {alias ?
+                  <div className="panel-form-row">
+                    <div>
+                      <label className="small"><FormattedMessage id="label_alias" defaultMessage="Alias:"
+                        description="Label for user or topic alias" /></label>&nbsp;
+                      <tt>{alias}</tt>
+                    </div>
+                    <div style={{marginLeft: 'auto'}}>
+                      &nbsp;<a href="#" onClick={e => {this.handleCopyToClipboard(e, alias);}}>
+                        <i className="material-icons">content_copy</i>
+                      </a>&nbsp;
+                      &nbsp;<i className="material-icons" style={{opacity: 0}}>qr_code</i>&nbsp;
+                    </div>
+                  </div>
+                : null}
+                </>
                 : null
               }
               {this.state.trustedBadges.length > 0 ?

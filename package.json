@@ -18,7 +18,8 @@
     "i18n:obsolete": "node scripts/i18n.js obsolete",
     "vers": "node scripts/gen-version.js",
     "extract": "formatjs extract \"src/**/*.{js,jsx}\" --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
-    "compile": "formatjs compile"
+    "compile": "formatjs compile",
+    "test": "jest"
   },
   "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead",
   "files": [
@@ -84,8 +85,9 @@
     "babel-plugin-formatjs": "^10.5.3",
     "browserslist": "^4.21.10",
     "copy-webpack-plugin": "^12.0.0",
-    "cssnano": "^6.0.1",
+    "cssnano": "^7.0.6",
     "glob": "^11.0.0",
+    "jest": "^29.7.0",
     "postcss": "^8.4.27",
     "postcss-cli": "^11.0.0",
     "webpack": "^5.88.2",

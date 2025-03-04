@@ -23,6 +23,18 @@
     "defaultMessage": "Report Conversation",
     "description": "Flat button [Report Group]"
   },
+  "alias_already_taken": {
+    "defaultMessage": "(already taken)",
+    "description": "Error message for alias already taken"
+  },
+  "alias_editing_placeholder": {
+    "defaultMessage": "Alias (optional)",
+    "description": "Placeholder for editing user or topic alias"
+  },
+  "alias_invalid": {
+    "defaultMessage": "(invalid)",
+    "description": "Error message for invalid alias"
+  },
   "already_in_call": {
     "defaultMessage": "You already in an ongoing call!",
     "description": "Error message when the user tried to accept a new call without finishing pervious one"
@@ -369,6 +381,14 @@
   "invalid_security_token": {
     "defaultMessage": "Invalid security token",
     "description": "Error message when resetting password."
+  },
+  "label_alias": {
+    "defaultMessage": "Alias:",
+    "description": "Label for user or topic alias"
+  },
+  "label_alias_edit": {
+    "defaultMessage": "Alias",
+    "description": "Label for editing user or topic alias"
   },
   "label_client": {
     "defaultMessage": "Client:",
@@ -824,6 +844,10 @@
     "defaultMessage": "List like alice@example.com, +17025550003...",
     "description": "Placeholder in contacts search field"
   },
+  "select_country": {
+    "defaultMessage": "Select country",
+    "description": "Placeholder for the country selector"
+  },
   "self_topic_comment": {
   },
   "self_topic_name": {
@@ -895,6 +919,10 @@
   "tags_not_found": {
     "defaultMessage": "No tags defined. Add some.",
     "description": ""
+  },
+  "text_copied": {
+    "defaultMessage": "Copied to clipboard",
+    "description": "Notification that text has been copied to clipboard"
   },
   "title_all_contacts": {
     "defaultMessage": "All Contacts",

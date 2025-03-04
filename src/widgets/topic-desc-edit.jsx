@@ -1,7 +1,7 @@
 // Widget for editing topic description.
 
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import { Tinode } from 'tinode-sdk';
 
@@ -14,6 +14,22 @@ import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LE
   MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
+
+const messages = defineMessages({
+  alias_invalid: {
+    id: 'alias_invalid',
+    defaultMessage: '(invalid)',
+    description: 'Error message for invalid alias'
+  },
+  alias_already_taken: {
+    id: 'alias_already_taken',
+    defaultMessage: '(already taken)',
+    description: 'Error message for alias already taken'
+  },
+});
+
+const ALIAS_REGEX = /^[a-z0-9_\-]{4,24}$/;
+const ALIAS_AVAILABILITY_CHECK_DELAY = 1000; // milliseconds
 
 class TopicDescEdit extends React.Component {
   constructor(props) {
@@ -34,10 +50,13 @@ class TopicDescEdit extends React.Component {
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       tags: topic.tags() || [],
       newAvatar: null,
-      newAvatarMime: null
+      newAvatarMime: null,
+      aliasError: ''
     };
 
     this.previousOnTags = null;
+    this.aliasCheckTimer = null;
+    this.aliasCheckPromise = null;
 
     this.tnNewTags = this.tnNewTags.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
@@ -46,8 +65,10 @@ class TopicDescEdit extends React.Component {
     this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
+    this.handleAliasUpdate = this.handleAliasUpdate.bind(this);
     this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+    this.validateAlias = this.validateAlias.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +166,60 @@ class TopicDescEdit extends React.Component {
     this.setState({newAvatar: null, newAvatarMime: null});
   }
 
+  handleAliasUpdate(alias) {
+    alias = alias.trim() || '';
+    const tags = this.state.tags.filter(t => !t.startsWith('alias:'));
+    if (alias) {
+      tags.push('alias:' + alias.toLowerCase());
+    }
+    this.handleTagsUpdated(tags);
+  }
+
+  validateAlias(alias) {
+    // Reset pending delayed check.
+    if (this.aliasCheckTimer) {
+      this.aliasCheckPromise.reject(null);
+      clearTimeout(this.aliasCheckTimer);
+      this.aliasCheckTimer = null;
+    }
+
+    if (!alias) {
+      return true;
+    }
+
+    const valid = ALIAS_REGEX.test(alias);
+    if (!valid) {
+      this.setState({aliasError: this.props.intl.formatMessage(messages.alias_invalid)});
+      return false;
+    }
+    this.setState({aliasError: ''});
+
+    // Setup a delayed check for alias availability.
+    this.aliasCheckPromise = {};
+    const validationPromise = new Promise((resolve, reject) => {
+      this.aliasCheckPromise.resolve = resolve;
+      this.aliasCheckPromise.reject = reject;
+    });
+    this.aliasCheckTimer = setTimeout(_ => {
+      this.aliasCheckTimer = null;
+      const fnd = this.props.tinode.getFndTopic();
+      fnd.subscribe()
+        .then(_ => fnd.setMeta({desc: {public: `alias:${alias}`}}))
+        .then(_ => fnd.getMeta(fnd.startMetaQuery().withTags().build()))
+        .then(meta => {
+          const taken = Array.isArray(meta.tags);
+          this.setState({aliasError: taken ?
+            this.props.intl.formatMessage(messages.alias_already_taken) : ''});
+          this.aliasCheckPromise.resolve(!taken)
+        })
+        .catch(err => {
+          this.aliasCheckPromise.reject(err);
+          this.setState({aliasError: err.message});
+        });
+    }, ALIAS_AVAILABILITY_CHECK_DELAY);
+    return validationPromise;
+  }
+
   handleTagsUpdated(tags) {
     // Check if tags have actually changed.
     if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
@@ -166,6 +241,11 @@ class TopicDescEdit extends React.Component {
     }
 
     const editable = this.state.isMe || (this.state.owner && !this.state.isSelf);
+    let alias = this.state.tags && this.state.tags.find(t => t.startsWith('alias:'));
+    if (alias) {
+      // Remove 'alias:' prefix.
+      alias = alias.substring(6);
+    }
 
     return (
       <>
@@ -212,6 +292,7 @@ class TopicDescEdit extends React.Component {
                     readOnly={!editable}
                     value={this.state.fullName}
                     required={true}
+                    maxLength={32}
                     onFinished={this.handleFullNameUpdate} />
                 }</FormattedMessage>
               </div>
@@ -234,6 +315,30 @@ class TopicDescEdit extends React.Component {
               </div>
             </div>
           </>
+        }
+        {editable || alias ?
+          <div className="group">
+            <div><label className={'small ' + (this.state.aliasError ? 'invalid' : '')}>
+              <FormattedMessage id="label_alias_edit" defaultMessage="Alias"
+                description="Label for editing user or topic alias" /> {this.state.aliasError}
+            </label></div>
+            <div>
+              <FormattedMessage id="alias_editing_placeholder"
+                defaultMessage="Alias (optional)"
+                description="Placeholder for editing user or topic alias">{
+                (private_placeholder) => <InPlaceEdit
+                  placeholder={private_placeholder}
+                  readOnly={!editable}
+                  value={alias}
+                  validator={this.validateAlias}
+                  iconLeft='alternate_email'
+                  maxLength={24}
+                  spellCheck={false}
+                  onFinished={this.handleAliasUpdate} />
+              }</FormattedMessage>
+            </div>
+          </div>
+          : null
         }
         {editable || this.state.description ?
           <div className="group">

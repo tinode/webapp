@@ -68,6 +68,10 @@ label.large {
   font-size: 1.1rem;
 }
 
+label.invalid {
+  color: #D32F2F;
+}
+
 img.avatar {
   width: 100%;
   height: 100%;
@@ -242,20 +246,21 @@ textarea::placeholder {
   font-weight: lighter;
 }
 
-input[type="text"].with-visibility,
-input[type="password"].with-visibility {
+input[type="text"].with-icon-right,
+input[type="password"].with-icon-right {
   margin-right:-2rem;
   padding-right:2rem;
+}
+
+input[type="text"].with-icon-left,
+input[type="password"].with-icon-left {
+  margin-left:-1.45rem;
+  padding-left:1.75rem;
 }
 
 textarea {
   resize: none;
   padding-top: 0.45rem;
-}
-
-textarea.inplace-edit {
-  height: unset;
-  font-size: unset;
 }
 
 /* END of input and buttons */
@@ -634,6 +639,7 @@ div.trusted-badge {
 }
 
 #info-view {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-grow: 0;
@@ -679,7 +685,7 @@ div.trusted-badge {
 }
 
 /* BEGIN InPlaceEdit styles */
-.in-place-edit {
+span.in-place-edit, div.in-place-edit {
   display: inline-block;
   font-family: inherit;
   font-size: 1rem;
@@ -691,9 +697,12 @@ div.trusted-badge {
 }
 
 .in-place-edit.short {
+  display: inline-flex;
+  align-items: center;
   font-size: 1.1rem;
   height: 2.5rem;
   line-height: 2.25;
+  white-space: nowrap;
 }
 
 .in-place-edit.disabled {
@@ -711,11 +720,29 @@ div.trusted-badge {
 }
 
 .in-place-edit.short span {
-  display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: hidden;
+  width: 100%;
 }
+
+.in-place-edit .material-icons {
+  display: inline-block;
+}
+
+.material-icons.invalid {
+  color: #c66;
+}
+
+textarea.in-place-edit {
+  height: unset;
+  font-size: unset;
+}
+
+input.in-place-edit.invalid {
+  color: #c66;
+}
+
 /* END of InPlaceEdit styles */
 
 table.permission-editor {
@@ -3246,6 +3273,53 @@ ul.phone-country-selector span {
 ul.phone-country-selector span.country {
   text-overflow: ellipsis;
   overflow-x: hidden;
+}
+
+div.toast {
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  min-width: 10rem;
+  padding: 0.5rem 1rem;
+  height: 3rem;
+  z-index: 3;
+  font-weight: lighter;
+  color: #eee;
+  background-color: #333;
+  border-radius: 0.5rem;
+  box-shadow: 1px 2px 0.3rem gray;
+  bottom: 2rem;
+  left: 50%;
+  translate: -50%;
+}
+
+div.toast.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 2rem;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 2rem;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 /*

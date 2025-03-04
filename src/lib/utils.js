@@ -89,7 +89,7 @@ export function arrayEqual(a, b) {
 export function asPhone(val) {
   val = val.trim();
   if (/^(?:\+?(\d{1,3}))?[- (.]*(\d{3})[- ).]*(\d{3})[- .]*(\d{2})[- .]*(\d{2})?$/.test(val)) {
-    return val.replace(/[- ().]*/, '');
+    return val.replaceAll(/[- ().]*/g, '');
   }
   return null;
 }
@@ -97,7 +97,7 @@ export function asPhone(val) {
 // Checks (loosely) if the given string is an email. If so returns the email.
 export function asEmail(val) {
   val = val.trim();
-  if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(val)) {
+  if (/^[a-z0-9_.+-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(val)) {
     return val;
   }
   return null;

@@ -4473,6 +4473,13 @@ class Topic {
   aux(key) {
     return this._aux[key];
   }
+  alias() {
+    let alias = this._tags && this._tags.find(t => t.startsWith('alias:'));
+    if (alias) {
+      alias = alias.substring(6);
+    }
+    return alias;
+  }
   subscriber(uid) {
     return this._users[uid];
   }

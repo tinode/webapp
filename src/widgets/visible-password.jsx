@@ -67,10 +67,11 @@ export default class VisiblePassword extends React.PureComponent {
   render() {
     return (
       <div tabIndex="-1" className="group-focus" onBlur={this.handleEditingFinished}>
-        <input className="with-visibility"
+        <input className="with-icon-right"
           type={this.state.visible ? 'text' : 'password'}
           value={this.state.value}
           placeholder={this.props.placeholder}
+          maxLength={32}
           required={this.props.required ? 'required' : ''}
           autoFocus={this.props.autoFocus ? 'autoFocus' : ''}
           autoComplete={this.props.autoComplete}

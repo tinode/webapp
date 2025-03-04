@@ -24,7 +24,8 @@ export default class AccountSettingsView extends React.Component {
       description: _clip(me.public ? me.public.note : undefined, MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: makeImageUrl(me.public ? me.public.photo : null),
       credentials: me.getCredentials() || [],
-      credEdit: undefined
+      credEdit: undefined,
+      alias: ((me.tags() || []).find(tag => tag.startsWith('alias:')) || '').substring(6),
     };
   }
 
@@ -123,6 +124,12 @@ export default class AccountSettingsView extends React.Component {
               description="Label for user address (ID)" /></label>&nbsp;
             <tt>{this.props.myUserId}</tt>
           </div>
+          {this.state.alias ?
+          <div className="group">
+            <label className="small"><FormattedMessage id="label_alias" defaultMessage="Alias:"
+              description="Label for user or topic alias" /></label>&nbsp;
+            <tt>@{this.state.alias}</tt>
+          </div> : null}
           <div className="group">
             <BadgeList trustedBadges={this.props.trustedBadges} />
           </div>

@@ -10,7 +10,7 @@ import NewTopicGroup from '../widgets/new-topic-group.jsx';
 import SearchContacts from '../widgets/search-contacts.jsx';
 
 import HashNavigation from '../lib/navigation.js';
-import { theCard } from '../lib/utils.js';
+import { asEmail, asPhone, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
   search_for_contacts: {
@@ -57,6 +57,24 @@ class NewTopicView extends React.Component {
   }
 
   handleSearchContacts(query) {
+    query = query.trim();
+    if (!query) {
+      query = Tinode.DEL_CHAR;
+    } else if (!/[\s,:]/.test(query)) {
+      // No colons, spaces or commas. Try as email or phone.
+      // If not email or phone, treat as alias.
+      const email = asEmail(query);
+      if (email) {
+        query = `email:${email}`;
+      } else {
+        const tel = asPhone(query);
+        if (tel) {
+          query = `tel:${tel}`;
+        } else {
+          query = `alias:${query}`;
+        }
+      }
+    }
     this.props.onSearchContacts(query);
     this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
   }
@@ -125,7 +143,7 @@ class NewTopicView extends React.Component {
                 contacts={this.props.searchResults}
                 myUserId={this.props.myUserId}
                 emptyListMessage={no_contacts_placeholder}
-                showSelfTopic={true}
+                showSelfTopic={!this.state.searchQuery}
                 showOnline={false}
                 showUnread={false}
                 showContextMenu={false}

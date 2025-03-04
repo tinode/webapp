@@ -39,6 +39,8 @@ test('arrayEqual', () => {
 
 test('asEmail', () => {
   expect(asEmail('test@example.com')).toBe('test@example.com');
+  expect(asEmail('test@mail.example.com')).toBe('test@mail.example.com');
+  expect(asEmail('test@e-mail.example.com')).toBe('test@e-mail.example.com');
   expect(asEmail(' test@example.com ')).toBe('test@example.com');
   expect(asEmail('test.email+alex@leetcode.com')).toBe('test.email+alex@leetcode.com');
   expect(asEmail('test.email@sub.example.com')).toBe('test.email@sub.example.com');
@@ -50,6 +52,8 @@ test('asEmail', () => {
   expect(asEmail('invalid-email@example..com')).toBeNull();
   expect(asEmail('invalid-email@.example.com')).toBeNull();
   expect(asEmail('invalid-email@example.com.')).toBeNull();
+  expect(asEmail('invalid-email@@example.com.')).toBeNull();
+  expect(asEmail('invalid/email@example.com.')).toBeNull();
 });
 
 test('isUrlRelative', () => {
