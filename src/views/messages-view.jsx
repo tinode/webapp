@@ -925,11 +925,11 @@ class MessagesView extends React.Component {
           let canDelete = acs.isOwner();
           if (!canDelete) {
             // Not owner: check message age if configured on the server.
-            const maxAge = this.props.tinode.getServerParam(Tinode.MSG_DELETE_AGE, 0) | 0;
-            if (maxAge > 0 && params.timestamp) {
-              // Make sure the message is not too old.
-              canDelete = params.timestamp.getTime() > (new Date().getTime() - maxAge * 1000);
-            }
+            const maxDelAge = this.props.tinode.getServerParam(Tinode.MSG_DELETE_AGE, 0) | 0;
+            // Make sure the message is not too old. This check is here just to make the UI
+            // more user-friendly. The server will enforce the limit regardless of this.
+            canDelete = maxDelAge == 0 || (maxDelAge > 0 && params.timestamp ?
+              params.timestamp.getTime() > (new Date().getTime() - maxDelAge * 1000) : false);
           }
           if (canDelete) {
             // [Delete for All] title.

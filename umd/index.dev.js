@@ -10861,10 +10861,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (acs && acs.isDeleter()) {
           let canDelete = acs.isOwner();
           if (!canDelete) {
-            const maxAge = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MSG_DELETE_AGE, 0) | 0;
-            if (maxAge > 0 && params.timestamp) {
-              canDelete = params.timestamp.getTime() > new Date().getTime() - maxAge * 1000;
-            }
+            const maxDelAge = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MSG_DELETE_AGE, 0) | 0;
+            canDelete = maxDelAge == 0 || (maxDelAge > 0 && params.timestamp ? params.timestamp.getTime() > new Date().getTime() - maxDelAge * 1000 : false);
           }
           if (canDelete) {
             menuItems.push('message_delete_hard');
@@ -18772,7 +18770,6 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         });
       }).catch(err => {
         if (err) {
-          console.log('Validation error:', err);
           this.setState({
             valid: false
           });
