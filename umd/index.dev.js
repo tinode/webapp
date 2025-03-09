@@ -11713,7 +11713,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     query = query.trim();
     if (!query) {
       query = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR;
-    } else if (!/[\s,:]/.test(query)) {
+    } else if (!/[\s,:]/.test(query) && query != tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR) {
       const email = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.asEmail)(query);
       if (email) {
         query = `email:${email}`;
@@ -21225,6 +21225,9 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.aliasCheckTimer = null;
     }
     if (!alias) {
+      this.setState({
+        aliasError: ''
+      });
       return true;
     }
     const valid = ALIAS_REGEX.test(alias);

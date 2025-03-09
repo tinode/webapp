@@ -184,6 +184,7 @@ class TopicDescEdit extends React.Component {
     }
 
     if (!alias) {
+      this.setState({aliasError: ''});
       return true;
     }
 

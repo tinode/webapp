@@ -60,8 +60,8 @@ class NewTopicView extends React.Component {
     query = query.trim();
     if (!query) {
       query = Tinode.DEL_CHAR;
-    } else if (!/[\s,:]/.test(query)) {
-      // No colons, spaces or commas. Try as email or phone.
+    } else if (!/[\s,:]/.test(query) && query != Tinode.DEL_CHAR) {
+      // No colons, spaces or commas, not DEL char. Try as email or phone.
       // If not email or phone, treat as alias.
       const email = asEmail(query);
       if (email) {
