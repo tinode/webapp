@@ -1691,7 +1691,7 @@
     "obsolete": false
   },
   "alias_editing_placeholder": {
-    "translation": "Alias ​​(optional)",
+    "translation": "Alias (optional)",
     "defaultMessage": "Alias (optional)",
     "description": "Placeholder for editing user or topic alias",
     "missing": false,

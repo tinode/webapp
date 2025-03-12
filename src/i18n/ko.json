@@ -1663,80 +1663,80 @@
     "obsolete": false
   },
   "self_topic_comment": {
-    "translation": "",
+    "translation": "후세를 위해 저장된 메모, 메시지, 링크, 파일",
     "defaultMessage": "Notes, messages, links, files saved for posterity",
     "description": "Comment for self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "self_topic_name": {
-    "translation": "",
+    "translation": "저장된 메시지",
     "defaultMessage": "Saved messages",
     "description": "Name of self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_not_found": {
-    "translation": "",
+    "translation": "메시지를 찾을 수 없음",
     "defaultMessage": "message not found",
     "description": "Pinned message is not found",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_deleted": {
-    "translation": "",
+    "translation": "메시지 삭제됨",
     "defaultMessage": "message deleted",
     "description": "Pinned message is deleted",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_editing_placeholder": {
-    "translation": "",
+    "translation": "별칭(선택 사항)",
     "defaultMessage": "Alias (optional)",
     "description": "Placeholder for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias": {
-    "translation": "",
+    "translation": "별칭:",
     "defaultMessage": "Alias:",
     "description": "Label for user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_already_taken": {
-    "translation": "",
+    "translation": "(이미 취함)",
     "defaultMessage": "(already taken)",
     "description": "Error message for alias already taken",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_invalid": {
-    "translation": "",
+    "translation": "(잘못된)",
     "defaultMessage": "(invalid)",
     "description": "Error message for invalid alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias_edit": {
-    "translation": "",
+    "translation": "별칭",
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "select_country": {
-    "translation": "",
+    "translation": "국가 선택",
     "defaultMessage": "Select country",
     "description": "Placeholder for the country selector",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "text_copied": {
-    "translation": "",
+    "translation": "클립보드에 복사됨",
     "defaultMessage": "Copied to clipboard",
     "description": "Notification that text has been copied to clipboard",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

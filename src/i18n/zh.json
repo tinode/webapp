@@ -1663,80 +1663,80 @@
     "obsolete": false
   },
   "self_topic_comment": {
-    "translation": "",
+    "translation": "为后人保存的注释、消息、链接、文件",
     "defaultMessage": "Notes, messages, links, files saved for posterity",
     "description": "Comment for self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "self_topic_name": {
-    "translation": "",
+    "translation": "已保存的消息",
     "defaultMessage": "Saved messages",
     "description": "Name of self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_not_found": {
-    "translation": "",
+    "translation": "未找到消息",
     "defaultMessage": "message not found",
     "description": "Pinned message is not found",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_deleted": {
-    "translation": "",
+    "translation": "消息已删除",
     "defaultMessage": "message deleted",
     "description": "Pinned message is deleted",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_editing_placeholder": {
-    "translation": "",
+    "translation": "别名（可选）",
     "defaultMessage": "Alias (optional)",
     "description": "Placeholder for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias": {
-    "translation": "",
+    "translation": "别名：",
     "defaultMessage": "Alias:",
     "description": "Label for user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_already_taken": {
-    "translation": "",
+    "translation": "（已占用）",
     "defaultMessage": "(already taken)",
     "description": "Error message for alias already taken",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_invalid": {
-    "translation": "",
+    "translation": "（无效）",
     "defaultMessage": "(invalid)",
     "description": "Error message for invalid alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias_edit": {
-    "translation": "",
+    "translation": "别名",
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "select_country": {
-    "translation": "",
+    "translation": "选择国家",
     "defaultMessage": "Select country",
     "description": "Placeholder for the country selector",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "text_copied": {
-    "translation": "",
+    "translation": "已复制到剪贴板",
     "defaultMessage": "Copied to clipboard",
     "description": "Notification that text has been copied to clipboard",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
