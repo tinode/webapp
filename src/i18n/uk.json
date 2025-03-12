@@ -1663,80 +1663,80 @@
     "obsolete": false
   },
   "self_topic_comment": {
-    "translation": "",
+    "translation": "Нотатки, повідомлення, посилання, файли збережені для нащадків",
     "defaultMessage": "Notes, messages, links, files saved for posterity",
     "description": "Comment for self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "self_topic_name": {
-    "translation": "",
+    "translation": "Збережені повідомлення",
     "defaultMessage": "Saved messages",
     "description": "Name of self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_not_found": {
-    "translation": "",
+    "translation": "повідомлення не знайдено",
     "defaultMessage": "message not found",
     "description": "Pinned message is not found",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_deleted": {
-    "translation": "",
+    "translation": "повідомлення видалено",
     "defaultMessage": "message deleted",
     "description": "Pinned message is deleted",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_editing_placeholder": {
-    "translation": "",
+    "translation": "Псевдонім (необов'язково)",
     "defaultMessage": "Alias (optional)",
     "description": "Placeholder for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias": {
-    "translation": "",
+    "translation": "Псевдонім:",
     "defaultMessage": "Alias:",
     "description": "Label for user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_already_taken": {
-    "translation": "",
+    "translation": "(вже зайнято)",
     "defaultMessage": "(already taken)",
     "description": "Error message for alias already taken",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_invalid": {
-    "translation": "",
+    "translation": "(недійсний)",
     "defaultMessage": "(invalid)",
     "description": "Error message for invalid alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias_edit": {
-    "translation": "",
+    "translation": "Псевдонім",
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "select_country": {
-    "translation": "",
+    "translation": "Виберіть країну",
     "defaultMessage": "Select country",
     "description": "Placeholder for the country selector",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "text_copied": {
-    "translation": "",
+    "translation": "Скопійовано в буфер обміну",
     "defaultMessage": "Copied to clipboard",
     "description": "Notification that text has been copied to clipboard",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
