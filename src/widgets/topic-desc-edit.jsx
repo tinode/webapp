@@ -26,6 +26,16 @@ const messages = defineMessages({
     defaultMessage: '(already taken)',
     description: 'Error message for alias already taken'
   },
+  self_topic_name: {
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
+  },
+  self_topic_comment: {
+    id: 'self_topic_comment',
+    defaultMessage: 'Notes, messages, links, files saved for posterity',
+    description: 'Comment for self topic for UI'
+  }
 });
 
 const ALIAS_REGEX = /^[a-z0-9_\-]{4,24}$/;
@@ -43,10 +53,10 @@ class TopicDescEdit extends React.Component {
       isSelf: isSelf,
       owner: acs && acs.isOwner(),
       fullName: topic.public ? topic.public.fn :
-        isSelf ? this.props.intl.formatMessage({id: 'self_topic_name'}) : null,
+        isSelf ? this.props.intl.formatMessage(messages.self_topic_name) : null,
       private: topic.private ? topic.private.comment : null,
       description: topic.public ? topic.public.note :
-        isSelf ? this.props.intl.formatMessage({id: 'self_topic_comment'}) : null,
+        isSelf ? this.props.intl.formatMessage(messages.self_topic_comment) : null,
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       tags: topic.tags() || [],
       newAvatar: null,

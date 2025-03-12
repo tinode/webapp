@@ -87,7 +87,17 @@ const messages = defineMessages({
     id: 'text_copied',
     defaultMessage: 'Copied to clipboard',
     description: 'Notification that text has been copied to clipboard'
-  }
+  },
+  self_topic_name: {
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI',
+  },
+  self_topic_comment: {
+    id: 'self_topic_comment',
+    defaultMessage: 'Notes, messages, links, files saved for posterity',
+    description: 'Comment for self topic for UI',
+  },
 });
 
 class InfoView extends React.Component {
@@ -220,10 +230,10 @@ class InfoView extends React.Component {
       muted: acs && acs.isMuted(),
 
       fullName: isSelf ?
-        props.intl.formatMessage({id: 'self_topic_name'}) :
+        props.intl.formatMessage(messages.self_topic_name) :
         clipStr(topic.public && topic.public.fn, MAX_TITLE_LENGTH),
       description: isSelf ?
-        props.intl.formatMessage({id: 'self_topic_comment'}) :
+        props.intl.formatMessage(messages.self_topic_comment) :
         clipStr(topic.public && topic.public.note, MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,

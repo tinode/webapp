@@ -849,8 +849,12 @@
     "description": "Placeholder for the country selector"
   },
   "self_topic_comment": {
+    "defaultMessage": "Notes, messages, links, files saved for posterity",
+    "description": "Comment for self topic for UI"
   },
   "self_topic_name": {
+    "defaultMessage": "Saved messages",
+    "description": "Name of self topic for UI"
   },
   "sidepanel_title_acc_notifications": {
     "defaultMessage": "Notifications",

@@ -1664,11 +1664,15 @@
   },
   "self_topic_comment": {
     "translation": "",
+    "defaultMessage": "Notes, messages, links, files saved for posterity",
+    "description": "Comment for self topic for UI",
     "missing": true,
     "obsolete": false
   },
   "self_topic_name": {
     "translation": "",
+    "defaultMessage": "Saved messages",
+    "description": "Name of self topic for UI",
     "missing": true,
     "obsolete": false
   },

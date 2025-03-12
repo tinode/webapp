@@ -77,6 +77,11 @@ const messages = defineMessages({
     defaultMessage: 'Drag file here',
     description: 'Prompt on the file drag-n-drop overlay banner'
   },
+  self_topic_name: {
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
+  },
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -380,9 +385,7 @@ class MessagesView extends React.Component {
 
         if (topic.isSelfType()) {
           Object.assign(nextState, {
-            title: nextProps.intl.formatMessage({
-              id: 'self_topic_name'
-            }),
+            title: nextProps.intl.formatMessage(messages.self_topic_name),
             avatar: true
           });
         } else if (topic.public) {
@@ -639,9 +642,7 @@ class MessagesView extends React.Component {
   handleDescChange(desc) {
     if (Tinode.isSelfTopicName(this.props.topic)) {
       this.setState({
-        title: this.props.intl.formatMessage({
-          id: 'self_topic_name'
-        }),
+        title: this.props.intl.formatMessage(messages.self_topic_name),
         avatar: true
       });
     } else if (desc.public) {

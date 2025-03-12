@@ -9127,6 +9127,20 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Copied to clipboard"
     }]
+  },
+  self_topic_name: {
+    id: "self_topic_name",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Saved messages"
+    }]
+  },
+  self_topic_comment: {
+    id: "self_topic_comment",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Notes, messages, links, files saved for posterity"
+    }]
   }
 });
 class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -9247,12 +9261,8 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       sharer: acs && acs.isSharer(),
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
-      fullName: isSelf ? props.intl.formatMessage({
-        id: "self_topic_name"
-      }) : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.fn, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TITLE_LENGTH),
-      description: isSelf ? props.intl.formatMessage({
-        id: "self_topic_comment"
-      }) : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.note, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TOPIC_DESCRIPTION_LENGTH),
+      fullName: isSelf ? props.intl.formatMessage(messages.self_topic_name) : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.fn, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TITLE_LENGTH),
+      description: isSelf ? props.intl.formatMessage(messages.self_topic_comment) : (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.public && topic.public.note, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__.clipStr)(topic.private && topic.private.comment, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_TITLE_LENGTH),
@@ -10100,6 +10110,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Drag file here"
     }]
+  },
+  self_topic_name: {
+    id: "self_topic_name",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Saved messages"
+    }]
   }
 });
 function isUnconfirmed(acs) {
@@ -10356,9 +10373,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
         if (topic.isSelfType()) {
           Object.assign(nextState, {
-            title: nextProps.intl.formatMessage({
-              id: "self_topic_name"
-            }),
+            title: nextProps.intl.formatMessage(messages.self_topic_name),
             avatar: true
           });
         } else if (topic.public) {
@@ -10588,9 +10603,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   handleDescChange(desc) {
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isSelfTopicName(this.props.topic)) {
       this.setState({
-        title: this.props.intl.formatMessage({
-          id: "self_topic_name"
-        }),
+        title: this.props.intl.formatMessage(messages.self_topic_name),
         avatar: true
       });
     } else if (desc.public) {
@@ -21065,6 +21078,20 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "(already taken)"
     }]
+  },
+  self_topic_name: {
+    id: "self_topic_name",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Saved messages"
+    }]
+  },
+  self_topic_comment: {
+    id: "self_topic_comment",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Notes, messages, links, files saved for posterity"
+    }]
   }
 });
 const ALIAS_REGEX = /^[a-z0-9_\-]{4,24}$/;
@@ -21079,13 +21106,9 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isMeTopicName(this.props.topic),
       isSelf: isSelf,
       owner: acs && acs.isOwner(),
-      fullName: topic.public ? topic.public.fn : isSelf ? this.props.intl.formatMessage({
-        id: "self_topic_name"
-      }) : null,
+      fullName: topic.public ? topic.public.fn : isSelf ? this.props.intl.formatMessage(messages.self_topic_name) : null,
       private: topic.private ? topic.private.comment : null,
-      description: topic.public ? topic.public.note : isSelf ? this.props.intl.formatMessage({
-        id: "self_topic_comment"
-      }) : null,
+      description: topic.public ? topic.public.note : isSelf ? this.props.intl.formatMessage(messages.self_topic_comment) : null,
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(topic.public ? topic.public.photo : null),
       tags: topic.tags() || [],
       newAvatar: null,
