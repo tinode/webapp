@@ -784,8 +784,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ DB)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-
 
 const DB_VERSION = 3;
 const DB_NAME = 'tinode-web';
@@ -1233,7 +1231,7 @@ class DB {
             const entries = event.target.result;
             if (entries) {
               if (Array.isArray(entries)) {
-                result = result.concat(array.map(entry => {
+                result = result.concat(entries.map(entry => {
                   return {
                     low: entry.low,
                     hi: entry.hi
@@ -6210,6 +6208,9 @@ class Tinode {
   }
   static isNullValue(str) {
     return str === _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR;
+  }
+  static isServerAssignedSeq(seq) {
+    return seq > 0 && seq < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID;
   }
   getNextUniqueId() {
     return this._messageId != 0 ? '' + this._messageId++ : undefined;
