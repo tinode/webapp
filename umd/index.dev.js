@@ -10628,7 +10628,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   postReadNotification(seq) {
-    if (!this.props.applicationVisible) {
+    if (!this.props.applicationVisible || !this.state.topic) {
       return;
     }
     if (!this.readNotificationTimer) {
@@ -10648,7 +10648,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           const now = new Date();
           if (n.sendAt <= now) {
             this.readNotificationQueue.shift();
-            seq = Math.max(seq, n.seq);
+            if (n.seq == 0 || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isServerAssignedSeq(n.seq)) {
+              seq = Math.max(seq, n.seq);
+            }
           } else {
             break;
           }
@@ -10656,7 +10658,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (seq >= 0) {
           const topic = this.props.tinode.getTopic(this.state.topic);
           if (topic) {
-            topic.noteRead(seq);
+            try {
+              topic.noteRead(seq);
+            } catch (err) {
+              console.error("Failed to send read notification", err);
+            }
           }
         }
       }, NOTIFICATION_EXEC_INTERVAL);
@@ -10741,8 +10747,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.setState({
       fetchingMessages: false
     });
-    if (count > 0) {
-      this.postReadNotification(0);
+    if (!count) {
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      if (topic) {
+        this.postReadNotification(topic.seq);
+      }
+      return;
     }
     if (!this.state.pinsLoaded) {
       const topic = this.props.tinode.getTopic(this.state.topic);

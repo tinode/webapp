@@ -669,8 +669,8 @@ class MessagesView extends React.Component {
   }
 
   postReadNotification(seq) {
-    // Ignore notifications if the app is invisible.
-    if (!this.props.applicationVisible) {
+    // Ignore notifications if the app is invisible or topic is not yet available.
+    if (!this.props.applicationVisible || !this.state.topic) {
       return;
     }
 
@@ -697,7 +697,9 @@ class MessagesView extends React.Component {
           if (n.sendAt <= now) {
             // Remove expired notification from queue.
             this.readNotificationQueue.shift();
-            seq = Math.max(seq, n.seq);
+            if (n.seq == 0 || Tinode.isServerAssignedSeq(n.seq)) {
+              seq = Math.max(seq, n.seq);
+            }
           } else {
             break;
           }
@@ -707,7 +709,11 @@ class MessagesView extends React.Component {
         if (seq >= 0) {
           const topic = this.props.tinode.getTopic(this.state.topic);
           if (topic) {
-            topic.noteRead(seq);
+            try {
+              topic.noteRead(seq);
+            } catch (err) {
+              console.error("Failed to send read notification", err);
+            }
           }
         }
       }, NOTIFICATION_EXEC_INTERVAL);
@@ -796,9 +802,14 @@ class MessagesView extends React.Component {
 
   handleAllMessagesReceived(count) {
     this.setState({fetchingMessages: false});
-    if (count > 0) {
-      // 0 means "latest".
-      this.postReadNotification(0);
+    if (!count) {
+      // All messages received. Nothing left to receive.
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      if (topic) {
+        // Send read notification for the absolute last message.
+        this.postReadNotification(topic.seq);
+      }
+      return;
     }
 
     // Load pinned message too (if any);
