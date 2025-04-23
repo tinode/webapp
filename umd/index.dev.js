@@ -21139,6 +21139,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.validateAlias = this.validateAlias.bind(this);
+    this.cancelValidator = this.cancelValidator.bind(this);
   }
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
@@ -21148,6 +21149,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onTagsUpdated = this.previousOnTags;
+    this.cancelValidator();
   }
   tnNewTags(tags) {
     this.setState({
@@ -21252,11 +21254,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.handleTagsUpdated(tags);
   }
   validateAlias(alias) {
-    if (this.aliasCheckTimer) {
-      this.aliasCheckPromise.reject(null);
-      clearTimeout(this.aliasCheckTimer);
-      this.aliasCheckTimer = null;
-    }
+    this.cancelValidator();
     if (!alias) {
       this.setState({
         aliasError: ''
@@ -21299,6 +21297,13 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       });
     }, ALIAS_AVAILABILITY_CHECK_DELAY);
     return validationPromise;
+  }
+  cancelValidator() {
+    if (this.aliasCheckTimer) {
+      clearTimeout(this.aliasCheckTimer);
+      this.aliasCheckTimer = null;
+      this.aliasCheckPromise.reject(null);
+    }
   }
   handleTagsUpdated(tags) {
     if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {

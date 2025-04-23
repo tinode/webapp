@@ -79,6 +79,7 @@ class TopicDescEdit extends React.Component {
     this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.validateAlias = this.validateAlias.bind(this);
+    this.cancelValidator = this.cancelValidator.bind(this);
   }
 
   componentDidMount() {
@@ -90,6 +91,7 @@ class TopicDescEdit extends React.Component {
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onTagsUpdated = this.previousOnTags;
+    this.cancelValidator();
   }
 
   tnNewTags(tags) {
@@ -187,11 +189,7 @@ class TopicDescEdit extends React.Component {
 
   validateAlias(alias) {
     // Reset pending delayed check.
-    if (this.aliasCheckTimer) {
-      this.aliasCheckPromise.reject(null);
-      clearTimeout(this.aliasCheckTimer);
-      this.aliasCheckTimer = null;
-    }
+    this.cancelValidator();
 
     if (!alias) {
       this.setState({aliasError: ''});
@@ -229,6 +227,15 @@ class TopicDescEdit extends React.Component {
         });
     }, ALIAS_AVAILABILITY_CHECK_DELAY);
     return validationPromise;
+  }
+
+  cancelValidator() {
+    // Reset pending delayed check.
+    if (this.aliasCheckTimer) {
+      clearTimeout(this.aliasCheckTimer);
+      this.aliasCheckTimer = null;
+      this.aliasCheckPromise.reject(null);
+    }
   }
 
   handleTagsUpdated(tags) {
