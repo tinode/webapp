@@ -1648,6 +1648,7 @@ img.channel {
   justify-content: space-around;
   align-items: center;
   overflow: hidden;
+  background-color: #777;
   width: 100%;
   height: 100%;
 }
