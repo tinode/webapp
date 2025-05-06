@@ -21104,7 +21104,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-const ALIAS_REGEX = /^[a-z0-9_\-]{4,24}$/;
+const ALIAS_REGEX = /^[a-z0-9][a-z0-9_\-]{3,23}$/i;
 const ALIAS_AVAILABILITY_CHECK_DELAY = 1000;
 class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {

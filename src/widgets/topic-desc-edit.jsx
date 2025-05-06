@@ -38,7 +38,7 @@ const messages = defineMessages({
   }
 });
 
-const ALIAS_REGEX = /^[a-z0-9_\-]{4,24}$/;
+const ALIAS_REGEX = /^[a-z0-9][a-z0-9_\-]{3,23}$/i; // 4-24 characters, starting with letter or digit, then letters, digits, hyphen, underscore.
 const ALIAS_AVAILABILITY_CHECK_DELAY = 1000; // milliseconds
 
 class TopicDescEdit extends React.Component {
