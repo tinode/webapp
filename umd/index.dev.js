@@ -97,7 +97,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$q = "@firebase/app";
-const version$1 = "0.11.2";
+const version$1 = "0.11.5";
 
 /**
  * @license
@@ -168,7 +168,7 @@ const name$2 = "@firebase/vertexai";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "11.4.0";
+const version = "11.6.1";
 
 /**
  * @license
@@ -6615,7 +6615,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "11.4.0";
+var version = "11.6.1";
 
 /**
  * @license
