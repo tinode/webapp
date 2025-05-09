@@ -11739,13 +11739,16 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     } else if (!/[\s,:]/.test(query) && query != tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR) {
       const email = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.asEmail)(query);
       if (email) {
-        query = `email:${email}`;
+        query = `${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_EMAIL}${email}`;
       } else {
         const tel = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.asPhone)(query);
         if (tel) {
-          query = `tel:${tel}`;
+          query = `${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_PHONE}${tel}`;
         } else {
-          query = `alias:${query}`;
+          if (query[0] == '@') {
+            query = query.substring(1);
+          }
+          query = `${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS}${query}`;
         }
       }
     }
@@ -20870,6 +20873,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     super(props);
     this.state = {
       tags: this.props.tags || [],
+      alias: tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.tagByPrefix(this.props.tags, tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.TAG_ALIAS) || '',
       tagInput: '',
       activated: this.props.activated
     };
@@ -20883,7 +20887,8 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     const tags = nextProps.tags || [];
     if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.arrayEqual)(tags, prevState.tags) && !prevState.activated) {
       return {
-        tags: tags
+        tags: tags || [],
+        alias: tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.tagByPrefix(tags, tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.TAG_ALIAS) || ''
       };
     }
     return null;
@@ -20930,7 +20935,9 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     }
   }
   handleSubmit() {
-    this.props.onSubmit(this.handleAddTag(this.state.tagInput.trim()));
+    let tags = this.handleAddTag(this.state.tagInput.trim());
+    tags = tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.setUniqueTag(tags, this.state.alias);
+    this.props.onSubmit(tags);
     this.setState({
       activated: false,
       tags: this.props.tags || []
@@ -20952,17 +20959,21 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     let tags = [];
     if (this.state.activated) {
       this.state.tags.forEach(tag => {
-        tags.push({
-          user: tag,
-          invalid: tag.length < minTagLength || tag.length > maxTagLength
-        });
+        if (tag != this.state.alias) {
+          tags.push({
+            user: tag,
+            invalid: tag.length < minTagLength || tag.length > maxTagLength
+          });
+        }
       });
     } else {
       this.state.tags.forEach(tag => {
-        tags.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-          className: "badge",
-          key: tags.length
-        }, tag));
+        if (tag != this.state.alias) {
+          tags.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: "badge",
+            key: tags.length
+          }, tag));
+        }
       });
       if (tags.length == 0) {
         tags = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -21104,7 +21115,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-const ALIAS_REGEX = /^[a-z0-9][a-z0-9_\-]{3,23}$/i;
 const ALIAS_AVAILABILITY_CHECK_DELAY = 1000;
 class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -21246,22 +21256,20 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     });
   }
   handleAliasUpdate(alias) {
-    alias = alias.trim() || '';
-    const tags = this.state.tags.filter(t => !t.startsWith('alias:'));
-    if (alias) {
-      tags.push('alias:' + alias.toLowerCase());
-    }
+    alias = (alias || '').trim();
+    const tags = alias ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.setUniqueTag(this.state.tags, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS + alias.toLowerCase()) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.clearTagPrefix(this.state.tags, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS);
     this.handleTagsUpdated(tags);
   }
   validateAlias(alias) {
     this.cancelValidator();
+    alias = alias.trim();
     if (!alias) {
       this.setState({
         aliasError: ''
       });
       return true;
     }
-    const valid = ALIAS_REGEX.test(alias);
+    const valid = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isValidTagValue(alias);
     if (!valid) {
       this.setState({
         aliasError: this.props.intl.formatMessage(messages.alias_invalid)
@@ -21271,6 +21279,13 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.setState({
       aliasError: ''
     });
+    const fnd = topic._tinode.getOrCreateFndTopic();
+    if (!fnd) {
+      this.setState({
+        aliasError: ''
+      });
+      return true;
+    }
     this.aliasCheckPromise = {};
     const validationPromise = new Promise((resolve, reject) => {
       this.aliasCheckPromise.resolve = resolve;
@@ -21278,17 +21293,11 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     });
     this.aliasCheckTimer = setTimeout(_ => {
       this.aliasCheckTimer = null;
-      const fnd = this.props.tinode.getFndTopic();
-      fnd.subscribe().then(_ => fnd.setMeta({
-        desc: {
-          public: `alias:${alias}`
-        }
-      })).then(_ => fnd.getMeta(fnd.startMetaQuery().withTags().build())).then(meta => {
-        const taken = Array.isArray(meta.tags);
+      fnd.checkTagUniqueness(`${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS}${alias}`, this.name()).then(ok => {
+        this.aliasCheckPromise.resolve(ok);
         this.setState({
-          aliasError: taken ? this.props.intl.formatMessage(messages.alias_already_taken) : ''
+          aliasError: ok ? '' : this.props.intl.formatMessage(messages.alias_already_taken)
         });
-        this.aliasCheckPromise.resolve(!taken);
       }).catch(err => {
         this.aliasCheckPromise.reject(err);
         this.setState({

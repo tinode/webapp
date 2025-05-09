@@ -61,17 +61,20 @@ class NewTopicView extends React.Component {
     if (!query) {
       query = Tinode.DEL_CHAR;
     } else if (!/[\s,:]/.test(query) && query != Tinode.DEL_CHAR) {
-      // No colons, spaces or commas, not DEL char. Try as email or phone.
-      // If not email or phone, treat as alias.
+      // No colons, spaces or commas, not DEL char. Try as email, phone, or alias.
       const email = asEmail(query);
       if (email) {
-        query = `email:${email}`;
+        query = `${Tinode.TAG_EMAIL}${email}`;
       } else {
         const tel = asPhone(query);
         if (tel) {
-          query = `tel:${tel}`;
+          query = `${Tinode.TAG_PHONE}${tel}`;
         } else {
-          query = `alias:${query}`;
+          if (query[0] == '@') {
+            // Strip the leading '@' sign if present.
+            query = query.substring(1);
+          }
+          query = `${Tinode.TAG_ALIAS}${query}`;
         }
       }
     }

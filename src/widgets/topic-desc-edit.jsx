@@ -38,7 +38,6 @@ const messages = defineMessages({
   }
 });
 
-const ALIAS_REGEX = /^[a-z0-9][a-z0-9_\-]{3,23}$/i; // 4-24 characters, starting with letter or digit, then letters, digits, hyphen, underscore.
 const ALIAS_AVAILABILITY_CHECK_DELAY = 1000; // milliseconds
 
 class TopicDescEdit extends React.Component {
@@ -179,11 +178,10 @@ class TopicDescEdit extends React.Component {
   }
 
   handleAliasUpdate(alias) {
-    alias = alias.trim() || '';
-    const tags = this.state.tags.filter(t => !t.startsWith('alias:'));
-    if (alias) {
-      tags.push('alias:' + alias.toLowerCase());
-    }
+    alias = (alias || '').trim();
+    const tags = alias ?
+      Tinode.setUniqueTag(this.state.tags, Tinode.TAG_ALIAS + alias.toLowerCase()) :
+      Tinode.clearTagPrefix(this.state.tags, Tinode.TAG_ALIAS);
     this.handleTagsUpdated(tags);
   }
 
@@ -191,12 +189,13 @@ class TopicDescEdit extends React.Component {
     // Reset pending delayed check.
     this.cancelValidator();
 
+    alias = alias.trim();
     if (!alias) {
       this.setState({aliasError: ''});
       return true;
     }
 
-    const valid = ALIAS_REGEX.test(alias);
+    const valid = Tinode.isValidTagValue(alias);
     if (!valid) {
       this.setState({aliasError: this.props.intl.formatMessage(messages.alias_invalid)});
       return false;
@@ -204,6 +203,12 @@ class TopicDescEdit extends React.Component {
     this.setState({aliasError: ''});
 
     // Setup a delayed check for alias availability.
+    const fnd = topic._tinode.getOrCreateFndTopic();
+    if (!fnd) {
+      // Unable to check alias availability.
+      this.setState({aliasError: ''});
+      return true;
+    }
     this.aliasCheckPromise = {};
     const validationPromise = new Promise((resolve, reject) => {
       this.aliasCheckPromise.resolve = resolve;
@@ -211,15 +216,10 @@ class TopicDescEdit extends React.Component {
     });
     this.aliasCheckTimer = setTimeout(_ => {
       this.aliasCheckTimer = null;
-      const fnd = this.props.tinode.getFndTopic();
-      fnd.subscribe()
-        .then(_ => fnd.setMeta({desc: {public: `alias:${alias}`}}))
-        .then(_ => fnd.getMeta(fnd.startMetaQuery().withTags().build()))
-        .then(meta => {
-          const taken = Array.isArray(meta.tags);
-          this.setState({aliasError: taken ?
-            this.props.intl.formatMessage(messages.alias_already_taken) : ''});
-          this.aliasCheckPromise.resolve(!taken)
+      fnd.checkTagUniqueness(`${Tinode.TAG_ALIAS}${alias}`, this.name())
+        .then(ok => {
+          this.aliasCheckPromise.resolve(ok)
+          this.setState({aliasError: ok ? '' : this.props.intl.formatMessage(messages.alias_already_taken)});
         })
         .catch(err => {
           this.aliasCheckPromise.reject(err);
