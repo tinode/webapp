@@ -57,7 +57,7 @@ const i18n = {
   'ar': {
     'new_message': "رسالة جديدة",
     'new_chat': "محادثة جديدة",
-  },
+  }
 };
 
 self.i18nMessage = function (id) {
