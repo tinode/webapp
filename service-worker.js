@@ -53,10 +53,14 @@ const i18n = {
   'zh-TW': {
     'new_message': "新訊息",
     'new_chat': "新聊天",
-  }
+  },
+  'ar': {
+    'new_message': "رسالة جديدة",
+    'new_chat': "محادثة جديدة",
+  },
 };
 
-self.i18nMessage = function(id) {
+self.i18nMessage = function (id) {
   if (!id) {
     return null;
   }
@@ -82,7 +86,7 @@ fbMessaging.onBackgroundMessage(payload => {
     return;
   }
 
-  const titles = {'msg': 'new_message', 'sub': 'new_chat'};
+  const titles = { 'msg': 'new_message', 'sub': 'new_chat' };
   const pushType = payload.data.what || 'msg';
   const title = payload.data.title || self.i18nMessage(titles[pushType]);
   if (title) {
@@ -119,7 +123,8 @@ self.addEventListener('notificationclick', event => {
 
   event.waitUntil(self.clients.matchAll({
     type: 'window',
-    includeUncontrolled: true})
+    includeUncontrolled: true
+  })
     .then(windowClients => {
       let anyClient = null;
       for (let i = 0; i < windowClients.length; i++) {
@@ -162,7 +167,7 @@ self.addEventListener('fetch', event => {
 
     const reqUrl = new URL(event.request.url);
     // Using ignoreSearch=true to read cached images and docs despite different auth signatures.
-    const cachedResponse = await cache.match(event.request, {ignoreSearch: (self.location.origin == reqUrl.origin)});
+    const cachedResponse = await cache.match(event.request, { ignoreSearch: (self.location.origin == reqUrl.origin) });
     if (cachedResponse) {
       return cachedResponse;
     }
