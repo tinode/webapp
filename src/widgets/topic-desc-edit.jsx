@@ -203,7 +203,7 @@ class TopicDescEdit extends React.Component {
     this.setState({aliasError: ''});
 
     // Setup a delayed check for alias availability.
-    const fnd = topic._tinode.getOrCreateFndTopic();
+    const fnd = this.props.tinode.getFndTopic();
     if (!fnd) {
       // Unable to check alias availability.
       this.setState({aliasError: ''});
@@ -216,7 +216,7 @@ class TopicDescEdit extends React.Component {
     });
     this.aliasCheckTimer = setTimeout(_ => {
       this.aliasCheckTimer = null;
-      fnd.checkTagUniqueness(`${Tinode.TAG_ALIAS}${alias}`, this.name())
+      fnd.checkTagUniqueness(`${Tinode.TAG_ALIAS}${alias}`, this.props.topic)
         .then(ok => {
           this.aliasCheckPromise.resolve(ok)
           this.setState({aliasError: ok ? '' : this.props.intl.formatMessage(messages.alias_already_taken)});
