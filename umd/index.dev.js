@@ -22406,6 +22406,7 @@ if (typeof FIREBASE_INIT != 'undefined' && FIREBASE_INIT && FIREBASE_INIT.measur
   gtag('config', FIREBASE_INIT.measurementId);
 }
 const messageLoader = {
+  'ar': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ar_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ar.json */ "./src/i18n.min/ar.json", 19)),
   'de': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_de_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/de.json */ "./src/i18n.min/de.json", 19)),
   'en': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_en_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19)),
   'es': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_es_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/es.json */ "./src/i18n.min/es.json", 19)),

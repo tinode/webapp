@@ -24,6 +24,7 @@ if (typeof FIREBASE_INIT != 'undefined' && FIREBASE_INIT && FIREBASE_INIT.measur
 
 // Allow loading translation strings for just one language.
 const messageLoader = {
+  'ar': _ => import('./i18n.min/ar.json'),
   'de': _ => import('./i18n.min/de.json'),
   'en': _ => import('./i18n.min/en.json'),
   'es': _ => import('./i18n.min/es.json'),
