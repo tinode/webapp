@@ -11733,10 +11733,8 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
   handleSearchContacts(query) {
-    query = query.trim();
-    if (!query) {
-      query = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR;
-    } else if (!/[\s,:]/.test(query) && query != tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR) {
+    query = query.trim() || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR;
+    if (!/[\s,:]/.test(query) && query != tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR) {
       const email = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.asEmail)(query);
       if (email) {
         query = `${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_EMAIL}${email}`;
@@ -21279,7 +21277,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.setState({
       aliasError: ''
     });
-    const fnd = topic._tinode.getOrCreateFndTopic();
+    const fnd = this.props.tinode.getFndTopic();
     if (!fnd) {
       this.setState({
         aliasError: ''
@@ -21293,12 +21291,13 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     });
     this.aliasCheckTimer = setTimeout(_ => {
       this.aliasCheckTimer = null;
-      fnd.checkTagUniqueness(`${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS}${alias}`, this.name()).then(ok => {
+      fnd.checkTagUniqueness(`${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS}${alias}`, this.props.topic).then(ok => {
         this.aliasCheckPromise.resolve(ok);
         this.setState({
           aliasError: ok ? '' : this.props.intl.formatMessage(messages.alias_already_taken)
         });
       }).catch(err => {
+        console.log("HERE", err);
         this.aliasCheckPromise.reject(err);
         this.setState({
           aliasError: err.message

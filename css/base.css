@@ -2108,6 +2108,10 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 .chat-box .author {
   font-size: 80%;
   color:#777;
+  max-width: 12em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
 }
 
 /* Inline and preview image styles */

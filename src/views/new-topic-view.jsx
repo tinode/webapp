@@ -57,10 +57,8 @@ class NewTopicView extends React.Component {
   }
 
   handleSearchContacts(query) {
-    query = query.trim();
-    if (!query) {
-      query = Tinode.DEL_CHAR;
-    } else if (!/[\s,:]/.test(query) && query != Tinode.DEL_CHAR) {
+    query = query.trim() || Tinode.DEL_CHAR;
+    if (!/[\s,:]/.test(query) && query != Tinode.DEL_CHAR) {
       // No colons, spaces or commas, not DEL char. Try as email, phone, or alias.
       const email = asEmail(query);
       if (email) {
