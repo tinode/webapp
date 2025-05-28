@@ -1,0 +1,1651 @@
+{
+    "action_block_contact": {
+        "translation": "حظر جهة الاتصال",
+        "defaultMessage": "Block Contact",
+        "description": "Flat button [Block Contact]",
+        "missing": false,
+        "obsolete": false
+    },
+    "action_cancel": {
+        "translation": "إلغاء",
+        "defaultMessage": "cancel",
+        "description": "Call to action [cancel]",
+        "missing": false,
+        "obsolete": false
+    },
+    "action_clear_messages": {
+        "translation": "مسح الرسائل",
+        "defaultMessage": "Clear Messages",
+        "description": "Flat button [Clear Messages] (soft-delete messages)",
+        "missing": false,
+        "obsolete": false
+    },
+    "action_delete_messages": {
+        "translation": "مسح الرسائل للجميع",
+        "defaultMessage": "Clear Messages for All",
+        "description": "Flat button [Clear for All] (hard-delete all messages)",
+        "missing": false,
+        "obsolete": false
+    },
+    "action_leave_chat": {
+        "translation": "مغادرة المحادثة",
+        "defaultMessage": "Leave Conversation",
+        "description": "Flat button [Leave Conversation]",
+        "missing": false,
+        "obsolete": false
+    },
+    "action_report_chat": {
+        "translation": "الإبلاغ عن المحادثة",
+        "defaultMessage": "Report Conversation",
+        "description": "Flat button [Report Group]",
+        "missing": false,
+        "obsolete": false
+    },
+    "archived_contacts": {
+        "translation": "جهات الاتصال المؤرشفة ({count})",
+        "defaultMessage": "Archived contacts ({count})",
+        "description": "Label for archived chats",
+        "missing": false,
+        "obsolete": false
+    },
+    "badge_danger": {
+        "translation": "غير موثوق به",
+        "defaultMessage": "Untrustworthy",
+        "description": "Suspicious or untrustworthy account or topic badge",
+        "missing": false,
+        "obsolete": false
+    },
+    "badge_owner": {
+        "translation": "مالك",
+        "defaultMessage": "owner",
+        "description": "Badge for indicating the owner",
+        "missing": false,
+        "obsolete": false
+    },
+    "badge_staff": {
+        "translation": "يديره الموظفون",
+        "defaultMessage": "Staff-managed",
+        "description": "Explanation of a staff-managed account or topic badge",
+        "missing": false,
+        "obsolete": false
+    },
+    "badge_verified": {
+        "translation": "موثق/رسمي",
+        "defaultMessage": "Verified/official",
+        "description": "Explanation of a verified account or topic badge",
+        "missing": false,
+        "obsolete": false
+    },
+    "badge_you": {
+        "translation": "أنت",
+        "defaultMessage": "you",
+        "description": "Badge for indicating the current user",
+        "missing": false,
+        "obsolete": false
+    },
+    "block_contact_warning": {
+        "translation": "هل أنت متأكد من أنك تريد حظر جهة الاتصال هذه؟",
+        "defaultMessage": "Are you sure you want to block this contact?",
+        "description": "Alert dialog warning when blocking a contact.",
+        "missing": false,
+        "obsolete": false
+    },
+    "blocked_contacts_link": {
+        "translation": "جهات الاتصال المحظورة ({count})",
+        "defaultMessage": "Blocked contacts ({count})",
+        "description": "Blocked contacts link",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_add_members": {
+        "translation": "إضافة أعضاء",
+        "defaultMessage": "Add members",
+        "description": "Flat button [Add members] (to topic)",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_cancel": {
+        "translation": "إلغاء",
+        "defaultMessage": "Cancel",
+        "description": "Button [Cancel]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_confirm": {
+        "translation": "تأكيد",
+        "defaultMessage": "Confirm",
+        "description": "Button [Confirm]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_create": {
+        "translation": "إنشاء",
+        "defaultMessage": "Create",
+        "description": "Button [Create]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_delete_account": {
+        "translation": "حذف الحساب",
+        "defaultMessage": "Delete account",
+        "description": "Button [Delete account]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_edit": {
+        "translation": "تعديل",
+        "defaultMessage": "Edit",
+        "description": "Call to action [Edit]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_logout": {
+        "translation": "تسجيل الخروج",
+        "defaultMessage": "Logout",
+        "description": "Button [Logout]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_ok": {
+        "translation": "موافق",
+        "defaultMessage": "OK",
+        "description": "Button [OK]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_reset": {
+        "translation": "إعادة تعيين",
+        "defaultMessage": "Reset",
+        "description": "Button [Reset]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_send_request": {
+        "translation": "إرسال طلب",
+        "defaultMessage": "Send request",
+        "description": "Button [Send request]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_sign_in": {
+        "translation": "تسجيل الدخول",
+        "defaultMessage": "Sign in",
+        "description": "Button [Sign In]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_sign_up": {
+        "translation": "إنشاء حساب",
+        "defaultMessage": "Sign up",
+        "description": "Create account button [Sign Up]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_subscribe": {
+        "translation": "اشتراك",
+        "defaultMessage": "Subscribe",
+        "description": "Button [Subscribe]",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_update": {
+        "translation": "تحديث",
+        "defaultMessage": "Update",
+        "description": "Button [Update]",
+        "missing": false,
+        "obsolete": false
+    },
+    "cannot_initiate_file_upload": {
+        "translation": "لا يمكن بدء تحميل الملف",
+        "defaultMessage": "Cannot initiate file upload.",
+        "description": "Generic error messagewhen attachment fails",
+        "missing": false,
+        "obsolete": false
+    },
+    "channel": {
+        "translation": "قناة",
+        "defaultMessage": "channel",
+        "description": "Subtitle shown for channels in MessagesView instead of last seen",
+        "missing": false,
+        "obsolete": false
+    },
+    "channel_prompt": {
+        "translation": "هذه قناة",
+        "defaultMessage": "This is a channel",
+        "description": "Checkbox label when creating a channel",
+        "missing": false,
+        "obsolete": false
+    },
+    "chat_invitation": {
+        "translation": "أنت مدعو لبدء محادثة جديدة. ماذا تريد أن تفعل؟",
+        "defaultMessage": "You are invited to start a new chat. What would you like to do?",
+        "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+        "missing": false,
+        "obsolete": false
+    },
+    "chat_invitation_accept": {
+        "translation": "قبول",
+        "defaultMessage": "Accept",
+        "description": "Action [Accept] for chat invitation.",
+        "missing": false,
+        "obsolete": false
+    },
+    "chat_invitation_block": {
+        "translation": "حظر",
+        "defaultMessage": "Block",
+        "description": "Action [Block] for chat invitation.",
+        "missing": false,
+        "obsolete": false
+    },
+    "chat_invitation_ignore": {
+        "translation": "تجاهل",
+        "defaultMessage": "Ignore",
+        "description": "Action [Ignore] for chat invitation.",
+        "missing": false,
+        "obsolete": false
+    },
+    "clear_messages_warning": {
+        "translation": "هل أنت متأكد من أنك تريد مسح جميع الرسائل؟ لا يمكن التراجع عن هذا الإجراء.",
+        "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
+        "description": "Alert dialog warning when deleting all messages.",
+        "missing": false,
+        "obsolete": false
+    },
+    "code_doesnot_match": {
+        "translation": "الرمز غير متطابق",
+        "defaultMessage": "Code does not match",
+        "description": "Error message when the credential validation code is incorrect.",
+        "missing": false,
+        "obsolete": false
+    },
+    "contacts_not_found": {
+        "translation": "ليس لديك محادثات<br />¯∖_(ツ)_/¯",
+        "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+        "description": "HTML message shown in ContactList when no contacts are found",
+        "missing": false,
+        "obsolete": false
+    },
+    "contacts_not_found_short": {
+        "translation": "لا توجد جهات اتصال تطابق ''{query}''",
+        "defaultMessage": "No contacts match ''{query}''",
+        "description": "Shown in ContactsView when search returned no results",
+        "missing": false,
+        "obsolete": false
+    },
+    "credential_email_prompt": {
+        "translation": "البريد الإلكتروني للتسجيل",
+        "defaultMessage": "Your registration email",
+        "description": "Placeholder for entering email",
+        "missing": false,
+        "obsolete": false
+    },
+    "delete_account": {
+        "translation": "حذف الحساب",
+        "defaultMessage": "Delete account",
+        "description": "Title for delete account warning",
+        "missing": false,
+        "obsolete": false
+    },
+    "delete_account_warning": {
+        "translation": "هل أنت متأكد من أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.",
+        "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+        "description": "Warning message when deleting an account",
+        "missing": false,
+        "obsolete": false
+    },
+    "delete_messages_warning": {
+        "translation": "هل أنت متأكد من أنك تريد حذف جميع الرسائل للجميع؟ لا يمكن التراجع عن هذا الإجراء.",
+        "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+        "description": "Alert dialog warning when hard-deleting all messages.",
+        "missing": false,
+        "obsolete": false
+    },
+    "download_action": {
+        "translation": "تحميل",
+        "defaultMessage": "download",
+        "description": "Call to action [download]",
+        "missing": false,
+        "obsolete": false
+    },
+    "drafty_attachment": {
+        "translation": "مرفق",
+        "defaultMessage": "Attachment",
+        "description": "Comment for attachment in Drafty",
+        "missing": false,
+        "obsolete": false
+    },
+    "drafty_form": {
+        "translation": "نموذج:",
+        "defaultMessage": "Form:",
+        "description": "Comment for form in Drafty",
+        "missing": false,
+        "obsolete": false
+    },
+    "drafty_image": {
+        "translation": "صورة",
+        "defaultMessage": "Picture",
+        "description": "Comment for embedded images in Drafty",
+        "missing": false,
+        "obsolete": false
+    },
+    "email_dative": {
+        "translation": "البريد الإلكتروني",
+        "defaultMessage": "email",
+        "description": "Dative case of 'email', i.e. 'email' in 'by email'",
+        "missing": false,
+        "obsolete": false
+    },
+    "email_prompt": {
+        "translation": "البريد الإلكتروني، مثال: jdoe@example.com",
+        "defaultMessage": "Email, e.g. jdoe@example.com",
+        "description": "Input placeholder for email entry",
+        "missing": false,
+        "obsolete": false
+    },
+    "enable_peers_messaging": {
+        "translation": "تفعيل",
+        "defaultMessage": "Enable",
+        "description": "Call to action to enable peer's messaging",
+        "missing": false,
+        "obsolete": false
+    },
+    "enter_confirmation_code_prompt": {
+        "translation": "رمز التأكيد",
+        "defaultMessage": "Confirmation code",
+        "description": "Request to enter confirmation code",
+        "missing": false,
+        "obsolete": false
+    },
+    "error_invalid_id": {
+        "translation": "معرف غير صالح",
+        "defaultMessage": "Invalid ID",
+        "description": "Error message",
+        "missing": false,
+        "obsolete": false
+    },
+    "file_attachment_too_large": {
+        "translation": "حجم الملف {size} يتجاوز الحد {limit}.",
+        "defaultMessage": "The file size {size} exceeds the {limit} limit.",
+        "description": "Error message when attachment is too large",
+        "missing": false,
+        "obsolete": false
+    },
+    "forgot_password_link": {
+        "translation": "نسيت كلمة المرور؟",
+        "defaultMessage": "Forgot password?",
+        "description": "Link to Reset password form",
+        "missing": false,
+        "obsolete": false
+    },
+    "full_name_prompt": {
+        "translation": "الاسم الكامل، مثال: جون دو",
+        "defaultMessage": "Full name, e.g. John Doe",
+        "description": "Input placeholder for person's full name",
+        "missing": false,
+        "obsolete": false
+    },
+    "granted_permissions": {
+        "translation": "ممنوح",
+        "defaultMessage": "Granted",
+        "description": "Title for permissions",
+        "missing": false,
+        "obsolete": false
+    },
+    "group_has_no_members": {
+        "translation": "لا يوجد أعضاء",
+        "defaultMessage": "No members",
+        "description": "Shown in place of group members",
+        "missing": false,
+        "obsolete": false
+    },
+    "group_user_id_prompt": {
+        "translation": "معرف المجموعة أو المستخدم",
+        "defaultMessage": "Group or User ID",
+        "description": "Prompt for entering user or group ID",
+        "missing": false,
+        "obsolete": false
+    },
+    "image_caption_prompt": {
+        "translation": "وصف الصورة",
+        "defaultMessage": "Image caption",
+        "description": "Prompt in SendMessage for attached image",
+        "missing": false,
+        "obsolete": false
+    },
+    "invalid_content": {
+        "translation": "محتوى غير صالح",
+        "defaultMessage": "invalid content",
+        "description": "Shown when the message is unreadable",
+        "missing": false,
+        "obsolete": false
+    },
+    "invalid_security_token": {
+        "translation": "رمز الأمان غير صالح",
+        "defaultMessage": "Invalid security token",
+        "description": "Error message when resetting password.",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_client": {
+        "translation": "العميل:",
+        "defaultMessage": "Client:",
+        "description": "Label for a client version",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_content_type": {
+        "translation": "نوع المحتوى:",
+        "defaultMessage": "Content type:",
+        "description": "Label for file content type (mime)",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_default_access_mode": {
+        "translation": "وضع الوصول الافتراضي:",
+        "defaultMessage": "Default access mode:",
+        "description": "Label for default access mode",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_file_name": {
+        "translation": "اسم الملف:",
+        "defaultMessage": "File name:",
+        "description": "Label for a file name",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_group_members": {
+        "translation": "أعضاء المجموعة:",
+        "defaultMessage": "Group members:",
+        "description": "Section title or label",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_incognito_mode": {
+        "translation": "وضع التخفي:",
+        "defaultMessage": "Incognito mode:",
+        "description": "Label for incognito mode toggle",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_message_sound": {
+        "translation": "صوت الرسالة:",
+        "defaultMessage": "Message sound:",
+        "description": "Label for message sounds toggle",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_muting_topic": {
+        "translation": "صامت:",
+        "defaultMessage": "Muted:",
+        "description": "Label for Muting/unmuting the topic",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_other_user": {
+        "translation": "آخر",
+        "defaultMessage": "Other",
+        "description": "Label for the other user when the user is unnamed",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_password": {
+        "translation": "كلمة المرور",
+        "defaultMessage": "Password",
+        "description": "Label for password editing",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_permissions": {
+        "translation": "الصلاحيات:",
+        "defaultMessage": "Permissions:",
+        "description": "Section title",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_private": {
+        "translation": "تعليق خاص",
+        "defaultMessage": "Private comment",
+        "description": "Label for editing 'private'",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_push_notifications": {
+        "translation": "تنبيهات الإشعارات:",
+        "defaultMessage": "Notification alerts:",
+        "description": "Label for push notifications switch",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_push_notifications_disabled": {
+        "translation": "تنبيهات الإشعارات (يتطلب HTTPS):",
+        "defaultMessage": "Notification alerts (requires HTTPS):",
+        "description": "Label for push notifications switch",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_reset_password": {
+        "translation": "إرسال بريد إلكتروني لإعادة تعيين كلمة المرور:",
+        "defaultMessage": "Send a password reset email",
+        "description": "Label for password reset field",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_sdk": {
+        "translation": "SDK:",
+        "defaultMessage": "SDK:",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_server": {
+        "translation": "الخادم:",
+        "defaultMessage": "Server:",
+        "description": "Label for a server version",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_server_address": {
+        "translation": "عنوان الخادم:",
+        "defaultMessage": "Server address:",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_server_to_use": {
+        "translation": "الخادم المراد استخدامه:",
+        "defaultMessage": "Server to use:",
+        "description": "Label for server selector in SettingsView",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_size": {
+        "translation": "الحجم:",
+        "defaultMessage": "Size:",
+        "description": "Label for file size",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_topic_name": {
+        "translation": "الاسم",
+        "defaultMessage": "Name",
+        "description": "Label for editing topic name",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_user_contacts": {
+        "translation": "جهات الاتصال",
+        "defaultMessage": "Contacts",
+        "description": "Label for user contacts",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_user_id": {
+        "translation": "المعرف:",
+        "defaultMessage": "ID:",
+        "description": "Label for user address (ID)",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_wire_transport": {
+        "translation": "نقل البيانات:",
+        "defaultMessage": "Wire transport:",
+        "description": "Label for wire transport selection in SettingsView",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_you": {
+        "translation": "أنت:",
+        "defaultMessage": "You:",
+        "description": "Label for the current user",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_your_name": {
+        "translation": "اسمك",
+        "defaultMessage": "Your name",
+        "description": "Label for full name editing",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_your_permissions": {
+        "translation": "صلاحياتك:",
+        "defaultMessage": "Your permissions:",
+        "description": "Label for current user permissions",
+        "missing": false,
+        "obsolete": false
+    },
+    "last_seen_timestamp": {
+        "translation": "آخر ظهور",
+        "defaultMessage": "Last seen",
+        "description": "Label for the timestamp of when the user or topic was last online",
+        "missing": false,
+        "obsolete": false
+    },
+    "leave_chat_warning": {
+        "translation": "هل أنت متأكد من أنك تريد مغادرة هذه المحادثة؟",
+        "defaultMessage": "Are you sure you want to leave this conversation?",
+        "description": "Alert dialog warning when unsubscribing from a chat.",
+        "missing": false,
+        "obsolete": false
+    },
+    "link_contact_us": {
+        "translation": "اتصل بنا",
+        "defaultMessage": "Contact Us",
+        "description": "Ancor text for contacting us by email",
+        "missing": false,
+        "obsolete": false
+    },
+    "link_privacy_policy": {
+        "translation": "سياسة الخصوصية",
+        "defaultMessage": "Privacy Policy",
+        "description": "Ancor text for privacy policy link",
+        "missing": false,
+        "obsolete": false
+    },
+    "link_terms_of_service": {
+        "translation": "شروط الخدمة",
+        "defaultMessage": "Terms of Service",
+        "description": "Ancor text for terms of service link",
+        "missing": false,
+        "obsolete": false
+    },
+    "login_prompt": {
+        "translation": "تسجيل الدخول",
+        "defaultMessage": "Login",
+        "description": "Placeholer for username/login",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_archive_topic": {
+        "translation": "أرشفة",
+        "defaultMessage": "Archive",
+        "description": "Move topic from the list of active chats to archive",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_block": {
+        "translation": "حظر",
+        "defaultMessage": "Block",
+        "description": "Block topic or user",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_clear_messages": {
+        "translation": "مسح الرسائل",
+        "defaultMessage": "Clear messages",
+        "description": "Delete all messages",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_clear_messages_for_all": {
+        "translation": "مسح للجميع",
+        "defaultMessage": "Clear for All",
+        "description": "Delete all message(s) for all members",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_delete": {
+        "translation": "حذف",
+        "defaultMessage": "Delete",
+        "description": "Delete selected messages",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_delete_for_all": {
+        "translation": "حذف للجميع",
+        "defaultMessage": "Delete for All",
+        "description": "Delete selected message(s) for all members",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_delete_topic": {
+        "translation": "حذف",
+        "defaultMessage": "Delete",
+        "description": "Delete entire topic",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_edit_permissions": {
+        "translation": "تعديل الصلاحيات",
+        "defaultMessage": "Edit permissions",
+        "description": "Menu item [Edit permissions]",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_info": {
+        "translation": "معلومات",
+        "defaultMessage": "Info",
+        "description": "Show extended topic information",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_member_delete": {
+        "translation": "إزالة",
+        "defaultMessage": "Remove",
+        "description": "Remove user from topic",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_mute": {
+        "translation": "كتم",
+        "defaultMessage": "Mute",
+        "description": "Turn off notifications",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_reply": {
+        "translation": "رد",
+        "defaultMessage": "Reply",
+        "description": "Reply to message",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_restore_topic": {
+        "translation": "استعادة",
+        "defaultMessage": "Restore",
+        "description": "Restore topic from archive",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_send_retry": {
+        "translation": "إعادة المحاولة",
+        "defaultMessage": "Retry",
+        "description": "Retry sending message",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_unblock": {
+        "translation": "إلغاء الحظر",
+        "defaultMessage": "Unblock",
+        "description": "Unblock topic or user",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_unmute": {
+        "translation": "إلغاء الكتم",
+        "defaultMessage": "Unmute",
+        "description": "Turn notifications on",
+        "missing": false,
+        "obsolete": false
+    },
+    "message_sending": {
+        "translation": "جاري الإرسال...",
+        "defaultMessage": "sending...",
+        "description": "Message being sent, in place of time stamp",
+        "missing": false,
+        "obsolete": false
+    },
+    "message_sending_failed": {
+        "translation": "فشل",
+        "defaultMessage": "failed",
+        "description": "Failed to send message, in place of time stamp",
+        "missing": false,
+        "obsolete": false
+    },
+    "messages_not_readable": {
+        "translation": "لا يمكن الوصول إلى الرسائل",
+        "defaultMessage": "no access to messages",
+        "description": "Message shown in topic without the read access",
+        "missing": false,
+        "obsolete": false
+    },
+    "messaging_disabled_prompt": {
+        "translation": "المراسلة معطلة",
+        "defaultMessage": "Messaging disabled",
+        "description": "Prompt in SendMessage in read-only topic",
+        "missing": false,
+        "obsolete": false
+    },
+    "more_online_members": {
+        "translation": "+{overflow} آخرون",
+        "defaultMessage": "+{overflow} more",
+        "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+        "missing": false,
+        "obsolete": false
+    },
+    "new_message_prompt": {
+        "translation": "رسالة جديدة",
+        "defaultMessage": "New message",
+        "description": "Prompt in send message field",
+        "missing": false,
+        "obsolete": false
+    },
+    "new_password_placeholder": {
+        "translation": "أدخل كلمة المرور الجديدة",
+        "defaultMessage": "Enter new password",
+        "description": "Placeholder for entering new password",
+        "missing": false,
+        "obsolete": false
+    },
+    "no_connection": {
+        "translation": "لا يوجد اتصال",
+        "defaultMessage": "No connection",
+        "description": "Warning that the user is offline.",
+        "missing": false,
+        "obsolete": false
+    },
+    "no_contacts": {
+        "translation": "ليس لديك جهات اتصال :-(",
+        "defaultMessage": "You have no contacts :-(",
+        "description": "Shown in ContactsView when the user has no contacts",
+        "missing": false,
+        "obsolete": false
+    },
+    "numeric_confirmation_code_prompt": {
+        "translation": "أرقام فقط",
+        "defaultMessage": "Numbers only",
+        "description": "Prompt for numeric conformation code",
+        "missing": false,
+        "obsolete": false
+    },
+    "online_now": {
+        "translation": "متصل الآن",
+        "defaultMessage": "online now",
+        "description": "Indicator that the user or topic is currently online",
+        "missing": false,
+        "obsolete": false
+    },
+    "password_prompt": {
+        "translation": "كلمة المرور",
+        "defaultMessage": "Password",
+        "description": "Placeholder/prompt for entering password",
+        "missing": false,
+        "obsolete": false
+    },
+    "password_unchanged_prompt": {
+        "translation": "لم يتغير",
+        "defaultMessage": "Unchanged",
+        "description": "Message in editor while password is unchanged",
+        "missing": false,
+        "obsolete": false
+    },
+    "peers_messaging_disabled": {
+        "translation": "المراسلة معطلة للطرف الآخر",
+        "defaultMessage": "Peer's messaging is disabled.",
+        "description": "Shown when the p2p peer's messaging is disabled",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_admin": {
+        "translation": "الموافقة ({val})",
+        "defaultMessage": "Approve ({val})",
+        "description": "Name of A permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_delete": {
+        "translation": "حذف ({val})",
+        "defaultMessage": "Delete ({val})",
+        "description": "Name of D permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_join": {
+        "translation": "انضمام ({val})",
+        "defaultMessage": "Join ({val})",
+        "description": "Name of J permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_owner": {
+        "translation": "مالك ({val})",
+        "defaultMessage": "Owner ({val})",
+        "description": "Name of O permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_pres": {
+        "translation": "تلقي الإشعارات ({val})",
+        "defaultMessage": "Get notified ({val})",
+        "description": "Name of P permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_read": {
+        "translation": "قراءة ({val})",
+        "defaultMessage": "Read ({val})",
+        "description": "Name of R permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_share": {
+        "translation": "مشاركة ({val})",
+        "defaultMessage": "Share ({val})",
+        "description": "Name of S permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "permission_write": {
+        "translation": "كتابة ({val})",
+        "defaultMessage": "Write ({val})",
+        "description": "Name of W permission",
+        "missing": false,
+        "obsolete": false
+    },
+    "phone_dative": {
+        "translation": "هاتف",
+        "defaultMessage": "phone",
+        "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'",
+        "missing": false,
+        "obsolete": false
+    },
+    "private_editing_placeholder": {
+        "translation": "مرئي لك فقط",
+        "defaultMessage": "Visible to you only",
+        "description": "Placeholder for editing 'private'",
+        "missing": false,
+        "obsolete": false
+    },
+    "push_init_failed": {
+        "translation": "فشل في تهيئة الإشعارات",
+        "defaultMessage": "Failed to initialize push notifications",
+        "description": "Error message when push notifications have failed to initialize.",
+        "missing": false,
+        "obsolete": false
+    },
+    "reconnect_countdown": {
+        "translation": "تم قطع الاتصال. إعادة الاتصال خلال {seconds}...",
+        "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
+        "description": "Message shown when an app update is available.",
+        "missing": false,
+        "obsolete": false
+    },
+    "reconnect_now": {
+        "translation": "حاول الآن",
+        "defaultMessage": "Try now",
+        "description": "Prompt for reconnecting now",
+        "missing": false,
+        "obsolete": false
+    },
+    "reload_update": {
+        "translation": "إعادة تحميل",
+        "defaultMessage": "Reload",
+        "description": "Call to action to reload application when update is available.",
+        "missing": false,
+        "obsolete": false
+    },
+    "report_chat_warning": {
+        "translation": "هل أنت متأكد من أنك تريد حظر والإبلاغ عن هذه المحادثة؟",
+        "defaultMessage": "Are you sure you want to block and report this conversation?",
+        "description": "Alert dialog warning when reporting a conversation for abuse",
+        "missing": false,
+        "obsolete": false
+    },
+    "requested_permissions": {
+        "translation": "مطلوب",
+        "defaultMessage": "Requested",
+        "description": "Title for permissions",
+        "missing": false,
+        "obsolete": false
+    },
+    "save_attachment": {
+        "translation": "حفظ",
+        "defaultMessage": "save",
+        "description": "Call to save an attachment",
+        "missing": false,
+        "obsolete": false
+    },
+    "search_for_contacts": {
+        "translation": "استخدم البحث للعثور على جهات الاتصال",
+        "defaultMessage": "Use search to find contacts",
+        "description": "Text shown in contacts view when user entered no search query.",
+        "missing": false,
+        "obsolete": false
+    },
+    "search_no_results": {
+        "translation": "لم يسفر البحث عن أي نتائج",
+        "defaultMessage": "Search returned no results",
+        "description": "Text shown in contacts view when query returned no results.",
+        "missing": false,
+        "obsolete": false
+    },
+    "search_placeholder": {
+        "translation": "قائمة مثل alice@example.com، +17025550003...",
+        "defaultMessage": "List like alice@example.com, +17025550003...",
+        "description": "Placeholder in contacts search field",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_acc_notifications": {
+        "translation": "الإشعارات",
+        "defaultMessage": "Notifications",
+        "description": "Sidepanel title for AccNotificationsView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_acc_support": {
+        "translation": "الدعم",
+        "defaultMessage": "Support",
+        "description": "Sidepanel title for AccSupportView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_account_settings": {
+        "translation": "إعدادات الحساب",
+        "defaultMessage": "Account Settings",
+        "description": "Sidepanel title for AccountSettingsView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_archive": {
+        "translation": "المحادثات المؤرشفة",
+        "defaultMessage": "Archived Chats",
+        "description": "Sidepanel title for ContactsView-Archive.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_blocked": {
+        "translation": "المحادثات المحظورة",
+        "defaultMessage": "Blocked Chats",
+        "description": "Sidepanel title for ContactsView-Blocked.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_cred": {
+        "translation": "تأكيد بيانات الاعتماد",
+        "defaultMessage": "Confirm Credentials",
+        "description": "Sidepanel title for ValidationView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_login": {
+        "translation": "تسجيل الدخول",
+        "defaultMessage": "Sign In",
+        "description": "Sidepanel title for LoginView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_newtpk": {
+        "translation": "بدء محادثة جديدة",
+        "defaultMessage": "Start New Chat",
+        "description": "Sidepanel title for NewTopicView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_register": {
+        "translation": "إنشاء حساب",
+        "defaultMessage": "Create Account",
+        "description": "Sidepanel title for CreateAccountView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_reset": {
+        "translation": "إعادة تعيين كلمة المرور",
+        "defaultMessage": "Reset Password",
+        "description": "Sidepanel title for PasswordResetView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "sidepanel_title_settings": {
+        "translation": "الإعدادات",
+        "defaultMessage": "Settings",
+        "description": "Sidepanel title for SettingsView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "stay_logged_in": {
+        "translation": "البقاء متصلاً",
+        "defaultMessage": "Stay logged in",
+        "description": "Label for a checkbox",
+        "missing": false,
+        "obsolete": false
+    },
+    "tabtitle_find_user": {
+        "translation": "بحث",
+        "defaultMessage": "find",
+        "description": "Tab title Find",
+        "missing": false,
+        "obsolete": false
+    },
+    "tabtitle_group_by_id": {
+        "translation": "بواسطة المعرف",
+        "defaultMessage": "by id",
+        "description": "Tab title Find topic by ID",
+        "missing": false,
+        "obsolete": false
+    },
+    "tabtitle_new_group": {
+        "translation": "مجموعة جديدة",
+        "defaultMessage": "new group",
+        "description": "Tab title New Group",
+        "missing": false,
+        "obsolete": false
+    },
+    "tags_editor_no_tags": {
+        "translation": "أضف بعض الوسوم",
+        "defaultMessage": "Add some tags",
+        "description": "Tag editor prompt when no tags are found.",
+        "missing": false,
+        "obsolete": false
+    },
+    "tags_not_found": {
+        "translation": "لا توجد وسوم محددة. أضف بعضها.",
+        "defaultMessage": "No tags defined. Add some.",
+        "description": "",
+        "missing": false,
+        "obsolete": false
+    },
+    "title_all_contacts": {
+        "translation": "جميع جهات الاتصال",
+        "defaultMessage": "All Contacts",
+        "description": "Section title [All Contacts]",
+        "missing": false,
+        "obsolete": false
+    },
+    "title_group_members": {
+        "translation": "أعضاء المجموعة",
+        "defaultMessage": "Group Members",
+        "description": "Section title",
+        "missing": false,
+        "obsolete": false
+    },
+    "title_manage_tags": {
+        "translation": "إدارة",
+        "defaultMessage": "Manage",
+        "description": "Section title for the list of tags",
+        "missing": false,
+        "obsolete": false
+    },
+    "title_not_found": {
+        "translation": "غير موجود",
+        "defaultMessage": "Not found",
+        "description": "Title shown when topic is not found",
+        "missing": false,
+        "obsolete": false
+    },
+    "title_permissions": {
+        "translation": "الصلاحيات",
+        "defaultMessage": "Permissions",
+        "description": "Section title",
+        "missing": false,
+        "obsolete": false
+    },
+    "title_tag_manager": {
+        "translation": "الوسوم (البحث والاكتشاف)",
+        "defaultMessage": "Tags (search & discovery)",
+        "description": "Section title for TagManager",
+        "missing": false,
+        "obsolete": false
+    },
+    "topic_block_warning": {
+        "translation": "هل أنت متأكد من أنك تريد حظر هذه المحادثة؟",
+        "defaultMessage": "Are you sure you want to block this conversation?",
+        "description": "Alert warning when blocking a topic.",
+        "missing": false,
+        "obsolete": false
+    },
+    "topic_delete_warning": {
+        "translation": "هل أنت متأكد من أنك تريد حذف هذه المحادثة؟ لا يمكن التراجع عن هذا الإجراء.",
+        "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
+        "description": "Alert warning when deleting entire topic",
+        "missing": false,
+        "obsolete": false
+    },
+    "topic_name_editing_placeholder": {
+        "translation": "اسم حر للمجموعة",
+        "defaultMessage": "Freeform name of the group",
+        "description": "Prompt for entering topic name",
+        "missing": false,
+        "obsolete": false
+    },
+    "unnamed_topic": {
+        "translation": "بدون اسم",
+        "defaultMessage": "Unnamed",
+        "description": "Title shown when the topic has no name",
+        "missing": false,
+        "obsolete": false
+    },
+    "update_available": {
+        "translation": "يتوفر تحديث.",
+        "defaultMessage": "Update available.",
+        "description": "Message shown when an app update is available.",
+        "missing": false,
+        "obsolete": false
+    },
+    "upload_finishing": {
+        "translation": "جاري الإنهاء...",
+        "defaultMessage": "finishing...",
+        "description": "Notification that upload is finishing",
+        "missing": false,
+        "obsolete": false
+    },
+    "user_not_found": {
+        "translation": "غير موجود",
+        "defaultMessage": "Not found",
+        "description": "In place of a user's full name when the user is not found.",
+        "missing": false,
+        "obsolete": false
+    },
+    "description_editing_placeholder": {
+        "translation": "وصف اختياري",
+        "defaultMessage": "Description (optional)",
+        "description": "Placeholder for editing topic description",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_description": {
+        "translation": "الوصف",
+        "defaultMessage": "Description",
+        "description": "Label for editing topic description",
+        "missing": false,
+        "obsolete": false
+    },
+    "button_security": {
+        "translation": "الأمان",
+        "defaultMessage": "Security",
+        "description": "Navigaton button for security panel.",
+        "missing": false,
+        "obsolete": false
+    },
+    "panel_title_crop": {
+        "translation": "اسحب للتعديل",
+        "defaultMessage": "Drag to Adjust",
+        "description": "Title for AvatarCropView.",
+        "missing": false,
+        "obsolete": false
+    },
+    "panel_title_general": {
+        "translation": "عام",
+        "defaultMessage": "General",
+        "description": "Title for TopicCommon.",
+        "missing": false,
+        "obsolete": false
+    },
+    "panel_title_members": {
+        "translation": "الأعضاء",
+        "defaultMessage": "Members",
+        "description": "Title for managing group members view.",
+        "missing": false,
+        "obsolete": false
+    },
+    "panel_title_security": {
+        "translation": "الأمان",
+        "defaultMessage": "Security",
+        "description": "Title for TopicSecirity and AccSecurity.",
+        "missing": false,
+        "obsolete": false
+    },
+    "panel_title_info": {
+        "translation": "معلومات",
+        "defaultMessage": "Info",
+        "description": "Title for InfoView",
+        "missing": false,
+        "obsolete": false
+    },
+    "permissions_anonymous": {
+        "translation": "مجهول",
+        "defaultMessage": "Anonymous",
+        "description": "Title for editing default anonymous permissions",
+        "missing": false,
+        "obsolete": false
+    },
+    "permissions_authenticated": {
+        "translation": "مصادق عليه",
+        "defaultMessage": "Authenticated",
+        "description": "Title for editing default authenticated permissions",
+        "missing": false,
+        "obsolete": false
+    },
+    "topic_delete": {
+        "translation": "حذف المحادثة",
+        "defaultMessage": "Delete Conversation",
+        "description": "Alert title when deleting the topic.",
+        "missing": false,
+        "obsolete": false
+    },
+    "permissions_user": {
+        "translation": "صلاحيات المستخدم",
+        "defaultMessage": "User's Permissions",
+        "description": "Title for editing user's permissions",
+        "missing": false,
+        "obsolete": false
+    },
+    "password_reset_email_sent": {
+        "translation": "تم إرسال بريد إلكتروني يحتوي على رمز الأمان.",
+        "defaultMessage": "An email with security code has been sent.",
+        "description": "Notification that the email with password reset instructions has been sent",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_unarchive_topic": {
+        "translation": "مؤرشف:",
+        "defaultMessage": "Archived:",
+        "description": "Label for unarchiving the topic",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_forward": {
+        "translation": "إعادة توجيه",
+        "defaultMessage": "Forward",
+        "description": "Forward message",
+        "missing": false,
+        "obsolete": false
+    },
+    "forward_to": {
+        "translation": "إعادة توجيه إلى",
+        "defaultMessage": "Forward to",
+        "missing": false,
+        "obsolete": false
+    },
+    "forward_to_search_placeholder": {
+        "translation": "البحث عن جهات الاتصال",
+        "defaultMessage": "Search contacts",
+        "description": "Contact search prompt when forwarding a message.",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_new_password": {
+        "translation": "كلمة المرور الجديدة",
+        "defaultMessage": "New password",
+        "description": "Label for entering a new password",
+        "missing": false,
+        "obsolete": false
+    },
+    "drafty_unknown": {
+        "translation": "غير مدعوم",
+        "defaultMessage": "Unsupported",
+        "description": "Unsupported entity in drafty",
+        "missing": false,
+        "obsolete": false
+    },
+    "calls_incoming": {
+        "translation": "مكالمة واردة",
+        "defaultMessage": "Incoming call",
+        "description": "Incoming call label",
+        "missing": false,
+        "obsolete": false
+    },
+    "calls_outgoing": {
+        "translation": "مكالمة صادرة",
+        "defaultMessage": "Outgoing call",
+        "description": "Outgoing call label",
+        "missing": false,
+        "obsolete": false
+    },
+    "calls_you_label": {
+        "translation": "أنت",
+        "defaultMessage": "You",
+        "description": "Shown over the local video screen",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_video_call": {
+        "translation": "مكالمة فيديو",
+        "defaultMessage": "Video call",
+        "description": "Start video call",
+        "missing": false,
+        "obsolete": false
+    },
+    "already_in_call": {
+        "translation": "أنت بالفعل في مكالمة جارية!",
+        "defaultMessage": "You already in an ongoing call!",
+        "description": "Error message when the user tried to accept a new call without finishing pervious one",
+        "missing": false,
+        "obsolete": false
+    },
+    "call_cancelled": {
+        "translation": "تم الإلغاء",
+        "defaultMessage": "cancelled",
+        "description": "Label for cancelled outgoing call",
+        "missing": false,
+        "obsolete": false
+    },
+    "call_missed": {
+        "translation": "فائتة",
+        "defaultMessage": "missed",
+        "description": "Label for missed incoming call",
+        "missing": false,
+        "obsolete": false
+    },
+    "call_declined": {
+        "translation": "تم الرفض",
+        "defaultMessage": "declined",
+        "description": "Label for declined call",
+        "missing": false,
+        "obsolete": false
+    },
+    "call_disconnected": {
+        "translation": "تم قطع الاتصال",
+        "defaultMessage": "disconnected",
+        "description": "Label for disconnected call",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_use_secure_connection": {
+        "translation": "استخدام اتصال آمن",
+        "defaultMessage": "Use secure connection",
+        "description": "Label for WS/WSS connection type in SettingsView",
+        "missing": false,
+        "obsolete": false
+    },
+    "cred_confirmed_successfully": {
+        "translation": "تم التأكيد بنجاح",
+        "defaultMessage": "Confirmed successfully",
+        "description": "Notification message that the credential was successfully validated.",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_edit": {
+        "translation": "تعديل",
+        "defaultMessage": "Edit",
+        "description": "Edit message",
+        "missing": false,
+        "obsolete": false
+    },
+    "editing_message": {
+        "translation": "جاري التعديل",
+        "defaultMessage": "Editing",
+        "description": "Title over message editing preview",
+        "missing": false,
+        "obsolete": false
+    },
+    "message_edited_marker": {
+        "translation": "، تم التعديل",
+        "defaultMessage": ", edited",
+        "description": "Marker indicating that the message was edited",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_add_image": {
+        "translation": "إضافة صورة",
+        "defaultMessage": "Add image",
+        "description": "Icon tool tip for attaching an image",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_attach_file": {
+        "translation": "إرفاق ملف",
+        "defaultMessage": "Attach file",
+        "description": "Icon tool tip for attaching a file",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_delete": {
+        "translation": "حذف التسجيل",
+        "defaultMessage": "Delete recording",
+        "description": "Icon tool tip for deleting recorded audio",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_pause": {
+        "translation": "إيقاف مؤقت",
+        "defaultMessage": "Pause playback",
+        "description": "Icon tool tip for pausing audio playback",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_play": {
+        "translation": "تشغيل",
+        "defaultMessage": "Play recording",
+        "description": "Icon tool tip for starting audio playback",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_record_voice": {
+        "translation": "تسجيل رسالة صوتية",
+        "defaultMessage": "Record voice message",
+        "description": "Icon tool tip for recording a voice message",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_resume": {
+        "translation": "استئناف",
+        "defaultMessage": "Resume playback",
+        "description": "Icon tool tip for resuming audio playback",
+        "missing": false,
+        "obsolete": false
+    },
+    "icon_title_send": {
+        "translation": "إرسال رسالة",
+        "defaultMessage": "Send message",
+        "description": "Icon tool tip for sending a message",
+        "missing": false,
+        "obsolete": false
+    },
+    "drag_file": {
+        "translation": "اسحب الملف هنا",
+        "defaultMessage": "Drag file here",
+        "description": "Prompt on the file drag-n-drop overlay banner",
+        "missing": false,
+        "obsolete": false
+    },
+    "drafty_video": {
+        "translation": "تسجيل فيديو",
+        "defaultMessage": "Video recording",
+        "description": "Comment for videos embedded in Drafty",
+        "missing": false,
+        "obsolete": false
+    },
+    "call_in_progress": {
+        "translation": "جارية",
+        "defaultMessage": "in progress",
+        "description": "Label for call in progress",
+        "missing": false,
+        "obsolete": false
+    },
+    "menu_item_audio_call": {
+        "translation": "مكالمة",
+        "defaultMessage": "Call",
+        "description": "Start audio call",
+        "missing": false,
+        "obsolete": false
+    },
+    "unrecognized_video_format": {
+        "translation": "تنسيق هذا الفيديو غير معروف",
+        "defaultMessage": "Format of this video is not recognized",
+        "description": "Error message when uploaded video is invalid",
+        "missing": false,
+        "obsolete": false
+    },
+    "loading_note": {
+        "translation": "جاري التحميل...",
+        "defaultMessage": "Loading...",
+        "description": "Message shown when component is loading",
+        "missing": false,
+        "obsolete": false
+    },
+    "password_i_have_code": {
+        "translation": "لدي رمز",
+        "defaultMessage": "I have code",
+        "description": "Call to open field to enter password reset code",
+        "missing": false,
+        "obsolete": false
+    },
+    "label_reset_password_tel": {
+        "translation": "إرسال رسالة نصية لإعادة تعيين كلمة المرور:",
+        "defaultMessage": "Send SMS to reset password",
+        "description": "Label for password reset field by phone",
+        "missing": false,
+        "obsolete": false
+    },
+    "mobile_phone_number": {
+        "translation": "رقم الهاتف المحمول",
+        "defaultMessage": "Mobile phone number",
+        "description": "Prompt for entering a mobile phone number",
+        "missing": false,
+        "obsolete": false
+    },
+    "password_reset_sms_sent": {
+        "translation": "تم إرسال رسالة نصية تحتوي على رمز الأمان.",
+        "defaultMessage": "A text message with security code has been sent.",
+        "description": "Notification that the SMS with password reset instructions has been sent",
+        "missing": false,
+        "obsolete": false
+    },
+    "mobile_number_required": {
+        "translation": "رقم الهاتف المحمول مطلوب",
+        "defaultMessage": "Mobile phone number required",
+        "description": "Error message",
+        "missing": false,
+        "obsolete": false
+    },
+    "current_email": {
+        "translation": "البريد الإلكتروني الحالي",
+        "defaultMessage": "Current email",
+        "description": "Label for old email",
+        "missing": false,
+        "obsolete": false
+    },
+    "current_phone": {
+        "translation": "رقم الهاتف الحالي",
+        "defaultMessage": "Current phone number",
+        "description": "Label for old phone",
+        "missing": false,
+        "obsolete": false
+    },
+    "new_email": {
+        "translation": "بريد إلكتروني جديد",
+        "defaultMessage": "New email",
+        "description": "Prompt for entering a new email",
+        "missing": false,
+        "obsolete": false
+    },
+    "new_phone_number": {
+        "translation": "رقم هاتف جديد",
+        "defaultMessage": "New phone number",
+        "description": "Prompt for entering a new telephone number",
+        "missing": false,
+        "obsolete": false
+    },
+    "change_email": {
+        "translation": "تغيير البريد الإلكتروني",
+        "defaultMessage": "Change email",
+        "description": "Prompt to change current email",
+        "missing": false,
+        "obsolete": false
+    },
+    "change_phone": {
+        "translation": "تغيير رقم الهاتف",
+        "defaultMessage": "Change phone number",
+        "description": "Prompt to change current phone number",
+        "missing": false,
+        "obsolete": false
+    },
+    "call_busy": {
+        "translation": "مشغول",
+        "defaultMessage": "busy",
+        "description": "Label for busy call line",
+        "missing": false,
+        "obsolete": false
+    },
+    "failed_to_init_audio": {
+        "translation": "فشل في تهيئة تسجيل الصوت",
+        "defaultMessage": "Failed to initialize audio recording",
+        "description": "Error message when audio is not available",
+        "missing": false,
+        "obsolete": false
+    },
+    "password_reset_success": {
+        "translation": "تم إعادة تعيين كلمة المرور بنجاح",
+        "defaultMessage": "Password reset successfully",
+        "description": "Notification message that the password was successfully reset.",
+        "missing": false,
+        "obsolete": false
+    },
+    "scan_qr_code": {
+        "translation": "مسح رمز QR",
+        "defaultMessage": "Scan QR Code",
+        "description": "Title for scanning QR code",
+        "missing": false,
+        "obsolete": false
+    }
+}
