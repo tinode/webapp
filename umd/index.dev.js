@@ -21297,7 +21297,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
           aliasError: ok ? '' : this.props.intl.formatMessage(messages.alias_already_taken)
         });
       }).catch(err => {
-        console.log("HERE", err);
         this.aliasCheckPromise.reject(err);
         this.setState({
           aliasError: err.message
