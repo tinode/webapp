@@ -41,6 +41,7 @@ The app is fully internationalized using [React-Intl](https://github.com/formatj
 
 The app is currently available in the following languages:
  * English - default
+ * Arabic
  * Chinese simplified
  * Chinese traditional
  * French
