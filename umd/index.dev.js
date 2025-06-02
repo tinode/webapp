@@ -8449,7 +8449,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.0-rc2";
+const PACKAGE_VERSION = "0.24.0-rc3";
 
 /***/ }),
 
@@ -11746,7 +11746,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           if (query[0] == '@') {
             query = query.substring(1);
           }
-          query = `${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS}${query}`;
+          query = `${tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.TAG_ALIAS}${query},${query}`;
         }
       }
     }

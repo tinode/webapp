@@ -63,7 +63,7 @@
     "obsolete": false
   },
   "badge_staff": {
-    "translation": "يديره الموظفون",
+    "translation": "إدارة الموقع",
     "defaultMessage": "Staff-managed",
     "description": "Explanation of a staff-managed account or topic badge",
     "missing": false,

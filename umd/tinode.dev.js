@@ -235,7 +235,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 
 class CBuffer {
-  #comparator = (() => undefined)();
+  #comparator = undefined;
   #unique = false;
   buffer = [];
   constructor(compare_, unique_) {
@@ -768,10 +768,10 @@ class Connection {
       return this.#socket && this.#socket.readyState == this.#socket.OPEN;
     };
   }
-  onMessage = (() => undefined)();
-  onDisconnect = (() => undefined)();
-  onOpen = (() => undefined)();
-  onAutoreconnectIteration = (() => undefined)();
+  onMessage = undefined;
+  onDisconnect = undefined;
+  onOpen = undefined;
+  onAutoreconnectIteration = undefined;
 }
 Connection.NETWORK_ERROR = NETWORK_ERROR;
 Connection.NETWORK_ERROR_TEXT = NETWORK_ERROR_TEXT;
@@ -5362,7 +5362,8 @@ function clipInRange(src, clip) {
     low: Math.max(src.low, clip.low),
     hi: Math.min(src.hi, clip.hi)
   };
-  return result;
+  // removed by dead control flow
+{}
 }
 
 /***/ }),
@@ -5377,7 +5378,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.0-rc1";
+const PACKAGE_VERSION = "0.24.0-rc2";
 
 /***/ })
 
@@ -5561,8 +5562,7 @@ initForNonBrowserApp();
 function initForNonBrowserApp() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   if (typeof btoa == 'undefined') {
-    __webpack_require__.g.btoa = function () {
-      let input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    __webpack_require__.g.btoa = function (input = '') {
       let str = input;
       let output = '';
       for (let block = 0, charCode, i = 0, map = chars; str.charAt(i | 0) || (map = '=', i % 1); output += map.charAt(63 & block >> 8 - i % 1 * 8)) {
@@ -5576,8 +5576,7 @@ function initForNonBrowserApp() {
     };
   }
   if (typeof atob == 'undefined') {
-    __webpack_require__.g.atob = function () {
-      let input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    __webpack_require__.g.atob = function (input = '') {
       let str = input.replace(/=+$/, '');
       let output = '';
       if (str.length % 4 == 1) {
@@ -5718,7 +5717,7 @@ class Tinode {
   _login = null;
   _authToken = null;
   _inPacketCount = 0;
-  _messageId = (() => Math.floor(Math.random() * 0xFFFF + 0xFFFF))();
+  _messageId = Math.floor(Math.random() * 0xFFFF + 0xFFFF);
   _serverInfo = null;
   _deviceToken = null;
   _pendingPromises = {};
@@ -5805,13 +5804,10 @@ class Tinode {
       });
     }
   }
-  logger(str) {
+  logger(str, ...args) {
     if (this._loggingEnabled) {
       const d = new Date();
       const dateString = ('0' + d.getUTCHours()).slice(-2) + ':' + ('0' + d.getUTCMinutes()).slice(-2) + ':' + ('0' + d.getUTCSeconds()).slice(-2) + '.' + ('00' + d.getUTCMilliseconds()).slice(-3);
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
       console.log('[' + dateString + ']', str, args.join(' '));
     }
   }
@@ -6740,17 +6736,17 @@ class Tinode {
       this._messageId = 0;
     }
   }
-  onWebsocketOpen = (() => undefined)();
-  onConnect = (() => undefined)();
-  onDisconnect = (() => undefined)();
-  onLogin = (() => undefined)();
-  onCtrlMessage = (() => undefined)();
-  onDataMessage = (() => undefined)();
-  onPresMessage = (() => undefined)();
-  onMessage = (() => undefined)();
-  onRawMessage = (() => undefined)();
-  onNetworkProbe = (() => undefined)();
-  onAutoreconnectIteration = (() => undefined)();
+  onWebsocketOpen = undefined;
+  onConnect = undefined;
+  onDisconnect = undefined;
+  onLogin = undefined;
+  onCtrlMessage = undefined;
+  onDataMessage = undefined;
+  onPresMessage = undefined;
+  onMessage = undefined;
+  onRawMessage = undefined;
+  onNetworkProbe = undefined;
+  onAutoreconnectIteration = undefined;
 }
 ;
 Tinode.MESSAGE_STATUS_NONE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_NONE;

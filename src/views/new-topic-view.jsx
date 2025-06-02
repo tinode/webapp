@@ -72,7 +72,8 @@ class NewTopicView extends React.Component {
             // Strip the leading '@' sign if present.
             query = query.substring(1);
           }
-          query = `${Tinode.TAG_ALIAS}${query}`;
+          // 'alice' -> 'alias:alice,alice'
+          query = `${Tinode.TAG_ALIAS}${query},${query}`;
         }
       }
     }
