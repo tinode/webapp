@@ -1649,94 +1649,94 @@
     "obsolete": false
   },
   "alias_already_taken": {
-    "translation": "",
+    "translation": "(مُستخدم بالفعل)",
     "defaultMessage": "(already taken)",
     "description": "Error message for alias already taken",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_editing_placeholder": {
-    "translation": "",
+    "translation": "الاسم المستعار (اختياري)",
     "defaultMessage": "Alias (optional)",
     "description": "Placeholder for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "alias_invalid": {
-    "translation": "",
+    "translation": "(غير صالح)",
     "defaultMessage": "(invalid)",
     "description": "Error message for invalid alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias": {
-    "translation": "",
+    "translation": "الاسم المستعار:",
     "defaultMessage": "Alias:",
     "description": "Label for user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_alias_edit": {
-    "translation": "",
+    "translation": "الاسم المستعار",
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_deleted": {
-    "translation": "",
+    "translation": "تم حذف الرسالة",
     "defaultMessage": "message deleted",
     "description": "Pinned message is deleted",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "message_not_found": {
-    "translation": "",
+    "translation": "لم يتم العثور على الرسالة",
     "defaultMessage": "message not found",
     "description": "Pinned message is not found",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "pin_message": {
-    "translation": "",
+    "translation": "تثبيت",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning message to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "select_country": {
-    "translation": "",
+    "translation": "اختر الدولة",
     "defaultMessage": "Select country",
     "description": "Placeholder for the country selector",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "self_topic_comment": {
-    "translation": "",
+    "translation": "ملاحظات ورسائل وروابط وملفات محفوظة للمستقبل",
     "defaultMessage": "Notes, messages, links, files saved for posterity",
     "description": "Comment for self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "self_topic_name": {
-    "translation": "",
+    "translation": "الرسائل المحفوظة",
     "defaultMessage": "Saved messages",
     "description": "Name of self topic for UI",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "text_copied": {
-    "translation": "",
+    "translation": "تم النسخ إلى الحافظة",
     "defaultMessage": "Copied to clipboard",
     "description": "Notification that text has been copied to clipboard",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_message": {
-    "translation": "",
+    "translation": "إلغاء التثبيت",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the message.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
