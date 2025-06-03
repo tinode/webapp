@@ -380,7 +380,7 @@ class TopicDescEdit extends React.Component {
           : null
         }
       </div>
-      {editable ?
+      {editable && !this.state.isMe ?
         <>
           <div className="hr" />
           <FormattedMessage id="title_tag_manager" defaultMessage="Tags (search & discovery)"
