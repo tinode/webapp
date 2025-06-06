@@ -22419,6 +22419,7 @@ const messageLoader = {
   'zh': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/zh.json */ "./src/i18n.min/zh.json", 19)),
   'zh-TW': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh-TW_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/zh-TW.json */ "./src/i18n.min/zh-TW.json", 19))
 };
+const rtl = ['ar', 'fa', 'he', 'ur'];
 const {
   params
 } = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseUrlHash(window.location.hash);
@@ -22426,7 +22427,11 @@ const language = params && params.hl || navigator.languages && navigator.languag
 const normalized = language.replace('_', '-');
 const baseLanguage = normalized.split('-')[0].toLowerCase();
 const htmlLang = messageLoader[normalized] ? language : messageLoader[baseLanguage] ? baseLanguage : 'en';
-document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
+const html = document.getElementsByTagName('html')[0];
+html.setAttribute('lang', htmlLang);
+if (rtl.includes(baseLanguage)) {
+  html.setAttribute('dir', 'rtl');
+}
 const root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(document.getElementById('mountPoint'));
 messageLoader[htmlLang]().then(messages => root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,
