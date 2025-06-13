@@ -7022,6 +7022,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   BROKEN_IMAGE_SIZE: function() { return /* binding */ BROKEN_IMAGE_SIZE; },
 /* harmony export */   CHANNEL_ACCESS_MODE: function() { return /* binding */ CHANNEL_ACCESS_MODE; },
 /* harmony export */   CLICKABLE_URL_SCHEMES: function() { return /* binding */ CLICKABLE_URL_SCHEMES; },
+/* harmony export */   DEFAULT_COLOR_SCHEME: function() { return /* binding */ DEFAULT_COLOR_SCHEME; },
 /* harmony export */   DEFAULT_HOST: function() { return /* binding */ DEFAULT_HOST; },
 /* harmony export */   DEFAULT_P2P_ACCESS_MODE: function() { return /* binding */ DEFAULT_P2P_ACCESS_MODE; },
 /* harmony export */   EDIT_PREVIEW_LENGTH: function() { return /* binding */ EDIT_PREVIEW_LENGTH; },
@@ -7120,6 +7121,7 @@ const WAKE_UP_TICK = 1000;
 const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
 const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZpZXdCb3g9IjAgMCAxNyAxNyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMy41NjIgMXYxNS40NTlsNC42ODYtMy4yNyA0Ljc1MiAzLjI2di0xNS40NDloLTkuNDM4ek0xMiAxNC41NTFsLTMuNzU2LTIuNTc4LTMuNjgxIDIuNTY4di0xMi41NDFoNy40Mzd2MTIuNTUxeiIgZmlsbD0iIzU1NTU1NSIgLz48L3N2Zz4=';
 const TOAST_DURATION = 3_000;
+const DEFAULT_COLOR_SCHEME = 'light dark';
 
 /***/ }),
 
@@ -8453,15 +8455,15 @@ const PACKAGE_VERSION = "0.24.0";
 
 /***/ }),
 
-/***/ "./src/views/acc-notifications-view.jsx":
-/*!**********************************************!*\
-  !*** ./src/views/acc-notifications-view.jsx ***!
-  \**********************************************/
+/***/ "./src/views/acc-appearance-view.jsx":
+/*!*******************************************!*\
+  !*** ./src/views/acc-appearance-view.jsx ***!
+  \*******************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ EditAccountView; }
+/* harmony export */   "default": function() { return /* binding */ AccAppearanceView; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -8471,7 +8473,126 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      colorSchema: props.colorSchema || 'light dark'
+    };
+    this.handleColorSchemaSelected = this.handleColorSchemaSelected.bind(this);
+  }
+  handleColorSchemaSelected(e) {
+    this.setState({
+      colorSchema: e.currentTarget.value
+    });
+    this.props.onChangeColorSchema(e.currentTarget.value);
+  }
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "settings-form",
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_color_schema",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Theme:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+      className: "quoted"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "system"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "system",
+      name: "color-scheme-select",
+      value: "light dark",
+      checked: this.state.colorSchema === 'light dark',
+      onChange: this.handleColorSchemaSelected
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "system"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "color_schema_system",
+      defaultMessage: [{
+        "type": 0,
+        "value": "System default"
+      }]
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      src: "../img/routine.svg",
+      style: {
+        verticalAlign: 'top',
+        width: '1.6rem',
+        height: '1.6rem'
+      }
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "light"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "light",
+      name: "color-scheme-select",
+      value: "light",
+      checked: this.state.colorSchema === 'light',
+      onChange: this.handleColorSchemaSelected
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "light"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "color_schema_light",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Light"
+      }]
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons orange large"
+    }, "light_mode"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "dark"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "dark",
+      name: "color-scheme-select",
+      value: "dark",
+      checked: this.state.colorSchema === 'dark',
+      onChange: this.handleColorSchemaSelected
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "dark"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "color_schema_dark",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Dark"
+      }]
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons blue large"
+    }, "dark_mode"))))));
+  }
+}
+;
+
+/***/ }),
+
+/***/ "./src/views/acc-notifications-view.jsx":
+/*!**********************************************!*\
+  !*** ./src/views/acc-notifications-view.jsx ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ AccNotificationsView; }
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
+
+
+
+class AccNotificationsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
@@ -11511,7 +11632,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: "material-icons"
         }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-panel",
-          ref: this.handleScrollReference
+          ref: this.handleScrollReference,
+          "color-scheme": this.props.colorSchema
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
           id: "scroller",
           className: chatBoxClass
@@ -12010,13 +12132,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/side-navbar.jsx */ "./src/widgets/side-navbar.jsx");
 /* harmony import */ var _topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./topic-common-view.jsx */ "./src/views/topic-common-view.jsx");
 /* harmony import */ var _contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./contacts-view.jsx */ "./src/views/contacts-view.jsx");
-/* harmony import */ var _acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./acc-notifications-view.jsx */ "./src/views/acc-notifications-view.jsx");
-/* harmony import */ var _acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx");
-/* harmony import */ var _acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./acc-support-view.jsx */ "./src/views/acc-support-view.jsx");
-/* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
-/* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
-/* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
-/* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
+/* harmony import */ var _acc_appearance_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./acc-appearance-view.jsx */ "./src/views/acc-appearance-view.jsx");
+/* harmony import */ var _acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./acc-notifications-view.jsx */ "./src/views/acc-notifications-view.jsx");
+/* harmony import */ var _acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx");
+/* harmony import */ var _acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./acc-support-view.jsx */ "./src/views/acc-support-view.jsx");
+/* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
+/* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
+/* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
+/* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
 
 
 
@@ -12026,6 +12149,7 @@ __webpack_require__.r(__webpack_exports__);
 const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-7e28c7"), __webpack_require__.e("src_views_account-settings-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx")));
 
 const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-7e28c7"), __webpack_require__.e("src_views_create-account-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx")));
+
 
 
 
@@ -12089,6 +12213,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     defaultMessage: [{
       "type": 0,
       "value": "Notifications"
+    }]
+  },
+  appearance: {
+    id: "sidepanel_title_appearance",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Appearance"
     }]
   },
   support: {
@@ -12182,7 +12313,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onClearError: this.props.onError
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       show: this.props.loadSpinnerVisible
-    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       login: this.props.login,
       disabled: this.props.loginDisabled,
       persist: this.props.persist,
@@ -12205,7 +12336,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
       onError: this.props.onError
-    })) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+    })) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
       transport: this.props.transport,
       serverAddress: this.props.serverAddress,
       secureConnection: this.props.secureConnection,
@@ -12240,7 +12371,12 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onUpdateTopicDesc: this.props.onUpdateAccountDesc,
       onUpdateTagsRequest: this.props.onUpdateAccountTags,
       onError: this.props.onError
-    }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    }) : view === 'appearance' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_appearance_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      colorSchema: this.props.colorSchema,
+      textSize: this.props.textSize,
+      onChangeColorSchema: this.props.onChangeColorSchema,
+      onChangeTextSize: this.props.onChangeTextSize
+    }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       messageSounds: this.props.messageSounds,
       desktopAlerts: this.props.desktopAlerts,
       desktopAlertsEnabled: this.props.desktopAlertsEnabled,
@@ -12248,7 +12384,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onTogglePushNotifications: this.props.onTogglePushNotifications,
       onToggleMessageSounds: this.props.onToggleMessageSounds,
       onToggleIncognitoMode: this.props.onToggleIncognitoMode
-    }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       tinode: this.props.tinode,
       onUpdateAccountDesc: this.props.onUpdateAccountDesc,
       onUpdatePassword: this.props.onUpdatePassword,
@@ -12256,7 +12392,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onDeleteAccount: this.props.onDeleteAccount,
       onShowAlert: this.props.onShowAlert,
       onShowBlocked: this.props.onShowBlocked
-    }) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       serverAddress: this.props.serverAddress,
       serverVersion: this.props.serverVersion
     }) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
@@ -12270,14 +12406,14 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       showContextMenu: this.props.showContextMenu,
       onTopicSelected: this.props.onTopicSelected,
       onShowArchive: this.props.onShowArchive
-    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
       tinode: this.props.tinode,
       searchResults: this.props.searchResults,
       onInitFind: this.props.onInitFind,
       onSearchContacts: this.props.onSearchContacts,
       onCreateTopic: this.props.onCreateTopic,
       onError: this.props.onError
-    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
       credCode: this.props.credCode,
       credMethod: this.props.credMethod,
       credToken: this.props.credToken,
@@ -12489,6 +12625,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleUpdatePasswordRequest = this.handleUpdatePasswordRequest.bind(this);
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
+    this.handleChangeColorSchema = this.handleChangeColorSchema.bind(this);
+    this.handleChangeTextSize = this.handleChangeTextSize.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -12555,6 +12693,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: "no connection",
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
+      colorSchema: settings.colorSchema || _config_js__WEBPACK_IMPORTED_MODULE_12__.DEFAULT_COLOR_SCHEME,
+      textSize: settings.textSize || 10,
       desktopAlerts: persist && !!settings.desktopAlerts,
       desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
       firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('firebase-token') : null,
@@ -12615,6 +12755,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
     window.addEventListener('offline', this.handleOnlineOff);
     window.addEventListener('hashchange', this.handleHashRoute);
+    document.documentElement.style.colorScheme = this.state.colorSchema;
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
@@ -12822,7 +12963,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       newTopicTabSelected: hash.params.tab
     };
     if (hash.path && hash.path.length > 0) {
-      if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
+      if (['register', 'settings', 'edit', 'notif', 'appearance', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
       } else {
         console.warn("Unknown sidepanel view", hash.path[0]);
@@ -13397,6 +13538,24 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
+  handleChangeColorSchema(scheme) {
+    this.setState({
+      colorSchema: scheme
+    });
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
+      colorSchema: scheme
+    });
+    document.documentElement.style.colorScheme = scheme;
+  }
+  handleChangeTextSize(size) {
+    this.setState({
+      textSize: size | 0
+    });
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
+      textSize: size
+    });
+    document.documentElement.style.fontSize = `${size}pt`;
+  }
   handleUpdateAccountTagsRequest(_, tags) {
     this.tinode.getMeTopic().setMeta({
       tags: tags
@@ -13510,7 +13669,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleSidepanelCancel() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
     let path = '';
-    if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
+    if (['security', 'support', 'general', 'notif', 'appearance'].includes(parsed.path[0])) {
       path = 'edit';
     } else if ('crop' == parsed.path[0]) {
       path = 'general';
@@ -13665,6 +13824,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (this.state.firebaseToken) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
     }
+    document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_12__.DEFAULT_COLOR_SCHEME;
     clearInterval(this.reconnectCountdown);
     let cleared;
     if (this.tinode) {
@@ -14176,6 +14336,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       secureConnection: this.state.secureConnection,
       serverVersion: this.state.serverVersion,
       reqCredMethod: this.state.reqCredMethod,
+      textSize: this.state.textSize,
+      colorSchema: this.state.colorSchema,
       onGlobalSettings: this.handleGlobalSettings,
       onSignUp: this.handleNewAccount,
       onSettings: this.handleSettings,
@@ -14189,6 +14351,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onTogglePushNotifications: this.toggleFCMToken,
       onToggleMessageSounds: this.handleToggleMessageSounds,
       onToggleIncognitoMode: this.handleToggleIncognitoMode,
+      onChangeColorSchema: this.handleChangeColorSchema,
+      onChangeTextSize: this.handleChangeTextSize,
       onCredAdd: this.handleCredAdd,
       onCredDelete: this.handleCredDelete,
       onCredConfirm: this.handleCredConfirm,
@@ -14224,6 +14388,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: this.state.serverVersion,
       serverAddress: this.state.serverAddress,
       applicationVisible: this.state.applicationVisible,
+      colorSchema: this.state.colorSchema,
       forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
       callTopic: this.state.callTopic,

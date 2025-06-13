@@ -148,3 +148,7 @@ export const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS
 
 // Toast display duration, milliseconds.
 export const TOAST_DURATION = 3_000;
+
+// Initial/default color scheme.
+export const DEFAULT_COLOR_SCHEME = 'light dark';
+

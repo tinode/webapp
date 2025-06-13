@@ -9,6 +9,7 @@ import TopicCommonView from './topic-common-view.jsx';
 const AccountSettingsView = React.lazy(_ => import('./account-settings-view.jsx'));
 import ContactsView from './contacts-view.jsx';
 const CreateAccountView = React.lazy(_ => import('./create-account-view.jsx'));
+import AccAppearanceView from './acc-appearance-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
 import AccSecurityView from './acc-security-view.jsx';
 import AccSupportView from './acc-support-view.jsx';
@@ -59,6 +60,11 @@ const messages = defineMessages({
     id: 'sidepanel_title_acc_notifications',
     description: 'Sidepanel title for AccNotificationsView.',
     defaultMessage: 'Notifications'
+  },
+  appearance: {
+    id: 'sidepanel_title_appearance',
+    description: 'Sidepanel title for AccAppearanceView.',
+    defaultMessage: 'Appearance'
   },
   support: {
     id: 'sidepanel_title_acc_support',
@@ -199,6 +205,13 @@ class SidepanelView extends React.PureComponent {
             onUpdateTopicDesc={this.props.onUpdateAccountDesc}
             onUpdateTagsRequest={this.props.onUpdateAccountTags}
             onError={this.props.onError} /> :
+
+          view === 'appearance' ?
+          <AccAppearanceView
+            colorSchema={this.props.colorSchema}
+            textSize={this.props.textSize}
+            onChangeColorSchema={this.props.onChangeColorSchema}
+            onChangeTextSize={this.props.onChangeTextSize} /> :
 
           view === 'notif' ?
           <AccNotificationsView

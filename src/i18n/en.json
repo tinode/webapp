@@ -1738,5 +1738,40 @@
     "description": "Notification that text has been copied to clipboard",
     "missing": false,
     "obsolete": false
+  },
+  "color_schema_dark": {
+    "translation": "Dark",
+    "defaultMessage": "Dark",
+    "description": "Name of the color schema",
+    "missing": false,
+    "obsolete": false
+  },
+  "color_schema_light": {
+    "translation": "Light",
+    "defaultMessage": "Light",
+    "description": "Name of the color schema",
+    "missing": false,
+    "obsolete": false
+  },
+  "color_schema_system": {
+    "translation": "System default",
+    "defaultMessage": "System default",
+    "description": "Name of the color schema",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_color_schema": {
+    "translation": "Theme:",
+    "defaultMessage": "Theme:",
+    "description": "Label for selecting color scheme (dark, light) in Settings",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_appearance": {
+    "translation": "Appearance",
+    "defaultMessage": "Appearance",
+    "description": "Sidepanel title for AccAppearanceView.",
+    "missing": false,
+    "obsolete": false
   }
 }

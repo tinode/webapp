@@ -18,8 +18,8 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, WAKE_UP_TICK, WAKE_UP_TIMEOUT } from '../config.js';
+import { API_KEY, APP_NAME, DEFAULT_COLOR_SCHEME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH,
+  LOGGING_ENABLED, MEDIA_BREAKPOINT, WAKE_UP_TICK, WAKE_UP_TIMEOUT } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
          CALL_HEAD_STARTED }  from '../constants.js';
@@ -134,6 +134,8 @@ class TinodeWeb extends React.Component {
     this.handleUpdatePasswordRequest = this.handleUpdatePasswordRequest.bind(this);
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
+    this.handleChangeColorSchema = this.handleChangeColorSchema.bind(this);
+    this.handleChangeTextSize = this.handleChangeTextSize.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -213,6 +215,8 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
+      colorSchema: settings.colorSchema || DEFAULT_COLOR_SCHEME, // default: system default
+      textSize: settings.textSize || 10, // default size: 10pt
       // Persistent request to enable alerts.
       desktopAlerts: persist && !!settings.desktopAlerts,
       // Enable / disable checkbox.
@@ -292,6 +296,8 @@ class TinodeWeb extends React.Component {
     this.handleOnlineOff = _ => { this.handleOnline(false); }
     window.addEventListener('offline', this.handleOnlineOff);
     window.addEventListener('hashchange', this.handleHashRoute);
+
+    document.documentElement.style.colorScheme = this.state.colorSchema;
 
     // Process background notifications from the service worker.
     if (typeof BroadcastChannel == 'function') {
@@ -517,7 +523,7 @@ class TinodeWeb extends React.Component {
 
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','notif','security','support','general','crop',
+      if (['register','settings','edit','notif','appearance','security','support','general','crop',
           'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
       } else {
@@ -1204,6 +1210,18 @@ class TinodeWeb extends React.Component {
     });
   }
 
+  handleChangeColorSchema(scheme) {
+    this.setState({colorSchema: scheme});
+    LocalStorageUtil.updateObject('settings', {colorSchema: scheme});
+    document.documentElement.style.colorScheme = scheme;
+  }
+
+  handleChangeTextSize(size) {
+    this.setState({textSize: size | 0});
+    LocalStorageUtil.updateObject('settings', {textSize: size});
+    document.documentElement.style.fontSize = `${size}pt`;
+  }
+
   handleUpdateAccountTagsRequest(_, tags) {
     this.tinode.getMeTopic().setMeta({tags: tags})
       .catch(err => this.handleError(err.message, 'err'));
@@ -1316,7 +1334,7 @@ class TinodeWeb extends React.Component {
   handleSidepanelCancel() {
     const parsed = HashNavigation.parseUrlHash(window.location.hash);
     let path = '';
-    if (['security','support','general','notif'].includes(parsed.path[0])) {
+    if (['security','support','general','notif','appearance'].includes(parsed.path[0])) {
       path = 'edit';
     } else if ('crop' == parsed.path[0]) {
       path = 'general';
@@ -1469,6 +1487,9 @@ class TinodeWeb extends React.Component {
     if (this.state.firebaseToken) {
       firebaseDelToken(this.fcm);
     }
+
+    // Reset color scheme.
+    document.documentElement.style.colorScheme = DEFAULT_COLOR_SCHEME;
 
     clearInterval(this.reconnectCountdown);
 
@@ -2059,6 +2080,8 @@ class TinodeWeb extends React.Component {
             secureConnection={this.state.secureConnection}
             serverVersion={this.state.serverVersion}
             reqCredMethod={this.state.reqCredMethod}
+            textSize={this.state.textSize}
+            colorSchema={this.state.colorSchema}
 
             onGlobalSettings={this.handleGlobalSettings}
             onSignUp={this.handleNewAccount}
@@ -2073,6 +2096,8 @@ class TinodeWeb extends React.Component {
             onTogglePushNotifications={this.toggleFCMToken}
             onToggleMessageSounds={this.handleToggleMessageSounds}
             onToggleIncognitoMode={this.handleToggleIncognitoMode}
+            onChangeColorSchema={this.handleChangeColorSchema}
+            onChangeTextSize={this.handleChangeTextSize}
             onCredAdd={this.handleCredAdd}
             onCredDelete={this.handleCredDelete}
             onCredConfirm={this.handleCredConfirm}
@@ -2114,6 +2139,7 @@ class TinodeWeb extends React.Component {
             serverVersion={this.state.serverVersion}
             serverAddress={this.state.serverAddress}
             applicationVisible={this.state.applicationVisible}
+            colorSchema={this.state.colorSchema}
 
             forwardMessage={this.state.forwardMessage}
             onCancelForwardMessage={this.handleHideForwardDialog}

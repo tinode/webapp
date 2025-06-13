@@ -148,6 +148,10 @@ export default class AccountSettingsView extends React.Component {
         </div>
         <div className="hr" />
         <div className="panel-form-column">
+          <a href="#" className="flat-button" onClick={e => {e.preventDefault(); this.props.onNavigate('appearance');}}>
+            <i className="material-icons">tune</i>&nbsp;<FormattedMessage id="sidepanel_title_appearance"
+              defaultMessage="Appearance" description="Sidepanel title for AccAppearanceView." />
+          </a>
           <a href="#" className="flat-button" onClick={e => {e.preventDefault(); this.props.onNavigate('notif');}}>
             <i className="material-icons">notifications</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_notifications"
               defaultMessage="Notifications" description="Sidepanel title for AccNotificationsView." />

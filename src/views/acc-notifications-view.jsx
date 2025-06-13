@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import CheckBox from '../widgets/checkbox.jsx';
 
-export default class EditAccountView extends React.PureComponent {
+export default class AccNotificationsView extends React.PureComponent {
   constructor(props) {
     super(props);
 

@@ -211,6 +211,18 @@
     "defaultMessage": "Code does not match",
     "description": "Error message when the credential validation code is incorrect."
   },
+  "color_schema_dark": {
+    "defaultMessage": "Dark",
+    "description": "Name of the color schema"
+  },
+  "color_schema_light": {
+    "defaultMessage": "Light",
+    "description": "Name of the color schema"
+  },
+  "color_schema_system": {
+    "defaultMessage": "System default",
+    "description": "Name of the color schema"
+  },
   "contacts_not_found": {
     "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
     "description": "HTML message shown in ContactList when no contacts are found"
@@ -393,6 +405,10 @@
   "label_client": {
     "defaultMessage": "Client:",
     "description": "Label for a client version"
+  },
+  "label_color_schema": {
+    "defaultMessage": "Theme:",
+    "description": "Label for selecting color scheme (dark, light) in Settings"
   },
   "label_content_type": {
     "defaultMessage": "Content type:",
@@ -867,6 +883,10 @@
   "sidepanel_title_account_settings": {
     "defaultMessage": "Account Settings",
     "description": "Sidepanel title for AccountSettingsView."
+  },
+  "sidepanel_title_appearance": {
+    "defaultMessage": "Appearance",
+    "description": "Sidepanel title for AccAppearanceView."
   },
   "sidepanel_title_archive": {
     "defaultMessage": "Archived Chats",

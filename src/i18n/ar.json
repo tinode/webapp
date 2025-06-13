@@ -1738,5 +1738,40 @@
     "description": "Menu item [Unpin] for un-pinning the message.",
     "missing": false,
     "obsolete": false
+  },
+  "color_schema_dark": {
+    "translation": "",
+    "defaultMessage": "Dark",
+    "description": "Name of the color schema",
+    "missing": true,
+    "obsolete": false
+  },
+  "color_schema_light": {
+    "translation": "",
+    "defaultMessage": "Light",
+    "description": "Name of the color schema",
+    "missing": true,
+    "obsolete": false
+  },
+  "color_schema_system": {
+    "translation": "",
+    "defaultMessage": "System default",
+    "description": "Name of the color schema",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_color_schema": {
+    "translation": "",
+    "defaultMessage": "Theme:",
+    "description": "Label for selecting color scheme (dark, light) in Settings",
+    "missing": true,
+    "obsolete": false
+  },
+  "sidepanel_title_appearance": {
+    "translation": "",
+    "defaultMessage": "Appearance",
+    "description": "Sidepanel title for AccAppearanceView.",
+    "missing": true,
+    "obsolete": false
   }
 }
