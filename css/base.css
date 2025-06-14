@@ -33,7 +33,7 @@
   --clr-background-off-white: light-dark(#fafafa, #282828); /* Common very light background */
   --clr-background-light-gray: light-dark(#f0f0f0, #0f0f0f); /* HR background, action button hover */
   --clr-background-extra-light-gray: light-dark(#eee, #222); /* Flat button faux bg, tabbar bg, chip bg */
-  --clr-background-blue-gray-50: light-dark(#edf0f2, hsl(203, 16%, 15%)); /* Contact hover, messages panel, send message panel */
+  --clr-background-blue-gray-50: light-dark(#edf0f2, #202c33); /* Contact hover, messages panel, send message panel */
   --clr-background-blue-gray-100: light-dark(#cfd8dc, #20272a); /* Contact selected, uploader bar */
   --clr-background-blue-gray-300: light-dark(#b0bec5, #354146); /* Topic/Info caption panel bg, some lettertiles */
   --clr-blue-wash-light: light-dark(#f0f0ff, #224); /* bot form button bg, badge bg (blue) */
@@ -121,7 +121,7 @@
   --clr-bubble-left-bg-flash: light-dark(#94a97c, #2c4517);
   --clr-bubble-right-bg: var(--clr-background-off-white);
   --clr-bubble-right-bg-flash: var(--clr-border-light);
-  --clr-bubble-text: light-dark(#212121, #bbb);
+  --clr-bubble-text: light-dark(#212121, #bbc);
   --clr-bubble-meta-text: var(--clr-text-primary);
   --clr-bubble-meta-deleted-bg: var(--clr-primary-wash);
   --clr-bubble-meta-date-bg: light-dark(rgba(255 255 255 / 80%), rgba(40 40 40 / 80%));
@@ -132,7 +132,7 @@
   --clr-reply-quote-border: var(--clr-light-blue-accent);
   --clr-reply-quote-text: var(--clr-text-primary);
   --clr-reply-quote-left-bg: light-dark(rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0.4));
-  --clr-reply-quote-right-bg: light-dark(rgba(128, 128, 128, 0.12), rgba(127, 127, 127, 0.12));
+  --clr-reply-quote-right-bg: light-dark(#8080801f, #c4c4c42e);
   --clr-reply-quote-preview-bg: var(--clr-background-off-white);
 
   /* Badges (small inline labels) */
