@@ -1773,5 +1773,19 @@
     "description": "Sidepanel title for AccAppearanceView.",
     "missing": false,
     "obsolete": false
+  },
+  "label_text_size": {
+    "translation": "Text size:",
+    "defaultMessage": "Text size:",
+    "description": "Label adjusting text size",
+    "missing": false,
+    "obsolete": false
+  },
+  "incognito_mode_description": {
+    "translation": "Hide your online status and typing indicators.",
+    "defaultMessage": "Hide your online status and typing indicators.",
+    "description": "Description for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
   }
 }

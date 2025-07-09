@@ -386,6 +386,10 @@
     "defaultMessage": "Image caption",
     "description": "Prompt in SendMessage for attached image"
   },
+  "incognito_mode_description": {
+    "defaultMessage": "Hide your online status and typing indicators.",
+    "description": "Description for incognito mode toggle"
+  },
   "invalid_content": {
     "defaultMessage": "invalid content",
     "description": "Shown when the message is unreadable"
@@ -495,6 +499,10 @@
   "label_size": {
     "defaultMessage": "Size:",
     "description": "Label for file size"
+  },
+  "label_text_size": {
+    "defaultMessage": "Text size:",
+    "description": "Label adjusting text size"
   },
   "label_topic_name": {
     "defaultMessage": "Name",

@@ -1740,37 +1740,51 @@
     "obsolete": false
   },
   "color_schema_dark": {
-    "translation": "",
+    "translation": "Темна",
     "defaultMessage": "Dark",
     "description": "Name of the color schema",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "color_schema_light": {
-    "translation": "",
+    "translation": "Світла",
     "defaultMessage": "Light",
     "description": "Name of the color schema",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "color_schema_system": {
-    "translation": "",
+    "translation": "Системна",
     "defaultMessage": "System default",
     "description": "Name of the color schema",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_color_schema": {
-    "translation": "",
+    "translation": "Тема:",
     "defaultMessage": "Theme:",
     "description": "Label for selecting color scheme (dark, light) in Settings",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "sidepanel_title_appearance": {
-    "translation": "",
+    "translation": "Вигляд",
     "defaultMessage": "Appearance",
     "description": "Sidepanel title for AccAppearanceView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_text_size": {
+    "translation": "Розмір тексту:",
+    "defaultMessage": "Text size:",
+    "description": "Label adjusting text size",
+    "missing": false,
+    "obsolete": false
+  },
+  "incognito_mode_description": {
+    "translation": "",
+    "defaultMessage": "Hide your online status and typing indicators.",
+    "description": "Description for incognito mode toggle",
     "missing": true,
     "obsolete": false
   }
