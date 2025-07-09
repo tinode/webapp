@@ -1,6 +1,9 @@
 :root {
   color-scheme: light dark;
 
+  /* Size of text in message bubbles */
+  --message-text-size: 10pt;
+
   /* Core Palette */
   --clr-bright: light-dark(#fff, #181818);
   --clr-dark: light-dark(#000, #fff);
@@ -12,8 +15,8 @@
   --clr-std-orange: #ffa500; /* Standard orange color */
 
   /* Primary Accent Colors */
-  --clr-primary-accent: light-dark(#2094f3, #08599b); /* blue 500, links, borders */
-  --clr-primary-accent-hover: light-dark(#0a6ebd, #1374c3); /* hover for primary accent */
+  --clr-primary-accent: light-dark(#2094f3, #0e6dba); /* blue 500, links, borders */
+  --clr-primary-accent-hover: light-dark(#0a6ebd, #116ab4); /* hover for primary accent */
   --clr-primary-accent-focus-shadow: light-dark(rgba(33, 150, 243, 0.25), rgba(3, 7, 12, 0.25)); /* focus shadow for inputs with primary accent */
   --clr-primary-accent-transparent-medium: light-dark(rgba(33, 150, 243, 0.3), rgba(20, 70, 120, 0.3)); /* for active call shadow */
   --clr-primary-action: light-dark(#1e89e6, #1571c1); /* blue 600, primary buttons */
@@ -69,7 +72,7 @@
   --clr-staff-accent: light-dark(#689f38, #598830); /* Staff color */
   --clr-badge-inv: light-dark(#fffd, #cccd); /* Badge inverted text */
   --clr-cyan-accent: light-dark(#0097a8, #006570); /* Checkmark icon, unread badge bg */
-  --clr-cyan-50: light-dark(#e0f7fa, #050809); /* Dummy view bg */
+  --clr-cyan-50: light-dark(#e0f7fa, #2f3e43); /* Dummy view bg */
   --clr-overlay-white-strong: light-dark(rgba(255, 255, 255, 0.9), rgba(0,0,0,0.90)); /* Image preview bg, video container bg */
   --clr-gray-medium-bg: light-dark(#777, #444); /* Image preview container bg (darker gray) */
   --clr-toast-bg: #333;
@@ -126,7 +129,7 @@
   --clr-bubble-meta-deleted-bg: var(--clr-primary-wash);
   --clr-bubble-meta-date-bg: light-dark(rgba(255 255 255 / 80%), rgba(40 40 40 / 80%));
   --clr-bubble-timestamp-text: light-dark(#777, #888);
-  --clr-bubble-author-text: var(--clr-gray-medium-bg);
+  --clr-bubble-author-text: light-dark(#777, #666);
 
   /* Reply Quotes */
   --clr-reply-quote-border: var(--clr-light-blue-accent);
@@ -533,6 +536,21 @@ textarea {
   padding-top: 0.45rem;
 }
 
+input[type="range"] {
+  width: 90%;
+}
+
+option {
+  padding: 0;
+}
+
+datalist {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
 /* END of input and buttons */
 
 /* BEGIN scrollbar styling.  */
@@ -819,7 +837,7 @@ div.trusted-badge {
   background-color: var(--clr-background-light-gray);
 }
 .action-button:active {
-  color: var(--clr-gray-medium-bg); /* #777 */
+  color: light-dark(#777, #666); /* #777 */
   background-color: var(--clr-background-extra-light-gray);
 }
 
@@ -1342,7 +1360,7 @@ i.search {
 
 .contact-box .contact-comment .material-icons {
   margin-bottom: 0.2rem;
-  color: var(--clr-gray-medium-bg); /* #777 */
+  color: light-dark(#777, #666); /* #777 */
 }
 
 /* Avatar and online-offline indicator */
@@ -2337,6 +2355,7 @@ video {
   max-width: 36rem;
   overflow-wrap: anywhere;
   padding: 0 0.75rem 0 0.75rem;
+  font-size: var(--message-text-size);
 }
 
 /* Increase font size when the message contains only emojis.

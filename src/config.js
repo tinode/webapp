@@ -152,3 +152,6 @@ export const TOAST_DURATION = 3_000;
 // Initial/default color scheme.
 export const DEFAULT_COLOR_SCHEME = 'light dark';
 
+// Default text size in points.
+export const DEFAULT_TEXT_SIZE = 10;
+
