@@ -16,8 +16,6 @@ export default class AccNotificationsView extends React.PureComponent {
       this.props.onToggleMessageSounds(checked);
     } else if (what == 'alert') {
       this.props.onTogglePushNotifications(checked);
-    } else if (what == 'incognito') {
-      this.props.onToggleIncognitoMode(checked);
     }
   }
 
@@ -46,14 +44,6 @@ export default class AccNotificationsView extends React.PureComponent {
             <CheckBox name="alert" id="desktop-alerts"
               checked={this.props.desktopAlerts}
               onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
-          </div>
-          <div className="panel-form-row">
-            <label htmlFor="incognito-mode">
-              <FormattedMessage id="label_incognito_mode" defaultMessage="Incognito mode:"
-                description="Label for incognito mode toggle" />
-            </label>
-            <CheckBox name="incognito" id="incognito-mode"
-              checked={this.props.incognitoMode} onChange={this.handleCheckboxClick} />
           </div>
         </div>
     );

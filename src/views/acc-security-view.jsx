@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
+import CheckBox from '../widgets/checkbox.jsx';
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 
@@ -42,6 +43,7 @@ class AccSecurityView extends React.Component {
     this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
   }
 
   handlePasswordUpdate(pwd) {
@@ -68,6 +70,10 @@ class AccSecurityView extends React.Component {
     let newState = {showPermissionEditorFor: undefined};
     newState[this.state.showPermissionEditorFor] = perm;
     this.setState(newState);
+  }
+
+  handleCheckboxClick(what, checked) {
+    this.props.onToggleIncognitoMode(checked);
   }
 
   handleDeleteAccount(e) {
@@ -107,6 +113,21 @@ class AccSecurityView extends React.Component {
                   onFinished={this.handlePasswordUpdate} />
               }</FormattedMessage>
             </div>
+          </div>
+          <div className="hr" />
+          <div className="panel-form-row">
+            <label htmlFor="incognito-mode">
+              <FormattedMessage id="label_incognito_mode" defaultMessage="Incognito mode:"
+                description="Label for incognito mode toggle" />
+            </label>
+            <CheckBox name="incognito" id="incognito-mode"
+              checked={this.props.incognitoMode} onChange={this.handleCheckboxClick} />
+          </div>
+          <div className="panel-form-row">
+            <span className="small">
+              <FormattedMessage id="incognito_mode_description" defaultMessage="Hide your online status and typing indicators."
+                description="Description for incognito mode toggle" />
+            </span>
           </div>
           <div className="hr" />
           <div className="panel-form-column">

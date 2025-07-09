@@ -2,22 +2,29 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import CheckBox from '../widgets/checkbox.jsx';
-
 export default class AccAppearanceView extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       colorSchema: props.colorSchema || 'light dark',
+      textSize: (props.textSize * 10) || '100',
     };
 
     this.handleColorSchemaSelected = this.handleColorSchemaSelected.bind(this);
+    this.handleTextSizeChanged = this.handleTextSizeChanged.bind(this);
   }
 
   handleColorSchemaSelected(e) {
     this.setState({colorSchema: e.currentTarget.value});
     this.props.onChangeColorSchema(e.currentTarget.value);
+  }
+
+  handleTextSizeChanged(e) {
+    // In %%.
+    this.setState({textSize: e.currentTarget.value});
+    // Convert %% to pt, 100% = 10pt.
+    this.props.onTextSizeChanged((e.currentTarget.value / 10) | 0);
   }
 
   render() {
@@ -59,6 +66,28 @@ export default class AccAppearanceView extends React.PureComponent {
                 </label>
               </li>
             </ul>
+          </div>
+          <div className="hr" />
+          <div className="panel-form-row">
+            <label className="small">
+              <FormattedMessage id="label_text_size" defaultMessage="Text size:"
+                description="Label adjusting text size" />
+            </label>
+          </div>
+          <div className="panel-form-column">
+            <div className="panel-form-row">
+              <input type="range" id="text_size" name="text_size" min="80" max="120" step="10"
+                list="text_size_options" value={this.state.textSize} onChange={this.handleTextSizeChanged} />
+            </div>
+            <div className="panel-form-row">
+              <datalist id="text_size_options">
+                <option value="80" label="80%" />
+                <option value="90" label="90%" />
+                <option value="100" label="100%" />
+                <option value="110" label="110%" />
+                <option value="120" label="120%" />
+              </datalist>
+            </div>
           </div>
         </div>
     );
