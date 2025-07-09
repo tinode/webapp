@@ -14,11 +14,11 @@ import ForwardDialog from '../widgets/forward-dialog.jsx';
 import CallIncoming from '../widgets/call-incoming.jsx';
 const PhoneCountrySelector = React.lazy(_ => import('../widgets/phone-country-selector.jsx'));
 
-import InfoView from './info-view.jsx';
+const InfoView = React.lazy(_ => import('./info-view.jsx'));
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_COLOR_SCHEME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH,
+import { API_KEY, APP_NAME, DEFAULT_COLOR_SCHEME, DEFAULT_P2P_ACCESS_MODE, DEFAULT_TEXT_SIZE, FORWARDED_PREVIEW_LENGTH,
   LOGGING_ENABLED, MEDIA_BREAKPOINT, WAKE_UP_TICK, WAKE_UP_TIMEOUT } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
@@ -216,7 +216,7 @@ class TinodeWeb extends React.Component {
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
       colorSchema: settings.colorSchema || DEFAULT_COLOR_SCHEME, // default: system default
-      textSize: settings.textSize || 10, // default size: 10pt
+      textSize: settings.textSize || DEFAULT_TEXT_SIZE, // default size: 10pt
       // Persistent request to enable alerts.
       desktopAlerts: persist && !!settings.desktopAlerts,
       // Enable / disable checkbox.
@@ -298,6 +298,7 @@ class TinodeWeb extends React.Component {
     window.addEventListener('hashchange', this.handleHashRoute);
 
     document.documentElement.style.colorScheme = this.state.colorSchema;
+    document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
 
     // Process background notifications from the service worker.
     if (typeof BroadcastChannel == 'function') {
@@ -1219,7 +1220,7 @@ class TinodeWeb extends React.Component {
   handleChangeTextSize(size) {
     this.setState({textSize: size | 0});
     LocalStorageUtil.updateObject('settings', {textSize: size});
-    document.documentElement.style.fontSize = `${size}pt`;
+    document.documentElement.style.setProperty('--message-text-size', `${size}pt`);
   }
 
   handleUpdateAccountTagsRequest(_, tags) {
@@ -1490,6 +1491,7 @@ class TinodeWeb extends React.Component {
 
     // Reset color scheme.
     document.documentElement.style.colorScheme = DEFAULT_COLOR_SCHEME;
+    document.documentElement.style.setProperty('--message-text-size', `${DEFAULT_TEXT_SIZE}pt`);
 
     clearInterval(this.reconnectCountdown);
 
@@ -2097,7 +2099,7 @@ class TinodeWeb extends React.Component {
             onToggleMessageSounds={this.handleToggleMessageSounds}
             onToggleIncognitoMode={this.handleToggleIncognitoMode}
             onChangeColorSchema={this.handleChangeColorSchema}
-            onChangeTextSize={this.handleChangeTextSize}
+            onTextSizeChanged={this.handleChangeTextSize}
             onCredAdd={this.handleCredAdd}
             onCredDelete={this.handleCredDelete}
             onCredConfirm={this.handleCredConfirm}
@@ -2174,38 +2176,41 @@ class TinodeWeb extends React.Component {
           : null}
 
         {this.state.infoPanel ?
-          <InfoView
-            tinode={this.tinode}
-            connected={this.state.connected}
-            displayMobile={this.state.displayMobile}
-            topic={this.state.topicSelected}
-            searchableContacts={this.state.searchableContacts}
-            myUserId={this.state.myUserId}
-            panel={this.state.infoPanel}
+          <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+            <InfoView
+              tinode={this.tinode}
+              connected={this.state.connected}
+              displayMobile={this.state.displayMobile}
+              topic={this.state.topicSelected}
+              searchableContacts={this.state.searchableContacts}
+              myUserId={this.state.myUserId}
+              panel={this.state.infoPanel}
 
-            errorText={this.state.errorText}
-            errorLevel={this.state.errorLevel}
-            errorAction={this.state.errorAction}
-            errorActionText={this.state.errorActionText}
+              errorText={this.state.errorText}
+              errorLevel={this.state.errorLevel}
+              errorAction={this.state.errorAction}
+              errorActionText={this.state.errorActionText}
 
-            onNavigate={this.infoNavigator}
-            onTopicDescUpdateRequest={this.handleTopicUpdateRequest}
-            onShowAlert={this.handleShowAlert}
-            onChangePermissions={this.handleChangePermissions}
-            onMemberUpdateRequest={this.handleMemberUpdateRequest}
-            onDeleteTopic={this.handleDeleteTopicRequest}
-            onDeleteMessages={this.handleDeleteMessagesRequest}
-            onLeaveTopic={this.handleLeaveUnsubRequest}
-            onBlockTopic={this.handleBlockTopicRequest}
-            onReportTopic={this.handleReportTopic}
-            onAddMember={this.handleManageGroupMembers}
-            onTopicTagsUpdateRequest={this.handleTagsUpdateRequest}
-            onTopicUnArchive={this.handleUnarchive}
-            onInitFind={this.tnInitFind}
-            onError={this.handleError}
+              onNavigate={this.infoNavigator}
+              onTopicDescUpdateRequest={this.handleTopicUpdateRequest}
+              onShowAlert={this.handleShowAlert}
+              onChangePermissions={this.handleChangePermissions}
+              onMemberUpdateRequest={this.handleMemberUpdateRequest}
+              onDeleteTopic={this.handleDeleteTopicRequest}
+              onDeleteMessages={this.handleDeleteMessagesRequest}
+              onLeaveTopic={this.handleLeaveUnsubRequest}
+              onBlockTopic={this.handleBlockTopicRequest}
+              onReportTopic={this.handleReportTopic}
+              onAddMember={this.handleManageGroupMembers}
+              onTopicTagsUpdateRequest={this.handleTagsUpdateRequest}
+              onTopicUnArchive={this.handleUnarchive}
+              onInitFind={this.tnInitFind}
+              onError={this.handleError}
 
-            showContextMenu={this.handleShowContextMenu}
-            />
+              showContextMenu={this.handleShowContextMenu}
+              />
+          </Suspense>
           :
           null
         }

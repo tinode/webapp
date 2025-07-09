@@ -11,7 +11,7 @@ import ContactsView from './contacts-view.jsx';
 const CreateAccountView = React.lazy(_ => import('./create-account-view.jsx'));
 import AccAppearanceView from './acc-appearance-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
-import AccSecurityView from './acc-security-view.jsx';
+const AccSecurityView = React.lazy(_ => import('./acc-security-view.jsx'));
 import AccSupportView from './acc-support-view.jsx';
 import LoginView from './login-view.jsx';
 import NewTopicView from './new-topic-view.jsx';
@@ -211,27 +211,30 @@ class SidepanelView extends React.PureComponent {
             colorSchema={this.props.colorSchema}
             textSize={this.props.textSize}
             onChangeColorSchema={this.props.onChangeColorSchema}
-            onChangeTextSize={this.props.onChangeTextSize} /> :
+            onTextSizeChanged={this.props.onTextSizeChanged} /> :
 
           view === 'notif' ?
           <AccNotificationsView
             messageSounds={this.props.messageSounds}
             desktopAlerts={this.props.desktopAlerts}
             desktopAlertsEnabled={this.props.desktopAlertsEnabled}
-            incognitoMode={this.props.incognitoMode}
             onTogglePushNotifications={this.props.onTogglePushNotifications}
-            onToggleMessageSounds={this.props.onToggleMessageSounds}
-            onToggleIncognitoMode={this.props.onToggleIncognitoMode} /> :
+            onToggleMessageSounds={this.props.onToggleMessageSounds} /> :
 
           view === 'security' ?
-          <AccSecurityView
-            tinode={this.props.tinode}
-            onUpdateAccountDesc={this.props.onUpdateAccountDesc}
-            onUpdatePassword={this.props.onUpdatePassword}
-            onLogout={this.props.onLogout}
-            onDeleteAccount={this.props.onDeleteAccount}
-            onShowAlert={this.props.onShowAlert}
-            onShowBlocked={this.props.onShowBlocked} /> :
+            <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+              defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+              <AccSecurityView
+                tinode={this.props.tinode}
+                incognitoMode={this.props.incognitoMode}
+                onUpdateAccountDesc={this.props.onUpdateAccountDesc}
+                onUpdatePassword={this.props.onUpdatePassword}
+                onLogout={this.props.onLogout}
+                onDeleteAccount={this.props.onDeleteAccount}
+                onShowAlert={this.props.onShowAlert}
+                onShowBlocked={this.props.onShowBlocked}
+                onToggleIncognitoMode={this.props.onToggleIncognitoMode} />
+            </Suspense> :
 
           view === 'support' ?
           <AccSupportView
