@@ -829,6 +829,12 @@ class DB {
       req.onsuccess = event => {
         this.db = event.target.result;
         this.disabled = false;
+        this.db.onversionchange = _ => {
+          this.#logger('PCache', "another tab tries to upgrade DB, shutting down");
+          this.db.close();
+          this.db = null;
+          this.disabled = true;
+        };
         resolve(this.db);
       };
       req.onerror = event => {
@@ -842,24 +848,36 @@ class DB {
           this.#logger('PCache', "failed to create storage", event);
           this.#onError(event.target.error);
         };
-        this.db.createObjectStore('topic', {
-          keyPath: 'name'
-        });
-        this.db.createObjectStore('user', {
-          keyPath: 'uid'
-        });
-        this.db.createObjectStore('subscription', {
-          keyPath: ['topic', 'uid']
-        });
-        this.db.createObjectStore('message', {
-          keyPath: ['topic', 'seq']
-        });
-        const dellog = this.db.createObjectStore('dellog', {
-          keyPath: ['topic', 'low', 'hi']
-        });
-        dellog.createIndex('topic_clear', ['topic', 'clear'], {
-          unique: false
-        });
+        if (!this.db.objectStoreNames.contains('topic')) {
+          this.db.createObjectStore('topic', {
+            keyPath: 'name'
+          });
+        }
+        if (!this.db.objectStoreNames.contains('user')) {
+          this.db.createObjectStore('user', {
+            keyPath: 'uid'
+          });
+        }
+        if (!this.db.objectStoreNames.contains('subscription')) {
+          this.db.createObjectStore('subscription', {
+            keyPath: ['topic', 'uid']
+          });
+        }
+        if (!this.db.objectStoreNames.contains('message')) {
+          this.db.createObjectStore('message', {
+            keyPath: ['topic', 'seq']
+          });
+        }
+        if (!this.db.objectStoreNames.contains('dellog')) {
+          const dellog = this.db.createObjectStore('dellog', {
+            keyPath: ['topic', 'low', 'hi']
+          });
+          if (!dellog.indexNames.contains('topic_clear')) {
+            dellog.createIndex('topic_clear', ['topic', 'clear'], {
+              unique: false
+            });
+          }
+        }
       };
     });
   }
@@ -5378,7 +5396,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.1";
+const PACKAGE_VERSION = "0.24.2";
 
 /***/ })
 
