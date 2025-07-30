@@ -9,15 +9,9 @@ import {
 } from './strformat.js';
 
 describe('shortDateFormat', () => {
-  const now = new Date('2025-07-25T12:30:00');
-  // Mock Date.now
-  let dateNowSpy;
-  beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => now.getTime());
-  });
-  afterAll(() => {
-    dateNowSpy.mockRestore();
-  });
+  jest
+    .useFakeTimers()
+    .setSystemTime(new Date('2025-07-25T12:30:00Z'));
 
   test('should format for same day', () => {
     const then = new Date('2025-07-25T10:15:00');
@@ -38,15 +32,10 @@ describe('shortDateFormat', () => {
 });
 
 describe('relativeDateFormat', () => {
-  const now = new Date('2025-07-25T12:30:00Z');
-  // Mock Date.now
-  let dateNowSpy;
-  beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => now.getTime());
-  });
-  afterAll(() => {
-    dateNowSpy.mockRestore();
-  });
+  // Mock current date to a fixed point for consistent testing.
+  jest
+    .useFakeTimers()
+    .setSystemTime(new Date('2025-07-25T12:30:00Z'));
 
   test('should format for today', () => {
     const then = new Date('2025-07-25T10:00:00Z');
