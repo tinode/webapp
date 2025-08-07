@@ -7712,6 +7712,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
+const JSON_MIME_TYPE = 'application/json+drafty';
+const JSON_MIME_TYPE_LEGACY = 'application/json';
 function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
@@ -7937,7 +7939,7 @@ function previewFormatter(style, data, values, key) {
       break;
     case 'EX':
       if (data) {
-        if (data.mime == 'application/json') {
+        if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
           return null;
         }
         delete data.val;
@@ -8056,7 +8058,7 @@ function quoteFormatter(style, data, values, key) {
       case 'EX':
         let fname;
         if (data) {
-          if (data.mime == 'application/json') {
+          if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
             return null;
           }
           fname = data.name;
@@ -16514,7 +16516,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const attachments = [];
     if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
-        if (att.mime == 'application/json') {
+        if (att.mime == 'application/json+drafty' || att.mime == 'application/json') {
           return;
         }
         attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {

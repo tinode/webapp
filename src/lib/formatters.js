@@ -44,6 +44,9 @@ const messages = defineMessages({
   }
 });
 
+const JSON_MIME_TYPE = 'application/json+drafty';
+const JSON_MIME_TYPE_LEGACY = 'application/json'; // Remove in 2026.
+
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
 // 'this' must contain:
 //    viewportWidth:
@@ -304,7 +307,7 @@ export function previewFormatter(style, data, values, key) {
       break;
     case 'EX':
       if (data) {
-        if (data.mime == 'application/json') {
+        if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
           // Ignore JSON attachments: they are form response payloads.
           return null;
         }
@@ -426,7 +429,7 @@ function quoteFormatter(style, data, values, key) {
       case 'EX':
         let fname;
         if (data) {
-          if (data.mime == 'application/json') {
+          if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
             // Ignore JSON attachments: they are form response payloads.
             return null;
           }
