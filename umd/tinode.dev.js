@@ -1452,7 +1452,8 @@ class DB {
 const MAX_FORM_ELEMENTS = 8;
 const MAX_PREVIEW_ATTACHMENTS = 3;
 const MAX_PREVIEW_DATA_SIZE = 64;
-const JSON_MIME_TYPE = 'application/json';
+const JSON_MIME_TYPE = 'application/json+drafty';
+const JSON_MIME_TYPE_LEGACY = 'application/json';
 const DRAFTY_MIME_TYPE = 'text/x-drafty';
 const ALLOWED_ENT_FIELDS = ['act', 'height', 'duration', 'incoming', 'mime', 'name', 'premime', 'preref', 'preview', 'ref', 'size', 'state', 'url', 'val', 'width'];
 const segmenter = new Intl.Segmenter();
@@ -2536,7 +2537,7 @@ Drafty.sanitizeEntities = function (content) {
 };
 Drafty.getDownloadUrl = function (entData) {
   let url = null;
-  if (entData.mime != JSON_MIME_TYPE && entData.val) {
+  if (entData.mime != JSON_MIME_TYPE && entData.mime != JSON_MIME_TYPE_LEGACY && entData.val) {
     url = base64toObjectUrl(entData.val, entData.mime, Drafty.logger);
   } else if (typeof entData.ref == 'string') {
     url = entData.ref;
@@ -3020,7 +3021,7 @@ function attachmentsToEnd(tree, limit) {
         if (attachments.length == limit) {
           continue;
         }
-        if (c.data['mime'] == JSON_MIME_TYPE) {
+        if (c.data['mime'] == JSON_MIME_TYPE || c.data['mime'] == JSON_MIME_TYPE_LEGACY) {
           continue;
         }
         delete c.att;
@@ -5396,7 +5397,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.2";
+const PACKAGE_VERSION = "0.24.3";
 
 /***/ })
 

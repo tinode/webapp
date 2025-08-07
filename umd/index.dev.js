@@ -11156,6 +11156,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendFileAttachment(file) {
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const jsonMimeConverter = fileType => fileType == 'application/json' ? 'application/octet-stream' : fileType;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -11164,7 +11165,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
       const uploadCompletionPromise = uploader.upload(file);
       const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
-        mime: file.type,
+        mime: jsonMimeConverter(file.type),
         filename: file.name,
         size: file.size,
         urlPromise: uploadCompletionPromise
@@ -11172,7 +11173,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
-        mime: b64.mime,
+        mime: jsonMimeConverter(b64.mime),
         data: b64.bits,
         filename: b64.name,
         size: file.size
