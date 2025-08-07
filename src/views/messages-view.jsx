@@ -1022,6 +1022,11 @@ class MessagesView extends React.Component {
     const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
+    // If the attachment is a JSON file, then use 'application/octet-stream' instead of 'application/json'.
+    // This is a temporary workaround for the collision with the 'application/json' MIME type of form responses.
+    // Remove this code in 2026 or so.
+    const jsonMimeConverter = (fileType) => fileType == 'application/json' ? 'application/octet-stream' : fileType;
+
     if (file.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -1031,7 +1036,7 @@ class MessagesView extends React.Component {
       }
       const uploadCompletionPromise = uploader.upload(file);
       const msg = Drafty.attachFile(null, {
-        mime: file.type,
+        mime: jsonMimeConverter(file.type),
         filename: file.name,
         size: file.size,
         urlPromise: uploadCompletionPromise
@@ -1042,7 +1047,7 @@ class MessagesView extends React.Component {
       // Small enough to send inband.
       fileToBase64(file)
         .then(b64 => this.sendMessage(Drafty.attachFile(null, {
-          mime: b64.mime,
+          mime: jsonMimeConverter(b64.mime),
           data: b64.bits,
           filename: b64.name,
           size: file.size
