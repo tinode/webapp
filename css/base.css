@@ -1674,8 +1674,7 @@ img.channel {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  height: auto;
-  background-color: #bbb;
+  background-color: #ccc;
   padding: 1rem;
   border-radius: 0.5rem;
 }
