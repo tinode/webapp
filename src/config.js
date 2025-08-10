@@ -148,3 +148,6 @@ export const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS
 
 // Toast display duration, milliseconds.
 export const TOAST_DURATION = 3_000;
+
+// MIME type for the legacy Drafty form-response data.
+export const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json'; // Remove in 2026.

@@ -7230,6 +7230,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CLICKABLE_URL_SCHEMES: function() { return /* binding */ CLICKABLE_URL_SCHEMES; },
 /* harmony export */   DEFAULT_HOST: function() { return /* binding */ DEFAULT_HOST; },
 /* harmony export */   DEFAULT_P2P_ACCESS_MODE: function() { return /* binding */ DEFAULT_P2P_ACCESS_MODE; },
+/* harmony export */   DRAFTY_FR_MIME_TYPE_LEGACY: function() { return /* binding */ DRAFTY_FR_MIME_TYPE_LEGACY; },
 /* harmony export */   EDIT_PREVIEW_LENGTH: function() { return /* binding */ EDIT_PREVIEW_LENGTH; },
 /* harmony export */   FORWARDED_PREVIEW_LENGTH: function() { return /* binding */ FORWARDED_PREVIEW_LENGTH; },
 /* harmony export */   IMAGE_PREVIEW_DIM: function() { return /* binding */ IMAGE_PREVIEW_DIM; },
@@ -7326,6 +7327,7 @@ const WAKE_UP_TICK = 1000;
 const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
 const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZpZXdCb3g9IjAgMCAxNyAxNyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMy41NjIgMXYxNS40NTlsNC42ODYtMy4yNyA0Ljc1MiAzLjI2di0xNS40NDloLTkuNDM4ek0xMiAxNC41NTFsLTMuNzU2LTIuNTc4LTMuNjgxIDIuNTY4di0xMi41NDFoNy40Mzd2MTIuNTUxeiIgZmlsbD0iIzU1NTU1NSIgLz48L3N2Zz4=';
 const TOAST_DURATION = 3_000;
+const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json';
 
 /***/ }),
 
@@ -7712,8 +7714,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-const JSON_MIME_TYPE = 'application/json+drafty';
-const JSON_MIME_TYPE_LEGACY = 'application/json';
 function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
@@ -7939,7 +7939,7 @@ function previewFormatter(style, data, values, key) {
       break;
     case 'EX':
       if (data) {
-        if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(data.mime)) {
           return null;
         }
         delete data.val;
@@ -8058,7 +8058,7 @@ function quoteFormatter(style, data, values, key) {
       case 'EX':
         let fname;
         if (data) {
-          if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
+          if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(data.mime)) {
             return null;
           }
           fname = data.name;
@@ -11156,7 +11156,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendFileAttachment(file) {
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    const jsonMimeConverter = fileType => fileType == 'application/json' ? 'application/octet-stream' : fileType;
+    const jsonMimeConverter = fileType => fileType === _config_js__WEBPACK_IMPORTED_MODULE_18__.DRAFTY_FR_MIME_TYPE_LEGACY ? 'application/octet-stream' : fileType;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -16517,7 +16517,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const attachments = [];
     if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
-        if (att.mime == 'application/json+drafty' || att.mime == 'application/json') {
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(att.mime)) {
           return;
         }
         attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {

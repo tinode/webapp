@@ -162,8 +162,7 @@ class BaseChatMessage extends React.PureComponent {
     const attachments = [];
     if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
       Drafty.attachments(content, (att, i) => {
-        if (att.mime == 'application/json+drafty' ||
-            att.mime == 'application/json') {
+        if (Drafty.isFormResponseType(att.mime)) {
           // Don't show json drafty form response objects as attachments.
           // They are not meant for users.
           return;

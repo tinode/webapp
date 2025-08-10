@@ -22,8 +22,8 @@ import SendMessage from '../widgets/send-message.jsx';
 import VideoPreview from '../widgets/video-preview.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, IMMEDIATE_P2P_SUBSCRIPTION,
-  KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
-  READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
+  DRAFTY_FR_MIME_TYPE_LEGACY, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM,
+  MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
@@ -1025,7 +1025,7 @@ class MessagesView extends React.Component {
     // If the attachment is a JSON file, then use 'application/octet-stream' instead of 'application/json'.
     // This is a temporary workaround for the collision with the 'application/json' MIME type of form responses.
     // Remove this code in 2026 or so.
-    const jsonMimeConverter = (fileType) => fileType == 'application/json' ? 'application/octet-stream' : fileType;
+    const jsonMimeConverter = (fileType) => fileType === DRAFTY_FR_MIME_TYPE_LEGACY ? 'application/octet-stream' : fileType;
 
     if (file.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.

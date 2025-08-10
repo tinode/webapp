@@ -10,8 +10,8 @@ import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
-import { BROKEN_IMAGE_SIZE, CLICKABLE_URL_SCHEMES, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO, REM_SIZE,
-    VIDEO_THUMBNAIL_WIDTH } from '../config.js';
+import { BROKEN_IMAGE_SIZE, CLICKABLE_URL_SCHEMES, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO,
+  REM_SIZE, VIDEO_THUMBNAIL_WIDTH } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
 import { idToColorClass, secondsToTime, shortenFileName } from './strformat.js';
 import { cancelablePromise, sanitizeUrl, sanitizeUrlForMime } from './utils.js';
@@ -43,9 +43,6 @@ const messages = defineMessages({
     description: 'Unsupported entity in drafty'
   }
 });
-
-const JSON_MIME_TYPE = 'application/json+drafty';
-const JSON_MIME_TYPE_LEGACY = 'application/json'; // Remove in 2026.
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
 // 'this' must contain:
@@ -307,7 +304,7 @@ export function previewFormatter(style, data, values, key) {
       break;
     case 'EX':
       if (data) {
-        if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
+        if (Drafty.isFormResponseType(data.mime)) {
           // Ignore JSON attachments: they are form response payloads.
           return null;
         }
@@ -429,7 +426,7 @@ function quoteFormatter(style, data, values, key) {
       case 'EX':
         let fname;
         if (data) {
-          if (data.mime == JSON_MIME_TYPE || data.mime == JSON_MIME_TYPE_LEGACY) {
+          if (Drafty.isFormResponseType(data.mime)) {
             // Ignore JSON attachments: they are form response payloads.
             return null;
           }
