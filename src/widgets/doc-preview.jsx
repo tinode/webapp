@@ -51,7 +51,7 @@ export default class DocPreview extends React.PureComponent {
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container">
-          <div className="flex-column narrow">
+          <div className="doc-card">
             <i className="material-icons gray">{iconFromMime(this.props.content.type)}</i>
             <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
               description="Label for a file name" /></b> {shortenFileName(this.props.content.name, 24) || '-'}</div>

@@ -97,7 +97,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$q = "@firebase/app";
-const version$1 = "0.11.5";
+const version$1 = "0.13.2";
 
 /**
  * @license
@@ -163,12 +163,12 @@ const name$4 = "@firebase/storage-compat";
 
 const name$3 = "@firebase/firestore";
 
-const name$2 = "@firebase/vertexai";
+const name$2 = "@firebase/ai";
 
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "11.6.1";
+const version = "11.10.0";
 
 /**
  * @license
@@ -505,7 +505,7 @@ class FirebaseServerAppImpl extends FirebaseAppImpl {
         // Build configuration parameters for the FirebaseAppImpl base class.
         const automaticDataCollectionEnabled = serverConfig.automaticDataCollectionEnabled !== undefined
             ? serverConfig.automaticDataCollectionEnabled
-            : false;
+            : true;
         // Create the FirebaseAppSettings object for the FirebaseAppImp constructor.
         const config = {
             name,
@@ -616,7 +616,7 @@ function initializeApp(_options, rawConfig = {}) {
         const name = rawConfig;
         rawConfig = { name };
     }
-    const config = Object.assign({ name: DEFAULT_ENTRY_NAME, automaticDataCollectionEnabled: false }, rawConfig);
+    const config = Object.assign({ name: DEFAULT_ENTRY_NAME, automaticDataCollectionEnabled: true }, rawConfig);
     const name = config.name;
     if (typeof name !== 'string' || !name) {
         throw ERROR_FACTORY.create("bad-app-name" /* AppError.BAD_APP_NAME */, {
@@ -652,7 +652,7 @@ function initializeServerApp(_options, _serverAppConfig) {
         throw ERROR_FACTORY.create("invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */);
     }
     if (_serverAppConfig.automaticDataCollectionEnabled === undefined) {
-        _serverAppConfig.automaticDataCollectionEnabled = false;
+        _serverAppConfig.automaticDataCollectionEnabled = true;
     }
     let appOptions;
     if (_isFirebaseApp(_options)) {
@@ -1694,7 +1694,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.13";
+const version = "0.6.18";
 
 /**
  * @license
@@ -4133,7 +4133,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.17";
+const version = "0.12.22";
 
 /**
  * @license
@@ -4419,6 +4419,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   isAdmin: function() { return /* binding */ isAdmin; },
 /* harmony export */   isBrowser: function() { return /* binding */ isBrowser; },
 /* harmony export */   isBrowserExtension: function() { return /* binding */ isBrowserExtension; },
+/* harmony export */   isCloudWorkstation: function() { return /* binding */ isCloudWorkstation; },
 /* harmony export */   isCloudflareWorker: function() { return /* binding */ isCloudflareWorker; },
 /* harmony export */   isElectron: function() { return /* binding */ isElectron; },
 /* harmony export */   isEmpty: function() { return /* binding */ isEmpty; },
@@ -4429,6 +4430,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   isNodeSdk: function() { return /* binding */ isNodeSdk; },
 /* harmony export */   isReactNative: function() { return /* binding */ isReactNative; },
 /* harmony export */   isSafari: function() { return /* binding */ isSafari; },
+/* harmony export */   isSafariOrWebkit: function() { return /* binding */ isSafariOrWebkit; },
 /* harmony export */   isUWP: function() { return /* binding */ isUWP; },
 /* harmony export */   isValidFormat: function() { return /* binding */ isValidFormat; },
 /* harmony export */   isValidTimestamp: function() { return /* binding */ isValidTimestamp; },
@@ -4437,6 +4439,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   jsonEval: function() { return /* binding */ jsonEval; },
 /* harmony export */   map: function() { return /* binding */ map; },
 /* harmony export */   ordinal: function() { return /* binding */ ordinal; },
+/* harmony export */   pingServer: function() { return /* binding */ pingServer; },
 /* harmony export */   promiseWithTimeout: function() { return /* binding */ promiseWithTimeout; },
 /* harmony export */   querystring: function() { return /* binding */ querystring; },
 /* harmony export */   querystringDecode: function() { return /* binding */ querystringDecode; },
@@ -4444,6 +4447,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   stringLength: function() { return /* binding */ stringLength; },
 /* harmony export */   stringToByteArray: function() { return /* binding */ stringToByteArray; },
 /* harmony export */   stringify: function() { return /* binding */ stringify; },
+/* harmony export */   updateEmulatorBanner: function() { return /* binding */ updateEmulatorBanner; },
 /* harmony export */   validateArgCount: function() { return /* binding */ validateArgCount; },
 /* harmony export */   validateCallback: function() { return /* binding */ validateCallback; },
 /* harmony export */   validateContextObject: function() { return /* binding */ validateContextObject; },
@@ -5122,6 +5126,53 @@ class Deferred {
 
 /**
  * @license
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Checks whether host is a cloud workstation or not.
+ * @public
+ */
+function isCloudWorkstation(url) {
+    // `isCloudWorkstation` is called without protocol in certain connect*Emulator functions
+    // In HTTP request builders, it's called with the protocol.
+    // If called with protocol prefix, it's a valid URL, so we extract the hostname
+    // If called without, we assume the string is the hostname.
+    try {
+        const host = url.startsWith('http://') || url.startsWith('https://')
+            ? new URL(url).hostname
+            : url;
+        return host.endsWith('.cloudworkstations.dev');
+    }
+    catch (_a) {
+        return false;
+    }
+}
+/**
+ * Makes a fetch request to the given server.
+ * Mostly used for forwarding cookies in Firebase Studio.
+ * @public
+ */
+async function pingServer(endpoint) {
+    const result = await fetch(endpoint, {
+        credentials: 'include'
+    });
+    return result.ok;
+}
+
+/**
+ * @license
  * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -5164,6 +5215,152 @@ function createMockUserToken(token, projectId) {
         base64urlEncodeWithoutPadding(JSON.stringify(payload)),
         signature
     ].join('.');
+}
+const emulatorStatus = {};
+// Checks whether any products are running on an emulator
+function getEmulatorSummary() {
+    const summary = {
+        prod: [],
+        emulator: []
+    };
+    for (const key of Object.keys(emulatorStatus)) {
+        if (emulatorStatus[key]) {
+            summary.emulator.push(key);
+        }
+        else {
+            summary.prod.push(key);
+        }
+    }
+    return summary;
+}
+function getOrCreateEl(id) {
+    let parentDiv = document.getElementById(id);
+    let created = false;
+    if (!parentDiv) {
+        parentDiv = document.createElement('div');
+        parentDiv.setAttribute('id', id);
+        created = true;
+    }
+    return { created, element: parentDiv };
+}
+let previouslyDismissed = false;
+/**
+ * Updates Emulator Banner. Primarily used for Firebase Studio
+ * @param name
+ * @param isRunningEmulator
+ * @public
+ */
+function updateEmulatorBanner(name, isRunningEmulator) {
+    if (typeof window === 'undefined' ||
+        typeof document === 'undefined' ||
+        !isCloudWorkstation(window.location.host) ||
+        emulatorStatus[name] === isRunningEmulator ||
+        emulatorStatus[name] || // If already set to use emulator, can't go back to prod.
+        previouslyDismissed) {
+        return;
+    }
+    emulatorStatus[name] = isRunningEmulator;
+    function prefixedId(id) {
+        return `__firebase__banner__${id}`;
+    }
+    const bannerId = '__firebase__banner';
+    const summary = getEmulatorSummary();
+    const showError = summary.prod.length > 0;
+    function tearDown() {
+        const element = document.getElementById(bannerId);
+        if (element) {
+            element.remove();
+        }
+    }
+    function setupBannerStyles(bannerEl) {
+        bannerEl.style.display = 'flex';
+        bannerEl.style.background = '#7faaf0';
+        bannerEl.style.position = 'fixed';
+        bannerEl.style.bottom = '5px';
+        bannerEl.style.left = '5px';
+        bannerEl.style.padding = '.5em';
+        bannerEl.style.borderRadius = '5px';
+        bannerEl.style.alignItems = 'center';
+    }
+    function setupIconStyles(prependIcon, iconId) {
+        prependIcon.setAttribute('width', '24');
+        prependIcon.setAttribute('id', iconId);
+        prependIcon.setAttribute('height', '24');
+        prependIcon.setAttribute('viewBox', '0 0 24 24');
+        prependIcon.setAttribute('fill', 'none');
+        prependIcon.style.marginLeft = '-6px';
+    }
+    function setupCloseBtn() {
+        const closeBtn = document.createElement('span');
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.marginLeft = '16px';
+        closeBtn.style.fontSize = '24px';
+        closeBtn.innerHTML = ' &times;';
+        closeBtn.onclick = () => {
+            previouslyDismissed = true;
+            tearDown();
+        };
+        return closeBtn;
+    }
+    function setupLinkStyles(learnMoreLink, learnMoreId) {
+        learnMoreLink.setAttribute('id', learnMoreId);
+        learnMoreLink.innerText = 'Learn more';
+        learnMoreLink.href =
+            'https://firebase.google.com/docs/studio/preview-apps#preview-backend';
+        learnMoreLink.setAttribute('target', '__blank');
+        learnMoreLink.style.paddingLeft = '5px';
+        learnMoreLink.style.textDecoration = 'underline';
+    }
+    function setupDom() {
+        const banner = getOrCreateEl(bannerId);
+        const firebaseTextId = prefixedId('text');
+        const firebaseText = document.getElementById(firebaseTextId) || document.createElement('span');
+        const learnMoreId = prefixedId('learnmore');
+        const learnMoreLink = document.getElementById(learnMoreId) ||
+            document.createElement('a');
+        const prependIconId = prefixedId('preprendIcon');
+        const prependIcon = document.getElementById(prependIconId) ||
+            document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        if (banner.created) {
+            // update styles
+            const bannerEl = banner.element;
+            setupBannerStyles(bannerEl);
+            setupLinkStyles(learnMoreLink, learnMoreId);
+            const closeBtn = setupCloseBtn();
+            setupIconStyles(prependIcon, prependIconId);
+            bannerEl.append(prependIcon, firebaseText, learnMoreLink, closeBtn);
+            document.body.appendChild(bannerEl);
+        }
+        if (showError) {
+            firebaseText.innerText = `Preview backend disconnected.`;
+            prependIcon.innerHTML = `<g clip-path="url(#clip0_6013_33858)">
+<path d="M4.8 17.6L12 5.6L19.2 17.6H4.8ZM6.91667 16.4H17.0833L12 7.93333L6.91667 16.4ZM12 15.6C12.1667 15.6 12.3056 15.5444 12.4167 15.4333C12.5389 15.3111 12.6 15.1667 12.6 15C12.6 14.8333 12.5389 14.6944 12.4167 14.5833C12.3056 14.4611 12.1667 14.4 12 14.4C11.8333 14.4 11.6889 14.4611 11.5667 14.5833C11.4556 14.6944 11.4 14.8333 11.4 15C11.4 15.1667 11.4556 15.3111 11.5667 15.4333C11.6889 15.5444 11.8333 15.6 12 15.6ZM11.4 13.6H12.6V10.4H11.4V13.6Z" fill="#212121"/>
+</g>
+<defs>
+<clipPath id="clip0_6013_33858">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>`;
+        }
+        else {
+            prependIcon.innerHTML = `<g clip-path="url(#clip0_6083_34804)">
+<path d="M11.4 15.2H12.6V11.2H11.4V15.2ZM12 10C12.1667 10 12.3056 9.94444 12.4167 9.83333C12.5389 9.71111 12.6 9.56667 12.6 9.4C12.6 9.23333 12.5389 9.09444 12.4167 8.98333C12.3056 8.86111 12.1667 8.8 12 8.8C11.8333 8.8 11.6889 8.86111 11.5667 8.98333C11.4556 9.09444 11.4 9.23333 11.4 9.4C11.4 9.56667 11.4556 9.71111 11.5667 9.83333C11.6889 9.94444 11.8333 10 12 10ZM12 18.4C11.1222 18.4 10.2944 18.2333 9.51667 17.9C8.73889 17.5667 8.05556 17.1111 7.46667 16.5333C6.88889 15.9444 6.43333 15.2611 6.1 14.4833C5.76667 13.7056 5.6 12.8778 5.6 12C5.6 11.1111 5.76667 10.2833 6.1 9.51667C6.43333 8.73889 6.88889 8.06111 7.46667 7.48333C8.05556 6.89444 8.73889 6.43333 9.51667 6.1C10.2944 5.76667 11.1222 5.6 12 5.6C12.8889 5.6 13.7167 5.76667 14.4833 6.1C15.2611 6.43333 15.9389 6.89444 16.5167 7.48333C17.1056 8.06111 17.5667 8.73889 17.9 9.51667C18.2333 10.2833 18.4 11.1111 18.4 12C18.4 12.8778 18.2333 13.7056 17.9 14.4833C17.5667 15.2611 17.1056 15.9444 16.5167 16.5333C15.9389 17.1111 15.2611 17.5667 14.4833 17.9C13.7167 18.2333 12.8889 18.4 12 18.4ZM12 17.2C13.4444 17.2 14.6722 16.6944 15.6833 15.6833C16.6944 14.6722 17.2 13.4444 17.2 12C17.2 10.5556 16.6944 9.32778 15.6833 8.31667C14.6722 7.30555 13.4444 6.8 12 6.8C10.5556 6.8 9.32778 7.30555 8.31667 8.31667C7.30556 9.32778 6.8 10.5556 6.8 12C6.8 13.4444 7.30556 14.6722 8.31667 15.6833C9.32778 16.6944 10.5556 17.2 12 17.2Z" fill="#212121"/>
+</g>
+<defs>
+<clipPath id="clip0_6083_34804">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>`;
+            firebaseText.innerText = 'Preview backend running in this workspace.';
+        }
+        firebaseText.setAttribute('id', firebaseTextId);
+    }
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', setupDom);
+    }
+    else {
+        setupDom();
+    }
 }
 
 /**
@@ -5297,6 +5494,14 @@ function isSafari() {
     return (!isNode() &&
         !!navigator.userAgent &&
         navigator.userAgent.includes('Safari') &&
+        !navigator.userAgent.includes('Chrome'));
+}
+/** Returns true if we are running in Safari or WebKit */
+function isSafariOrWebkit() {
+    return (!isNode() &&
+        !!navigator.userAgent &&
+        (navigator.userAgent.includes('Safari') ||
+            navigator.userAgent.includes('WebKit')) &&
         !navigator.userAgent.includes('Chrome'));
 }
 /**
@@ -6615,7 +6820,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "11.6.1";
+var version = "11.10.0";
 
 /**
  * @license
@@ -6985,7 +7190,8 @@ const unwrap = (value) => reverseTransformCache.get(value);
 
 
 var m = __webpack_require__(/*! react-dom */ "react-dom");
-if (false) {} else {
+if (false) // removed by dead control flow
+{} else {
   var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
   exports.createRoot = function(c, o) {
     i.usingClientEntryPoint = true;
@@ -7026,6 +7232,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DEFAULT_HOST: function() { return /* binding */ DEFAULT_HOST; },
 /* harmony export */   DEFAULT_P2P_ACCESS_MODE: function() { return /* binding */ DEFAULT_P2P_ACCESS_MODE; },
 /* harmony export */   DEFAULT_TEXT_SIZE: function() { return /* binding */ DEFAULT_TEXT_SIZE; },
+/* harmony export */   DRAFTY_FR_MIME_TYPE_LEGACY: function() { return /* binding */ DRAFTY_FR_MIME_TYPE_LEGACY; },
 /* harmony export */   EDIT_PREVIEW_LENGTH: function() { return /* binding */ EDIT_PREVIEW_LENGTH; },
 /* harmony export */   FORWARDED_PREVIEW_LENGTH: function() { return /* binding */ FORWARDED_PREVIEW_LENGTH; },
 /* harmony export */   IMAGE_PREVIEW_DIM: function() { return /* binding */ IMAGE_PREVIEW_DIM; },
@@ -7124,6 +7331,7 @@ const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlb
 const TOAST_DURATION = 3_000;
 const DEFAULT_COLOR_SCHEME = 'light dark';
 const DEFAULT_TEXT_SIZE = 10;
+const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json';
 
 /***/ }),
 
@@ -7735,7 +7943,7 @@ function previewFormatter(style, data, values, key) {
       break;
     case 'EX':
       if (data) {
-        if (data.mime == 'application/json') {
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(data.mime)) {
           return null;
         }
         delete data.val;
@@ -7854,7 +8062,7 @@ function quoteFormatter(style, data, values, key) {
       case 'EX':
         let fname;
         if (data) {
-          if (data.mime == 'application/json') {
+          if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(data.mime)) {
             return null;
           }
           fname = data.name;
@@ -8453,7 +8661,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.0";
+const PACKAGE_VERSION = "0.25.0";
 
 /***/ }),
 
@@ -10092,6 +10300,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendFileAttachment(file) {
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const jsonMimeConverter = fileType => fileType === _config_js__WEBPACK_IMPORTED_MODULE_18__.DRAFTY_FR_MIME_TYPE_LEGACY ? 'application/octet-stream' : fileType;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -10100,7 +10309,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
       const uploadCompletionPromise = uploader.upload(file);
       const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
-        mime: file.type,
+        mime: jsonMimeConverter(file.type),
         filename: file.name,
         size: file.size,
         urlPromise: uploadCompletionPromise
@@ -10108,7 +10317,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
-        mime: b64.mime,
+        mime: jsonMimeConverter(b64.mime),
         data: b64.bits,
         filename: b64.name,
         size: file.size
@@ -15514,7 +15723,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const attachments = [];
     if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
-        if (att.mime == 'application/json') {
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(att.mime)) {
           return;
         }
         attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -17147,7 +17356,7 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column narrow"
+      className: "doc-card"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
     }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -20528,7 +20737,7 @@ module.exports = tinode;
 /******/ 			__webpack_require__.r(ns);
 /******/ 			var def = {};
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach(function(key) { def[key] = function() { return value[key]; }; });
 /******/ 			}
 /******/ 			def['default'] = function() { return value; };

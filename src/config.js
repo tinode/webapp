@@ -155,3 +155,5 @@ export const DEFAULT_COLOR_SCHEME = 'light dark';
 // Default text size in points.
 export const DEFAULT_TEXT_SIZE = 10;
 
+// MIME type for the legacy Drafty form-response data.
+export const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json'; // Remove in 2026.

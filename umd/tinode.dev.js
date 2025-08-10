@@ -829,6 +829,12 @@ class DB {
       req.onsuccess = event => {
         this.db = event.target.result;
         this.disabled = false;
+        this.db.onversionchange = _ => {
+          this.#logger('PCache', "another tab tries to upgrade DB, shutting down");
+          this.db.close();
+          this.db = null;
+          this.disabled = true;
+        };
         resolve(this.db);
       };
       req.onerror = event => {
@@ -842,24 +848,36 @@ class DB {
           this.#logger('PCache', "failed to create storage", event);
           this.#onError(event.target.error);
         };
-        this.db.createObjectStore('topic', {
-          keyPath: 'name'
-        });
-        this.db.createObjectStore('user', {
-          keyPath: 'uid'
-        });
-        this.db.createObjectStore('subscription', {
-          keyPath: ['topic', 'uid']
-        });
-        this.db.createObjectStore('message', {
-          keyPath: ['topic', 'seq']
-        });
-        const dellog = this.db.createObjectStore('dellog', {
-          keyPath: ['topic', 'low', 'hi']
-        });
-        dellog.createIndex('topic_clear', ['topic', 'clear'], {
-          unique: false
-        });
+        if (!this.db.objectStoreNames.contains('topic')) {
+          this.db.createObjectStore('topic', {
+            keyPath: 'name'
+          });
+        }
+        if (!this.db.objectStoreNames.contains('user')) {
+          this.db.createObjectStore('user', {
+            keyPath: 'uid'
+          });
+        }
+        if (!this.db.objectStoreNames.contains('subscription')) {
+          this.db.createObjectStore('subscription', {
+            keyPath: ['topic', 'uid']
+          });
+        }
+        if (!this.db.objectStoreNames.contains('message')) {
+          this.db.createObjectStore('message', {
+            keyPath: ['topic', 'seq']
+          });
+        }
+        if (!this.db.objectStoreNames.contains('dellog')) {
+          const dellog = this.db.createObjectStore('dellog', {
+            keyPath: ['topic', 'low', 'hi']
+          });
+          if (!dellog.indexNames.contains('topic_clear')) {
+            dellog.createIndex('topic_clear', ['topic', 'clear'], {
+              unique: false
+            });
+          }
+        }
       };
     });
   }
@@ -1434,8 +1452,9 @@ class DB {
 const MAX_FORM_ELEMENTS = 8;
 const MAX_PREVIEW_ATTACHMENTS = 3;
 const MAX_PREVIEW_DATA_SIZE = 64;
-const JSON_MIME_TYPE = 'application/json';
 const DRAFTY_MIME_TYPE = 'text/x-drafty';
+const DRAFTY_FR_MIME_TYPE = 'text/x-drafty-fr';
+const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json';
 const ALLOWED_ENT_FIELDS = ['act', 'height', 'duration', 'incoming', 'mime', 'name', 'premime', 'preref', 'preview', 'ref', 'size', 'state', 'url', 'val', 'width'];
 const segmenter = new Intl.Segmenter();
 const INLINE_STYLES = [{
@@ -2271,7 +2290,7 @@ Drafty.attachJSON = function (content, data) {
   content.ent.push({
     tp: 'EX',
     data: {
-      mime: JSON_MIME_TYPE,
+      mime: DRAFTY_FR_MIME_TYPE,
       val: data
     }
   });
@@ -2518,7 +2537,7 @@ Drafty.sanitizeEntities = function (content) {
 };
 Drafty.getDownloadUrl = function (entData) {
   let url = null;
-  if (entData.mime != JSON_MIME_TYPE && entData.val) {
+  if (!Drafty.isFormResponseType(entData.mime) && entData.val) {
     url = base64toObjectUrl(entData.val, entData.mime, Drafty.logger);
   } else if (typeof entData.ref == 'string') {
     url = entData.ref;
@@ -2548,6 +2567,9 @@ Drafty.attrValue = function (style, data) {
 };
 Drafty.getContentType = function () {
   return DRAFTY_MIME_TYPE;
+};
+Drafty.isFormResponseType = function (mimeType) {
+  return mimeType === DRAFTY_FR_MIME_TYPE || mimeType === DRAFTY_FR_MIME_TYPE_LEGACY;
 };
 function chunkify(line, start, end, spans) {
   const chunks = [];
@@ -3002,7 +3024,7 @@ function attachmentsToEnd(tree, limit) {
         if (attachments.length == limit) {
           continue;
         }
-        if (c.data['mime'] == JSON_MIME_TYPE) {
+        if (Drafty.isFormResponseType(c.data['mime'])) {
           continue;
         }
         delete c.att;
@@ -5378,7 +5400,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.0";
+const PACKAGE_VERSION = "0.24.4";
 
 /***/ })
 
