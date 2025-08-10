@@ -9,7 +9,7 @@
   --clr-dark: light-dark(#000, #fff);
   --clr-transparent: transparent;
   --clr-std-gray: #808080; /* Standard gray color */
-  --clr-std-ltgray: light-dark(silver, #3f3f3f); /* Standard silver color */
+  --clr-std-ltgray: light-dark(#c0c0c0, #3f3f3f); /* Standard silver color */
   --clr-std-teal: teal; /* Standard teal color */
   --clr-std-grey: grey; /* Standard grey color */
   --clr-std-orange: #ffa500; /* Standard orange color */
@@ -1973,7 +1973,7 @@ img.channel {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  background-color: #ccc;
+  background-color: var(--clr-std-ltgray);
   padding: 1rem;
   border-radius: 0.5rem;
 }
