@@ -1712,6 +1712,7 @@ class MessagesView extends React.Component {
                 disabled={!this.state.isWriter || this.state.deleted}
                 reply={this.state.reply}
                 initMessage={this.state.contentToEdit}
+                sendOnEnter={this.props.sendOnEnter}
                 onKeyPress={this.sendKeyPress}
                 onRecordingProgress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}

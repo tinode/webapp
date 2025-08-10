@@ -200,14 +200,23 @@ class SendMessage extends React.PureComponent {
       return;
     }
 
-    // Remove this if you don't want Enter to trigger send
+    // Enter pressed: either send, or enter a new line.
     if (e.key === 'Enter') {
-      // Have Shift-Enter insert a line break instead
-      if (!e.shiftKey) {
-        e.preventDefault();
-        e.stopPropagation();
+      if (this.props.sendOnEnter == 'plain') {
+        // Have Shift-Enter insert a line break instead
+        if (!e.shiftKey) {
+          e.preventDefault();
+          e.stopPropagation();
 
-        this.handleSend(e);
+          this.handleSend(e);
+        }
+      } else {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          this.handleSend(e);
+        }
       }
     }
   }

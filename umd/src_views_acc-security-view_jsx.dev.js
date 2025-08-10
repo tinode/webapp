@@ -145,7 +145,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "small"
+      className: "small gray"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "incognito_mode_description",
       defaultMessage: [{

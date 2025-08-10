@@ -1739,53 +1739,88 @@
     "missing": false,
     "obsolete": false
   },
+  "incognito_mode_description": {
+    "translation": "Nascondi il tuo stato online e gli indicatori di digitazione.",
+    "defaultMessage": "Hide your online status and typing indicators.",
+    "description": "Description for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command": {
+    "translation": "Invia con {key}",
+    "defaultMessage": "Send on {key}",
+    "description": "Config option to send message on hitting CTRL(or Cmd)-Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command_explained": {
+    "translation": "Premi Invio per una nuova riga",
+    "defaultMessage": "Press Enter for new line",
+    "description": "Explanation how to enter newline when [Send on CTRL-Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain": {
+    "translation": "Invia con Invio",
+    "defaultMessage": "Send on Enter",
+    "description": "Config option to send message on hitting Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain_explained": {
+    "translation": "Premi Shift + Invio per una nuova riga",
+    "defaultMessage": "Press Shift + Enter for new line",
+    "description": "Explanation how to enter newline when [Send on Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "Generale",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for AccGeneralView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_keyboard": {
+    "translation": "Tastiera:",
+    "defaultMessage": "Keyboard:",
+    "description": "Label for send on enter settings",
+    "missing": false,
+    "obsolete": false
+  },
   "color_schema_dark": {
-    "translation": "",
+    "translation": "Scuro",
     "defaultMessage": "Dark",
     "description": "Name of the color schema",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "color_schema_light": {
-    "translation": "",
+    "translation": "Chiaro",
     "defaultMessage": "Light",
     "description": "Name of the color schema",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "color_schema_system": {
-    "translation": "",
+    "translation": "Predefinito del sistema",
     "defaultMessage": "System default",
     "description": "Name of the color schema",
-    "missing": true,
-    "obsolete": false
-  },
-  "incognito_mode_description": {
-    "translation": "",
-    "defaultMessage": "Hide your online status and typing indicators.",
-    "description": "Description for incognito mode toggle",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_color_schema": {
-    "translation": "",
+    "translation": "Tema:",
     "defaultMessage": "Theme:",
     "description": "Label for selecting color scheme (dark, light) in Settings",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_text_size": {
-    "translation": "",
+    "translation": "Dimensione testo:",
     "defaultMessage": "Text size:",
     "description": "Label adjusting text size",
-    "missing": true,
-    "obsolete": false
-  },
-  "sidepanel_title_appearance": {
-    "translation": "",
-    "defaultMessage": "Appearance",
-    "description": "Sidepanel title for AccAppearanceView.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

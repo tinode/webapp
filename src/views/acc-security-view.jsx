@@ -124,7 +124,7 @@ class AccSecurityView extends React.Component {
               checked={this.props.incognitoMode} onChange={this.handleCheckboxClick} />
           </div>
           <div className="panel-form-row">
-            <span className="small">
+            <span className="small gray">
               <FormattedMessage id="incognito_mode_description" defaultMessage="Hide your online status and typing indicators."
                 description="Description for incognito mode toggle" />
             </span>

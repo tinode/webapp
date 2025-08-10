@@ -2,17 +2,21 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-export default class AccAppearanceView extends React.PureComponent {
+export default class AccGeneralView extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       colorSchema: props.colorSchema || 'light dark',
       textSize: (props.textSize * 10) || '100',
+      sendOnEnter: props.sendOnEnter || 'plain',
     };
 
+    this.isMac = ((navigator.userAgentData && navigator.userAgentData.platform)
+      || navigator.platform).toLowerCase().startsWith('mac');
     this.handleColorSchemaSelected = this.handleColorSchemaSelected.bind(this);
     this.handleTextSizeChanged = this.handleTextSizeChanged.bind(this);
+    this.handleSendOnEnterSelected = this.handleSendOnEnterSelected.bind(this);
   }
 
   handleColorSchemaSelected(e) {
@@ -25,6 +29,12 @@ export default class AccAppearanceView extends React.PureComponent {
     this.setState({textSize: e.currentTarget.value});
     // Convert %% to pt, 100% = 10pt.
     this.props.onTextSizeChanged((e.currentTarget.value / 10) | 0);
+  }
+
+  handleSendOnEnterSelected(e) {
+    console.log('handleSendOnEnterSelected', e.currentTarget.value);
+    this.setState({sendOnEnter: e.currentTarget.value});
+    this.props.onSendOnEnterChanged(e.currentTarget.value);
   }
 
   render() {
@@ -40,7 +50,7 @@ export default class AccAppearanceView extends React.PureComponent {
             <ul className="quoted">
               <li key="system">
                 <input type="radio" id="system" name="color-scheme-select" value="light dark"
-                  checked={this.state.colorSchema === 'light dark'}
+                  checked={this.state.colorSchema == 'light dark'}
                   onChange={this.handleColorSchemaSelected} />&nbsp;
                 <label htmlFor="system">
                   <FormattedMessage id="color_schema_system" defaultMessage="System default" description="Name of the color schema"/>&nbsp;
@@ -49,7 +59,7 @@ export default class AccAppearanceView extends React.PureComponent {
               </li>
               <li key="light">
                 <input type="radio" id="light" name="color-scheme-select" value="light"
-                  checked={this.state.colorSchema === 'light'}
+                  checked={this.state.colorSchema == 'light'}
                   onChange={this.handleColorSchemaSelected} />&nbsp;
                 <label htmlFor="light">
                   <FormattedMessage id="color_schema_light" defaultMessage="Light" description="Name of the color schema"/>&nbsp;
@@ -58,7 +68,7 @@ export default class AccAppearanceView extends React.PureComponent {
               </li>
               <li key="dark">
                 <input type="radio" id="dark" name="color-scheme-select" value="dark"
-                  checked={this.state.colorSchema === 'dark'}
+                  checked={this.state.colorSchema == 'dark'}
                   onChange={this.handleColorSchemaSelected} />&nbsp;
                 <label htmlFor="dark">
                   <FormattedMessage id="color_schema_dark" defaultMessage="Dark" description="Name of the color schema"/>&nbsp;
@@ -88,6 +98,48 @@ export default class AccAppearanceView extends React.PureComponent {
                 <option value="120" label="120%" />
               </datalist>
             </div>
+          </div>
+          <div className="hr" />
+          <div className="panel-form-row">
+            <label className="small">
+              <FormattedMessage id="label_keyboard" defaultMessage="Keyboard:"
+                description="Label for send on enter settings" />
+            </label>
+          </div>
+          <div className="panel-form-row">
+            <ul className="quoted">
+              <li key="plain">
+                <input type="radio" id="plain" name="send-select" value="plain"
+                  checked={this.state.sendOnEnter == 'plain'}
+                  onChange={this.handleSendOnEnterSelected} />&nbsp;
+                <label htmlFor="send_plain">
+                  <FormattedMessage id="send_plain" defaultMessage="Send on Enter"
+                    description="Config option to send message on hitting Enter"/>&nbsp;
+                </label>
+                <div className="panel-form-row">
+                  <span className="small gray">
+                    <FormattedMessage id="send_plain_explained" defaultMessage="Press Shift + Enter for new line"
+                      description="Explanation how to enter newline when [Send on Enter] is enabled" />
+                  </span>
+                </div>
+              </li>
+              <li key="command">
+                <input type="radio" id="command" name="send-select" value="command"
+                  checked={this.state.sendOnEnter == 'command'}
+                  onChange={this.handleSendOnEnterSelected} />&nbsp;
+                <label htmlFor="send_command">
+                  <FormattedMessage id="send_command" defaultMessage="Send on {key}"
+                    values={{key: this.isMac ? '⌘ + Enter' : 'Ctrl + Enter'}}
+                    description="Config option to send message on hitting CTRL(or Cmd)-Enter"/>&nbsp;
+                </label>
+                <div className="panel-form-row">
+                  <span className="small gray">
+                    <FormattedMessage id="send_command_explained" defaultMessage="Press Enter for new line"
+                      description="Explanation how to enter newline when [Send on CTRL-Enter] is enabled" />
+                  </span>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
     );

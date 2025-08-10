@@ -438,6 +438,10 @@
     "defaultMessage": "Incognito mode:",
     "description": "Label for incognito mode toggle"
   },
+  "label_keyboard": {
+    "defaultMessage": "Keyboard:",
+    "description": "Label for send on enter settings"
+  },
   "label_message_sound": {
     "defaultMessage": "Message sound:",
     "description": "Label for message sounds toggle"
@@ -880,6 +884,26 @@
     "defaultMessage": "Saved messages",
     "description": "Name of self topic for UI"
   },
+  "send_command": {
+    "defaultMessage": "Send on {key}",
+    "description": "Config option to send message on hitting CTRL(or Cmd)-Enter"
+  },
+  "send_command_explained": {
+    "defaultMessage": "Press Enter for new line",
+    "description": "Explanation how to enter newline when [Send on CTRL-Enter] is enabled"
+  },
+  "send_plain": {
+    "defaultMessage": "Send on Enter",
+    "description": "Config option to send message on hitting Enter"
+  },
+  "send_plain_explained": {
+    "defaultMessage": "Press Shift + Enter for new line",
+    "description": "Explanation how to enter newline when [Send on Enter] is enabled"
+  },
+  "sidepanel_title_acc_general": {
+    "defaultMessage": "General",
+    "description": "Sidepanel title for AccGeneralView."
+  },
   "sidepanel_title_acc_notifications": {
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView."
@@ -891,10 +915,6 @@
   "sidepanel_title_account_settings": {
     "defaultMessage": "Account Settings",
     "description": "Sidepanel title for AccountSettingsView."
-  },
-  "sidepanel_title_appearance": {
-    "defaultMessage": "Appearance",
-    "description": "Sidepanel title for AccAppearanceView."
   },
   "sidepanel_title_archive": {
     "defaultMessage": "Archived Chats",

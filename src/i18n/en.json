@@ -1767,13 +1767,6 @@
     "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_appearance": {
-    "translation": "Appearance",
-    "defaultMessage": "Appearance",
-    "description": "Sidepanel title for AccAppearanceView.",
-    "missing": false,
-    "obsolete": false
-  },
   "label_text_size": {
     "translation": "Text size:",
     "defaultMessage": "Text size:",
@@ -1785,6 +1778,48 @@
     "translation": "Hide your online status and typing indicators.",
     "defaultMessage": "Hide your online status and typing indicators.",
     "description": "Description for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command": {
+    "translation": "Send on {key}",
+    "defaultMessage": "Send on {key}",
+    "description": "Config option to send message on hitting CTRL(or Cmd)-Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command_explained": {
+    "translation": "Press Enter for new line",
+    "defaultMessage": "Press Enter for new line",
+    "description": "Explanation how to enter newline when [Send on CTRL-Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain": {
+    "translation": "Send on Enter",
+    "defaultMessage": "Send on Enter",
+    "description": "Config option to send message on hitting Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain_explained": {
+    "translation": "Press Shift + Enter for new line",
+    "defaultMessage": "Press Shift + Enter for new line",
+    "description": "Explanation how to enter newline when [Send on Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "General",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for AccGeneralView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_keyboard": {
+    "translation": "Keyboard:",
+    "defaultMessage": "Keyboard:",
+    "description": "Label for send on enter settings",
     "missing": false,
     "obsolete": false
   }

@@ -9,7 +9,7 @@ import TopicCommonView from './topic-common-view.jsx';
 const AccountSettingsView = React.lazy(_ => import('./account-settings-view.jsx'));
 import ContactsView from './contacts-view.jsx';
 const CreateAccountView = React.lazy(_ => import('./create-account-view.jsx'));
-import AccAppearanceView from './acc-appearance-view.jsx';
+import AccGeneralView from './acc-general-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
 const AccSecurityView = React.lazy(_ => import('./acc-security-view.jsx'));
 import AccSupportView from './acc-support-view.jsx';
@@ -61,10 +61,10 @@ const messages = defineMessages({
     description: 'Sidepanel title for AccNotificationsView.',
     defaultMessage: 'Notifications'
   },
-  appearance: {
-    id: 'sidepanel_title_appearance',
-    description: 'Sidepanel title for AccAppearanceView.',
-    defaultMessage: 'Appearance'
+  acc_general: {
+    id: 'sidepanel_title_acc_general',
+    description: 'Sidepanel title for AccGeneralView.',
+    defaultMessage: 'General'
   },
   support: {
     id: 'sidepanel_title_acc_support',
@@ -206,12 +206,14 @@ class SidepanelView extends React.PureComponent {
             onUpdateTagsRequest={this.props.onUpdateAccountTags}
             onError={this.props.onError} /> :
 
-          view === 'appearance' ?
-          <AccAppearanceView
+          view === 'acc_general' ?
+          <AccGeneralView
             colorSchema={this.props.colorSchema}
             textSize={this.props.textSize}
+            sendOnEnter={this.props.sendOnEnter}
             onChangeColorSchema={this.props.onChangeColorSchema}
-            onTextSizeChanged={this.props.onTextSizeChanged} /> :
+            onTextSizeChanged={this.props.onTextSizeChanged}
+            onSendOnEnterChanged={this.props.onSendOnEnterChanged} /> :
 
           view === 'notif' ?
           <AccNotificationsView

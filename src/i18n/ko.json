@@ -1767,13 +1767,6 @@
     "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_appearance": {
-    "translation": "모양",
-    "defaultMessage": "Appearance",
-    "description": "Sidepanel title for AccAppearanceView.",
-    "missing": false,
-    "obsolete": false
-  },
   "label_text_size": {
     "translation": "텍스트 크기:",
     "defaultMessage": "Text size:",
@@ -1782,10 +1775,52 @@
     "obsolete": false
   },
   "incognito_mode_description": {
-    "translation": "",
+    "translation": "온라인 상태와 입력 표시기를 숨깁니다.",
     "defaultMessage": "Hide your online status and typing indicators.",
     "description": "Description for incognito mode toggle",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command": {
+    "translation": "{key}로 전송",
+    "defaultMessage": "Send on {key}",
+    "description": "Config option to send message on hitting CTRL(or Cmd)-Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command_explained": {
+    "translation": "새 줄로 이동하려면 Enter를 누르세요",
+    "defaultMessage": "Press Enter for new line",
+    "description": "Explanation how to enter newline when [Send on CTRL-Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain": {
+    "translation": "Enter로 전송",
+    "defaultMessage": "Send on Enter",
+    "description": "Config option to send message on hitting Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain_explained": {
+    "translation": "새 줄로 이동하려면 Shift + Enter를 누르세요",
+    "defaultMessage": "Press Shift + Enter for new line",
+    "description": "Explanation how to enter newline when [Send on Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "일반",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for AccGeneralView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_keyboard": {
+    "translation": "키보드:",
+    "defaultMessage": "Keyboard:",
+    "description": "Label for send on enter settings",
+    "missing": false,
     "obsolete": false
   }
 }

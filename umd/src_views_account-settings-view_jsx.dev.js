@@ -219,15 +219,15 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
       className: "flat-button",
       onClick: e => {
         e.preventDefault();
-        this.props.onNavigate('appearance');
+        this.props.onNavigate('acc_general');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "tune"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "sidepanel_title_appearance",
+      id: "sidepanel_title_acc_general",
       defaultMessage: [{
         "type": 0,
-        "value": "Appearance"
+        "value": "General"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",

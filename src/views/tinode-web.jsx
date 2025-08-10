@@ -136,6 +136,7 @@ class TinodeWeb extends React.Component {
     this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
     this.handleChangeColorSchema = this.handleChangeColorSchema.bind(this);
     this.handleChangeTextSize = this.handleChangeTextSize.bind(this);
+    this.handleSendOnEnter = this.handleSendOnEnter.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -217,6 +218,7 @@ class TinodeWeb extends React.Component {
       incognitoMode: false,
       colorSchema: settings.colorSchema || DEFAULT_COLOR_SCHEME, // default: system default
       textSize: settings.textSize || DEFAULT_TEXT_SIZE, // default size: 10pt
+      sendOnEnter: settings.sendOnEnter || 'plain', // default: 'plain' (just Enter)
       // Persistent request to enable alerts.
       desktopAlerts: persist && !!settings.desktopAlerts,
       // Enable / disable checkbox.
@@ -524,7 +526,7 @@ class TinodeWeb extends React.Component {
 
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','notif','appearance','security','support','general','crop',
+      if (['register','settings','edit','notif','acc_general','security','support','general','crop',
           'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
       } else {
@@ -1223,6 +1225,11 @@ class TinodeWeb extends React.Component {
     document.documentElement.style.setProperty('--message-text-size', `${size}pt`);
   }
 
+  handleSendOnEnter(option) {
+    this.setState({sendOnEnter: option});
+    LocalStorageUtil.updateObject('settings', {sendOnEnter: option});
+  }
+
   handleUpdateAccountTagsRequest(_, tags) {
     this.tinode.getMeTopic().setMeta({tags: tags})
       .catch(err => this.handleError(err.message, 'err'));
@@ -1335,7 +1342,7 @@ class TinodeWeb extends React.Component {
   handleSidepanelCancel() {
     const parsed = HashNavigation.parseUrlHash(window.location.hash);
     let path = '';
-    if (['security','support','general','notif','appearance'].includes(parsed.path[0])) {
+    if (['security','support','general','notif','acc_general'].includes(parsed.path[0])) {
       path = 'edit';
     } else if ('crop' == parsed.path[0]) {
       path = 'general';
@@ -2084,6 +2091,7 @@ class TinodeWeb extends React.Component {
             reqCredMethod={this.state.reqCredMethod}
             textSize={this.state.textSize}
             colorSchema={this.state.colorSchema}
+            sendOnEnter={this.state.sendOnEnter}
 
             onGlobalSettings={this.handleGlobalSettings}
             onSignUp={this.handleNewAccount}
@@ -2100,6 +2108,7 @@ class TinodeWeb extends React.Component {
             onToggleIncognitoMode={this.handleToggleIncognitoMode}
             onChangeColorSchema={this.handleChangeColorSchema}
             onTextSizeChanged={this.handleChangeTextSize}
+            onSendOnEnterChanged={this.handleSendOnEnter}
             onCredAdd={this.handleCredAdd}
             onCredDelete={this.handleCredDelete}
             onCredConfirm={this.handleCredConfirm}
@@ -2142,7 +2151,7 @@ class TinodeWeb extends React.Component {
             serverAddress={this.state.serverAddress}
             applicationVisible={this.state.applicationVisible}
             colorSchema={this.state.colorSchema}
-
+            sendOnEnter={this.state.sendOnEnter}
             forwardMessage={this.state.forwardMessage}
             onCancelForwardMessage={this.handleHideForwardDialog}
 

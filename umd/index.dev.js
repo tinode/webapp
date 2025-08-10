@@ -8665,15 +8665,15 @@ const PACKAGE_VERSION = "0.25.0";
 
 /***/ }),
 
-/***/ "./src/views/acc-appearance-view.jsx":
-/*!*******************************************!*\
-  !*** ./src/views/acc-appearance-view.jsx ***!
-  \*******************************************/
+/***/ "./src/views/acc-general-view.jsx":
+/*!****************************************!*\
+  !*** ./src/views/acc-general-view.jsx ***!
+  \****************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ AccAppearanceView; }
+/* harmony export */   "default": function() { return /* binding */ AccGeneralView; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -8681,15 +8681,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 
 
-class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.state = {
       colorSchema: props.colorSchema || 'light dark',
-      textSize: props.textSize * 10 || '100'
+      textSize: props.textSize * 10 || '100',
+      sendOnEnter: props.sendOnEnter || 'plain'
     };
+    this.isMac = (navigator.userAgentData && navigator.userAgentData.platform || navigator.platform).toLowerCase().startsWith('mac');
     this.handleColorSchemaSelected = this.handleColorSchemaSelected.bind(this);
     this.handleTextSizeChanged = this.handleTextSizeChanged.bind(this);
+    this.handleSendOnEnterSelected = this.handleSendOnEnterSelected.bind(this);
   }
   handleColorSchemaSelected(e) {
     this.setState({
@@ -8702,6 +8705,13 @@ class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       textSize: e.currentTarget.value
     });
     this.props.onTextSizeChanged(e.currentTarget.value / 10 | 0);
+  }
+  handleSendOnEnterSelected(e) {
+    console.log('handleSendOnEnterSelected', e.currentTarget.value);
+    this.setState({
+      sendOnEnter: e.currentTarget.value
+    });
+    this.props.onSendOnEnterChanged(e.currentTarget.value);
   }
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -8728,7 +8738,7 @@ class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       id: "system",
       name: "color-scheme-select",
       value: "light dark",
-      checked: this.state.colorSchema === 'light dark',
+      checked: this.state.colorSchema == 'light dark',
       onChange: this.handleColorSchemaSelected
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       htmlFor: "system"
@@ -8752,7 +8762,7 @@ class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       id: "light",
       name: "color-scheme-select",
       value: "light",
-      checked: this.state.colorSchema === 'light',
+      checked: this.state.colorSchema == 'light',
       onChange: this.handleColorSchemaSelected
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       htmlFor: "light"
@@ -8771,7 +8781,7 @@ class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       id: "dark",
       name: "color-scheme-select",
       value: "dark",
-      checked: this.state.colorSchema === 'dark',
+      checked: this.state.colorSchema == 'dark',
       onChange: this.handleColorSchemaSelected
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       htmlFor: "dark"
@@ -8828,7 +8838,83 @@ class AccAppearanceView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
       value: "120",
       label: "120%"
-    })))));
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_keyboard",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Keyboard:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+      className: "quoted"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "plain"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "plain",
+      name: "send-select",
+      value: "plain",
+      checked: this.state.sendOnEnter == 'plain',
+      onChange: this.handleSendOnEnterSelected
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "send_plain"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "send_plain",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send on Enter"
+      }]
+    }), "\xA0"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "small gray"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "send_plain_explained",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Press Shift + Enter for new line"
+      }]
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "command"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "command",
+      name: "send-select",
+      value: "command",
+      checked: this.state.sendOnEnter == 'command',
+      onChange: this.handleSendOnEnterSelected
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "send_command"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "send_command",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send on "
+      }, {
+        "type": 1,
+        "value": "key"
+      }],
+      values: {
+        key: this.isMac ? '⌘ + Enter' : 'Ctrl + Enter'
+      }
+    }), "\xA0"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "small gray"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "send_command_explained",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Press Enter for new line"
+      }]
+    })))))));
   }
 }
 ;
@@ -10907,6 +10993,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           disabled: !this.state.isWriter || this.state.deleted,
           reply: this.state.reply,
           initMessage: this.state.contentToEdit,
+          sendOnEnter: this.props.sendOnEnter,
           onKeyPress: this.sendKeyPress,
           onRecordingProgress: this.sendKeyPress,
           onSendMessage: this.sendMessage,
@@ -11364,7 +11451,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/side-navbar.jsx */ "./src/widgets/side-navbar.jsx");
 /* harmony import */ var _topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./topic-common-view.jsx */ "./src/views/topic-common-view.jsx");
 /* harmony import */ var _contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./contacts-view.jsx */ "./src/views/contacts-view.jsx");
-/* harmony import */ var _acc_appearance_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./acc-appearance-view.jsx */ "./src/views/acc-appearance-view.jsx");
+/* harmony import */ var _acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./acc-general-view.jsx */ "./src/views/acc-general-view.jsx");
 /* harmony import */ var _acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./acc-notifications-view.jsx */ "./src/views/acc-notifications-view.jsx");
 /* harmony import */ var _acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./acc-support-view.jsx */ "./src/views/acc-support-view.jsx");
 /* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
@@ -11446,11 +11533,11 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": "Notifications"
     }]
   },
-  appearance: {
-    id: "sidepanel_title_appearance",
+  acc_general: {
+    id: "sidepanel_title_acc_general",
     defaultMessage: [{
       "type": 0,
-      "value": "Appearance"
+      "value": "General"
     }]
   },
   support: {
@@ -11602,11 +11689,13 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onUpdateTopicDesc: this.props.onUpdateAccountDesc,
       onUpdateTagsRequest: this.props.onUpdateAccountTags,
       onError: this.props.onError
-    }) : view === 'appearance' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_appearance_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    }) : view === 'acc_general' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       colorSchema: this.props.colorSchema,
       textSize: this.props.textSize,
+      sendOnEnter: this.props.sendOnEnter,
       onChangeColorSchema: this.props.onChangeColorSchema,
-      onTextSizeChanged: this.props.onTextSizeChanged
+      onTextSizeChanged: this.props.onTextSizeChanged,
+      onSendOnEnterChanged: this.props.onSendOnEnterChanged
     }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       messageSounds: this.props.messageSounds,
       desktopAlerts: this.props.desktopAlerts,
@@ -11867,6 +11956,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
     this.handleChangeColorSchema = this.handleChangeColorSchema.bind(this);
     this.handleChangeTextSize = this.handleChangeTextSize.bind(this);
+    this.handleSendOnEnter = this.handleSendOnEnter.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -11935,6 +12025,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       incognitoMode: false,
       colorSchema: settings.colorSchema || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME,
       textSize: settings.textSize || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_TEXT_SIZE,
+      sendOnEnter: settings.sendOnEnter || 'plain',
       desktopAlerts: persist && !!settings.desktopAlerts,
       desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
       firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('firebase-token') : null,
@@ -12204,7 +12295,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       newTopicTabSelected: hash.params.tab
     };
     if (hash.path && hash.path.length > 0) {
-      if (['register', 'settings', 'edit', 'notif', 'appearance', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
+      if (['register', 'settings', 'edit', 'notif', 'acc_general', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
       } else {
         console.warn("Unknown sidepanel view", hash.path[0]);
@@ -12797,6 +12888,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
     document.documentElement.style.setProperty('--message-text-size', `${size}pt`);
   }
+  handleSendOnEnter(option) {
+    this.setState({
+      sendOnEnter: option
+    });
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+      sendOnEnter: option
+    });
+  }
   handleUpdateAccountTagsRequest(_, tags) {
     this.tinode.getMeTopic().setMeta({
       tags: tags
@@ -12910,7 +13009,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleSidepanelCancel() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
     let path = '';
-    if (['security', 'support', 'general', 'notif', 'appearance'].includes(parsed.path[0])) {
+    if (['security', 'support', 'general', 'notif', 'acc_general'].includes(parsed.path[0])) {
       path = 'edit';
     } else if ('crop' == parsed.path[0]) {
       path = 'general';
@@ -13580,6 +13679,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       reqCredMethod: this.state.reqCredMethod,
       textSize: this.state.textSize,
       colorSchema: this.state.colorSchema,
+      sendOnEnter: this.state.sendOnEnter,
       onGlobalSettings: this.handleGlobalSettings,
       onSignUp: this.handleNewAccount,
       onSettings: this.handleSettings,
@@ -13595,6 +13695,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onToggleIncognitoMode: this.handleToggleIncognitoMode,
       onChangeColorSchema: this.handleChangeColorSchema,
       onTextSizeChanged: this.handleChangeTextSize,
+      onSendOnEnterChanged: this.handleSendOnEnter,
       onCredAdd: this.handleCredAdd,
       onCredDelete: this.handleCredDelete,
       onCredConfirm: this.handleCredConfirm,
@@ -13631,6 +13732,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverAddress: this.state.serverAddress,
       applicationVisible: this.state.applicationVisible,
       colorSchema: this.state.colorSchema,
+      sendOnEnter: this.state.sendOnEnter,
       forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
       callTopic: this.state.callTopic,
@@ -19483,10 +19585,18 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       return;
     }
     if (e.key === 'Enter') {
-      if (!e.shiftKey) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.handleSend(e);
+      if (this.props.sendOnEnter == 'plain') {
+        if (!e.shiftKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.handleSend(e);
+        }
+      } else {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.handleSend(e);
+        }
       }
     }
   }
