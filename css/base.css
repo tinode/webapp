@@ -1621,6 +1621,7 @@ img.channel {
   background-color: rgba(255,255,255,0.90);
 }
 
+
 #image-preview-caption-panel {
   display: flex;
   justify-content: space-between;
@@ -1667,6 +1668,15 @@ img.channel {
 
 #image-preview-container .material-icons {
   font-size: 6rem;
+}
+
+#image-preview-container .doc-card {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-color: #ccc;
+  padding: 1rem;
+  border-radius: 0.5rem;
 }
 
 /* Video-call related styles */

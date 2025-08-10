@@ -18150,7 +18150,7 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column narrow"
+      className: "doc-card"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
     }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
