@@ -57,7 +57,6 @@
   --clr-warning-border-light: light-dark(#fff59d, #000a2b); /* Info box warning border */
   --clr-warning-text-dark: light-dark(#6d4c41, #251613); /* Info box warning text */
   --clr-warning-icon: light-dark(#fbc02d, #b48204); /* Info box warning icon specific */
-  --clr-success-text: light-dark(#388e3c, #1a3a1d); /* Green text */
   --clr-info-bg-light: light-dark(#e1f5fe, #010a0e); /* Info box info bg */
   --clr-info-border-light: light-dark(#b3e5fc, #001824); /* Info box info border */
   --clr-info-text-dark: light-dark(#0288d1, #00151f); /* Info box info text, icon */
@@ -723,7 +722,7 @@ div.trusted-badge {
 }
 
 .green {
-  color: var(--clr-success-text); /* green 700 */
+  color: light-dark(#388e3c, #1a9a1d); /* green 700 */
 }
 
 .white {
@@ -1561,6 +1560,7 @@ img.channel {
   height: 10.5rem;
   font-size: 4.5rem;
   padding: 0;
+  margin: 0.25rem;
 }
 
 .avatar-upload.read-only {
