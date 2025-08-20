@@ -75,6 +75,10 @@ export default class CreateAccountView extends React.PureComponent {
 
   handleImageChanged(mime, img) {
     this.setState({newAvatar: img, newAvatarMime: mime});
+    if (!img) {
+      // User cleared the image.
+      this.setState({imageUrl: null, uploadUrl: null});
+    }
   }
 
   handleToggleSaveToken() {
@@ -100,7 +104,7 @@ export default class CreateAccountView extends React.PureComponent {
   // AvatarCropView calls this method when the user has cropped the image.
   handleAvatarCropped(mime, blob, width, height) {
     const url = blob ? URL.createObjectURL(blob) : null;
-    this.setState({avatar: url, newAvatar: null, newAvatarMime: null});
+    this.setState({newAvatar: null, newAvatarMime: null});
     if (blob) {
       this.uploadAvatar(mime, blob, width, height);
     }
