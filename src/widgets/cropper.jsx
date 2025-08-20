@@ -193,8 +193,8 @@ export default class Cropper extends React.Component {
 
   // Perform image panning.
   translate(pageX, pageY) {
-    const dX = pageX - this.mouseX;
-    const dY = pageY - this.mouseY;
+    const dX = (pageX - this.mouseX) / this.state.zoom;
+    const dY = (pageY - this.mouseY) / this.state.zoom;
 
     this.mouseX = pageX;
     this.mouseY = pageY;
