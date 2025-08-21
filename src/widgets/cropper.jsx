@@ -2,14 +2,14 @@
 
 import React from 'react';
 
-const DEFAULT_MAX_ZOOM = 2.5;
+const DEFAULT_MAX_ZOOM = 8;
 
 export default class Cropper extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // Coordinates of the top left corner of the image in container coordinates.
+      // Coordinates of the top left corner of the image in bounding box (container) coordinates.
       panX: 0,
       panY: 0,
       // Origin of the zoom in image coordinates.
@@ -32,7 +32,7 @@ export default class Cropper extends React.Component {
     // The main container (static).
     this.boundingBox = React.createRef();
 
-    // The original image width and height before any scaling.
+    // The original image width and height before any scaling (does not change).
     this.imageWidth = 0;
     this.imageHeight = 0;
 
@@ -42,10 +42,10 @@ export default class Cropper extends React.Component {
     // Length of the previous mouse move when dragging.
     this.prevDistance = 0;
 
-    // Bounding rectangles of static elements.
+    // Bounding rectangles of static elements (does not change).
     this.cutoutRect = {};
     this.bBoxRect = {};
-    // Center of the bounding box.
+    // Center of the bounding box (does not change).
     this.originX = 0;
     this.originY = 0;
 
@@ -70,7 +70,7 @@ export default class Cropper extends React.Component {
     this.originX = this.bBoxRect.width / 2;
     this.originY = this.bBoxRect.height / 2;
 
-    // The rectangle position is in viewport coordinates.
+    // The cutout circle bounds in viewport coordinates.
     this.cutoutRect = this.cutout.current.getBoundingClientRect();
   }
 
@@ -127,7 +127,7 @@ export default class Cropper extends React.Component {
     const minZoom = Math.max(this.cutoutRect.width / imgRect.width, this.cutoutRect.height / imgRect.height);
     this.setState({
       minZoom: minZoom,
-      maxZoom: Math.max(DEFAULT_MAX_ZOOM, minZoom + 1)
+      maxZoom: minZoom * DEFAULT_MAX_ZOOM
     });
 
     // Initial zoom level fills the bounding box at the smallest image dimension and overflows the largest, i.e. "fill" not "fit".
@@ -150,25 +150,29 @@ export default class Cropper extends React.Component {
     let panY = this.state.panY;
 
     // Ensure that the image at the new zoom is not outside of the cutout boundaries.
+
     // Calculate image coordinates at the new zoom.
     const imgLeft = this.originX - (this.originX - panX) * zoom;
     const imgRight = imgLeft + this.imageWidth * zoom;
+    const imgTop = this.originY - (this.originY - panY) * zoom;
+    const imgBottom = imgTop + this.imageHeight * zoom;
+
     // Cutout in the same coordinates as the image.
     const coLeft = this.cutoutRect.left - this.bBoxRect.left;
     const coRight = coLeft + this.cutoutRect.width;
-    if (coLeft < imgLeft) {
-      panX -= imgLeft - coLeft;
-    } else if (coRight > imgRight) {
-      panX += coRight - imgRight;
-    }
-    const imgTop = this.originY - (this.originY - panY) * zoom;
-    const imgBottom = imgTop + this.imageHeight * zoom;
     const coTop = this.cutoutRect.top - this.bBoxRect.top;
     const coBottom = coTop + this.cutoutRect.height;
+
+    if (coLeft < imgLeft) {
+      panX -= (imgLeft - coLeft) / zoom;
+    } else if (coRight > imgRight) {
+      panX += (coRight - imgRight) / zoom;
+    }
+
     if (coTop < imgTop) {
-      panY -= imgTop - coTop;
+      panY -= (imgTop - coTop) / zoom;
     } else if (coBottom > imgBottom) {
-      panY += coBottom - imgBottom;
+      panY += (coBottom - imgBottom) /zoom;
     }
 
     this.positionAll(panX, panY, zoom);
@@ -203,9 +207,9 @@ export default class Cropper extends React.Component {
     const imgRect = this.preview.current.getBoundingClientRect();
 
     // Check if the new position is within the boundaries, and if not if it's closer to them.
-    let panX = Cropper.checkBound(this.state.panX, [imgRect.left, imgRect.right],
+    const panX = Cropper.checkBound(this.state.panX, [imgRect.left, imgRect.right],
       [this.cutoutRect.left, this.cutoutRect.right], dX);
-    let panY = Cropper.checkBound(this.state.panY, [imgRect.top, imgRect.bottom],
+    const panY = Cropper.checkBound(this.state.panY, [imgRect.top, imgRect.bottom],
       [this.cutoutRect.top, this.cutoutRect.bottom], dY);
 
     this.positionAll(panX, panY, this.state.zoom);

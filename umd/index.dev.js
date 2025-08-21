@@ -17168,7 +17168,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-const DEFAULT_MAX_ZOOM = 2.5;
+const DEFAULT_MAX_ZOOM = 8;
 class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -17250,7 +17250,7 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     const minZoom = Math.max(this.cutoutRect.width / imgRect.width, this.cutoutRect.height / imgRect.height);
     this.setState({
       minZoom: minZoom,
-      maxZoom: Math.max(DEFAULT_MAX_ZOOM, minZoom + 1)
+      maxZoom: minZoom * DEFAULT_MAX_ZOOM
     });
     const zoom = Math.max(this.bBoxRect.width / imgRect.width, this.bBoxRect.height / imgRect.height);
     const panX = this.cutoutRect.left - this.bBoxRect.left - (imgRect.width - this.cutoutRect.width) / 2;
@@ -17265,21 +17265,21 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     let panY = this.state.panY;
     const imgLeft = this.originX - (this.originX - panX) * zoom;
     const imgRight = imgLeft + this.imageWidth * zoom;
-    const coLeft = this.cutoutRect.left - this.bBoxRect.left;
-    const coRight = coLeft + this.cutoutRect.width;
-    if (coLeft < imgLeft) {
-      panX -= imgLeft - coLeft;
-    } else if (coRight > imgRight) {
-      panX += coRight - imgRight;
-    }
     const imgTop = this.originY - (this.originY - panY) * zoom;
     const imgBottom = imgTop + this.imageHeight * zoom;
+    const coLeft = this.cutoutRect.left - this.bBoxRect.left;
+    const coRight = coLeft + this.cutoutRect.width;
     const coTop = this.cutoutRect.top - this.bBoxRect.top;
     const coBottom = coTop + this.cutoutRect.height;
+    if (coLeft < imgLeft) {
+      panX -= (imgLeft - coLeft) / zoom;
+    } else if (coRight > imgRight) {
+      panX += (coRight - imgRight) / zoom;
+    }
     if (coTop < imgTop) {
-      panY -= imgTop - coTop;
+      panY -= (imgTop - coTop) / zoom;
     } else if (coBottom > imgBottom) {
-      panY += coBottom - imgBottom;
+      panY += (coBottom - imgBottom) / zoom;
     }
     this.positionAll(panX, panY, zoom);
   }
@@ -17306,13 +17306,13 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     document.body.style['userSelect'] = 'none';
   }
   translate(pageX, pageY) {
-    const dX = pageX - this.mouseX;
-    const dY = pageY - this.mouseY;
+    const dX = (pageX - this.mouseX) / this.state.zoom;
+    const dY = (pageY - this.mouseY) / this.state.zoom;
     this.mouseX = pageX;
     this.mouseY = pageY;
     const imgRect = this.preview.current.getBoundingClientRect();
-    let panX = Cropper.checkBound(this.state.panX, [imgRect.left, imgRect.right], [this.cutoutRect.left, this.cutoutRect.right], dX);
-    let panY = Cropper.checkBound(this.state.panY, [imgRect.top, imgRect.bottom], [this.cutoutRect.top, this.cutoutRect.bottom], dY);
+    const panX = Cropper.checkBound(this.state.panX, [imgRect.left, imgRect.right], [this.cutoutRect.left, this.cutoutRect.right], dX);
+    const panY = Cropper.checkBound(this.state.panY, [imgRect.top, imgRect.bottom], [this.cutoutRect.top, this.cutoutRect.bottom], dY);
     this.positionAll(panX, panY, this.state.zoom);
   }
   mouseMove(e) {

@@ -109,6 +109,12 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       newAvatar: img,
       newAvatarMime: mime
     });
+    if (!img) {
+      this.setState({
+        imageUrl: null,
+        uploadUrl: null
+      });
+    }
   }
   handleToggleSaveToken() {
     _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_7__["default"].setObject('keep-logged-in', !this.state.saveToken);
@@ -126,7 +132,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   handleAvatarCropped(mime, blob, width, height) {
     const url = blob ? URL.createObjectURL(blob) : null;
     this.setState({
-      avatar: url,
       newAvatar: null,
       newAvatarMime: null
     });

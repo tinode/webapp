@@ -3103,8 +3103,8 @@ ul.tabbar li.active > a {
 
 .cropper .cutout {
   position: absolute;
-  width: 17rem;
-  height: 17rem;
+  width: 17.8rem;
+  height: 17.8rem;
   border: 1px dashed var(--clr-cropper-cutout-border);
   margin: auto;
   top: 0;
