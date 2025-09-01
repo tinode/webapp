@@ -18,7 +18,7 @@ export default class Cropper extends React.Component {
       // Zoom scale.
       zoom: 1,
       // Zoom min and max.
-      minZoom: 0,
+      minZoom: 0.001,
       maxZoom: DEFAULT_MAX_ZOOM,
     };
 
