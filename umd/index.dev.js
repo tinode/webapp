@@ -16490,6 +16490,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     e.stopPropagation();
     this.props.showContextMenu({
       topicName: this.props.item,
+      topicTitle: this.props.title,
       y: e.pageY,
       x: e.pageX
     });
@@ -16834,7 +16835,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.clear_messages), formatMessage(messages.clear_messages_warning), _ => {
+          return props.onShowAlert(params.topicTitle || formatMessage(messages.clear_messages), formatMessage(messages.clear_messages_warning), _ => {
             this.deleteMessages(true, false, params, errorHandler);
           }, null, true, null);
         }
@@ -16843,7 +16844,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.clear_for_all), formatMessage(messages.delete_messages_warning), _ => {
+          return props.onShowAlert(params.topicTitle || formatMessage(messages.clear_for_all), formatMessage(messages.delete_messages_warning), _ => {
             return this.deleteMessages(true, true, params, errorHandler);
           }, null, true, null);
         }
@@ -16928,7 +16929,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.block), formatMessage(messages.topic_block_warning), _ => this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
+          return props.onShowAlert(params.topicTitle || formatMessage(messages.block), formatMessage(messages.topic_block_warning), _ => this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
             this.props.onTopicRemoved(params.topicName);
             return ctrl;
           }), null, true, null);
@@ -16938,7 +16939,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), _ => {
+          return props.onShowAlert(params.topicTitle || formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), _ => {
             const topic = this.props.tinode.getTopic(params.topicName);
             if (!topic) {
               console.warn("Topic not found: ", params.topicName);
@@ -17178,7 +17179,7 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       originX: 0,
       originY: 0,
       zoom: 1,
-      minZoom: 0,
+      minZoom: 0.001,
       maxZoom: DEFAULT_MAX_ZOOM
     };
     this.overlay = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
