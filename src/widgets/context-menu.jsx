@@ -152,7 +152,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage(messages.clear_messages), // title
+            params.topicTitle || formatMessage(messages.clear_messages), // title
             formatMessage(messages.clear_messages_warning), // content
             (_ => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
             null, // "OK"
@@ -166,7 +166,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage(messages.clear_for_all), // title
+            params.topicTitle || formatMessage(messages.clear_for_all), // title
             formatMessage(messages.delete_messages_warning), // content
             (_ => { return this.deleteMessages(true, true, params, errorHandler); }),
             null, // "OK"
@@ -257,7 +257,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage(messages.block), // title
+            params.topicTitle || formatMessage(messages.block), // title
             formatMessage(messages.topic_block_warning), // content
             (_ => this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
               this.props.onTopicRemoved(params.topicName);
@@ -274,7 +274,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage(messages.topic_delete), // title
+            params.topicTitle || formatMessage(messages.topic_delete), // title
             formatMessage(messages.topic_delete_warning), // content
             (_ => {
               const topic = this.props.tinode.getTopic(params.topicName);

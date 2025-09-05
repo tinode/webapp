@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.24.3",
+  "version": "0.24.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tinode/webapp.git"

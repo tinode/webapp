@@ -46,7 +46,12 @@ class Contact extends React.Component {
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.showContextMenu({ topicName: this.props.item, y: e.pageY, x: e.pageX });
+    this.props.showContextMenu({
+      topicName: this.props.item,
+      topicTitle: this.props.title,
+      y: e.pageY,
+      x: e.pageX
+    });
   }
 
   render() {
