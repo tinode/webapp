@@ -50,7 +50,7 @@
   --clr-error-text-muted: light-dark(hsl(0, 50%, 60%), hsl(0, 50%, 40%)); /* For less critical errors like invalid in-place edit icon/text */
   --clr-error-bg-light: light-dark(#ffccd1, #ff6675); /* Info box error bg */
   --clr-error-border-light: light-dark(#ffbdc6, #ff334e); /* Info box error border */
-  --clr-error-text-dark: light-dark(#b51c1c, #6a1111); /* Info box error text, icon */
+  --clr-error-text-dark: light-dark(#b51c1c, #de2323); /* Info box error text, icon */
   --clr-error-icon: light-dark(#ef5552, #d81b0e); /* Info box error icon specific */
   --clr-warning-accent: light-dark(#FFC107, #000e16); /* Amber, danger-color */
   --clr-warning-bg-light: light-dark(#fff9c4, #00060c); /* Info box warning bg */
