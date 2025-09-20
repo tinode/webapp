@@ -33,7 +33,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -124,7 +126,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(this.state.fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_10__.MAX_TITLE_LENGTH), this.state.uploadUrl), {
+    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)((0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_10__.truncateString)(this.state.fn.trim(), _config_js__WEBPACK_IMPORTED_MODULE_11__.MAX_TITLE_LENGTH), this.state.uploadUrl), {
       'meth': this.state.meth,
       'val': this.state.meth == 'email' ? this.state.email : this.state.meth == 'tel' ? this.state.tel : null
     });
@@ -155,7 +157,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         imageUrl: URL.createObjectURL(blob),
         buttonDisabled: true
       });
-      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_10__.MAX_AVATAR_BYTES) {
+      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_11__.MAX_AVATAR_BYTES) {
         const uploader = this.props.tinode.getLargeFileHelper();
         uploader.upload(blob, 'newacc').then(url => this.setState({
           uploadUrl: url
@@ -173,8 +175,8 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         }));
       }
     };
-    if (width > _config_js__WEBPACK_IMPORTED_MODULE_10__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_10__.AVATAR_SIZE || width != height) {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_10__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_10__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_10__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
+    if (width > _config_js__WEBPACK_IMPORTED_MODULE_11__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_11__.AVATAR_SIZE || width != height) {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_11__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_11__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_11__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
     } else {
       readyToUpload({
         mime: mime,

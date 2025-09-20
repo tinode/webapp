@@ -820,6 +820,10 @@
     "defaultMessage": "phone",
     "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'"
   },
+  "pin_chat": {
+    "defaultMessage": "Pin",
+    "description": "Menu item [Pin] for pinning chat to the top."
+  },
   "pin_message": {
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning message to the top."
@@ -1019,6 +1023,10 @@
   "unnamed_topic": {
     "defaultMessage": "Unnamed",
     "description": "Title shown when the topic has no name"
+  },
+  "unpin_chat": {
+    "defaultMessage": "Unpin",
+    "description": "Menu item [Unpin] for un-pinning the chat."
   },
   "unpin_message": {
     "defaultMessage": "Unpin",

@@ -27,8 +27,12 @@ export default class ContactsView extends React.Component {
     const contacts = [];
     let unreadThreads = 0;
     let archivedCount = 0;
+
+    const me = props.tinode.getMeTopic();
     props.chatList.forEach(c => {
       const blocked = c.acs && !c.acs.isJoiner();
+      c.pinned = me.pinnedTopicRank(c.topic);
+
       // Show only blocked contacts only when props.blocked == true.
       if (blocked && props.blocked) {
         contacts.push(c);
@@ -50,7 +54,8 @@ export default class ContactsView extends React.Component {
     });
 
     contacts.sort((a, b) => {
-      return (b.touched || 0) - (a.touched || 0);
+      const pin = b.pinned - a.pinned;
+      return pin != 0 ? pin : (b.touched || 0) - (a.touched || 0);
     });
 
     if (archivedCount > 0) {

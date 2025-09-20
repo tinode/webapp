@@ -20,7 +20,8 @@ import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH,
   NO_ACCESS_MODE, TOAST_DURATION } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { theCard, clipStr } from '../lib/utils.js';
+import { theCard } from '../lib/utils.js';
+import { truncateString } from '../lib/strformat.js';
 
 const messages = defineMessages({
   info: {
@@ -231,13 +232,13 @@ class InfoView extends React.Component {
 
       fullName: isSelf ?
         props.intl.formatMessage(messages.self_topic_name) :
-        clipStr(topic.public && topic.public.fn, MAX_TITLE_LENGTH),
+        truncateString(topic.public && topic.public.fn, MAX_TITLE_LENGTH),
       description: isSelf ?
         props.intl.formatMessage(messages.self_topic_comment) :
-        clipStr(topic.public && topic.public.note, MAX_TOPIC_DESCRIPTION_LENGTH),
+        truncateString(topic.public && topic.public.note, MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
-      private: clipStr(topic.private && topic.private.comment, MAX_TITLE_LENGTH),
+      private: truncateString(topic.private && topic.private.comment, MAX_TITLE_LENGTH),
       archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),

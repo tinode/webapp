@@ -28,9 +28,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/parsePhoneNumberWithError.js");
 /* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
 /* harmony import */ var _widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/badge-list.jsx */ "./src/widgets/badge-list.jsx");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _widgets_credential_edit_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/credential-edit.jsx */ "./src/widgets/credential-edit.jsx");
+/* harmony import */ var _widgets_credential_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/credential-edit.jsx */ "./src/widgets/credential-edit.jsx");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -40,16 +42,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function _clip(str, length) {
-  return str && str.substring(0, length);
+  return (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_7__.truncateString)(str, length);
 }
 class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
     const me = this.props.tinode.getMeTopic();
     this.state = {
-      fullName: _clip(me.public ? me.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH),
-      description: _clip(me.public ? me.public.note : undefined, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TOPIC_DESCRIPTION_LENGTH),
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(me.public ? me.public.photo : null),
+      fullName: _clip(me.public ? me.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_8__.MAX_TITLE_LENGTH),
+      description: _clip(me.public ? me.public.note : undefined, _config_js__WEBPACK_IMPORTED_MODULE_8__.MAX_TOPIC_DESCRIPTION_LENGTH),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.makeImageUrl)(me.public ? me.public.photo : null),
       credentials: me.getCredentials() || [],
       credEdit: undefined,
       alias: ((me.tags() || []).find(tag => tag.startsWith('alias:')) || '').substring(6)
@@ -67,7 +69,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
   }
   render() {
     if (this.state.credEdit) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_credential_edit_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_credential_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
         method: this.state.credEdit.meth,
         val: this.state.credEdit.val,
         done: this.state.credEdit.done,

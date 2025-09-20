@@ -3753,6 +3753,38 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
   getCredentials() {
     return this._credentials;
   }
+  pinTopic(topic, pin) {
+    if (!this._attached) {
+      return Promise.reject(new Error("Cannot pin topic in inactive 'me' topic"));
+    }
+    if (!_topic_js__WEBPACK_IMPORTED_MODULE_2__["default"].isCommTopicName(topic)) {
+      return Promise.reject(new Error("Invalid topic to pin"));
+    }
+    const tpin = Array.isArray(this.private && this.private.tpin) ? this.private.tpin : [];
+    const found = tpin.includes(topic);
+    if (pin && found || !pin && !found) {
+      return Promise.resolve(tpin);
+    }
+    if (pin) {
+      tpin.unshift(topic);
+    } else {
+      tpin.splice(tpin.indexOf(topic), 1);
+    }
+    return this.setMeta({
+      desc: {
+        private: {
+          tpin: tpin.length > 0 ? tpin : _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR
+        }
+      }
+    });
+  }
+  pinnedTopicRank(topic) {
+    if (!this.private || !this.private.tpin) {
+      return 0;
+    }
+    const idx = this.private.tpin.indexOf(topic);
+    return idx < 0 ? 0 : this.private.tpin.length - idx;
+  }
 }
 
 /***/ }),
@@ -4314,6 +4346,12 @@ class Topic {
       });
     }
     return Promise.resolve();
+  }
+  pinTopic(topic, pin) {
+    return Promise.reject(new Error("Pinning topics is not supported here"));
+  }
+  pinnedTopicRank(topic) {
+    return 0;
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -5400,7 +5438,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.4";
+const PACKAGE_VERSION = "0.25.0-rc1";
 
 /***/ })
 

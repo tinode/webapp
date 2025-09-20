@@ -13,6 +13,7 @@ import TagManager from './tag-manager.jsx';
 import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LENGTH,
   MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { truncateString } from '../lib/strformat.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
@@ -98,7 +99,7 @@ class TopicDescEdit extends React.Component {
   }
 
   handleFullNameUpdate(fn) {
-    fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
+    fn = truncateString(fn.trim(), MAX_TITLE_LENGTH);
     if (fn && this.state.fullName !== fn) {
       this.setState({fullName: fn});
       this.props.onUpdateTopicDesc(this.props.topic, theCard(fn, null));

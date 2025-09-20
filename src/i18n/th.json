@@ -1822,5 +1822,19 @@
     "description": "Label for send on enter settings",
     "missing": false,
     "obsolete": false
+  },
+  "pin_chat": {
+    "translation": "",
+    "defaultMessage": "Pin",
+    "description": "Menu item [Pin] for pinning chat to the top.",
+    "missing": true,
+    "obsolete": false
+  },
+  "unpin_chat": {
+    "translation": "",
+    "defaultMessage": "Unpin",
+    "description": "Menu item [Unpin] for un-pinning the chat.",
+    "missing": true,
+    "obsolete": false
   }
 }

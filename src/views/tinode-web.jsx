@@ -963,7 +963,8 @@ class TinodeWeb extends React.Component {
       newState.ready = true;
     }
 
-    this.tinode.getMeTopic().contacts(c => {
+    const me = this.tinode.getMeTopic();
+    me.contacts(c => {
       if (!c.topic && !c.user) {
         // Contacts expect c.topic to be set.
         c.topic = c.name;
@@ -978,7 +979,14 @@ class TinodeWeb extends React.Component {
 
     const past = new Date(0);
     newState.chatList.sort((a, b) => {
-      return (a.touched || past).getTime() - (b.touched || past).getTime();
+      // Pinned topics take precedence.
+      const pins = me.pinnedTopicRank(b.topic) - me.pinnedTopicRank(a.topic);
+      // Then sort by last touched time.
+      return pins != 0 ? pins : (b.touched || past).getTime() - (a.touched || past).getTime();
+    });
+
+    newState.chatList.forEach(c => {
+      console.log("sorted:", c.topic, me.pinnedTopicRank(c.topic));
     });
 
     // Merge search results and chat list.
@@ -1643,11 +1651,13 @@ class TinodeWeb extends React.Component {
       ];
     }
 
+    const me = this.tinode.getMeTopic();
     let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false,
-      archived = false, webrtc = false, writer = false, p2p = false, self = false;
+      archived = false, pinned = false, webrtc = false, writer = false, p2p = false, self = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
+      pinned = me.pinnedTopicRank(topicName) > 0;
 
       const acs = topic.getAccessMode();
       if (acs) {
@@ -1680,6 +1690,7 @@ class TinodeWeb extends React.Component {
       subscribed && deleter && !self ? 'messages_clear_hard' : null,
       self ? null : (muted ? (blocked ? null : 'topic_unmute') : 'topic_mute'),
       self ? null : (self_blocked ? 'topic_unblock' : 'topic_block'),
+      subscribed ? (pinned ? 'topic_unpin' : 'topic_pin') : null,
       archived ? 'topic_restore' : 'topic_archive',
       'topic_delete'
     ];

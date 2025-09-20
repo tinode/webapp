@@ -12,6 +12,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { previewFormatter } from '../lib/formatters.js';
 import { deliveryMarker } from '../lib/utils.js';
+import { truncateString } from '../lib/strformat.js';
 
 const messages = defineMessages({
   self_topic_name: {
@@ -65,8 +66,8 @@ class Contact extends React.Component {
           description="Title shown when the topic has no name" /></i>;
       }
     } else if (title.length > 30) {
-      // FIXME: this is probably wrong for RTL languages.
-      title = title.substring(0, 28) + '…';
+      // Have to support RTL languages too.
+      title = truncateString(title, 30);
     }
     const online = this.props.now ? 'online' : 'offline';
     const avatar = this.props.avatar ? this.props.avatar : true;
@@ -115,8 +116,10 @@ class Contact extends React.Component {
 
     const comment = preview || this.props.comment ||
       (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
+    const bgColor = this.props.showCheckmark ? null :
+      (this.props.selected ? 'selected' : (this.props.pinned ? 'pinned' : null));
     return (
-      <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
+      <li className={bgColor} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
             tinode={this.props.tinode}

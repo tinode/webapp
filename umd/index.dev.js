@@ -8346,7 +8346,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   relativeDateFormat: function() { return /* binding */ relativeDateFormat; },
 /* harmony export */   secondsToTime: function() { return /* binding */ secondsToTime; },
 /* harmony export */   shortDateFormat: function() { return /* binding */ shortDateFormat; },
-/* harmony export */   shortenFileName: function() { return /* binding */ shortenFileName; }
+/* harmony export */   shortenFileName: function() { return /* binding */ shortenFileName; },
+/* harmony export */   truncateString: function() { return /* binding */ truncateString; }
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -8437,6 +8438,16 @@ function flagEmoji(countryCode) {
   const codePoints = countryCode.toUpperCase().split('').map(char => 0x1F1A5 + char.charCodeAt());
   return String.fromCodePoint(...codePoints);
 }
+function truncateString(str, maxLength) {
+  if (typeof str !== 'string') {
+    return str;
+  }
+  if (str.length <= maxLength) {
+    return str;
+  }
+  const isRTL = /[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(str);
+  return isRTL ? '…' + str.slice(0, maxLength - 1) : str.slice(0, maxLength - 1) + '…';
+}
 
 /***/ }),
 
@@ -8452,7 +8463,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   asEmail: function() { return /* binding */ asEmail; },
 /* harmony export */   asPhone: function() { return /* binding */ asPhone; },
 /* harmony export */   cancelablePromise: function() { return /* binding */ cancelablePromise; },
-/* harmony export */   clipStr: function() { return /* binding */ clipStr; },
 /* harmony export */   deliveryMarker: function() { return /* binding */ deliveryMarker; },
 /* harmony export */   isUrlRelative: function() { return /* binding */ isUrlRelative; },
 /* harmony export */   sanitizeUrl: function() { return /* binding */ sanitizeUrl; },
@@ -8645,9 +8655,6 @@ function cancelablePromise(promise) {
   };
 }
 ;
-function clipStr(str, length) {
-  return str && str.substring(0, length);
-}
 
 /***/ }),
 
@@ -8661,7 +8668,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.0";
+const PACKAGE_VERSION = "0.25.0-rc1";
 
 /***/ }),
 
@@ -9156,8 +9163,10 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const contacts = [];
     let unreadThreads = 0;
     let archivedCount = 0;
+    const me = props.tinode.getMeTopic();
     props.chatList.forEach(c => {
       const blocked = c.acs && !c.acs.isJoiner();
+      c.pinned = me.pinnedTopicRank(c.topic);
       if (blocked && props.blocked) {
         contacts.push(c);
       }
@@ -9176,7 +9185,8 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     });
     contacts.sort((a, b) => {
-      return (b.touched || 0) - (a.touched || 0);
+      const pin = b.pinned - a.pinned;
+      return pin != 0 ? pin : (b.touched || 0) - (a.touched || 0);
     });
     if (archivedCount > 0) {
       contacts.push({
@@ -12659,7 +12669,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (!this.state.ready) {
       newState.ready = true;
     }
-    this.tinode.getMeTopic().contacts(c => {
+    const me = this.tinode.getMeTopic();
+    me.contacts(c => {
       if (!c.topic && !c.user) {
         c.topic = c.name;
       }
@@ -12671,7 +12682,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
     const past = new Date(0);
     newState.chatList.sort((a, b) => {
-      return (a.touched || past).getTime() - (b.touched || past).getTime();
+      const pins = me.pinnedTopicRank(b.topic) - me.pinnedTopicRank(a.topic);
+      return pins != 0 ? pins : (b.touched || past).getTime() - (a.touched || past).getTime();
+    });
+    newState.chatList.forEach(c => {
+      console.log("sorted:", c.topic, me.pinnedTopicRank(c.topic));
     });
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
@@ -13278,12 +13293,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (topic._deleted) {
       return ['topic_delete'];
     }
+    const me = this.tinode.getMeTopic();
     let muted = false,
       blocked = false,
       self_blocked = false,
       subscribed = false,
       deleter = false,
       archived = false,
+      pinned = false,
       webrtc = false,
       writer = false,
       p2p = false,
@@ -13291,6 +13308,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
+      pinned = me.pinnedTopicRank(topicName) > 0;
       const acs = topic.getAccessMode();
       if (acs) {
         muted = acs.isMuted();
@@ -13312,7 +13330,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } : null, subscribed && p2p && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_video_call),
       handler: this.handleStartVideoCall
-    } : null, subscribed ? 'messages_clear' : null, subscribed && deleter && !self ? 'messages_clear_hard' : null, self ? null : muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self ? null : self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
+    } : null, subscribed ? 'messages_clear' : null, subscribed && deleter && !self ? 'messages_clear_hard' : null, self ? null : muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self ? null : self_blocked ? 'topic_unblock' : 'topic_block', subscribed ? pinned ? 'topic_unpin' : 'topic_pin' : null, archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
   }
   handleHideContextMenu() {
     this.setState({
@@ -14731,7 +14749,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 
 
 
@@ -14810,7 +14828,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
     this.setState({
-      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH),
+      fullName: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__.truncateString)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH),
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges
     });
@@ -14848,7 +14866,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       title: this.state.fullName
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name"
-    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    }, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__.truncateString)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       short: true,
       trustedBadges: this.state.trustedBadges
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -14985,7 +15003,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 
 
 
@@ -15490,7 +15508,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
-    const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
+    const peerTitle = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.truncateString)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
     let remoteActive = false;
     if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
@@ -16447,6 +16465,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
 
 
 
@@ -16511,7 +16531,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
         }));
       }
     } else if (title.length > 30) {
-      title = title.substring(0, 28) + '…';
+      title = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.truncateString)(title, 30);
     }
     const online = this.props.now ? 'online' : 'offline';
     const avatar = this.props.avatar ? this.props.avatar : true;
@@ -16580,8 +16600,9 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, icon.name) : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
     const comment = preview || this.props.comment || (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
+    const bgColor = this.props.showCheckmark ? null : this.props.selected ? 'selected' : this.props.pinned ? 'pinned' : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: !this.props.showCheckmark && this.props.selected ? 'selected' : null,
+      className: bgColor,
       onClick: this.handleClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
@@ -16813,6 +16834,20 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Unpin"
     }]
+  },
+  pin_chat: {
+    id: "pin_chat",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Pin"
+    }]
+  },
+  unpin_chat: {
+    id: "unpin_chat",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Unpin"
+    }]
   }
 });
 class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -16979,6 +17014,38 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             return;
           }
           return topic.archive(false).catch(err => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'topic_pin': {
+        id: 'topic_pin',
+        title: formatMessage(messages.pin_chat),
+        handler: (params, errorHandler) => {
+          const me = this.props.tinode.getMeTopic();
+          if (!me) {
+            console.warn("'me' topic not found");
+            return;
+          }
+          return me.pinTopic(params.topicName, true).catch(err => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'topic_unpin': {
+        id: 'topic_unpin',
+        title: formatMessage(messages.unpin_chat),
+        handler: (params, errorHandler) => {
+          const me = this.props.tinode.getMeTopic();
+          if (!me) {
+            console.warn("'me' topic not found");
+            return;
+          }
+          return me.pinTopic(params.topicName, false).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
@@ -18761,6 +18828,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
 
 
 
@@ -18864,9 +18933,9 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
   handleSubmit(e) {
     e.preventDefault();
-    const fn = this.state.fullName.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH);
-    const comment = this.state.private.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH);
-    const description = this.state.description.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TOPIC_DESCRIPTION_LENGTH);
+    const fn = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.truncateString)(this.state.fullName.trim(), _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH);
+    const comment = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.truncateString)(this.state.private.trim(), _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH);
+    const description = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.truncateString)(this.state.description.trim(), _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TOPIC_DESCRIPTION_LENGTH);
     if (fn) {
       this.props.onSubmit(fn, description, this.state.imageUrl, comment, this.state.tags, this.state.isChannel);
     }
@@ -20036,7 +20105,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -20129,12 +20200,12 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     });
   }
   handleFullNameUpdate(fn) {
-    fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
+    fn = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_9__.truncateString)(fn.trim(), _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
     if (fn && this.state.fullName !== fn) {
       this.setState({
         fullName: fn
       });
-      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__.theCard)(fn, null));
     }
   }
   handlePrivateUpdate(comment) {
@@ -20152,7 +20223,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.setState({
         description: desc
       });
-      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, null, null, desc));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__.theCard)(null, null, null, desc));
     }
   }
   handleImageUpdated(mime, img) {
@@ -20164,7 +20235,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.setState({
         avatar: null
       });
-      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__.theCard)(null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR));
     }
   }
   handleAvatarCropped(mime, blob, width, height) {
@@ -20186,7 +20257,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       } = image;
       if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
         const uploader = this.props.tinode.getLargeFileHelper();
-        uploader.upload(blob).then(url => this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url))).catch(err => this.props.onError(err.message, 'err'));
+        uploader.upload(blob).then(url => this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__.theCard)(null, url))).catch(err => this.props.onError(err.message, 'err'));
       } else {
         (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.blobToBase64)(blob).then(b64 => {
           const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)({
@@ -20196,7 +20267,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
           this.setState({
             source: du
           });
-          this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
+          this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__.theCard)(null, du));
         });
       }
     };
@@ -20277,7 +20348,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     }
   }
   handleTagsUpdated(tags) {
-    if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
+    if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
       return;
     }
     this.props.onUpdateTags(tags);

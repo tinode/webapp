@@ -11,6 +11,7 @@ import VisiblePassword from '../widgets/visible-password.jsx';
 import LocalStorageUtil from '../lib/local-storage.js';
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { theCard } from '../lib/utils.js';
+import { truncateString } from '../lib/strformat.js';
 
 import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
   MAX_TITLE_LENGTH } from '../config.js';
@@ -91,7 +92,7 @@ export default class CreateAccountView extends React.PureComponent {
     this.props.onCreateAccount(
       this.state.login.trim(),
       this.state.password.trim(),
-      theCard(this.state.fn.trim().substring(0, MAX_TITLE_LENGTH), this.state.uploadUrl),
+      theCard(truncateString(this.state.fn.trim(), MAX_TITLE_LENGTH), this.state.uploadUrl),
       {
         'meth': this.state.meth,
         'val': this.state.meth == 'email' ?

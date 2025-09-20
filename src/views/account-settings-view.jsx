@@ -5,13 +5,14 @@ import { parsePhoneNumber } from 'libphonenumber-js/mobile';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
-
-import { makeImageUrl } from '../lib/blob-helpers.js';
-import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 import CredentialEdit from '../widgets/credential-edit.jsx';
 
+import { makeImageUrl } from '../lib/blob-helpers.js';
+import { truncateString } from '../lib/strformat.js';
+import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
+
 function _clip(str, length) {
-  return str && str.substring(0, length);
+  return truncateString(str, length);
 }
 
 export default class AccountSettingsView extends React.Component {

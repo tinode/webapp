@@ -108,3 +108,18 @@ export function flagEmoji(countryCode) {
     .map(char => 0x1F1A5 + char.charCodeAt());
   return String.fromCodePoint(...codePoints);
 }
+
+// Truncate a string to a specific length and add ellipsis if needed.
+// Support both LTR and RTL languages.
+export function truncateString(str, maxLength) {
+  if (typeof str !== 'string') {
+    return str;
+  }
+  if (str.length <= maxLength) {
+    return str;
+  }
+
+  // Detect RTL characters in the string and truncate accordingly.
+  const isRTL = /[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(str);
+  return isRTL ? '…' + str.slice(0, maxLength - 1) : str.slice(0, maxLength - 1) + '…';
+}

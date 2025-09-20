@@ -6,8 +6,7 @@ import LetterTile from './letter-tile.jsx';
 
 import { MAX_PEER_TITLE_LENGTH } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
-
-import { clipStr } from '../lib/utils.js'
+import { truncateString } from '../lib/strformat.js';
 
 const RING_SOUND = new Audio('audio/call-out.m4a');
 RING_SOUND.loop = true;
@@ -584,7 +583,7 @@ class CallPanel extends React.PureComponent {
     const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
-    const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
+    const peerTitle = truncateString(this.props.title, MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
 
     let remoteActive = false;

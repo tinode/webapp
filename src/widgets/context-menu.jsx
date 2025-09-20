@@ -126,6 +126,16 @@ const messages = defineMessages({
     defaultMessage: 'Unpin',
     description: 'Menu item [Unpin] for un-pinning the message.'
   },
+  pin_chat: {
+    id: 'pin_chat',
+    defaultMessage: 'Pin',
+    description: 'Menu item [Pin] for pinning chat to the top.'
+  },
+  unpin_chat: {
+    id: 'unpin_chat',
+    defaultMessage: 'Unpin',
+    description: 'Menu item [Unpin] for un-pinning the chat.'
+  },
 });
 
 class ContextMenu extends React.Component {
@@ -320,6 +330,38 @@ class ContextMenu extends React.Component {
             return;
           }
           return topic.archive(false).catch(err => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'topic_pin': {
+        id: 'topic_pin',
+        title: formatMessage(messages.pin_chat),
+        handler: (params, errorHandler) => {
+          const me = this.props.tinode.getMeTopic();
+          if (!me) {
+            console.warn("'me' topic not found");
+            return;
+          }
+          return me.pinTopic(params.topicName, true).catch(err => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'topic_unpin': {
+        id: 'topic_unpin',
+        title: formatMessage(messages.unpin_chat),
+        handler: (params, errorHandler) => {
+          const me = this.props.tinode.getMeTopic();
+          if (!me) {
+            console.warn("'me' topic not found");
+            return;
+          }
+          return me.pinTopic(params.topicName, false).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }

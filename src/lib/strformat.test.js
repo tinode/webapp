@@ -5,7 +5,8 @@ import {
   bytesToHumanSize,
   shortenFileName,
   idToColorClass,
-  flagEmoji
+  flagEmoji,
+  truncateString
 } from './strformat.js';
 
 describe('shortDateFormat', () => {
@@ -150,5 +151,39 @@ describe('flagEmoji', () => {
 
   test('should handle lowercase country code', () => {
     expect(flagEmoji('jp')).toBe('🇯🇵');
+  });
+});
+
+describe('truncateString', () => {
+  test('should not truncate if not needed', () => {
+    expect(truncateString('short', 10)).toBe('short');
+  });
+
+  test('should truncate and add ellipsis for long strings', () => {
+    expect(truncateString('this is a long string', 10)).toBe('this is a…');
+  });
+
+  test('should handle RTL strings (Arabic)', () => {
+    expect(truncateString('هذا مثال لنص عربي طويل يحتاج.', 10)).toBe('…هذا مثال ');
+  });
+
+  test('should handle RTL strings (Hebrew)', () => {
+    expect(truncateString('זה דוגמה לטקסט עברי ארוך', 10)).toBe('…זה דוגמה ');
+  });
+
+  test('should handle RTL strings (Persian/Farsi)', () => {
+    expect(truncateString('این یک نمونه متن فارسی طولانی است', 10)).toBe('…این یک نم');
+  });
+
+  test('should handle RTL strings (Urdu)', () => {
+    expect(truncateString('یہ اردو زبان کا ایک طویل جملہ ہے', 10)).toBe('…یہ اردو ز');
+  });
+
+  test('should handle RTL strings (Arabic with mixed punctuation)', () => {
+    expect(truncateString('النص العربي الطويل! متحف الفن', 10)).toBe('…النص العر');
+  });
+
+  test('should handle RTL strings (Hebrew with English mixed)', () => {
+    expect(truncateString('טקסט עברי עם English מעורב', 10)).toBe('…טקסט עברי');
   });
 });

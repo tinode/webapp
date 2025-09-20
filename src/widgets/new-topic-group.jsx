@@ -9,6 +9,7 @@ import TagManager from './tag-manager.jsx';
 import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LENGTH,
   MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { truncateString } from '../lib/strformat.js';
 
 export default class NewTopicGroup extends React.PureComponent {
   constructor(props) {
@@ -100,9 +101,9 @@ export default class NewTopicGroup extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault();
 
-    const fn = this.state.fullName.trim().substring(0, MAX_TITLE_LENGTH);
-    const comment = this.state.private.trim().substring(0, MAX_TITLE_LENGTH);
-    const description = this.state.description.trim().substring(0, MAX_TOPIC_DESCRIPTION_LENGTH);
+    const fn = truncateString(this.state.fullName.trim(), MAX_TITLE_LENGTH);
+    const comment = truncateString(this.state.private.trim(), MAX_TITLE_LENGTH);
+    const description = truncateString(this.state.description.trim(), MAX_TOPIC_DESCRIPTION_LENGTH);
     if (fn) {
       this.props.onSubmit(fn, description, this.state.imageUrl, comment, this.state.tags, this.state.isChannel);
     }

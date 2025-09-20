@@ -8,7 +8,7 @@ import { MAX_TITLE_LENGTH, MAX_PEER_TITLE_LENGTH } from '../config.js';
 import { CALL_STATE_INCOMING_RECEIVED } from '../constants.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { clipStr } from '../lib/utils.js'
+import { truncateString } from '../lib/strformat.js';
 
 const RING_SOUND = new Audio('audio/call-in.m4a');
 
@@ -88,7 +88,7 @@ export default class CallIncoming extends React.Component {
     }
 
     this.setState({
-      fullName: clipStr(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
+      fullName: truncateString(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
     });
@@ -127,7 +127,7 @@ export default class CallIncoming extends React.Component {
                 topic={this.props.topic}
                 title={this.state.fullName} />
             </div>
-            <div className="caller-name">{clipStr(this.state.fullName, MAX_PEER_TITLE_LENGTH)}
+            <div className="caller-name">{truncateString(this.state.fullName, MAX_PEER_TITLE_LENGTH)}
               <BadgeList short={true} trustedBadges={this.state.trustedBadges} /></div>
           </div>
           <div className="controls">
