@@ -8714,7 +8714,6 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.props.onTextSizeChanged(e.currentTarget.value / 10 | 0);
   }
   handleSendOnEnterSelected(e) {
-    console.log('handleSendOnEnterSelected', e.currentTarget.value);
     this.setState({
       sendOnEnter: e.currentTarget.value
     });
@@ -12580,29 +12579,33 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(urlHash);
   }
   tnMeMetaDesc(desc) {
-    if (desc) {
-      if (desc.public) {
-        this.setState({
-          sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(desc.public.photo)
-        });
-      }
-      if (desc.trusted) {
-        const badges = [];
-        for (const [key, val] of Object.entries(desc.trusted)) {
-          if (val) {
-            badges.push(key);
-          }
+    if (!desc) {
+      return;
+    }
+    if (desc.public) {
+      this.setState({
+        sidePanelTitle: desc.public.fn,
+        sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(desc.public.photo)
+      });
+    }
+    if (desc.trusted) {
+      const badges = [];
+      for (const [key, val] of Object.entries(desc.trusted)) {
+        if (val) {
+          badges.push(key);
         }
-        this.setState({
-          myTrustedBadges: badges
-        });
       }
-      if (desc.acs) {
-        this.setState({
-          incognitoMode: !desc.acs.isPresencer()
-        });
-      }
+      this.setState({
+        myTrustedBadges: badges
+      });
+    }
+    if (desc.acs) {
+      this.setState({
+        incognitoMode: !desc.acs.isPresencer()
+      });
+    }
+    if (TinodeWeb.checkIfPinsUpdated(desc, this.state.chatList)) {
+      this.resetContactList();
     }
   }
   tnMeContactUpdate(what, cont) {
@@ -12685,11 +12688,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       const pins = me.pinnedTopicRank(b.topic) - me.pinnedTopicRank(a.topic);
       return pins != 0 ? pins : (b.touched || past).getTime() - (a.touched || past).getTime();
     });
-    newState.chatList.forEach(c => {
-      console.log("sorted:", c.topic, me.pinnedTopicRank(c.topic));
-    });
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
+  }
+  static checkIfPinsUpdated(me, chatList) {
+    for (let i = 0; i < chatList.length; i++) {
+      const c = chatList[i];
+      if (!!me.pinnedTopicRank(c.topic) != c.pinned) {
+        return true;
+      }
+    }
+    return false;
   }
   tnInitFind() {
     const fnd = this.tinode.getFndTopic();
@@ -13330,7 +13339,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } : null, subscribed && p2p && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_video_call),
       handler: this.handleStartVideoCall
-    } : null, subscribed ? 'messages_clear' : null, subscribed && deleter && !self ? 'messages_clear_hard' : null, self ? null : muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self ? null : self_blocked ? 'topic_unblock' : 'topic_block', subscribed ? pinned ? 'topic_unpin' : 'topic_pin' : null, archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
+    } : null, subscribed ? 'messages_clear' : null, subscribed && deleter && !self ? 'messages_clear_hard' : null, self ? null : muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self ? null : self_blocked ? 'topic_unblock' : 'topic_block', pinned ? 'topic_unpin' : 'topic_pin', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
   }
   handleHideContextMenu() {
     this.setState({
@@ -16413,6 +16422,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             badges: badges,
             showCheckmark: showCheckmark,
             selected: selected,
+            pinned: c.pinned,
             showOnline: this.props.showOnline && !isChannel,
             isChannel: isChannel,
             isGroup: isGroup,
@@ -16600,7 +16610,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, icon.name) : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
     const comment = preview || this.props.comment || (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
-    const bgColor = this.props.showCheckmark ? null : this.props.selected ? 'selected' : this.props.pinned ? 'pinned' : null;
+    const bgColor = this.props.showCheckmark ? null : this.props.selected ? 'selected' : this.props.pinned ? 'tpinned' : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: bgColor,
       onClick: this.handleClick

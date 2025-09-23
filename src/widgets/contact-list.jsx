@@ -132,6 +132,7 @@ class ContactList extends React.Component {
               badges={badges}
               showCheckmark={showCheckmark}
               selected={selected}
+              pinned={c.pinned}
               showOnline={this.props.showOnline && !isChannel}
               isChannel={isChannel}
               isGroup={isGroup}

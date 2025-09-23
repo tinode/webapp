@@ -32,7 +32,6 @@ export default class AccGeneralView extends React.PureComponent {
   }
 
   handleSendOnEnterSelected(e) {
-    console.log('handleSendOnEnterSelected', e.currentTarget.value);
     this.setState({sendOnEnter: e.currentTarget.value});
     this.props.onSendOnEnterChanged(e.currentTarget.value);
   }

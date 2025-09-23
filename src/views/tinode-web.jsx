@@ -843,29 +843,37 @@ class TinodeWeb extends React.Component {
   }
 
   tnMeMetaDesc(desc) {
-    if (desc) {
-      if (desc.public) {
-        this.setState({
-          sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: makeImageUrl(desc.public.photo)
-        });
-      }
-      if (desc.trusted) {
-        const badges = [];
-        for (const [key, val] of Object.entries(desc.trusted)) {
-          if (val) {
-            badges.push(key);
-          }
+    if (!desc) {
+      return;
+    }
+
+    if (desc.public) {
+      this.setState({
+        sidePanelTitle: desc.public.fn,
+        sidePanelAvatar: makeImageUrl(desc.public.photo)
+      });
+    }
+
+    if (desc.trusted) {
+      const badges = [];
+      for (const [key, val] of Object.entries(desc.trusted)) {
+        if (val) {
+          badges.push(key);
         }
-        this.setState({
-          myTrustedBadges: badges,
-        });
       }
-      if (desc.acs) {
-        this.setState({
-          incognitoMode: !desc.acs.isPresencer()
-        });
-      }
+      this.setState({
+        myTrustedBadges: badges,
+      });
+    }
+
+    if (desc.acs) {
+      this.setState({
+        incognitoMode: !desc.acs.isPresencer()
+      });
+    }
+
+    if (TinodeWeb.checkIfPinsUpdated(desc, this.state.chatList)) {
+      this.resetContactList();
     }
   }
 
@@ -985,13 +993,19 @@ class TinodeWeb extends React.Component {
       return pins != 0 ? pins : (b.touched || past).getTime() - (a.touched || past).getTime();
     });
 
-    newState.chatList.forEach(c => {
-      console.log("sorted:", c.topic, me.pinnedTopicRank(c.topic));
-    });
-
     // Merge search results and chat list.
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
+  }
+
+  static checkIfPinsUpdated(me, chatList) {
+    for (let i = 0; i < chatList.length; i++) {
+      const c = chatList[i];
+      if (!!me.pinnedTopicRank(c.topic) != c.pinned) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /* Fnd topic: find contacts by tokens */
@@ -1690,7 +1704,7 @@ class TinodeWeb extends React.Component {
       subscribed && deleter && !self ? 'messages_clear_hard' : null,
       self ? null : (muted ? (blocked ? null : 'topic_unmute') : 'topic_mute'),
       self ? null : (self_blocked ? 'topic_unblock' : 'topic_block'),
-      subscribed ? (pinned ? 'topic_unpin' : 'topic_pin') : null,
+      pinned ? 'topic_unpin' : 'topic_pin',
       archived ? 'topic_restore' : 'topic_archive',
       'topic_delete'
     ];

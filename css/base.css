@@ -1319,8 +1319,8 @@ i.search {
 .contact-box > li.selected {
   background-color: var(--clr-background-blue-gray-100); /* blue-gray 100 highlight */
 }
-.contact-box > li.pinned {
-  background-color: var(--clr-background-blue-gray-100); /* blue-gray 100 highlight */
+.contact-box > li.tpinned {
+  background-color: var(--clr-background-blue-gray-75); /* blue-gray 75 highlight */
 }
 .contact-box > li.action {
   min-height: 2.5rem;

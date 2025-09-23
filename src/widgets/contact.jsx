@@ -117,7 +117,7 @@ class Contact extends React.Component {
     const comment = preview || this.props.comment ||
       (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
     const bgColor = this.props.showCheckmark ? null :
-      (this.props.selected ? 'selected' : (this.props.pinned ? 'pinned' : null));
+      (this.props.selected ? 'selected' : (this.props.pinned ? 'tpinned' : null));
     return (
       <li className={bgColor} onClick={this.handleClick}>
         <div className="avatar-box">
