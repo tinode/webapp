@@ -37,7 +37,7 @@
   --clr-background-light-gray: light-dark(#f0f0f0, #0f0f0f); /* HR background, action button hover */
   --clr-background-extra-light-gray: light-dark(#eee, #222); /* Flat button faux bg, tabbar bg, chip bg */
   --clr-background-blue-gray-50: light-dark(#edf0f2, #202c33); /* Contact hover, messages panel, send message panel */
-  --clr-background-blue-gray-75: light-dark(#e1e8eb, #212c30); /* Contact pinned */
+  --clr-background-blue-gray-75: light-dark(#e1e8eb, #182124); /* Contact pinned */
   --clr-background-blue-gray-100: light-dark(#cfd8dc, #20272a); /* Contact selected, uploader bar */
   --clr-background-blue-gray-300: light-dark(#b0bec5, #354146); /* Topic/Info caption panel bg, some lettertiles */
   --clr-blue-wash-light: light-dark(#f0f0ff, #224); /* bot form button bg, badge bg (blue) */
