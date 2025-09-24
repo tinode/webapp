@@ -134,6 +134,7 @@ class InfoView extends React.Component {
       previousSubsUpdated: undefined,
     };
 
+    this.propsUpdated = this.propsUpdated.bind(this);
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
     this.resetTags = this.resetTags.bind(this);
@@ -153,8 +154,7 @@ class InfoView extends React.Component {
     this.handleBackNavigate = this.handleBackNavigate.bind(this);
   }
 
-  // No need to separately handle component mount.
-  componentDidUpdate(props) {
+  propsUpdated(props) {
     const topic = this.props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
@@ -174,6 +174,15 @@ class InfoView extends React.Component {
       this.resetSubs(topic, props);
       this.resetTags(topic);
     }
+  }
+
+  // Must provide this for lazy loaded components.
+  componentDidMount() {
+    this.propsUpdated(this.props);
+  }
+
+  componentDidUpdate(props) {
+    this.propsUpdated(props);
   }
 
   componentWillUnmount() {

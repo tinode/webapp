@@ -185,6 +185,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       previousMetaDesc: undefined,
       previousSubsUpdated: undefined
     };
+    this.propsUpdated = this.propsUpdated.bind(this);
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
     this.resetTags = this.resetTags.bind(this);
@@ -203,7 +204,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     this.handleContextMenu = this.handleContextMenu.bind(this);
     this.handleBackNavigate = this.handleBackNavigate.bind(this);
   }
-  componentDidUpdate(props) {
+  propsUpdated(props) {
     const topic = this.props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
@@ -222,6 +223,12 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       this.resetSubs(topic, props);
       this.resetTags(topic);
     }
+  }
+  componentDidMount() {
+    this.propsUpdated(this.props);
+  }
+  componentDidUpdate(props) {
+    this.propsUpdated(props);
   }
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);

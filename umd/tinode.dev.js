@@ -3496,7 +3496,6 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
     }
   }
   _processMetaDesc(desc) {
-    console.log("_processMetaDesc", desc);
     const turnOff = desc.acs && !desc.acs.isPresencer() && this.acs && this.acs.isPresencer();
     (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.mergeObj)(this, desc);
     this._tinode._db.updTopic(this);
