@@ -4,6 +4,7 @@ const path = require('path');
 
 module.exports = (env, argv) => {
   const mode = argv.mode === 'production' ? 'prod' : 'dev';
+  const maxAssetSize = mode === 'prod' ? 360000 : 1512000;
   return {
     entry: {
       index: path.resolve(__dirname, 'src/index.js'),
@@ -52,8 +53,8 @@ module.exports = (env, argv) => {
       ]
     },
     performance: {
-      maxEntrypointSize: 360000,
-      maxAssetSize: 360000
+      maxEntrypointSize: maxAssetSize,
+      maxAssetSize: maxAssetSize
     },
     plugins: [
       new CopyPlugin({
