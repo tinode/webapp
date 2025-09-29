@@ -40,7 +40,7 @@
   --clr-background-blue-gray-75: light-dark(#e1e8eb, #182124); /* Contact pinned */
   --clr-background-blue-gray-100: light-dark(#cfd8dc, #20272a); /* Contact selected, uploader bar */
   --clr-background-blue-gray-300: light-dark(#b0bec5, #354146); /* Topic/Info caption panel bg, some lettertiles */
-  --clr-blue-wash-light: light-dark(#f0f0ff, #224); /* bot form button bg, badge bg (blue) */
+  --clr-blue-wash-light: light-dark(#f0f0ff, #22222d); /* bot form button bg */
   --clr-blue-wash-medium: light-dark(#d8e8ff, #123550); /* Pinned active bg */
   --clr-primary-wash: light-dark(#e3f2fd, #072f45); /* Secondary button hover, avatar upload hover, bubble meta deleted bg */
   --clr-indigo-50: light-dark(#e8eaf6, #1a2c44); /* Outline button hover */
@@ -56,7 +56,7 @@
   --clr-warning-accent: light-dark(#FFC107, #000e16); /* Amber, danger-color */
   --clr-warning-bg-light: light-dark(#fff9c4, #00060c); /* Info box warning bg */
   --clr-warning-border-light: light-dark(#fff59d, #000a2b); /* Info box warning border */
-  --clr-warning-text-dark: light-dark(#6d4c41, #251613); /* Info box warning text */
+  --clr-warning-text-dark: light-dark(#6d4c41, #a08356); /* Info box warning text */
   --clr-warning-icon: light-dark(#fbc02d, #b48204); /* Info box warning icon specific */
   --clr-info-bg-light: light-dark(#e1f5fe, #010a0e); /* Info box info bg */
   --clr-info-border-light: light-dark(#b3e5fc, #001824); /* Info box info border */
@@ -148,7 +148,7 @@
   --clr-badge-yellow-bg: light-dark(#ffe, #331); /* Note: #ffe is close to white, dark will be black */
   --clr-badge-yellow-text: light-dark(#660, #660);
   --clr-badge-yellow-border: light-dark(#cc9, #552);
-  --clr-badge-blue-bg: var(--clr-blue-wash-light);
+  --clr-badge-blue-bg: light-dark(#f0f0ff, #224);
   --clr-badge-blue-text: light-dark(#339, #447);
   --clr-badge-blue-border: light-dark(#aad, #336);
   --clr-badge-red-bg: light-dark(#fee, #522);
@@ -256,7 +256,7 @@
   --clr-audio-icon: light-dark(rgba(102, 117, 117, 0.8), rgba(153, 138, 138, 0.8));
   --clr-audio-icon-disabled: light-dark(rgba(153  153  153 / 75%), rgba(102 102 102 / 75%));
   --clr-audio-timer-text: light-dark(rgba(102, 102, 102, 0.75), rgba(153, 153, 153, 0.75));
-  --clr-pinned-menu-bg: light-dark(#f8f8f8, #070707);
+  --clr-pinned-menu-bg: light-dark(#f8f8f8, #1a1a1a);
   --clr-drag-n-drop-border: var(--clr-std-grey);
   --clr-drag-n-drop-text: var(--clr-std-grey);
   --clr-drag-n-drop-bg: light-dark(rgba(255,255,255,.95), rgba(0,0,0,.95));
@@ -622,6 +622,7 @@ ul.menu > li.disabled {
   text-align: center;
   opacity: 0;
   background-color: inherit;
+  user-select: none;
 }
 .menuTrigger a {
   color: var(--clr-text-secondary);
@@ -3395,7 +3396,7 @@ ul.tabbar li.active > a {
 
 .pinned-menu .menuTrigger {
   position: relative;
-  user-select: none;
+  right: 0;
 }
 
 /*
