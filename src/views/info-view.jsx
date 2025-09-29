@@ -1,6 +1,6 @@
 // InfoView: panel with topic/user info.
 import React from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl';
 
 import { AccessMode, Tinode } from 'tinode-sdk';
 
@@ -653,6 +653,20 @@ class InfoView extends React.Component {
                 <div className="group">
                   <BadgeList trustedBadges={this.state.trustedBadges} />
                 </div>
+                : null
+              }
+              {this.state.groupTopic && topic.subcnt > 0 ?
+                <div className="group"><label className="small">
+                  {this.state.channel ?
+                    <FormattedMessage id="label_subscriber_count"
+                      defaultMessage="Subscribers:"
+                      description="Label for the count of channel subscribers" />
+                      :
+                    <FormattedMessage id="label_member_count"
+                      defaultMessage="Members:"
+                      description="Label for the count of group topic members" />
+                  }
+                </label>&nbsp;<FormattedNumber value={topic.subcnt}/></div>
                 : null
               }
               {this.state.description ?

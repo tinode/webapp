@@ -442,6 +442,10 @@
     "defaultMessage": "Keyboard:",
     "description": "Label for send on enter settings"
   },
+  "label_member_count": {
+    "defaultMessage": "Members:",
+    "description": "Label for the count of group topic members"
+  },
   "label_message_sound": {
     "defaultMessage": "Message sound:",
     "description": "Label for message sounds toggle"
@@ -504,6 +508,10 @@
     "defaultMessage": "Size:",
     "description": "Label for file size"
   },
+  "label_subscriber_count": {
+    "defaultMessage": "Subscribers:",
+    "description": "Label for the count of channel subscribers"
+  },
   "label_text_size": {
     "defaultMessage": "Text size:",
     "description": "Label adjusting text size"
@@ -545,7 +553,7 @@
     "description": "Label for current user permissions"
   },
   "last_seen_timestamp": {
-    "defaultMessage": "Last seen",
+    "defaultMessage": "Last seen: {timestamp}",
     "description": "Label for the timestamp of when the user or topic was last online"
   },
   "leave_chat_warning": {
@@ -571,6 +579,10 @@
   "login_prompt": {
     "defaultMessage": "Login",
     "description": "Placeholer for username/login"
+  },
+  "member_count": {
+    "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
+    "description": "Count of group topic members"
   },
   "menu_item_archive_topic": {
     "defaultMessage": "Archive",
@@ -955,6 +967,10 @@
   "stay_logged_in": {
     "defaultMessage": "Stay logged in",
     "description": "Label for a checkbox"
+  },
+  "subscriber_count": {
+    "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
+    "description": "Count of channel subscribers"
   },
   "tabtitle_find_user": {
     "defaultMessage": "find",

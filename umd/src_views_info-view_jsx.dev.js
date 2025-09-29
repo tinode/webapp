@@ -709,6 +709,24 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       trustedBadges: this.state.trustedBadges
+    })) : null, this.state.groupTopic && topic.subcnt > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "group"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small"
+    }, this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_subscriber_count",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Subscribers:"
+      }]
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_member_count",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Members:"
+      }]
+    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedNumber, {
+      value: topic.subcnt
     })) : null, this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {

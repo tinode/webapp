@@ -44,7 +44,7 @@ const messages = defineMessages({
   },
   last_seen: {
     id: 'last_seen_timestamp',
-    defaultMessage: 'Last seen',
+    defaultMessage: 'Last seen: {timestamp}',
     description: 'Label for the timestamp of when the user or topic was last online'
   },
   not_found: {
@@ -81,6 +81,28 @@ const messages = defineMessages({
     id: 'self_topic_name',
     defaultMessage: 'Saved messages',
     description: 'Name of self topic for UI'
+  },
+  subscriber_count: {
+    id: 'subscriber_count',
+    defaultMessage: '{count, plural, ' +
+      'one {{count, number} subscriber} ' +
+      'two {{count, number} subscribers} ' +
+      'three {{count, number} subscribers} ' +
+      'few {{count, number} subscribers} ' +
+      'many {{count, number} subscribers} ' +
+      'other {{count, number} subscribers}}',
+    description: 'Count of channel subscribers'
+  },
+  member_count: {
+    id: 'member_count',
+    defaultMessage: '{count, plural, ' +
+      'one {{count, number} member} ' +
+      'two {{count, number} members} ' +
+      'three {{count, number} members} ' +
+      'few {{count, number} members} ' +
+      'many {{count, number} members} ' +
+      'other {{count, number} members}}',
+    description: 'Count of group topic members'
   },
 });
 
@@ -1652,16 +1674,20 @@ class MessagesView extends React.Component {
 
         let lastSeen = null;
         if (isChannel) {
-          lastSeen = formatMessage(messages.channel);
+          lastSeen = formatMessage(messages.subscriber_count, {count: topic.subcnt});
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-          if (cont && Tinode.isP2PTopicName(cont.topic)) {
-            if (cont.online) {
-              lastSeen = formatMessage(messages.online_now);
-            } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " +
-                shortDateFormat(cont.seen.when, this.props.intl.locale);
-              // TODO: also handle user agent in c.seen.ua
+          if (cont) {
+            if (Tinode.isP2PTopicName(cont.topic)) {
+              if (cont.online) {
+                lastSeen = formatMessage(messages.online_now);
+              } else if (cont.seen) {
+                lastSeen = formatMessage(messages.last_seen,
+                  {timestamp: shortDateFormat(cont.seen.when, this.props.intl.locale)});
+                // TODO: also handle user agent in c.seen.ua
+              }
+            } else if (Tinode.isGroupTopicName(cont.topic)) {
+              lastSeen = formatMessage(messages.member_count, {count: topic.subcnt});
             }
           }
         }

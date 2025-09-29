@@ -615,7 +615,7 @@
   },
   "last_seen_timestamp": {
     "translation": "Vu pour la dernière fois",
-    "defaultMessage": "Last seen",
+    "defaultMessage": "Last seen: {timestamp}",
     "description": "Label for the timestamp of when the user or topic was last online",
     "missing": false,
     "obsolete": false
@@ -1834,6 +1834,41 @@
     "translation": "",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the chat.",
+    "missing": true,
+    "obsolete": false
+  },
+  "subscriber_count": {
+    "translation": "",
+    "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
+    "description": "Count of channel subscribers",
+    "missing": true,
+    "obsolete": false
+  },
+  "subscriber_count_channel": {
+    "translation": "",
+    "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
+    "description": "Count of channel subscribers",
+    "missing": true,
+    "obsolete": true
+  },
+  "label_member_count": {
+    "translation": "",
+    "defaultMessage": "Members:",
+    "description": "Label for the count of group topic members",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_subscriber_count": {
+    "translation": "",
+    "defaultMessage": "Subscribers:",
+    "description": "Label for the count of channel subscribers",
+    "missing": true,
+    "obsolete": false
+  },
+  "member_count": {
+    "translation": "",
+    "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
+    "description": "Count of group topic members",
     "missing": true,
     "obsolete": false
   }

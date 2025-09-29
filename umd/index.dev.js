@@ -9501,7 +9501,10 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     id: "last_seen_timestamp",
     defaultMessage: [{
       "type": 0,
-      "value": "Last seen"
+      "value": "Last seen: "
+    }, {
+      "type": 1,
+      "value": "timestamp"
     }]
   },
   not_found: {
@@ -9563,6 +9566,148 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     defaultMessage: [{
       "type": 0,
       "value": "Saved messages"
+    }]
+  },
+  subscriber_count: {
+    id: "subscriber_count",
+    defaultMessage: [{
+      "type": 6,
+      "value": "count",
+      "options": {
+        "one": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " subscriber"
+          }]
+        },
+        "two": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " subscribers"
+          }]
+        },
+        "three": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " subscribers"
+          }]
+        },
+        "few": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " subscribers"
+          }]
+        },
+        "many": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " subscribers"
+          }]
+        },
+        "other": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " subscribers"
+          }]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
+    }]
+  },
+  member_count: {
+    id: "member_count",
+    defaultMessage: [{
+      "type": 6,
+      "value": "count",
+      "options": {
+        "one": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " member"
+          }]
+        },
+        "two": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " members"
+          }]
+        },
+        "three": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " members"
+          }]
+        },
+        "few": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " members"
+          }]
+        },
+        "many": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " members"
+          }]
+        },
+        "other": {
+          "value": [{
+            "type": 2,
+            "value": "count",
+            "style": null
+          }, {
+            "type": 0,
+            "value": " members"
+          }]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
     }]
   }
 });
@@ -10935,14 +11080,24 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
         let lastSeen = null;
         if (isChannel) {
-          lastSeen = formatMessage(messages.channel);
+          lastSeen = formatMessage(messages.subscriber_count, {
+            count: topic.subcnt
+          });
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(cont.topic)) {
-            if (cont.online) {
-              lastSeen = formatMessage(messages.online_now);
-            } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
+          if (cont) {
+            if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(cont.topic)) {
+              if (cont.online) {
+                lastSeen = formatMessage(messages.online_now);
+              } else if (cont.seen) {
+                lastSeen = formatMessage(messages.last_seen, {
+                  timestamp: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.shortDateFormat)(cont.seen.when, this.props.intl.locale)
+                });
+              }
+            } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isGroupTopicName(cont.topic)) {
+              lastSeen = formatMessage(messages.member_count, {
+                count: topic.subcnt
+              });
             }
           }
         }
