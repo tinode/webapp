@@ -5044,10 +5044,14 @@ class Topic {
             acs: sub.acs
           });
         }
+        if (!this._users[sub.user]) {
+          this.subcnt++;
+        }
         user = this._updateCachedUser(sub.user, sub);
       } else {
         delete this._users[sub.user];
         user = sub;
+        this.subcnt--;
       }
       if (this.onMetaSub) {
         this.onMetaSub(user);
