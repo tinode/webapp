@@ -10968,7 +10968,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const isChannel = topic.isChannelType();
+        const isChannel = topic.isChannelType() || topic.chan;
         const groupTopic = topic.isGroupType() && !isChannel;
         const icon_badges = [];
         if (topic.trusted) {

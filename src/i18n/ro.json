@@ -1824,52 +1824,45 @@
     "obsolete": false
   },
   "pin_chat": {
-    "translation": "",
+    "translation": "Fixează",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning chat to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_chat": {
-    "translation": "",
+    "translation": "Anulează fixarea",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the chat.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "subscriber_count": {
-    "translation": "",
+    "translation": "{count, plural, one {{count, number} abonat} few {{count, number} abonați} other {{count, number} de abonați}}",
     "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
     "description": "Count of channel subscribers",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "subscriber_count_channel": {
-    "translation": "",
-    "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
-    "description": "Count of channel subscribers",
-    "missing": true,
-    "obsolete": true
-  },
   "label_member_count": {
-    "translation": "",
+    "translation": "Membri:",
     "defaultMessage": "Members:",
     "description": "Label for the count of group topic members",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_subscriber_count": {
-    "translation": "",
+    "translation": "Abonați:",
     "defaultMessage": "Subscribers:",
     "description": "Label for the count of channel subscribers",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "member_count": {
-    "translation": "",
+    "translation": "{count, plural, one {{count, number} membru} few {{count, number} membri} other {{count, number} de membri}}",
     "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
     "description": "Count of group topic members",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

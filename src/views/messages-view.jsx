@@ -1559,7 +1559,7 @@ class MessagesView extends React.Component {
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const isChannel = topic.isChannelType();
+        const isChannel = topic.isChannelType() || topic.chan;
         const groupTopic = topic.isGroupType() && !isChannel;
         const icon_badges = [];
         if (topic.trusted) {

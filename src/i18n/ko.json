@@ -1824,52 +1824,45 @@
     "obsolete": false
   },
   "pin_chat": {
-    "translation": "",
+    "translation": "고정",
     "defaultMessage": "Pin",
     "description": "Menu item [Pin] for pinning chat to the top.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unpin_chat": {
-    "translation": "",
+    "translation": "고정 해제",
     "defaultMessage": "Unpin",
     "description": "Menu item [Unpin] for un-pinning the chat.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "subscriber_count": {
-    "translation": "",
+    "translation": "{count, plural, other {구독자 {count, number}명}}",
     "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
     "description": "Count of channel subscribers",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "subscriber_count_channel": {
-    "translation": "",
-    "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
-    "description": "Count of channel subscribers",
-    "missing": true,
-    "obsolete": true
-  },
   "label_member_count": {
-    "translation": "",
+    "translation": "멤버:",
     "defaultMessage": "Members:",
     "description": "Label for the count of group topic members",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_subscriber_count": {
-    "translation": "",
+    "translation": "구독자:",
     "defaultMessage": "Subscribers:",
     "description": "Label for the count of channel subscribers",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "member_count": {
-    "translation": "",
+    "translation": "{count, plural, other {멤버 {count, number}명}}",
     "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
     "description": "Count of group topic members",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
