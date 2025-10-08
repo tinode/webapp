@@ -9753,6 +9753,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleExpandMedia = this.handleExpandMedia.bind(this);
     this.handleClosePreview = this.handleClosePreview.bind(this);
+    this.handleCallPanelToggle = this.handleCallPanelToggle.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowMessageContextMenu = this.handleShowMessageContextMenu.bind(this);
@@ -9910,6 +9911,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         videoPreview: null,
         videoPostview: null,
         rtcPanel: null,
+        minimizedCallPanel: false,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -9935,6 +9937,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         videoPreview: null,
         videoPostview: null,
         rtcPanel: null,
+        minimizedCallPanel: false,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -10589,6 +10592,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     this.props.onCallHangup(topic, seq);
   }
+  handleCallPanelToggle() {
+    this.setState({
+      minimizedCallPanel: !this.state.minimizedCallPanel
+    });
+  }
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
@@ -10909,7 +10917,28 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         serverAddress: this.props.serverAddress
       });
     } else {
+      let callPanel = null;
+      if (this.state.rtcPanel) {
+        callPanel = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          topic: this.state.topic,
+          seq: this.props.callSeq,
+          callState: this.props.callState,
+          callAudioOnly: this.props.callAudioOnly,
+          tinode: this.props.tinode,
+          title: this.state.title,
+          avatar: this.state.avatar || true,
+          minimized: this.state.minimizedCallPanel,
+          onError: this.props.onError,
+          onHangup: this.handleCallHangup,
+          onToggleMinimize: this.handleCallPanelToggle,
+          onInvite: this.props.onCallInvite,
+          onSendOffer: this.props.onCallSendOffer,
+          onIceCandidate: this.props.onCallIceCandidate,
+          onSendAnswer: this.props.onCallSendAnswer
+        });
+      }
       let component2;
+      let overlay = null;
       if (this.state.imagePreview) {
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePreview,
@@ -10950,23 +10979,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClose: this.handleClosePreview,
           onSendMessage: this.sendFileAttachment
         });
-      } else if (this.state.rtcPanel) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          topic: this.state.topic,
-          seq: this.props.callSeq,
-          callState: this.props.callState,
-          callAudioOnly: this.props.callAudioOnly,
-          tinode: this.props.tinode,
-          title: this.state.title,
-          avatar: this.state.avatar || true,
-          onError: this.props.onError,
-          onHangup: this.handleCallHangup,
-          onInvite: this.props.onCallInvite,
-          onSendOffer: this.props.onCallSendOffer,
-          onIceCandidate: this.props.onCallIceCandidate,
-          onSendAnswer: this.props.onCallSendAnswer
-        });
+      } else if (callPanel && !this.state.minimizedCallPanel) {
+        component2 = callPanel;
       } else {
+        if (callPanel) {
+          overlay = callPanel;
+        }
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType() || topic.chan;
         const groupTopic = topic.isGroupType() && !isChannel;
@@ -11253,7 +11271,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         id: "topic-view",
         ref: this.mountDnDEvents
-      }, component2);
+      }, component2, overlay);
     }
     return component;
   }
@@ -15034,7 +15052,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       short: true,
       trustedBadges: this.state.trustedBadges
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "controls"
+      id: "controls"
     }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "danger",
       onClick: this.handleRejectCall
@@ -15210,6 +15228,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       video: !props.callAudioOnly
     };
     this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED;
+    this.containerRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.remoteIceCandidatesCache = [];
@@ -15247,6 +15266,44 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.handleDataChannelMessage = this.handleDataChannelMessage.bind(this);
     this.handleDataChannelOpen = this.handleDataChannelOpen.bind(this);
     this.handleDataChannelClose = this.handleDataChannelClose.bind(this);
+    this.bounds = {};
+    this.dragStart = event => {
+      if (!event.target.classList.contains('draggable')) {
+        return;
+      }
+      if (window.matchMedia('(width<=640px)')) {
+        return;
+      }
+      if (this.props.minimized && this.containerRef) {
+        event.stopPropagation();
+        this.containerRef.current.setPointerCapture(event.pointerId);
+        this.containerRef.current.style.cursor = 'grabbing';
+        this.bounds.left = this.containerRef.current.offsetLeft;
+        this.bounds.top = this.containerRef.current.offsetTop;
+        this.bounds.width = this.containerRef.current.offsetWidth;
+        this.bounds.height = this.containerRef.current.offsetHeight;
+        const parent = this.containerRef.current.offsetParent;
+        this.bounds.maxX = parent.offsetWidth;
+        this.bounds.maxY = parent.offsetHeight;
+      }
+    };
+    this.drag = event => {
+      event.stopPropagation();
+      const el = this.containerRef.current;
+      if (this.props.minimized && this.containerRef && el.hasPointerCapture(event.pointerId)) {
+        this.bounds.left = Math.min(Math.max(this.bounds.left + event.movementX, 0), this.bounds.maxX - this.bounds.width);
+        this.bounds.top = Math.min(Math.max(this.bounds.top + event.movementY, 0), this.bounds.maxY - this.bounds.height);
+        el.style.left = `${this.bounds.left}px`;
+        el.style.top = `${this.bounds.top}px`;
+      }
+    };
+    this.dragEnd = event => {
+      event.stopPropagation();
+      if (this.props.minimized && this.containerRef) {
+        this.containerRef.current.releasePointerCapture(event.pointerId);
+        this.containerRef.current.style.cursor = 'grab';
+      }
+    };
   }
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
@@ -15255,11 +15312,21 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
       this.start();
     }
+    if (this.containerRef) {
+      this.containerRef.current.addEventListener('pointerdown', this.dragStart);
+      this.containerRef.current.addEventListener('pointermove', this.drag);
+      this.containerRef.current.addEventListener('pointerup', this.dragEnd);
+    }
   }
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onInfo = this.previousOnInfo;
     this.stop();
+    if (this.containerRef) {
+      this.containerRef.current.removeEventListener('pointerdown', this.dragStart);
+      this.containerRef.current.removeEventListener('pointermove', this.drag);
+      this.containerRef.current.removeEventListener('pointerup', this.dragEnd);
+    }
   }
   handleVideoCallAccepted(info) {
     RING_SOUND.pause();
@@ -15682,13 +15749,17 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         remoteActive = t.enabled && t.readyState == 'live';
       }
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "video-container"
+    const minimizedClass = this.props.minimized ? 'minimized' : null;
+    const fullScreen = this.props.minimized ? 'fullscreen' : 'fullscreen_exit';
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "video-container",
+      className: minimizedClass,
+      ref: this.containerRef
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-party self",
-      disabled: this.state.audioOnly
+      disabled: this.state.audioOnly || this.props.minimized
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.localRef,
       autoPlay: true,
@@ -15715,7 +15786,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       ref: this.remoteRef,
       autoPlay: true
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `caller-card${pulseAnimation}`
+      className: `caller-card${pulseAnimation} draggable`
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -15725,8 +15796,14 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       title: this.props.title
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name"
-    }, peerTitle))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "controls"
+    }, peerTitle))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "full-screen",
+      onClick: this.props.onToggleMinimize
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, fullScreen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "controls",
+      className: minimizedClass
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "danger",
       onClick: this.handleCloseClick
@@ -15744,7 +15821,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, audioIcon)))));
+    }, audioIcon))));
   }
 }
 ;

@@ -157,6 +157,7 @@ class MessagesView extends React.Component {
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleExpandMedia = this.handleExpandMedia.bind(this);
     this.handleClosePreview = this.handleClosePreview.bind(this);
+    this.handleCallPanelToggle = this.handleCallPanelToggle.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowMessageContextMenu = this.handleShowMessageContextMenu.bind(this);
@@ -344,6 +345,7 @@ class MessagesView extends React.Component {
         videoPreview: null,
         videoPostview: null,
         rtcPanel: null,
+        minimizedCallPanel: false,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -370,6 +372,7 @@ class MessagesView extends React.Component {
         videoPreview: null,
         videoPostview: null,
         rtcPanel: null,
+        minimizedCallPanel: false,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -1106,6 +1109,10 @@ class MessagesView extends React.Component {
     this.props.onCallHangup(topic, seq);
   }
 
+  handleCallPanelToggle() {
+    this.setState({minimizedCallPanel: !this.state.minimizedCallPanel});
+  }
+
   // sendImageAttachment sends the image bits as Drafty message.
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.mime;
@@ -1487,7 +1494,33 @@ class MessagesView extends React.Component {
           serverAddress={this.props.serverAddress} />
       );
     } else {
+
+      let callPanel = null;
+      if (this.state.rtcPanel) {
+        // P2P call.
+        callPanel = (
+          <CallPanel
+            topic={this.state.topic}
+            seq={this.props.callSeq}
+            callState={this.props.callState}
+            callAudioOnly={this.props.callAudioOnly}
+            tinode={this.props.tinode}
+            title={this.state.title}
+            avatar={this.state.avatar || true}
+            minimized={this.state.minimizedCallPanel}
+
+            onError={this.props.onError}
+            onHangup={this.handleCallHangup}
+            onToggleMinimize={this.handleCallPanelToggle}
+            onInvite={this.props.onCallInvite}
+            onSendOffer={this.props.onCallSendOffer}
+            onIceCandidate={this.props.onCallIceCandidate}
+            onSendAnswer={this.props.onCallSendAnswer} />
+        );
+      }
+
       let component2;
+      let overlay = null;
       if (this.state.imagePreview) {
         // Preview image before sending.
         component2 = (
@@ -1538,26 +1571,12 @@ class MessagesView extends React.Component {
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
         );
-      } else if (this.state.rtcPanel) {
-        // P2P call.
-        component2 = (
-          <CallPanel
-            topic={this.state.topic}
-            seq={this.props.callSeq}
-            callState={this.props.callState}
-            callAudioOnly={this.props.callAudioOnly}
-            tinode={this.props.tinode}
-            title={this.state.title}
-            avatar={this.state.avatar || true}
-
-            onError={this.props.onError}
-            onHangup={this.handleCallHangup}
-            onInvite={this.props.onCallInvite}
-            onSendOffer={this.props.onCallSendOffer}
-            onIceCandidate={this.props.onCallIceCandidate}
-            onSendAnswer={this.props.onCallSendAnswer} />
-        );
+      } else if (callPanel && !this.state.minimizedCallPanel) {
+        component2 = callPanel;
       } else {
+        if (callPanel) {
+          overlay = callPanel;
+        }
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType() || topic.chan;
         const groupTopic = topic.isGroupType() && !isChannel;
@@ -1829,7 +1848,7 @@ class MessagesView extends React.Component {
           </>
         );
       }
-      component = <div id="topic-view"  ref={this.mountDnDEvents}>{component2}</div>
+      component = <div id="topic-view"  ref={this.mountDnDEvents}>{component2}{overlay}</div>
     }
     return component;
   }

@@ -52,8 +52,10 @@ class CallPanel extends React.PureComponent {
     };
     this.isOutgoingCall = props.callState == CALL_STATE_OUTGOING_INITATED;
 
+    this.containerRef = React.createRef();
     this.localRef = React.createRef();
     this.remoteRef = React.createRef();
+
     // Cache for remote ice candidates until initial setup gets completed.
     this.remoteIceCandidatesCache = [];
 
@@ -100,6 +102,53 @@ class CallPanel extends React.PureComponent {
     this.handleDataChannelMessage = this.handleDataChannelMessage.bind(this);
     this.handleDataChannelOpen = this.handleDataChannelOpen.bind(this);
     this.handleDataChannelClose = this.handleDataChannelClose.bind(this);
+
+    this.bounds = {};
+
+    this.dragStart = (event) => {
+      if (!event.target.classList.contains('draggable')) {
+        // Prevent dragging when clicking on buttons or other non-draggable elements.
+        return;
+      }
+      if (window.matchMedia('(width<=640px)')) {
+        // No dragging on small screens.
+        return;
+      }
+      if (this.props.minimized && this.containerRef) {
+        event.stopPropagation();
+        this.containerRef.current.setPointerCapture(event.pointerId);
+        this.containerRef.current.style.cursor = 'grabbing';
+        this.bounds.left = this.containerRef.current.offsetLeft;
+        this.bounds.top = this.containerRef.current.offsetTop;
+        this.bounds.width = this.containerRef.current.offsetWidth;
+        this.bounds.height = this.containerRef.current.offsetHeight;
+
+        const parent = this.containerRef.current.offsetParent;
+        this.bounds.maxX = parent.offsetWidth;
+        this.bounds.maxY = parent.offsetHeight;
+      }
+    };
+    this.drag = (event) => {
+      event.stopPropagation();
+      const el = this.containerRef.current;
+      if (this.props.minimized && this.containerRef && el.hasPointerCapture(event.pointerId)) {
+        // Calculate new position. Restrict to the visible area of the parent element.
+        this.bounds.left = Math.min(Math.max(this.bounds.left + event.movementX, 0),
+          this.bounds.maxX - this.bounds.width);
+        this.bounds.top = Math.min(Math.max(this.bounds.top + event.movementY, 0),
+          this.bounds.maxY - this.bounds.height);
+
+        el.style.left = `${this.bounds.left}px`;
+        el.style.top = `${this.bounds.top}px`;
+      }
+    };
+    this.dragEnd = (event) => {
+      event.stopPropagation();
+      if (this.props.minimized && this.containerRef) {
+        this.containerRef.current.releasePointerCapture(event.pointerId);
+        this.containerRef.current.style.cursor = 'grab';
+      }
+    };
   }
 
   componentDidMount() {
@@ -110,12 +159,24 @@ class CallPanel extends React.PureComponent {
          this.props.callState == CALL_STATE_IN_PROGRESS) && this.localRef.current) {
       this.start();
     }
+
+    if (this.containerRef) {
+      this.containerRef.current.addEventListener('pointerdown', this.dragStart);
+      this.containerRef.current.addEventListener('pointermove', this.drag);
+      this.containerRef.current.addEventListener('pointerup', this.dragEnd);
+    }
   }
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onInfo = this.previousOnInfo;
     this.stop();
+
+    if (this.containerRef) {
+      this.containerRef.current.removeEventListener('pointerdown', this.dragStart);
+      this.containerRef.current.removeEventListener('pointermove', this.drag);
+      this.containerRef.current.removeEventListener('pointerup', this.dragEnd);
+    }
   }
 
   handleVideoCallAccepted(info) {
@@ -595,52 +656,56 @@ class CallPanel extends React.PureComponent {
       }
     }
 
+    const minimizedClass = this.props.minimized ? 'minimized' : null;
+    const fullScreen = this.props.minimized ? 'fullscreen' : 'fullscreen_exit';
+
     return (
-      <>
-        <div id="video-container">
-          <div id="video-container-panel">
-            <div className="call-party self" disabled={this.state.audioOnly}>
-              <video ref={this.localRef} autoPlay muted playsInline />
-              <div className="caller-name inactive">
-                <FormattedMessage id="calls_you_label"
-                  defaultMessage="You" description="Shown over the local video screen" />
-              </div>
-            </div>
-            <div className="call-party peer" disabled={!remoteActive}>
-              {remoteActive ?
-                <>
-                  <video ref={this.remoteRef} autoPlay playsInline />
-                  <div className="caller-name inactive">{peerTitle}</div>
-                </> :
-                <>
-                  <audio ref={this.remoteRef} autoPlay />
-                  <div className={`caller-card${pulseAnimation}`}>
-                    <div className="avatar-box">
-                      <LetterTile
-                        tinode={this.props.tinode}
-                        avatar={this.props.avatar}
-                        topic={this.props.topic}
-                        title={this.props.title} />
-                    </div>
-                    <div className="caller-name">{peerTitle}</div>
-                  </div>
-                </>
-              }
+      <div id="video-container" className={minimizedClass} ref={this.containerRef}>
+        <div id="video-container-panel">
+          <div className="call-party self" disabled={this.state.audioOnly || this.props.minimized}>
+            <video ref={this.localRef} autoPlay muted playsInline />
+            <div className="caller-name inactive">
+              <FormattedMessage id="calls_you_label"
+                defaultMessage="You" description="Shown over the local video screen" />
             </div>
           </div>
-          <div className="controls">
-            <button className="danger" onClick={this.handleCloseClick}>
-              <i className="material-icons">call_end</i>
-            </button>
-            <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
-              <i className="material-icons">{videoIcon}</i>
-            </button>
-            <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
-              <i className="material-icons">{audioIcon}</i>
-            </button>
+          <div className="call-party peer" disabled={!remoteActive}>
+            {remoteActive ?
+              <>
+                <video ref={this.remoteRef} autoPlay playsInline />
+                <div className="caller-name inactive">{peerTitle}</div>
+              </> :
+              <>
+                <audio ref={this.remoteRef} autoPlay />
+                <div className={`caller-card${pulseAnimation} draggable`}>
+                  <div className="avatar-box">
+                    <LetterTile
+                      tinode={this.props.tinode}
+                      avatar={this.props.avatar}
+                      topic={this.props.topic}
+                      title={this.props.title} />
+                  </div>
+                  <div className="caller-name">{peerTitle}</div>
+                </div>
+              </>
+            }
           </div>
         </div>
-      </>
+        <button className="full-screen" onClick={this.props.onToggleMinimize}>
+          <i className="material-icons">{fullScreen}</i>
+        </button>
+        <div id="controls" className={minimizedClass}>
+          <button className="danger" onClick={this.handleCloseClick}>
+            <i className="material-icons">call_end</i>
+          </button>
+          <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
+            <i className="material-icons">{videoIcon}</i>
+          </button>
+          <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
+            <i className="material-icons">{audioIcon}</i>
+          </button>
+        </div>
+      </div>
     );
   }
 };

@@ -130,7 +130,7 @@ export default class CallIncoming extends React.Component {
             <div className="caller-name">{truncateString(this.state.fullName, MAX_PEER_TITLE_LENGTH)}
               <BadgeList short={true} trustedBadges={this.state.trustedBadges} /></div>
           </div>
-          <div className="controls">
+          <div id="controls">
             {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
               <>
                 <button className="danger" onClick={this.handleRejectCall}>

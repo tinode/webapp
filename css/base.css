@@ -4,6 +4,9 @@
   /* Size of text in message bubbles */
   --message-text-size: 10pt;
 
+  /* Height of caption panel */
+  --caption-panel-height: 4rem;
+
   /* Core Palette */
   --clr-bright: light-dark(#fff, #181818);
   --clr-dark: light-dark(#000, #fff);
@@ -48,7 +51,7 @@
   /* Semantic Colors: Danger, Warning, Success, Info */
   --clr-danger-text: light-dark(#d33131, #931f1f); /* Danger text, invalid label */
   --clr-danger-text-hover: light-dark(#f44034, #cc1100); /* Hover for danger text */
-  --clr-error-text-muted: light-dark(hsl(0, 50%, 60%), hsl(0, 50%, 40%)); /* For less critical errors like invalid in-place edit icon/text */
+  --clr-error-text-muted: light-dark(#cc6666, #993333); /* For less critical errors like invalid in-place edit icon/text */
   --clr-error-bg-light: light-dark(#ffccd1, #ff6675); /* Info box error bg */
   --clr-error-border-light: light-dark(#ffbdc6, #ff334e); /* Info box error border */
   --clr-error-text-dark: light-dark(#b51c1c, #de2323); /* Info box error text, icon */
@@ -1092,7 +1095,7 @@ table.permission-editor td.checkbox {
   align-items: center;
   flex: none;
   padding: 0.5rem;
-  height: 4rem;
+  height: var(--caption-panel-height);
   white-space: nowrap;
   box-shadow: 0 1px 2px var(--clr-shadow-gray-strong);
   overflow-x: hidden;
@@ -1934,7 +1937,7 @@ img.channel {
   line-height: 2rem;
   flex-shrink: 0;
   flex-grow: 0;
-  height: 4rem;
+  height: var(--caption-panel-height);
   padding: 1rem 0.75rem 0 0.75rem;
   z-index: 3;
 }
@@ -1997,27 +2000,96 @@ img.channel {
   background-color: var(--clr-overlay-white-strong);
 }
 
-.controls {
+#video-container.minimized {
+  left: auto;
+  top: 1rem;
+  right: 1rem;
+  width: 18rem;
+  height: 18rem;
+  background-color: unset;
+  user-select: none;
+  cursor: grab;
+  box-shadow: 0.15rem 0.15rem 1.5rem var(--clr-shadow-dialog);
+  border-radius: 0.5rem;
+}
+
+#controls {
   position: absolute;
   display: flex;
   column-gap: 1rem;
   align-items: center;
+  align-self: center;
   justify-content: center;
-  width: 100%;
   bottom: 2.5rem;
   z-index: 1;
 }
 
-.incoming-call .controls {
+#controls.minimized {
+  column-gap: 0.5rem;
+  bottom: 1.75rem;
+}
+
+.incoming-call #controls {
   bottom: 1rem;
 }
 
-.controls button {
+#controls button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   width: 4rem;
   height: 4rem;
   min-width: initial;
   box-shadow: 0 3px 6px 0 var(--clr-shadow-button);
+}
+
+#controls.minimized button {
+  width: 2.75rem;
+  height: 2.75rem;
+  box-shadow: 0 2px 4px 0 var(--clr-shadow-button);
+}
+
+#controls button .material-icons {
+  font-size: 1.8rem;
+}
+
+#controls.minimized button .material-icons {
+  font-size: 1.4rem;
+}
+
+button.full-screen {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 1;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  padding: 0;
+  box-shadow: none;
+  background-color: transparent;
+  min-width: unset;
+}
+
+.minimized button.full-screen {
+  top: 1rem;
+  left: 1rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+button.full-screen:hover:not([disabled]), button:active:not([disabled]) {
+  color: var(--clr-text-secondary);
+}
+
+button.full-screen .material-icons {
+  font-size: x-large;
+}
+
+.minimized button.full-screen .material-icons {
+  font-size: large;
 }
 
 #video-container-panel {
@@ -2034,7 +2106,11 @@ img.channel {
 }
 
 .call-party:hover {
-  border: 2px solid var(--clr-primary-accent);
+  border-color: var(--clr-primary-accent);
+}
+
+.minimized .call-party {
+  border-width: 1px;
 }
 
 .call-party.peer {
@@ -2044,6 +2120,13 @@ img.channel {
   right: 1rem;
   bottom: 1rem;
   z-index: 1;
+}
+
+.minimized .call-party.peer {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .call-party.self {
@@ -2101,6 +2184,12 @@ video {
   line-height: 1.6;
 }
 
+.minimized .caller-card .avatar-box {
+  width: 6rem;
+  height: 6rem;
+  font-size: 3.6rem;
+}
+
 /* Badge with "You" for current user or peer's name. */
 .call-party .caller-name {
   max-width: 12rem;
@@ -2108,7 +2197,7 @@ video {
   border-radius: 0.35rem;
   z-index: 1;
   text-shadow: 0 0 1px var(--clr-bright);
-  background-color: rgba(255, 255, 255, 0.7); /* Specific rgba, could be a variable if reused */
+  background-color: var(--clr-background-off-white);
   text-overflow: ellipsis;
   overflow-x: hidden;
   white-space: nowrap;
@@ -2135,6 +2224,12 @@ video {
   left: 1rem;
   bottom: 0.5rem;
   margin: 0 auto;
+}
+
+.minimized .caller-name {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+  font-weight: lighter;
 }
 
 .incoming-call {
@@ -2305,6 +2400,7 @@ video {
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   background-color: var(--clr-bubble-meta-date-bg);
   text-transform: uppercase;
+  user-select: none;
 }
 
 /* Left triangle placed bottom left flush. */
@@ -2822,6 +2918,7 @@ ul.tabbar li.active > a {
   line-height: 1;
   vertical-align: middle;
   text-align: center;
+  user-select: none;
 }
 .material-icons.small {
   font-size: 1rem;
@@ -3580,7 +3677,31 @@ div.toast.show {
     width: unset;
   }
 
+  #video-container.minimized {
+    flex-direction: row;
+    left: 0;
+    top: var(--caption-panel-height);
+    width: 100%;
+    height: 11rem;
+    border-radius: unset;
+    box-shadow: 0 0 0.5rem var(--clr-shadow-gray-strong);
+  }
+
+  #controls.minimized {
+    flex-direction: column;
+    row-gap: 0.5rem;
+    bottom: auto;
+    column-gap: unset;
+    right: 1rem;
+  }
+
+  .minimized .call-party {
+    border-radius: unset;
+    box-shadow: unset;
+  }
+
   .call-party.self {
     bottom: 8.5rem;
+    border-radius: unset;
   }
 }
