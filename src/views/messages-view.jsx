@@ -1486,6 +1486,28 @@ class MessagesView extends React.Component {
   render() {
     const {formatMessage} = this.props.intl;
 
+    // P2P call is an overlay, not a separate component because it cannot be
+    // re-mounted between full screen/minimized.
+    const overlay = this.state.rtcPanel ? (
+        <CallPanel
+          topic={this.state.topic}
+          seq={this.props.callSeq}
+          callState={this.props.callState}
+          callAudioOnly={this.props.callAudioOnly}
+          tinode={this.props.tinode}
+          title={this.state.title}
+          avatar={this.state.avatar || true}
+          minimized={this.state.minimizedCallPanel}
+
+          onError={this.props.onError}
+          onHangup={this.handleCallHangup}
+          onToggleMinimize={this.handleCallPanelToggle}
+          onInvite={this.props.onCallInvite}
+          onSendOffer={this.props.onCallSendOffer}
+          onIceCandidate={this.props.onCallIceCandidate}
+          onSendAnswer={this.props.onCallSendAnswer} />
+      ) : null;
+
     let component;
     if (!this.state.topic) {
       component = (
@@ -1494,33 +1516,7 @@ class MessagesView extends React.Component {
           serverAddress={this.props.serverAddress} />
       );
     } else {
-
-      let callPanel = null;
-      if (this.state.rtcPanel) {
-        // P2P call.
-        callPanel = (
-          <CallPanel
-            topic={this.state.topic}
-            seq={this.props.callSeq}
-            callState={this.props.callState}
-            callAudioOnly={this.props.callAudioOnly}
-            tinode={this.props.tinode}
-            title={this.state.title}
-            avatar={this.state.avatar || true}
-            minimized={this.state.minimizedCallPanel}
-
-            onError={this.props.onError}
-            onHangup={this.handleCallHangup}
-            onToggleMinimize={this.handleCallPanelToggle}
-            onInvite={this.props.onCallInvite}
-            onSendOffer={this.props.onCallSendOffer}
-            onIceCandidate={this.props.onCallIceCandidate}
-            onSendAnswer={this.props.onCallSendAnswer} />
-        );
-      }
-
       let component2;
-      let overlay = null;
       if (this.state.imagePreview) {
         // Preview image before sending.
         component2 = (
@@ -1571,12 +1567,7 @@ class MessagesView extends React.Component {
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
         );
-      } else if (callPanel && !this.state.minimizedCallPanel) {
-        component2 = callPanel;
       } else {
-        if (callPanel) {
-          overlay = callPanel;
-        }
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType() || topic.chan;
         const groupTopic = topic.isGroupType() && !isChannel;
@@ -1848,7 +1839,7 @@ class MessagesView extends React.Component {
           </>
         );
       }
-      component = <div id="topic-view"  ref={this.mountDnDEvents}>{component2}{overlay}</div>
+      component = <div id="topic-view" ref={this.mountDnDEvents}>{component2}{overlay}</div>
     }
     return component;
   }

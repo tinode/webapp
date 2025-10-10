@@ -10910,6 +10910,23 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const {
       formatMessage
     } = this.props.intl;
+    const overlay = this.state.rtcPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      topic: this.state.topic,
+      seq: this.props.callSeq,
+      callState: this.props.callState,
+      callAudioOnly: this.props.callAudioOnly,
+      tinode: this.props.tinode,
+      title: this.state.title,
+      avatar: this.state.avatar || true,
+      minimized: this.state.minimizedCallPanel,
+      onError: this.props.onError,
+      onHangup: this.handleCallHangup,
+      onToggleMinimize: this.handleCallPanelToggle,
+      onInvite: this.props.onCallInvite,
+      onSendOffer: this.props.onCallSendOffer,
+      onIceCandidate: this.props.onCallIceCandidate,
+      onSendAnswer: this.props.onCallSendAnswer
+    }) : null;
     let component;
     if (!this.state.topic) {
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
@@ -10917,28 +10934,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         serverAddress: this.props.serverAddress
       });
     } else {
-      let callPanel = null;
-      if (this.state.rtcPanel) {
-        callPanel = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          topic: this.state.topic,
-          seq: this.props.callSeq,
-          callState: this.props.callState,
-          callAudioOnly: this.props.callAudioOnly,
-          tinode: this.props.tinode,
-          title: this.state.title,
-          avatar: this.state.avatar || true,
-          minimized: this.state.minimizedCallPanel,
-          onError: this.props.onError,
-          onHangup: this.handleCallHangup,
-          onToggleMinimize: this.handleCallPanelToggle,
-          onInvite: this.props.onCallInvite,
-          onSendOffer: this.props.onCallSendOffer,
-          onIceCandidate: this.props.onCallIceCandidate,
-          onSendAnswer: this.props.onCallSendAnswer
-        });
-      }
       let component2;
-      let overlay = null;
       if (this.state.imagePreview) {
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePreview,
@@ -10979,12 +10975,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClose: this.handleClosePreview,
           onSendMessage: this.sendFileAttachment
         });
-      } else if (callPanel && !this.state.minimizedCallPanel) {
-        component2 = callPanel;
       } else {
-        if (callPanel) {
-          overlay = callPanel;
-        }
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType() || topic.chan;
         const groupTopic = topic.isGroupType() && !isChannel;

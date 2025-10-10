@@ -24,6 +24,7 @@
   --clr-primary-accent-transparent-medium: light-dark(rgba(33, 150, 243, 0.3), rgba(20, 70, 120, 0.3)); /* for active call shadow */
   --clr-primary-action: light-dark(#1e89e6, #1571c1); /* blue 600, primary buttons */
   --clr-primary-action-hover: light-dark(#2962ff, #0037b8); /* hover for primary action */
+  --clr-secondary-accent: light-dark(#0097a8, #006570); /* Checkmark icon, unread badge bg */
   --clr-primary-light-blue: light-dark(#bcdefb, #78a0be); /* light-blue 100, side caption panel text/link */
   --clr-light-blue-accent: light-dark(#0398e2, #0379b5); /* light-blue accent, reply quote border, pinned active dot */
 
@@ -74,7 +75,6 @@
   --clr-verified-accent: light-dark(#02a6f2, #027db6); /* Verified color */
   --clr-staff-accent: light-dark(#689f38, #598830); /* Staff color */
   --clr-badge-inv: light-dark(#fffd, #cccd); /* Badge inverted text */
-  --clr-cyan-accent: light-dark(#0097a8, #006570); /* Checkmark icon, unread badge bg */
   --clr-cyan-50: light-dark(#e0f7fa, #2f3e43); /* Dummy view bg */
   --clr-overlay-white-strong: light-dark(rgba(255, 255, 255, 0.9), rgba(0,0,0,0.90)); /* Image preview bg, video container bg */
   --clr-gray-medium-bg: light-dark(#777, #444); /* Image preview container bg (darker gray) */
@@ -1324,6 +1324,7 @@ i.search {
   background-color: var(--clr-background-blue-gray-100); /* blue-gray 100 highlight */
 }
 .contact-box > li.tpinned {
+  border-right: 1px solid var(--clr-secondary-accent);
   background-color: var(--clr-background-blue-gray-75); /* blue-gray 75 highlight */
 }
 .contact-box > li.action {
@@ -1485,7 +1486,7 @@ img.channel {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
-  color: var(--clr-cyan-accent);
+  color: var(--clr-secondary-accent);
   position: absolute;
   right: 0;
   bottom: 0;
@@ -2747,7 +2748,7 @@ ul.tabbar li.active > a {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: bolder;
-  background-color: var(--clr-cyan-accent);
+  background-color: var(--clr-secondary-accent);
   color: var(--clr-bright);
   border-radius: 50%;
   width: 1.35rem;
