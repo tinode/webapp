@@ -601,8 +601,8 @@ class InfoView extends React.Component {
                   <FormattedMessage id="label_topic_name" defaultMessage="Name"
                     description="Label for editing topic name" />
                 </label></div>
-                <div className="large ellipsized">{this.state.fullName}
-                {this.state.channel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}</div>
+                <div className="large ellipsized">{this.state.fullName}&nbsp;
+                {this.state.channel ? <i className="material-icons">podcasts</i> : null}</div>
               </div>
               {this.state.private ?
                 <div className="group">

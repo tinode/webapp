@@ -29,6 +29,7 @@ const messageLoader = {
   'en': _ => import('./i18n.min/en.json'),
   'es': _ => import('./i18n.min/es.json'),
   'fr': _ => import('./i18n.min/fr.json'),
+  'it': _ => import('./i18n.min/it.json'),
   'ko': _ => import('./i18n.min/ko.json'),
   'ro': _ => import('./i18n.min/ro.json'),
   'ru': _ => import('./i18n.min/ru.json'),

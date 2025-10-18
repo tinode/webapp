@@ -29,7 +29,7 @@ import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/hos
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
 import { secondsToTime } from '../lib/strformat.js'
-import { updateFavicon } from '../lib/utils.js';
+import { defaultWallpaper, updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.m4a');
@@ -108,6 +108,7 @@ class TinodeWeb extends React.Component {
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
+    this.handleColorSchemeChange = this.handleColorSchemeChange.bind(this);
     this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
     this.handleError = this.handleError.bind(this);
@@ -137,6 +138,8 @@ class TinodeWeb extends React.Component {
     this.handleChangeColorSchema = this.handleChangeColorSchema.bind(this);
     this.handleChangeTextSize = this.handleChangeTextSize.bind(this);
     this.handleSendOnEnter = this.handleSendOnEnter.bind(this);
+    this.handleSelectWallpapers = this.handleSelectWallpapers.bind(this);
+    this.handleWallpaperSelected = this.handleWallpaperSelected.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -298,9 +301,22 @@ class TinodeWeb extends React.Component {
     this.handleOnlineOff = _ => { this.handleOnline(false); }
     window.addEventListener('offline', this.handleOnlineOff);
     window.addEventListener('hashchange', this.handleHashRoute);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.handleColorSchemeChange);
+
+    // Window/tab visible or invisible for pausing timers.
+    document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
     document.documentElement.style.colorScheme = this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
+
+    const settings = LocalStorageUtil.getObject('settings') || {};
+    if (!settings.wallpaper) {
+      const wallpaper = defaultWallpaper();
+      settings.wallpaper = wallpaper.name || '';
+      settings.wallpaperSize = wallpaper.size || 0;
+      settings.wallpaperBlur = 0;
+    }
+    this.applyWallpaperSettings(settings.wallpaper, settings.wallpaperSize, settings.wallpaperBlur);
 
     // Process background notifications from the service worker.
     if (typeof BroadcastChannel == 'function') {
@@ -322,9 +338,6 @@ class TinodeWeb extends React.Component {
       }
       this.lastWakeUpCheck = now;
     }, WAKE_UP_TICK);
-
-    // Window/tab visible or invisible for pausing timers.
-    document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
@@ -385,6 +398,7 @@ class TinodeWeb extends React.Component {
     window.removeEventListener('hashchange', this.handleHashRoute);
     window.removeEventListener('online', this.handleOnlineOn);
     window.removeEventListener('offline', this.handleOnlineOff);
+    window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', this.handleColorSchemeChange);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
 
     clearInterval(this.wakeUpTicker);
@@ -526,8 +540,9 @@ class TinodeWeb extends React.Component {
 
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','notif','acc_general','security','support','general','crop',
-          'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
+      if (['acc_general','archive','blocked','contacts','cred','crop','edit','general',
+          'newtpk','notif','register','reset','security','settings','support','wallpapers',
+          ''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
       } else {
         console.warn("Unknown sidepanel view", hash.path[0]);
@@ -1235,10 +1250,38 @@ class TinodeWeb extends React.Component {
     });
   }
 
+  // Manual change of color scheme.
   handleChangeColorSchema(scheme) {
     this.setState({colorSchema: scheme});
     LocalStorageUtil.updateObject('settings', {colorSchema: scheme});
     document.documentElement.style.colorScheme = scheme;
+  }
+
+  // System color scheme has changed.
+  handleColorSchemeChange(event) {
+    console.log("Color scheme change:", event.matches ? 'dark' : 'not dark');
+    // this.setState({colorSchema: event.matches ? 'dark' : 'light'});
+    // document.documentElement.style.setProperty('--wallpaper-invert', '0');
+  }
+
+  handleSelectWallpapers() {
+    this.handleError();
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'wallpapers'));
+  }
+
+  applyWallpaperSettings(wallpaper, size, blur) {
+    console.log("Applying wallpaper settings:", wallpaper, size, blur);
+    document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
+    document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
+    document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
+    document.documentElement.style.setProperty('--wallpaper-size', size ? `${size}px` : 'cover');
+    document.documentElement.style.setProperty('--wallpaper-position', size ? 'unset' : 'center');
+  }
+
+  handleWallpaperSelected(wallpaper, size, blur) {
+    this.handleError();
+    LocalStorageUtil.updateObject('settings', {wallpaper: wallpaper, wallpaperSize: size, wallpaperBlur: blur});
+    this.applyWallpaperSettings(wallpaper, size, blur);
   }
 
   handleChangeTextSize(size) {
@@ -1370,6 +1413,8 @@ class TinodeWeb extends React.Component {
       path = 'general';
     } else if ('blocked' == parsed.path[0]) {
       path = 'security';
+    } else if ('wallpapers' == parsed.path[0]) {
+      path = 'acc_general';
     } else if (this.state.myUserId) {
       path = 'contacts';
     }
@@ -2134,6 +2179,8 @@ class TinodeWeb extends React.Component {
             onChangeColorSchema={this.handleChangeColorSchema}
             onTextSizeChanged={this.handleChangeTextSize}
             onSendOnEnterChanged={this.handleSendOnEnter}
+            onSelectWallpapers={this.handleSelectWallpapers}
+            onWallpaperSelected={this.handleWallpaperSelected}
             onCredAdd={this.handleCredAdd}
             onCredDelete={this.handleCredDelete}
             onCredConfirm={this.handleCredConfirm}
@@ -2177,6 +2224,8 @@ class TinodeWeb extends React.Component {
             applicationVisible={this.state.applicationVisible}
             colorSchema={this.state.colorSchema}
             sendOnEnter={this.state.sendOnEnter}
+            wallpaper={this.state.wallpaper}
+
             forwardMessage={this.state.forwardMessage}
             onCancelForwardMessage={this.handleHideForwardDialog}
 

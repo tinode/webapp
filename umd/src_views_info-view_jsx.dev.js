@@ -637,11 +637,9 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "large ellipsized"
-    }, this.state.fullName, this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: "/img/channel.png",
-      className: "channel",
-      alt: "channel"
-    }) : null)), this.state.private ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.state.fullName, "\xA0", this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "podcasts") : null)), this.state.private ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"

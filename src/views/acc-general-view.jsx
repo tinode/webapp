@@ -39,51 +39,61 @@ export default class AccGeneralView extends React.PureComponent {
   render() {
     return (
         <div id="settings-form" className="scrollable-panel">
-          <div className="panel-form-row">
-            <label className="small">
-              <FormattedMessage id="label_color_schema" defaultMessage="Theme:"
-                description="Label for selecting color scheme (dark, light) in Settings" />
-            </label>
-          </div>
-          <div className="panel-form-row">
-            <ul className="quoted">
-              <li key="system">
-                <input type="radio" id="system" name="color-scheme-select" value="light dark"
-                  checked={this.state.colorSchema == 'light dark'}
-                  onChange={this.handleColorSchemaSelected} />&nbsp;
-                <label htmlFor="system">
-                  <FormattedMessage id="color_schema_system" defaultMessage="System default" description="Name of the color schema"/>&nbsp;
-                  <img src="../img/routine.svg" style={{verticalAlign: 'top', width: '1.6rem', height: '1.6rem'}}/>
-                </label>
-              </li>
-              <li key="light">
-                <input type="radio" id="light" name="color-scheme-select" value="light"
-                  checked={this.state.colorSchema == 'light'}
-                  onChange={this.handleColorSchemaSelected} />&nbsp;
-                <label htmlFor="light">
-                  <FormattedMessage id="color_schema_light" defaultMessage="Light" description="Name of the color schema"/>&nbsp;
-                  <i className="material-icons orange large">light_mode</i>
-                </label>
-              </li>
-              <li key="dark">
-                <input type="radio" id="dark" name="color-scheme-select" value="dark"
-                  checked={this.state.colorSchema == 'dark'}
-                  onChange={this.handleColorSchemaSelected} />&nbsp;
-                <label htmlFor="dark">
-                  <FormattedMessage id="color_schema_dark" defaultMessage="Dark" description="Name of the color schema"/>&nbsp;
-                  <i className="material-icons blue large">dark_mode</i>
-                </label>
-              </li>
-            </ul>
+          <div className="panel-form-column">
+            <div className="panel-form-row">
+              <label className="small">
+                <FormattedMessage id="label_color_schema" defaultMessage="Theme:"
+                  description="Label for selecting color scheme (dark, light) in Settings" />
+              </label>
+            </div>
+            <div className="panel-form-row">
+              <ul className="quoted">
+                <li key="system">
+                  <input type="radio" id="system" name="color-scheme-select" value="light dark"
+                    checked={this.state.colorSchema == 'light dark'}
+                    onChange={this.handleColorSchemaSelected} />&nbsp;
+                  <label htmlFor="system">
+                    <FormattedMessage id="color_schema_system" defaultMessage="System default" description="Name of the color schema"/>&nbsp;
+                    <img src="img/routine.svg" style={{verticalAlign: 'top', width: '1.6rem', height: '1.6rem'}}/>
+                  </label>
+                </li>
+                <li key="light">
+                  <input type="radio" id="light" name="color-scheme-select" value="light"
+                    checked={this.state.colorSchema == 'light'}
+                    onChange={this.handleColorSchemaSelected} />&nbsp;
+                  <label htmlFor="light">
+                    <FormattedMessage id="color_schema_light" defaultMessage="Light" description="Name of the color schema"/>&nbsp;
+                    <i className="material-icons orange large">light_mode</i>
+                  </label>
+                </li>
+                <li key="dark">
+                  <input type="radio" id="dark" name="color-scheme-select" value="dark"
+                    checked={this.state.colorSchema == 'dark'}
+                    onChange={this.handleColorSchemaSelected} />&nbsp;
+                  <label htmlFor="dark">
+                    <FormattedMessage id="color_schema_dark" defaultMessage="Dark" description="Name of the color schema"/>&nbsp;
+                    <i className="material-icons blue large">dark_mode</i>
+                  </label>
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="hr" />
-          <div className="panel-form-row">
-            <label className="small">
-              <FormattedMessage id="label_text_size" defaultMessage="Text size:"
-                description="Label adjusting text size" />
-            </label>
+          <div className="panel-form-row clean-clickable">
+            <a onClick={this.props.onSelectWallpapers} className="flat-button">
+              <i className="material-icons">wallpaper</i>&nbsp;
+              <FormattedMessage id="wallpapers" defaultMessage="Wallpapers"
+                  description="Link or title for working with wallpapers." />
+            </a>
           </div>
+          <div className="hr" />
           <div className="panel-form-column">
+            <div className="panel-form-row">
+              <label className="small">
+                <FormattedMessage id="label_text_size" defaultMessage="Text size:"
+                  description="Label adjusting text size" />
+              </label>
+            </div>
             <div className="panel-form-row">
               <input type="range" id="text_size" name="text_size" min="80" max="120" step="10"
                 list="text_size_options" value={this.state.textSize} onChange={this.handleTextSizeChanged} />

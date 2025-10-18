@@ -157,3 +157,6 @@ export const DEFAULT_TEXT_SIZE = 10;
 
 // MIME type for the legacy Drafty form-response data.
 export const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json'; // Remove in 2026.
+
+// Path to wallpaper images.
+export const WALLPAPER_DEFAULTS = {type: 'patt', index: 0, path:'img/bkg/'};

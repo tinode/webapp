@@ -1,0 +1,18 @@
+{
+  "patt": [
+    {"name": "a00.png", "size": 200}, {"name": "a01.jpg", "size": 384}, {"name": "a02.jpg", "size": 384},
+    {"name": "a03.jpg", "size": 384}, {"name": "a04.png", "size": 400}, {"name": "a05.jpg", "size": 400},
+    {"name": "a06.jpg", "size": 256}, {"name": "a07.jpg", "size": 384}, {"name": "a08.jpg", "size": 384},
+    {"name": "a09.jpg", "size": 400}, {"name": "a10.jpg", "size": 256}, {"name": "a11.png", "size": 200}
+  ],
+  "img": [
+    {"name": "w01.jpg", "pr": "p01.jpg"}, {"name": "w02.jpg", "pr": "p02.jpg"}, {"name": "w03.jpg", "pr": "p03.jpg"},
+    {"name": "w04.jpg", "pr": "p04.jpg"}, {"name": "w05.jpg", "pr": "p05.jpg"}, {"name": "w06.jpg", "pr": "p06.jpg"},
+    {"name": "w07.jpg", "pr": "p07.jpg"}, {"name": "w08.jpg", "pr": "p08.jpg"}, {"name": "w09.jpg", "pr": "p09.jpg"},
+    {"name": "w10.jpg", "pr": "p10.jpg"}, {"name": "w11.jpg", "pr": "p11.jpg"}, {"name": "w12.jpg", "pr": "p12.jpg"},
+    {"name": "w13.jpg", "pr": "p13.jpg"}, {"name": "w14.jpg", "pr": "p14.jpg"}, {"name": "w15.jpg", "pr": "p15.jpg"},
+    {"name": "w16.jpg", "pr": "p16.jpg"}, {"name": "w17.jpg", "pr": "p17.jpg"}, {"name": "w18.jpg", "pr": "p18.jpg"},
+    {"name": "w19.jpg", "pr": "p19.jpg"}, {"name": "w20.jpg", "pr": "p20.jpg"}, {"name": "w21.jpg", "pr": "p21.jpg"},
+    {"name": "w22.jpg", "pr": "p22.jpg"}, {"name": "w23.jpg", "pr": "p23.jpg"}, {"name": "w24.jpg", "pr": "p24.jpg"}
+  ]
+}

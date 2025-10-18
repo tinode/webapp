@@ -31,7 +31,7 @@ export default class LetterTile extends React.PureComponent {
       // If avatar image is invalid, show a placeholder.
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = <img className={className} alt="avatar" src={url}
-        onError={e=>{e.target.onerror = null; e.target.src="../img/broken_image.png"}} />;
+        onError={e=>{e.target.onerror = null; e.target.src="img/broken_image.png"}} />;
     } else {
       avatar = null;
     }

@@ -1864,5 +1864,47 @@
     "description": "Count of group topic members",
     "missing": false,
     "obsolete": false
+  },
+  "label_wallpapers": {
+    "translation": "Wallpapers",
+    "defaultMessage": "Wallpapers",
+    "description": "Label for selecting wallpapers in Settings",
+    "missing": false,
+    "obsolete": true
+  },
+  "tabtitle_image": {
+    "translation": "image",
+    "defaultMessage": "image",
+    "description": "Tab title Image",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_pattern": {
+    "translation": "pattern",
+    "defaultMessage": "pattern",
+    "description": "Tab title Pattern",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_restore": {
+    "translation": "Restore default",
+    "defaultMessage": "Restore default",
+    "description": "Reset setting to default",
+    "missing": false,
+    "obsolete": false
+  },
+  "wallpapers": {
+    "translation": "Wallpapers",
+    "defaultMessage": "Wallpapers",
+    "description": "Link or title for working with wallpapers.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_blur_wallpaper": {
+    "translation": "Blur:",
+    "defaultMessage": "Blur:",
+    "description": "Label adjusting blur amount",
+    "missing": false,
+    "obsolete": false
   }
 }

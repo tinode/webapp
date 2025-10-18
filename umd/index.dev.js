@@ -2,6 +2,16 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./img/bkg/index.json":
+/*!****************************!*\
+  !*** ./img/bkg/index.json ***!
+  \****************************/
+/***/ (function(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200},{"name":"a01.jpg","size":384},{"name":"a02.jpg","size":384},{"name":"a03.jpg","size":384},{"name":"a04.png","size":400},{"name":"a05.jpg","size":400},{"name":"a06.jpg","size":256},{"name":"a07.jpg","size":384},{"name":"a08.jpg","size":384},{"name":"a09.jpg","size":400},{"name":"a10.jpg","size":256},{"name":"a11.png","size":200}],"img":[{"name":"w01.jpg","pr":"p01.jpg"},{"name":"w02.jpg","pr":"p02.jpg"},{"name":"w03.jpg","pr":"p03.jpg"},{"name":"w04.jpg","pr":"p04.jpg"},{"name":"w05.jpg","pr":"p05.jpg"},{"name":"w06.jpg","pr":"p06.jpg"},{"name":"w07.jpg","pr":"p07.jpg"},{"name":"w08.jpg","pr":"p08.jpg"},{"name":"w09.jpg","pr":"p09.jpg"},{"name":"w10.jpg","pr":"p10.jpg"},{"name":"w11.jpg","pr":"p11.jpg"},{"name":"w12.jpg","pr":"p12.jpg"},{"name":"w13.jpg","pr":"p13.jpg"},{"name":"w14.jpg","pr":"p14.jpg"},{"name":"w15.jpg","pr":"p15.jpg"},{"name":"w16.jpg","pr":"p16.jpg"},{"name":"w17.jpg","pr":"p17.jpg"},{"name":"w18.jpg","pr":"p18.jpg"},{"name":"w19.jpg","pr":"p19.jpg"},{"name":"w20.jpg","pr":"p20.jpg"},{"name":"w21.jpg","pr":"p21.jpg"},{"name":"w22.jpg","pr":"p22.jpg"},{"name":"w23.jpg","pr":"p23.jpg"},{"name":"w24.jpg","pr":"p24.jpg"}]}');
+
+/***/ }),
+
 /***/ "./node_modules/@firebase/app/dist/esm/index.esm2017.js":
 /*!**************************************************************!*\
   !*** ./node_modules/@firebase/app/dist/esm/index.esm2017.js ***!
@@ -7273,7 +7283,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   VIDEO_PREVIEW_DIM: function() { return /* binding */ VIDEO_PREVIEW_DIM; },
 /* harmony export */   VIDEO_THUMBNAIL_WIDTH: function() { return /* binding */ VIDEO_THUMBNAIL_WIDTH; },
 /* harmony export */   WAKE_UP_TICK: function() { return /* binding */ WAKE_UP_TICK; },
-/* harmony export */   WAKE_UP_TIMEOUT: function() { return /* binding */ WAKE_UP_TIMEOUT; }
+/* harmony export */   WAKE_UP_TIMEOUT: function() { return /* binding */ WAKE_UP_TIMEOUT; },
+/* harmony export */   WALLPAPER_DEFAULTS: function() { return /* binding */ WALLPAPER_DEFAULTS; }
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -7332,6 +7343,11 @@ const TOAST_DURATION = 3_000;
 const DEFAULT_COLOR_SCHEME = 'light dark';
 const DEFAULT_TEXT_SIZE = 10;
 const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json';
+const WALLPAPER_DEFAULTS = {
+  type: 'patt',
+  index: 0,
+  path: 'img/bkg/'
+};
 
 /***/ }),
 
@@ -8463,6 +8479,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   asEmail: function() { return /* binding */ asEmail; },
 /* harmony export */   asPhone: function() { return /* binding */ asPhone; },
 /* harmony export */   cancelablePromise: function() { return /* binding */ cancelablePromise; },
+/* harmony export */   defaultWallpaper: function() { return /* binding */ defaultWallpaper; },
 /* harmony export */   deliveryMarker: function() { return /* binding */ deliveryMarker; },
 /* harmony export */   isUrlRelative: function() { return /* binding */ isUrlRelative; },
 /* harmony export */   sanitizeUrl: function() { return /* binding */ sanitizeUrl; },
@@ -8473,6 +8490,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');
@@ -8655,6 +8674,14 @@ function cancelablePromise(promise) {
   };
 }
 ;
+function defaultWallpaper() {
+  const wallpaperIndex = __webpack_require__(/*! ../../img/bkg/index.json */ "./img/bkg/index.json");
+  const wp = wallpaperIndex[_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLPAPER_DEFAULTS.type][_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLPAPER_DEFAULTS.index];
+  return {
+    name: `../${_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLPAPER_DEFAULTS.path}${wp.name}`,
+    size: wp.size
+  };
+}
 
 /***/ }),
 
@@ -8724,6 +8751,8 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       id: "settings-form",
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -8755,7 +8784,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "value": "System default"
       }]
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: "../img/routine.svg",
+      src: "img/routine.svg",
       style: {
         verticalAlign: 'top',
         width: '1.6rem',
@@ -8799,9 +8828,26 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }]
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons blue large"
-    }, "dark_mode"))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "dark_mode")))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row clean-clickable"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      onClick: this.props.onSelectWallpapers,
+      className: "flat-button"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "wallpaper"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "wallpapers",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Wallpapers"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -8812,8 +8858,6 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "value": "Text size:"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "range",
@@ -11398,7 +11442,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "tabbar"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === "find" ? "active" : null
+      className: this.state.tabSelected === 'find' ? 'active' : null
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       "data-id": "find",
@@ -11410,7 +11454,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "value": "find"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === "grp" ? "active" : null
+      className: this.state.tabSelected === 'grp' ? 'active' : null
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       "data-id": "grp",
@@ -11422,7 +11466,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "value": "new group"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === "byid" ? "active" : null
+      className: this.state.tabSelected === 'byid' ? 'active' : null
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       "data-id": "byid",
@@ -11649,6 +11693,7 @@ const AccSecurityView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => _
 const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-7e28c7"), __webpack_require__.e("src_views_password-reset-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx")));
 
 
+const WallpapersView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_wallpapers_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./wallpapers.jsx */ "./src/views/wallpapers.jsx")));
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   login: {
     id: "sidepanel_title_login",
@@ -11753,6 +11798,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     defaultMessage: [{
       "type": 0,
       "value": "Blocked Chats"
+    }]
+  },
+  wallpapers: {
+    id: "wallpapers",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Wallpapers"
     }]
   }
 });
@@ -11864,6 +11916,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onError: this.props.onError
     }) : view === 'acc_general' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       colorSchema: this.props.colorSchema,
+      onSelectWallpapers: this.props.onSelectWallpapers,
       textSize: this.props.textSize,
       sendOnEnter: this.props.sendOnEnter,
       onChangeColorSchema: this.props.onChangeColorSchema,
@@ -11898,7 +11951,19 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     })) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       serverAddress: this.props.serverAddress,
       serverVersion: this.props.serverVersion
-    }) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }) : view === 'wallpapers' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "panel-form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(WallpapersView, {
+      onWallpaperSelected: this.props.onWallpaperSelected
+    })) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       connected: this.props.connected,
@@ -12101,6 +12166,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
+    this.handleColorSchemeChange = this.handleColorSchemeChange.bind(this);
     this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
     this.handleError = this.handleError.bind(this);
@@ -12130,6 +12196,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleChangeColorSchema = this.handleChangeColorSchema.bind(this);
     this.handleChangeTextSize = this.handleChangeTextSize.bind(this);
     this.handleSendOnEnter = this.handleSendOnEnter.bind(this);
+    this.handleSelectWallpapers = this.handleSelectWallpapers.bind(this);
+    this.handleWallpaperSelected = this.handleWallpaperSelected.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -12259,8 +12327,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
     window.addEventListener('offline', this.handleOnlineOff);
     window.addEventListener('hashchange', this.handleHashRoute);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.handleColorSchemeChange);
+    document.addEventListener('visibilitychange', this.handleVisibilityEvent);
     document.documentElement.style.colorScheme = this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
+    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('settings') || {};
+    if (!settings.wallpaper) {
+      const wallpaper = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.defaultWallpaper)();
+      settings.wallpaper = wallpaper.name || '';
+      settings.wallpaperSize = wallpaper.size || 0;
+      settings.wallpaperBlur = 0;
+    }
+    this.applyWallpaperSettings(settings.wallpaper, settings.wallpaperSize, settings.wallpaperBlur);
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
@@ -12275,7 +12353,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
       this.lastWakeUpCheck = now;
     }, _config_js__WEBPACK_IMPORTED_MODULE_11__.WAKE_UP_TICK);
-    document.addEventListener('visibilitychange', this.handleVisibilityEvent);
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
@@ -12320,6 +12397,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.removeEventListener('hashchange', this.handleHashRoute);
     window.removeEventListener('online', this.handleOnlineOn);
     window.removeEventListener('offline', this.handleOnlineOff);
+    window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', this.handleColorSchemeChange);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
     clearInterval(this.wakeUpTicker);
   }
@@ -12468,7 +12546,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       newTopicTabSelected: hash.params.tab
     };
     if (hash.path && hash.path.length > 0) {
-      if (['register', 'settings', 'edit', 'notif', 'acc_general', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
+      if (['acc_general', 'archive', 'blocked', 'contacts', 'cred', 'crop', 'edit', 'general', 'newtpk', 'notif', 'register', 'reset', 'security', 'settings', 'support', 'wallpapers', ''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
       } else {
         console.warn("Unknown sidepanel view", hash.path[0]);
@@ -13067,6 +13145,30 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
     document.documentElement.style.colorScheme = scheme;
   }
+  handleColorSchemeChange(event) {
+    console.log("Color scheme change:", event.matches ? 'dark' : 'not dark');
+  }
+  handleSelectWallpapers() {
+    this.handleError();
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'wallpapers'));
+  }
+  applyWallpaperSettings(wallpaper, size, blur) {
+    console.log("Applying wallpaper settings:", wallpaper, size, blur);
+    document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
+    document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
+    document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
+    document.documentElement.style.setProperty('--wallpaper-size', size ? `${size}px` : 'cover');
+    document.documentElement.style.setProperty('--wallpaper-position', size ? 'unset' : 'center');
+  }
+  handleWallpaperSelected(wallpaper, size, blur) {
+    this.handleError();
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+      wallpaper: wallpaper,
+      wallpaperSize: size,
+      wallpaperBlur: blur
+    });
+    this.applyWallpaperSettings(wallpaper, size, blur);
+  }
   handleChangeTextSize(size) {
     this.setState({
       textSize: size | 0
@@ -13203,6 +13305,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       path = 'general';
     } else if ('blocked' == parsed.path[0]) {
       path = 'security';
+    } else if ('wallpapers' == parsed.path[0]) {
+      path = 'acc_general';
     } else if (this.state.myUserId) {
       path = 'contacts';
     }
@@ -13887,6 +13991,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onChangeColorSchema: this.handleChangeColorSchema,
       onTextSizeChanged: this.handleChangeTextSize,
       onSendOnEnterChanged: this.handleSendOnEnter,
+      onSelectWallpapers: this.handleSelectWallpapers,
+      onWallpaperSelected: this.handleWallpaperSelected,
       onCredAdd: this.handleCredAdd,
       onCredDelete: this.handleCredDelete,
       onCredConfirm: this.handleCredConfirm,
@@ -13924,6 +14030,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       applicationVisible: this.state.applicationVisible,
       colorSchema: this.state.colorSchema,
       sendOnEnter: this.state.sendOnEnter,
+      wallpaper: this.state.wallpaper,
       forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
       callTopic: this.state.callTopic,
@@ -16857,11 +16964,9 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       className: titleClass
     }, title), this.props.isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons as-badge"
-    }, "group") : null, this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: "/img/channel.png",
-      className: "channel",
-      alt: "channel"
-    }) : null, !self ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }, "group") : null, this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons as-badge"
+    }, "podcasts") : null, !self ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: icon_badges
     }) : null, !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       count: this.props.unread
@@ -18746,7 +18851,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         src: url,
         onError: e => {
           e.target.onerror = null;
-          e.target.src = "../img/broken_image.png";
+          e.target.src = "img/broken_image.png";
         }
       });
     } else {
@@ -21405,6 +21510,7 @@ const messageLoader = {
   'en': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_en_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19)),
   'es': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_es_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/es.json */ "./src/i18n.min/es.json", 19)),
   'fr': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_fr_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/fr.json */ "./src/i18n.min/fr.json", 19)),
+  'it': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_it_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/it.json */ "./src/i18n.min/it.json", 19)),
   'ko': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ko_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19)),
   'ro': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ro_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ro.json */ "./src/i18n.min/ro.json", 19)),
   'ru': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ru_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ru.json */ "./src/i18n.min/ru.json", 19)),

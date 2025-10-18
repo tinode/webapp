@@ -1,6 +1,7 @@
 // Odds and ends
 
 import { Tinode } from 'tinode-sdk';
+import { WALLPAPER_DEFAULTS } from '../config.js';
 
 // Make shortcut icon appear with a green dot + show unread count in title.
 export function updateFavicon(count) {
@@ -248,3 +249,8 @@ export function cancelablePromise(promise) {
   };
 };
 
+export function defaultWallpaper() {
+  const wallpaperIndex = require('../../img/bkg/index.json');
+  const wp = wallpaperIndex[WALLPAPER_DEFAULTS.type][WALLPAPER_DEFAULTS.index];
+  return {name: `../${WALLPAPER_DEFAULTS.path}${wp.name}`, size: wp.size};
+}

@@ -107,6 +107,10 @@
     "defaultMessage": "Reset",
     "description": "Button [Reset]"
   },
+  "button_restore": {
+    "defaultMessage": "Restore default",
+    "description": "Reset setting to default"
+  },
   "button_security": {
     "defaultMessage": "Security",
     "description": "Navigaton button for security panel."
@@ -405,6 +409,10 @@
   "label_alias_edit": {
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias"
+  },
+  "label_blur_wallpaper": {
+    "defaultMessage": "Blur:",
+    "description": "Label adjusting blur amount"
   },
   "label_client": {
     "defaultMessage": "Client:",
@@ -980,9 +988,17 @@
     "defaultMessage": "by id",
     "description": "Tab title Find topic by ID"
   },
+  "tabtitle_image": {
+    "defaultMessage": "image",
+    "description": "Tab title Image"
+  },
   "tabtitle_new_group": {
     "defaultMessage": "new group",
     "description": "Tab title New Group"
+  },
+  "tabtitle_pattern": {
+    "defaultMessage": "pattern",
+    "description": "Tab title Pattern"
   },
   "tags_editor_no_tags": {
     "defaultMessage": "Add some tags",
@@ -1063,5 +1079,9 @@
   "user_not_found": {
     "defaultMessage": "Not found",
     "description": "In place of a user's full name when the user is not found."
+  },
+  "wallpapers": {
+    "defaultMessage": "Wallpapers",
+    "description": "Link or title for working with wallpapers."
   }
 }

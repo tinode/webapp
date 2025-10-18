@@ -7,6 +7,15 @@
   /* Height of caption panel */
   --caption-panel-height: 4rem;
 
+  /* Wallpaper */
+  --wallpaper-url: url('../img/bkg/a00.png'); /* path relative to CSS file */
+  --wallpaper-repeat: repeat;
+  --wallpaper-blur: 0px;
+  --wallpaper-invert: 0;
+  --wallpaper-size: contain;
+  --wallpaper-position: center;
+
+
   /* Core Palette */
   --clr-bright: light-dark(#fff, #181818);
   --clr-dark: light-dark(#000, #fff);
@@ -57,7 +66,7 @@
   --clr-error-border-light: light-dark(#ffbdc6, #ff334e); /* Info box error border */
   --clr-error-text-dark: light-dark(#b51c1c, #de2323); /* Info box error text, icon */
   --clr-error-icon: light-dark(#ef5552, #d81b0e); /* Info box error icon specific */
-  --clr-warning-accent: light-dark(#FFC107, #000e16); /* Amber, danger-color */
+  --clr-warning-accent: light-dark(#FFC107, #808020); /* Amber, danger-color */
   --clr-warning-bg-light: light-dark(#fff9c4, #00060c); /* Info box warning bg */
   --clr-warning-border-light: light-dark(#fff59d, #000a2b); /* Info box warning border */
   --clr-warning-text-dark: light-dark(#6d4c41, #a08356); /* Info box warning text */
@@ -161,6 +170,41 @@
   --clr-badge-magenta-text: light-dark(#939, #747);
   --clr-badge-magenta-border: light-dark(#c9c, #636);
 
+    /* Chips */
+  --clr-chip-bg: var(--clr-background-extra-light-gray);
+  --clr-chip-invalid-text: var(--clr-error-text-muted);
+  --clr-chip-invalid-bg: var(--clr-badge-red-bg);
+  --clr-chip-remove-icon-bg: light-dark(#aaa, #555);
+  --clr-chip-remove-icon-text: var(--clr-background-extra-light-gray);
+  --clr-chip-remove-icon-hover-bg: var(--clr-text-placeholder);
+  --clr-chip-remove-icon-hover-text: var(--clr-bright);
+
+    /* Tabbar */
+  --clr-tabbar-bg: var(--clr-background-extra-light-gray);
+  --clr-tabbar-inactive-text: light-dark(rgba(33,150,243,0.6), rgba(22,90,160,1));
+  --clr-tabbar-active-text: var(--clr-primary-accent);
+  --clr-tabbar-inactive-border: var(--clr-border-light);
+  --clr-tabbar-active-border: var(--clr-primary-accent);
+
+  /* Miscellaneous UI */
+  --clr-highlight-text: var(--clr-std-teal);
+  --clr-highlight-preview-text: light-dark(#5f9ea0, #205e60);
+  --clr-spinner-track: light-dark(#f3f3f3, #0c0c0c);
+  --clr-spinner-active: var(--clr-primary-action);
+  --clr-cropper-bounding-box-border: var(--clr-primary-action);
+  --clr-cropper-bounding-box-bg: var(--clr-text-tertiary);
+  --clr-cropper-cutout-border: var(--clr-text-tertiary);
+  --clr-cropper-cutout-shadow: light-dark(rgb(230 246 255 / 66%), rgb(25 10 0 / 66%));
+  --clr-audio-bg: var(--clr-background-extra-light-gray);
+  --clr-audio-icon: light-dark(rgba(102, 117, 117, 0.8), rgba(153, 138, 138, 0.8));
+  --clr-audio-icon-disabled: light-dark(rgba(153  153  153 / 75%), rgba(102 102 102 / 75%));
+  --clr-audio-timer-text: light-dark(rgba(102, 102, 102, 0.75), rgba(153, 153, 153, 0.75));
+  --clr-pinned-menu-bg: light-dark(#f8f8f8, #1a1a1a);
+  --clr-drag-n-drop-border: var(--clr-std-grey);
+  --clr-drag-n-drop-text: var(--clr-std-grey);
+  --clr-drag-n-drop-bg: light-dark(rgba(255,255,255,.95), rgba(0,0,0,.95));
+  --clr-drag-n-drop-outline: light-dark(rgba(255,255,255,.95), rgba(0,0,0,.95));
+
   /* Letter Tiles Base */
   --clr-lettertile-default-text: light-dark(#fafafacc, #dcdcdccc);
   --clr-lettertile-hover-text: var(--clr-bright);
@@ -236,41 +280,6 @@
   --clr-dk-fg-13: var(--clr-dk-bg-13);
   --clr-dk-fg-14: var(--clr-dk-bg-14);
   --clr-dk-fg-15: var(--clr-dk-bg-15);
-
-  /* Chips */
-  --clr-chip-bg: var(--clr-background-extra-light-gray);
-  --clr-chip-invalid-text: var(--clr-error-text-muted);
-  --clr-chip-invalid-bg: var(--clr-badge-red-bg);
-  --clr-chip-remove-icon-bg: light-dark(#aaa, #555);
-  --clr-chip-remove-icon-text: var(--clr-background-extra-light-gray);
-  --clr-chip-remove-icon-hover-bg: var(--clr-text-placeholder);
-  --clr-chip-remove-icon-hover-text: var(--clr-bright);
-
-  /* Miscellaneous UI */
-  --clr-highlight-text: var(--clr-std-teal);
-  --clr-highlight-preview-text: light-dark(#5f9ea0, #205e60);
-  --clr-spinner-track: light-dark(#f3f3f3, #0c0c0c);
-  --clr-spinner-active: var(--clr-primary-action);
-  --clr-cropper-bounding-box-border: var(--clr-primary-action);
-  --clr-cropper-bounding-box-bg: var(--clr-text-tertiary);
-  --clr-cropper-cutout-border: var(--clr-text-tertiary);
-  --clr-cropper-cutout-shadow: light-dark(rgb(230 246 255 / 66%), rgb(25 10 0 / 66%));
-  --clr-audio-bg: var(--clr-background-extra-light-gray);
-  --clr-audio-icon: light-dark(rgba(102, 117, 117, 0.8), rgba(153, 138, 138, 0.8));
-  --clr-audio-icon-disabled: light-dark(rgba(153  153  153 / 75%), rgba(102 102 102 / 75%));
-  --clr-audio-timer-text: light-dark(rgba(102, 102, 102, 0.75), rgba(153, 153, 153, 0.75));
-  --clr-pinned-menu-bg: light-dark(#f8f8f8, #1a1a1a);
-  --clr-drag-n-drop-border: var(--clr-std-grey);
-  --clr-drag-n-drop-text: var(--clr-std-grey);
-  --clr-drag-n-drop-bg: light-dark(rgba(255,255,255,.95), rgba(0,0,0,.95));
-  --clr-drag-n-drop-outline: light-dark(rgba(255,255,255,.95), rgba(0,0,0,.95));
-
-  /* Tabbar */
-  --clr-tabbar-bg: var(--clr-background-extra-light-gray);
-  --clr-tabbar-inactive-text: light-dark(rgba(33,150,243,0.6), rgba(22,90,160,0.6));
-  --clr-tabbar-active-text: var(--clr-primary-accent);
-  --clr-tabbar-inactive-border: var(--clr-border-light);
-  --clr-tabbar-active-border: var(--clr-primary-accent);
 }
 
 * {
@@ -1761,18 +1770,33 @@ img.channel {
   overflow-y: scroll;
   background-color: var(--clr-background-blue-gray-50);
   height: 100%;
-  background-image: url("../img/bg_messages.png");
+}
+
+#messages-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: var(--wallpaper-url);
+  background-repeat: var(--wallpaper-repeat);
+  background-size: var(--wallpaper-size);
+  background-position: var(--wallpaper-position);
+  filter: blur(var(--wallpaper-blur)) invert(var(--wallpaper-invert));
+  pointer-events: none;
+}
+
+/* Dark mode asigned by the OS */
+@media (prefers-color-scheme: dark) {
+  #messages-panel::before {
+    background-image: url("../img/bg_messages_dk.png");
+  }
 }
 
 /* Explicitly set dark mode */
-#messages-panel[color-scheme="dark"] {
+#messages-panel[color-scheme="dark"]::before {
   background-image: url("../img/bg_messages_dk.png");
-}
-/* Dark mode asigned by the OS */
-@media (prefers-color-scheme: dark) {
-  #messages-panel {
-    background-image: url("../img/bg_messages_dk.png");
-  }
 }
 
 #messages-container {
@@ -3565,6 +3589,34 @@ ul.phone-country-selector span {
 ul.phone-country-selector span.country {
   text-overflow: ellipsis;
   overflow-x: hidden;
+}
+
+.image-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.35rem;
+  padding: 0.25rem;
+}
+
+.image-grid-cell {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 7rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 0 0.2rem var( --clr-shadow-hr-inset); /* gray */
+}
+
+.image-grid-cell img {
+  object-fit: cover;
+}
+
+.image-grid-cell.selected {
+  border: 1.5px solid var(--clr-secondary-accent);
 }
 
 div.toast {

@@ -18,6 +18,7 @@ import NewTopicView from './new-topic-view.jsx';
 const PasswordResetView = React.lazy(_ => import('./password-reset-view.jsx'));
 import SettingsView from './settings-view.jsx';
 import ValidationView from './validation-view.jsx';
+const WallpapersView = React.lazy(_ => import('./wallpapers.jsx'));
 
 // Panel titles for translation.
 const messages = defineMessages({
@@ -95,6 +96,11 @@ const messages = defineMessages({
     id: 'sidepanel_title_blocked',
     description: 'Sidepanel title for ContactsView-Blocked.',
     defaultMessage: 'Blocked Chats'
+  },
+  wallpapers: {
+    id: 'wallpapers',
+    description: 'Link or title for working with wallpapers.',
+    defaultMessage: 'Wallpapers'
   }
 });
 
@@ -209,6 +215,7 @@ class SidepanelView extends React.PureComponent {
           view === 'acc_general' ?
           <AccGeneralView
             colorSchema={this.props.colorSchema}
+            onSelectWallpapers={this.props.onSelectWallpapers}
             textSize={this.props.textSize}
             sendOnEnter={this.props.sendOnEnter}
             onChangeColorSchema={this.props.onChangeColorSchema}
@@ -242,6 +249,14 @@ class SidepanelView extends React.PureComponent {
           <AccSupportView
             serverAddress={this.props.serverAddress}
             serverVersion={this.props.serverVersion} /> :
+
+          view === 'wallpapers' ?
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <WallpapersView
+              onWallpaperSelected={this.props.onWallpaperSelected}
+            />
+          </Suspense> :
 
           (view === 'contacts' || view == 'archive' || view == 'blocked') ?
           <ContactsView
