@@ -28,6 +28,7 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     super(props);
     this.state = {
       tab: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type,
+      selectedType: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type,
       wallpaper: _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__[_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type][_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.index].name,
       blur: 0
     };
@@ -53,14 +54,15 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       e.preventDefault();
       type = this.state.tab;
       index = e.currentTarget.dataset.id;
-      blur = this.state.blur;
+      blur = type == 'patt' ? 0 : this.state.blur;
     }
     const fname = _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__[type][index].name;
     const size = type == 'patt' ? _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__[type][index].size : 0;
     this.setState({
       tab: type,
       wallpaper: fname,
-      blur: 0
+      selectedType: type,
+      blur: blur
     });
     this.props.onWallpaperSelected(`../${_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path}${fname}`, size, this.blurValues[blur]);
   }
@@ -70,7 +72,9 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.setState({
       blur: blur
     });
-    this.props.onWallpaperSelected(`../${_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path}${this.state.wallpaper}`, 0, this.blurValues[blur]);
+    if (this.state.selectedType == 'img') {
+      this.props.onWallpaperSelected(`../${_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path}${this.state.wallpaper}`, 0, this.blurValues[blur]);
+    }
   }
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

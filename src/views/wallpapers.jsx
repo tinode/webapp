@@ -10,7 +10,8 @@ export default class WallpapersView extends React.PureComponent {
     super(props);
 
     this.state = {
-      tab: WALLPAPER_DEFAULTS.type, // 'patt' | 'img'
+      tab: WALLPAPER_DEFAULTS.type, // currently selected tab: 'patt' | 'img'
+      selectedType: WALLPAPER_DEFAULTS.type, // type of the selected wallpaper.
       wallpaper: imageIndex[WALLPAPER_DEFAULTS.type][WALLPAPER_DEFAULTS.index].name,
       blur: 0,
     };
@@ -39,11 +40,11 @@ export default class WallpapersView extends React.PureComponent {
       e.preventDefault();
       type = this.state.tab;
       index = e.currentTarget.dataset.id;
-      blur = this.state.blur;
+      blur = type == 'patt' ? 0 : this.state.blur;
     }
     const fname = imageIndex[type][index].name;
     const size = type == 'patt' ? imageIndex[type][index].size : 0;
-    this.setState({tab: type, wallpaper: fname, blur: 0});
+    this.setState({tab: type, wallpaper: fname, selectedType: type, blur: blur});
     this.props.onWallpaperSelected(`../${WALLPAPER_DEFAULTS.path}${fname}`, size, this.blurValues[blur]);
   }
 
@@ -51,8 +52,10 @@ export default class WallpapersView extends React.PureComponent {
     e.preventDefault();
     const blur = e.currentTarget.value;
     this.setState({blur: blur});
-    // Path relative to CSS file.
-    this.props.onWallpaperSelected(`../${WALLPAPER_DEFAULTS.path}${this.state.wallpaper}`, 0, this.blurValues[blur]);
+    if (this.state.selectedType == 'img') {
+      // Apply blur to patterns only. Path relative to CSS file.
+      this.props.onWallpaperSelected(`../${WALLPAPER_DEFAULTS.path}${this.state.wallpaper}`, 0, this.blurValues[blur]);
+    }
   }
 
   render() {

@@ -42,11 +42,12 @@
   --clr-text-primary: light-dark(#666, #999); /* Default text color */
   --clr-text-secondary: light-dark(#757575, #8a8a8a); /* Muted text, icons e.g. menu trigger */
   --clr-text-tertiary: light-dark(#999, #787878); /* Even more muted text, borders, some icons */
+  --clr-text-tertiary-activated: #888; /* Activated (hover, focus) tertiary text */
   --clr-text-placeholder: light-dark(#bbb, #555); /* Placeholder text */
   --clr-text-disabled: light-dark(#888, #777); /* Disabled text e.g. in-place-edit */
   --clr-border-light: light-dark(#ccc, #555); /* Common light border, separator */
   --clr-border-muted: light-dark(#ddd, #444); /* Softer border, e.g. in-place-edit dashed */
-  --clr-background-off-white: light-dark(#fafafa, #282828); /* Common very light background */
+  --clr-background-off-white: light-dark(#fafafa, #222); /* Common very light background */
   --clr-background-light-gray: light-dark(#f0f0f0, #0f0f0f); /* HR background, action button hover */
   --clr-background-extra-light-gray: light-dark(#eee, #222); /* Flat button faux bg, tabbar bg, chip bg */
   --clr-background-blue-gray-50: light-dark(#edf0f2, #202c33); /* Contact hover, messages panel, send message panel */
@@ -829,7 +830,7 @@ div.trusted-badge {
 .action-button {
   display: block;
   position: absolute;
-  color: var(--clr-text-tertiary);
+  color: var(--clr-text-secondary);
   font-size: 1.8rem;
   background-color: var(--clr-background-off-white);
   border-radius: 50%;
@@ -845,12 +846,15 @@ div.trusted-badge {
   z-index: 2;
 }
 
-.action-button:focus, .action-button:hover {
-  color: var(--clr-text-disabled);
+.action-button:focus,
+.action-button:hover,
+.action-button:hover:not([disabled]),
+.action-button:active:not([disabled]) {
+  color: var(--clr-text-tertiary-activated);
   background-color: var(--clr-background-light-gray);
 }
 .action-button:active {
-  color: light-dark(#777, #666); /* #777 */
+  color: var(--clr-text-tertiary-activated);
   background-color: var(--clr-background-extra-light-gray);
 }
 
@@ -1763,28 +1767,36 @@ img.channel {
   align-self: center;
 }
 
-/* Scrollable panel where the messages are shown */
-#messages-panel {
+#messages-container {
   position: relative;
-  padding: 0.75rem;
-  overflow-y: scroll;
-  background-color: var(--clr-background-blue-gray-50);
+  overflow-y: hidden;
   height: 100%;
 }
 
-#messages-panel::before {
+
+#messages-container::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
+  background-color: var(--clr-background-blue-gray-50);
   background-image: var(--wallpaper-url);
   background-repeat: var(--wallpaper-repeat);
   background-size: var(--wallpaper-size);
   background-position: var(--wallpaper-position);
   filter: blur(var(--wallpaper-blur)) invert(var(--wallpaper-invert));
   pointer-events: none;
+  z-index: 0;
+}
+
+/* Scrollable panel where the messages are shown */
+#messages-panel {
+  position: relative;
+  padding: 0.75rem;
+  overflow-y: scroll;
+  height: 100%;
 }
 
 /* Dark mode asigned by the OS */
@@ -1797,12 +1809,6 @@ img.channel {
 /* Explicitly set dark mode */
 #messages-panel[color-scheme="dark"]::before {
   background-image: url("../img/bg_messages_dk.png");
-}
-
-#messages-container {
-  position: relative;
-  overflow-y: hidden;
-  height: 100%;
 }
 
 #write-only-background {
