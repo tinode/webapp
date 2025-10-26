@@ -11157,8 +11157,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         const avatar = this.state.avatar || true;
         const online = this.state.deleted || topic.isSelfType() ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
-        const darkModeClass = this.props.colorSchema == 'dark' ? 'dark ' + this.props.wallpaperType : '';
-        console.log("colorSchema", this.props.colorSchema, '=>', darkModeClass);
+        const darkModeClass = this.props.colorSchema == 'dark' ? 'dark' : '';
         let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container",
           className: darkModeClass
@@ -11964,6 +11963,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         }]
       }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(WallpapersView, {
+      colorSchema: this.props.colorSchema !== 'auto' ? this.props.colorSchema : this.props.systemColorSchema,
       onWallpaperSelected: this.props.onWallpaperSelected
     })) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.props.tinode,
@@ -12273,9 +12273,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
       colorSchema: settings.colorSchema || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME,
-      systemColorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+      systemColorSchema: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
       wallpaper: settings.wallpaper,
-      wallpaperType: settings.wallpaperSize == 0 ? 'wpimg' : 'wppatt',
       wallpaperSize: settings.wallpaperSize,
       wallpaperBlur: 0,
       textSize: settings.textSize || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_TEXT_SIZE,
@@ -12342,12 +12341,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.addEventListener('hashchange', this.handleHashRoute);
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.handleColorSchemeChange);
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
-    document.documentElement.style.colorScheme = this.state.colorSchema;
+    document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
-    this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
+    this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur, this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
     console.log("Wallpaper settings:", this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
     console.log("Wallpaper type:", this.state.wallpaperSize == 0 ? 'wpimg' : 'wppatt');
-    console.log("System color scheme:", this.state.systemColorScheme);
+    console.log("System color scheme:", this.state.systemColorSchema);
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
@@ -13145,32 +13144,43 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-  handleChangeColorSchema(scheme) {
-    console.log("User color scheme change:", scheme);
+  handleChangeColorSchema(schema) {
+    console.log("User color scheme change:", schema);
     this.setState({
-      colorSchema: scheme
+      colorSchema: schema
     });
     _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
-      colorSchema: scheme
+      colorSchema: schema
     });
-    document.documentElement.style.colorScheme = scheme;
+    document.documentElement.style.colorScheme = schema == 'auto' ? 'light dark' : schema;
+    this.applyColorSchema(schema, this.state.systemColorSchema, this.state.wallpaperSize);
   }
   handleColorSchemeChange(event) {
-    console.log("System color scheme change:", event.matches ? 'dark' : 'not dark');
+    const systemSchema = event.matches ? 'dark' : 'light';
+    console.log("System color scheme change:", systemSchema);
     this.setState({
-      systemColorScheme: event.matches ? 'dark' : 'light'
+      systemColorSchema: systemSchema
     });
+    this.applyColorSchema(this.state.colorSchema, systemSchema, this.state.wallpaperSize);
+  }
+  applyColorSchema(schema, systemSchema, size) {
+    const effectiveSchema = schema == 'auto' ? systemSchema : schema;
+    console.log("applyColorSchema:", effectiveSchema);
+    document.documentElement.style.setProperty('--wallpaper-invert', effectiveSchema == 'dark' && size ? '1' : '0');
+    document.documentElement.style.setProperty('--wallpaper-brightness', effectiveSchema == 'dark' && !size ? '0.5' : '1');
   }
   handleSelectWallpapers() {
     this.handleError();
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'wallpapers'));
   }
-  applyWallpaperSettings(wallpaper, size, blur) {
+  applyWallpaperSettings(wallpaper, size, blur, effectiveSchema) {
     document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
     document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
     document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
     document.documentElement.style.setProperty('--wallpaper-size', size ? `${size}px` : 'cover');
     document.documentElement.style.setProperty('--wallpaper-position', size ? 'unset' : 'center');
+    document.documentElement.style.setProperty('--wallpaper-invert', effectiveSchema == 'dark' && size ? '1' : '0');
+    document.documentElement.style.setProperty('--wallpaper-brightness', effectiveSchema == 'dark' && !size ? '0.5' : '1');
   }
   handleWallpaperSelected(wallpaper, size, blur) {
     this.handleError();
@@ -13182,10 +13192,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       wallpaper: wallpaper,
       wallpaperSize: size,
-      wallpaperBlur: blur,
-      wallpaperType: size == 0 ? 'wpimg' : 'wppatt'
+      wallpaperBlur: blur
     });
-    this.applyWallpaperSettings(wallpaper, size, blur);
+    this.applyWallpaperSettings(wallpaper, size, blur, this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
   }
   handleChangeTextSize(size) {
     this.setState({
@@ -13474,7 +13483,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (this.state.firebaseToken) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
     }
-    document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME;
+    document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME == 'auto' ? 'light dark' : _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME;
     document.documentElement.style.setProperty('--message-text-size', `${_config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_TEXT_SIZE}pt`);
     clearInterval(this.reconnectCountdown);
     let cleared;
@@ -13907,7 +13916,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   render() {
-    const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorScheme;
+    const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorSchema;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "app-container",
       ref: this.selfRef
@@ -13992,7 +14001,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: this.state.serverVersion,
       reqCredMethod: this.state.reqCredMethod,
       textSize: this.state.textSize,
-      colorSchema: colorSchema,
+      colorSchema: this.state.colorSchema,
+      systemColorSchema: this.state.systemColorSchema,
       sendOnEnter: this.state.sendOnEnter,
       onGlobalSettings: this.handleGlobalSettings,
       onSignUp: this.handleNewAccount,
@@ -14050,7 +14060,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       colorSchema: colorSchema,
       sendOnEnter: this.state.sendOnEnter,
       wallpaper: this.state.wallpaper,
-      wallpaperType: this.state.wallpaperType,
       forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
       callTopic: this.state.callTopic,

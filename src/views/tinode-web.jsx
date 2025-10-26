@@ -226,10 +226,9 @@ class TinodeWeb extends React.Component {
       incognitoMode: false,
       // Manually selected color scheme. Default: 'system default' ('auto').
       colorSchema: settings.colorSchema || DEFAULT_COLOR_SCHEME,
-      systemColorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+      systemColorSchema: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
       // Wallpaper settings.
       wallpaper: settings.wallpaper,
-      wallpaperType: settings.wallpaperSize == 0 ? 'wpimg' : 'wppatt',
       wallpaperSize: settings.wallpaperSize,
       wallpaperBlur: 0,
       // Text size in points. Default size: 10pt
@@ -320,14 +319,15 @@ class TinodeWeb extends React.Component {
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
-    document.documentElement.style.colorScheme = this.state.colorSchema;
+    document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
 
-    this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
+    this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur,
+      this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
 
     console.log("Wallpaper settings:", this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
     console.log("Wallpaper type:", this.state.wallpaperSize == 0 ? 'wpimg' : 'wppatt');
-    console.log("System color scheme:", this.state.systemColorScheme);
+    console.log("System color scheme:", this.state.systemColorSchema);
 
     // Process background notifications from the service worker.
     if (typeof BroadcastChannel == 'function') {
@@ -1262,17 +1262,27 @@ class TinodeWeb extends React.Component {
   }
 
   // Manual change of color scheme: 'dark', 'light', 'auto'.
-  handleChangeColorSchema(scheme) {
-    console.log("User color scheme change:", scheme);
-    this.setState({colorSchema: scheme});
-    LocalStorageUtil.updateObject('settings', {colorSchema: scheme});
-    document.documentElement.style.colorScheme = scheme;
+  handleChangeColorSchema(schema) {
+    console.log("User color scheme change:", schema);
+    this.setState({colorSchema: schema});
+    LocalStorageUtil.updateObject('settings', {colorSchema: schema});
+    document.documentElement.style.colorScheme = schema == 'auto' ? 'light dark' : schema;
+    this.applyColorSchema(schema, this.state.systemColorSchema, this.state.wallpaperSize);
   }
 
   // System color scheme has changed.
   handleColorSchemeChange(event) {
-    console.log("System color scheme change:", event.matches ? 'dark' : 'not dark');
-    this.setState({systemColorScheme: event.matches ? 'dark' : 'light'});
+    const systemSchema = event.matches ? 'dark' : 'light';
+    console.log("System color scheme change:", systemSchema);
+    this.setState({systemColorSchema: systemSchema});
+    this.applyColorSchema(this.state.colorSchema, systemSchema, this.state.wallpaperSize);
+  }
+
+  applyColorSchema(schema, systemSchema, size) {
+    const effectiveSchema = schema == 'auto' ? systemSchema : schema;
+    console.log("applyColorSchema:", effectiveSchema);
+    document.documentElement.style.setProperty('--wallpaper-invert', effectiveSchema == 'dark' && size ? '1' : '0');
+    document.documentElement.style.setProperty('--wallpaper-brightness', effectiveSchema == 'dark' && !size ? '0.5' : '1');
   }
 
   handleSelectWallpapers() {
@@ -1280,20 +1290,22 @@ class TinodeWeb extends React.Component {
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'wallpapers'));
   }
 
-  applyWallpaperSettings(wallpaper, size, blur) {
+  applyWallpaperSettings(wallpaper, size, blur, effectiveSchema) {
     document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
     document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
     document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
     document.documentElement.style.setProperty('--wallpaper-size', size ? `${size}px` : 'cover');
     document.documentElement.style.setProperty('--wallpaper-position', size ? 'unset' : 'center');
-
+    document.documentElement.style.setProperty('--wallpaper-invert', effectiveSchema == 'dark' && size ? '1' : '0');
+    document.documentElement.style.setProperty('--wallpaper-brightness', effectiveSchema == 'dark' && !size ? '0.5' : '1');
   }
 
   handleWallpaperSelected(wallpaper, size, blur) {
     this.handleError();
     LocalStorageUtil.updateObject('settings', {wallpaper: wallpaper, wallpaperSize: size, wallpaperBlur: blur});
-    this.setState({wallpaper: wallpaper, wallpaperSize: size, wallpaperBlur: blur, wallpaperType: size == 0 ? 'wpimg' : 'wppatt'});
-    this.applyWallpaperSettings(wallpaper, size, blur);
+    this.setState({wallpaper: wallpaper, wallpaperSize: size, wallpaperBlur: blur});
+    this.applyWallpaperSettings(wallpaper, size, blur,
+      this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
   }
 
   handleChangeTextSize(size) {
@@ -1576,7 +1588,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Reset color scheme.
-    document.documentElement.style.colorScheme = DEFAULT_COLOR_SCHEME;
+    document.documentElement.style.colorScheme = DEFAULT_COLOR_SCHEME == 'auto' ? 'light dark' : DEFAULT_COLOR_SCHEME;
     document.documentElement.style.setProperty('--message-text-size', `${DEFAULT_TEXT_SIZE}pt`);
 
     clearInterval(this.reconnectCountdown);
@@ -2073,7 +2085,7 @@ class TinodeWeb extends React.Component {
   }
 
   render() {
-    const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorScheme;
+    const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorSchema;
     return (
       <div id="app-container" ref={this.selfRef}>
         {this.state.contextMenuVisible ?
@@ -2173,7 +2185,8 @@ class TinodeWeb extends React.Component {
             serverVersion={this.state.serverVersion}
             reqCredMethod={this.state.reqCredMethod}
             textSize={this.state.textSize}
-            colorSchema={colorSchema}
+            colorSchema={this.state.colorSchema}
+            systemColorSchema={this.state.systemColorSchema}
             sendOnEnter={this.state.sendOnEnter}
 
             onGlobalSettings={this.handleGlobalSettings}
@@ -2238,7 +2251,6 @@ class TinodeWeb extends React.Component {
             colorSchema={colorSchema}
             sendOnEnter={this.state.sendOnEnter}
             wallpaper={this.state.wallpaper}
-            wallpaperType={this.state.wallpaperType}
 
             forwardMessage={this.state.forwardMessage}
             onCancelForwardMessage={this.handleHideForwardDialog}

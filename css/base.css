@@ -12,6 +12,7 @@
   --wallpaper-repeat: repeat;
   --wallpaper-blur: 0px;
   --wallpaper-invert: 0;
+  --wallpaper-brightness: 1;
   --wallpaper-size: contain;
   --wallpaper-position: center;
 
@@ -1786,19 +1787,22 @@ img.channel {
   background-repeat: var(--wallpaper-repeat);
   background-size: var(--wallpaper-size);
   background-position: var(--wallpaper-position);
-  filter: blur(var(--wallpaper-blur)) invert(var(--wallpaper-invert));
+  filter: blur(var(--wallpaper-blur))
+    invert(var(--wallpaper-invert))
+    brightness(var(--wallpaper-brightness));
   pointer-events: none;
   z-index: 0;
 }
 
-/* Dark mode wallpaper adjustments: image wallpaper */
+/* Dark mode wallpaper adjustments: image wallpaper *
 #messages-container.dark.wpimg::before {
   filter: brightness(50%);
 }
-/* Dark mode wallpaper adjustments: pattern wallpaper */
+/* Dark mode wallpaper adjustments: pattern wallpaper *
 #messages-container.dark.wppatt::before {
   filter: invert(1);
 }
+*/
 
 /* Scrollable panel where the messages are shown */
 #messages-panel {
@@ -3620,6 +3624,10 @@ ul.phone-country-selector span.country {
 
 .image-grid-cell.selected {
   border: 1.5px solid var(--clr-secondary-accent);
+}
+
+img.inverted {
+  filter: invert(1);
 }
 
 div.toast {

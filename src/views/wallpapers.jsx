@@ -86,9 +86,10 @@ export default class WallpapersView extends React.PureComponent {
           <div className="image-grid">
             {imageIndex.patt.map((img, idx) => {
               const selected = this.state.wallpaper === img.name ? ' selected' : '';
+              const dark = this.props.colorSchema == 'dark' ? 'inverted' : null;
               return <div key={idx} data-id={idx} className={`image-grid-cell${selected}`}
                 onClick={this.handleWallpaperSelected}>
-                <img src={WALLPAPER_DEFAULTS.path + img.name} alt={img.name}
+                <img src={WALLPAPER_DEFAULTS.path + img.name} alt={img.name} className={dark}
                   style={{ width: `${img.size}px`, height: `${img.size}px` }}/>
               </div>
             })}

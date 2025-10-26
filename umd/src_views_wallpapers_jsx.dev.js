@@ -125,6 +125,7 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "image-grid"
     }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__.patt.map((img, idx) => {
       const selected = this.state.wallpaper === img.name ? ' selected' : '';
+      const dark = this.props.colorSchema == 'dark' ? 'inverted' : null;
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: idx,
         "data-id": idx,
@@ -133,6 +134,7 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
         src: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path + img.name,
         alt: img.name,
+        className: dark,
         style: {
           width: `${img.size}px`,
           height: `${img.size}px`

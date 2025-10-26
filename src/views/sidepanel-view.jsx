@@ -254,6 +254,7 @@ class SidepanelView extends React.PureComponent {
           <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
             defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
             <WallpapersView
+              colorSchema={this.props.colorSchema !== 'auto' ? this.props.colorSchema : this.props.systemColorSchema}
               onWallpaperSelected={this.props.onWallpaperSelected}
             />
           </Suspense> :
