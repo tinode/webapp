@@ -1791,24 +1791,21 @@ img.channel {
   z-index: 0;
 }
 
+/* Dark mode wallpaper adjustments: image wallpaper */
+#messages-container.dark.wpimg::before {
+  filter: brightness(50%);
+}
+/* Dark mode wallpaper adjustments: pattern wallpaper */
+#messages-container.dark.wppatt::before {
+  filter: invert(1);
+}
+
 /* Scrollable panel where the messages are shown */
 #messages-panel {
   position: relative;
   padding: 0.75rem;
   overflow-y: scroll;
   height: 100%;
-}
-
-/* Dark mode asigned by the OS */
-@media (prefers-color-scheme: dark) {
-  #messages-panel::before {
-    background-image: url("../img/bg_messages_dk.png");
-  }
-}
-
-/* Explicitly set dark mode */
-#messages-panel[color-scheme="dark"]::before {
-  background-image: url("../img/bg_messages_dk.png");
 }
 
 #write-only-background {

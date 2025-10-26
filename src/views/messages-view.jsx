@@ -1706,15 +1706,17 @@ class MessagesView extends React.Component {
           this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
 
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
+        const darkModeClass = this.props.colorSchema == 'dark' ? 'dark ' + this.props.wallpaperType : '';
+        console.log("colorSchema", this.props.colorSchema, '=>', darkModeClass);
 
         let messagesComponent = (
           <>
-            <div id="messages-container">
+            <div id="messages-container" className={darkModeClass}>
               <button id="go-to-latest" className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
                 <i className="material-icons">arrow_downward</i>
               </button>
-              <div id="messages-panel" ref={this.handleScrollReference} color-scheme={this.props.colorSchema}>
+              <div id="messages-panel" ref={this.handleScrollReference}>
                 <ul id="scroller" className={chatBoxClass}>
                   {messageNodes}
                 </ul>

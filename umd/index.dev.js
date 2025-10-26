@@ -7340,7 +7340,7 @@ const WAKE_UP_TICK = 1000;
 const MIN_SWIPE_DISTANCE = REM_SIZE * 3;
 const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZpZXdCb3g9IjAgMCAxNyAxNyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMy41NjIgMXYxNS40NTlsNC42ODYtMy4yNyA0Ljc1MiAzLjI2di0xNS40NDloLTkuNDM4ek0xMiAxNC41NTFsLTMuNzU2LTIuNTc4LTMuNjgxIDIuNTY4di0xMi41NDFoNy40Mzd2MTIuNTUxeiIgZmlsbD0iIzU1NTU1NSIgLz48L3N2Zz4=';
 const TOAST_DURATION = 3_000;
-const DEFAULT_COLOR_SCHEME = 'light dark';
+const DEFAULT_COLOR_SCHEME = 'auto';
 const DEFAULT_TEXT_SIZE = 10;
 const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json';
 const WALLPAPER_DEFAULTS = {
@@ -8719,7 +8719,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   constructor(props) {
     super(props);
     this.state = {
-      colorSchema: props.colorSchema || 'light dark',
+      colorSchema: props.colorSchema || 'auto',
       textSize: props.textSize * 10 || '100',
       sendOnEnter: props.sendOnEnter || 'plain'
     };
@@ -8772,8 +8772,8 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       type: "radio",
       id: "system",
       name: "color-scheme-select",
-      value: "light dark",
-      checked: this.state.colorSchema == 'light dark',
+      value: "auto",
+      checked: this.state.colorSchema == 'auto',
       onChange: this.handleColorSchemaSelected
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       htmlFor: "system"
@@ -11157,8 +11157,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         const avatar = this.state.avatar || true;
         const online = this.state.deleted || topic.isSelfType() ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
+        const darkModeClass = this.props.colorSchema == 'dark' ? 'dark ' + this.props.wallpaperType : '';
+        console.log("colorSchema", this.props.colorSchema, '=>', darkModeClass);
         let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-container"
+          id: "messages-container",
+          className: darkModeClass
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
           id: "go-to-latest",
           className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
@@ -11167,8 +11170,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: "material-icons"
         }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-panel",
-          ref: this.handleScrollReference,
-          "color-scheme": this.props.colorSchema
+          ref: this.handleScrollReference
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
           id: "scroller",
           className: chatBoxClass
@@ -12254,6 +12256,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   getBlankState() {
     const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('settings') || {};
     const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in');
+    if (!settings.wallpaper) {
+      const wallpaper = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.defaultWallpaper)();
+      settings.wallpaper = wallpaper.name || '';
+      settings.wallpaperSize = wallpaper.size || 0;
+      settings.wallpaperBlur = 0;
+    }
     return {
       connected: false,
       ready: false,
@@ -12265,6 +12273,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
       colorSchema: settings.colorSchema || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME,
+      systemColorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+      wallpaper: settings.wallpaper,
+      wallpaperType: settings.wallpaperSize == 0 ? 'wpimg' : 'wppatt',
+      wallpaperSize: settings.wallpaperSize,
+      wallpaperBlur: 0,
       textSize: settings.textSize || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_TEXT_SIZE,
       sendOnEnter: settings.sendOnEnter || 'plain',
       desktopAlerts: persist && !!settings.desktopAlerts,
@@ -12331,14 +12344,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
     document.documentElement.style.colorScheme = this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
-    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('settings') || {};
-    if (!settings.wallpaper) {
-      const wallpaper = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.defaultWallpaper)();
-      settings.wallpaper = wallpaper.name || '';
-      settings.wallpaperSize = wallpaper.size || 0;
-      settings.wallpaperBlur = 0;
-    }
-    this.applyWallpaperSettings(settings.wallpaper, settings.wallpaperSize, settings.wallpaperBlur);
+    this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
+    console.log("Wallpaper settings:", this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
+    console.log("Wallpaper type:", this.state.wallpaperSize == 0 ? 'wpimg' : 'wppatt');
+    console.log("System color scheme:", this.state.systemColorScheme);
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
@@ -13137,6 +13146,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
   handleChangeColorSchema(scheme) {
+    console.log("User color scheme change:", scheme);
     this.setState({
       colorSchema: scheme
     });
@@ -13146,14 +13156,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     document.documentElement.style.colorScheme = scheme;
   }
   handleColorSchemeChange(event) {
-    console.log("Color scheme change:", event.matches ? 'dark' : 'not dark');
+    console.log("System color scheme change:", event.matches ? 'dark' : 'not dark');
+    this.setState({
+      systemColorScheme: event.matches ? 'dark' : 'light'
+    });
   }
   handleSelectWallpapers() {
     this.handleError();
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'wallpapers'));
   }
   applyWallpaperSettings(wallpaper, size, blur) {
-    console.log("Applying wallpaper settings:", wallpaper, size, blur);
     document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
     document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
     document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
@@ -13166,6 +13178,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       wallpaper: wallpaper,
       wallpaperSize: size,
       wallpaperBlur: blur
+    });
+    this.setState({
+      wallpaper: wallpaper,
+      wallpaperSize: size,
+      wallpaperBlur: blur,
+      wallpaperType: size == 0 ? 'wpimg' : 'wppatt'
     });
     this.applyWallpaperSettings(wallpaper, size, blur);
   }
@@ -13889,6 +13907,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   render() {
+    const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorScheme;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "app-container",
       ref: this.selfRef
@@ -13973,7 +13992,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: this.state.serverVersion,
       reqCredMethod: this.state.reqCredMethod,
       textSize: this.state.textSize,
-      colorSchema: this.state.colorSchema,
+      colorSchema: colorSchema,
       sendOnEnter: this.state.sendOnEnter,
       onGlobalSettings: this.handleGlobalSettings,
       onSignUp: this.handleNewAccount,
@@ -14028,9 +14047,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: this.state.serverVersion,
       serverAddress: this.state.serverAddress,
       applicationVisible: this.state.applicationVisible,
-      colorSchema: this.state.colorSchema,
+      colorSchema: colorSchema,
       sendOnEnter: this.state.sendOnEnter,
       wallpaper: this.state.wallpaper,
+      wallpaperType: this.state.wallpaperType,
       forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
       callTopic: this.state.callTopic,

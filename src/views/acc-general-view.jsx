@@ -7,7 +7,7 @@ export default class AccGeneralView extends React.PureComponent {
     super(props);
 
     this.state = {
-      colorSchema: props.colorSchema || 'light dark',
+      colorSchema: props.colorSchema || 'auto',
       textSize: (props.textSize * 10) || '100',
       sendOnEnter: props.sendOnEnter || 'plain',
     };
@@ -49,8 +49,8 @@ export default class AccGeneralView extends React.PureComponent {
             <div className="panel-form-row">
               <ul className="quoted">
                 <li key="system">
-                  <input type="radio" id="system" name="color-scheme-select" value="light dark"
-                    checked={this.state.colorSchema == 'light dark'}
+                  <input type="radio" id="system" name="color-scheme-select" value="auto"
+                    checked={this.state.colorSchema == 'auto'}
                     onChange={this.handleColorSchemaSelected} />&nbsp;
                   <label htmlFor="system">
                     <FormattedMessage id="color_schema_system" defaultMessage="System default" description="Name of the color schema"/>&nbsp;

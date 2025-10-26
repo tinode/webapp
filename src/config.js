@@ -150,7 +150,7 @@ export const SELF_AVATAR_URI = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS
 export const TOAST_DURATION = 3_000;
 
 // Initial/default color scheme.
-export const DEFAULT_COLOR_SCHEME = 'light dark';
+export const DEFAULT_COLOR_SCHEME = 'auto';
 
 // Default text size in points.
 export const DEFAULT_TEXT_SIZE = 10;

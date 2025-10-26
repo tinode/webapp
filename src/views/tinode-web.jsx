@@ -204,7 +204,12 @@ class TinodeWeb extends React.Component {
   getBlankState() {
     const settings = LocalStorageUtil.getObject('settings') || {};
     const persist = !!LocalStorageUtil.getObject('keep-logged-in');
-
+    if (!settings.wallpaper) {
+      const wallpaper = defaultWallpaper();
+      settings.wallpaper = wallpaper.name || '';
+      settings.wallpaperSize = wallpaper.size || 0;
+      settings.wallpaperBlur = 0;
+    }
     return {
       connected: false,
       // Connected and subscribed to 'me'
@@ -219,9 +224,18 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
-      colorSchema: settings.colorSchema || DEFAULT_COLOR_SCHEME, // default: system default
-      textSize: settings.textSize || DEFAULT_TEXT_SIZE, // default size: 10pt
-      sendOnEnter: settings.sendOnEnter || 'plain', // default: 'plain' (just Enter)
+      // Manually selected color scheme. Default: 'system default' ('auto').
+      colorSchema: settings.colorSchema || DEFAULT_COLOR_SCHEME,
+      systemColorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+      // Wallpaper settings.
+      wallpaper: settings.wallpaper,
+      wallpaperType: settings.wallpaperSize == 0 ? 'wpimg' : 'wppatt',
+      wallpaperSize: settings.wallpaperSize,
+      wallpaperBlur: 0,
+      // Text size in points. Default size: 10pt
+      textSize: settings.textSize || DEFAULT_TEXT_SIZE,
+      // Default: 'plain' (just Enter)
+      sendOnEnter: settings.sendOnEnter || 'plain',
       // Persistent request to enable alerts.
       desktopAlerts: persist && !!settings.desktopAlerts,
       // Enable / disable checkbox.
@@ -309,14 +323,11 @@ class TinodeWeb extends React.Component {
     document.documentElement.style.colorScheme = this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
 
-    const settings = LocalStorageUtil.getObject('settings') || {};
-    if (!settings.wallpaper) {
-      const wallpaper = defaultWallpaper();
-      settings.wallpaper = wallpaper.name || '';
-      settings.wallpaperSize = wallpaper.size || 0;
-      settings.wallpaperBlur = 0;
-    }
-    this.applyWallpaperSettings(settings.wallpaper, settings.wallpaperSize, settings.wallpaperBlur);
+    this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
+
+    console.log("Wallpaper settings:", this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
+    console.log("Wallpaper type:", this.state.wallpaperSize == 0 ? 'wpimg' : 'wppatt');
+    console.log("System color scheme:", this.state.systemColorScheme);
 
     // Process background notifications from the service worker.
     if (typeof BroadcastChannel == 'function') {
@@ -1250,8 +1261,9 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  // Manual change of color scheme.
+  // Manual change of color scheme: 'dark', 'light', 'auto'.
   handleChangeColorSchema(scheme) {
+    console.log("User color scheme change:", scheme);
     this.setState({colorSchema: scheme});
     LocalStorageUtil.updateObject('settings', {colorSchema: scheme});
     document.documentElement.style.colorScheme = scheme;
@@ -1259,9 +1271,8 @@ class TinodeWeb extends React.Component {
 
   // System color scheme has changed.
   handleColorSchemeChange(event) {
-    console.log("Color scheme change:", event.matches ? 'dark' : 'not dark');
-    // this.setState({colorSchema: event.matches ? 'dark' : 'light'});
-    // document.documentElement.style.setProperty('--wallpaper-invert', '0');
+    console.log("System color scheme change:", event.matches ? 'dark' : 'not dark');
+    this.setState({systemColorScheme: event.matches ? 'dark' : 'light'});
   }
 
   handleSelectWallpapers() {
@@ -1270,17 +1281,18 @@ class TinodeWeb extends React.Component {
   }
 
   applyWallpaperSettings(wallpaper, size, blur) {
-    console.log("Applying wallpaper settings:", wallpaper, size, blur);
     document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
     document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
     document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
     document.documentElement.style.setProperty('--wallpaper-size', size ? `${size}px` : 'cover');
     document.documentElement.style.setProperty('--wallpaper-position', size ? 'unset' : 'center');
+
   }
 
   handleWallpaperSelected(wallpaper, size, blur) {
     this.handleError();
     LocalStorageUtil.updateObject('settings', {wallpaper: wallpaper, wallpaperSize: size, wallpaperBlur: blur});
+    this.setState({wallpaper: wallpaper, wallpaperSize: size, wallpaperBlur: blur, wallpaperType: size == 0 ? 'wpimg' : 'wppatt'});
     this.applyWallpaperSettings(wallpaper, size, blur);
   }
 
@@ -2061,6 +2073,7 @@ class TinodeWeb extends React.Component {
   }
 
   render() {
+    const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorScheme;
     return (
       <div id="app-container" ref={this.selfRef}>
         {this.state.contextMenuVisible ?
@@ -2160,7 +2173,7 @@ class TinodeWeb extends React.Component {
             serverVersion={this.state.serverVersion}
             reqCredMethod={this.state.reqCredMethod}
             textSize={this.state.textSize}
-            colorSchema={this.state.colorSchema}
+            colorSchema={colorSchema}
             sendOnEnter={this.state.sendOnEnter}
 
             onGlobalSettings={this.handleGlobalSettings}
@@ -2222,9 +2235,10 @@ class TinodeWeb extends React.Component {
             serverVersion={this.state.serverVersion}
             serverAddress={this.state.serverAddress}
             applicationVisible={this.state.applicationVisible}
-            colorSchema={this.state.colorSchema}
+            colorSchema={colorSchema}
             sendOnEnter={this.state.sendOnEnter}
             wallpaper={this.state.wallpaper}
+            wallpaperType={this.state.wallpaperType}
 
             forwardMessage={this.state.forwardMessage}
             onCancelForwardMessage={this.handleHideForwardDialog}
