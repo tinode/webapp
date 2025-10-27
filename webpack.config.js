@@ -54,7 +54,14 @@ module.exports = (env, argv) => {
     },
     performance: {
       maxEntrypointSize: maxAssetSize,
-      maxAssetSize: maxAssetSize
+      maxAssetSize: maxAssetSize,
+      assetFilter: function(assetFilename) {
+        // Exclude all sourcemaps
+        if (/\.map$/.test(assetFilename)) {
+          return false;
+        }
+        return true;
+      },
     },
     plugins: [
       new CopyPlugin({

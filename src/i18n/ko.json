@@ -1865,53 +1865,39 @@
     "missing": false,
     "obsolete": false
   },
-  "label_wallpapers": {
-    "translation": "",
-    "defaultMessage": "Wallpapers:",
-    "description": "Label for selecting wallpapers in Settings",
-    "missing": true,
-    "obsolete": true
-  },
   "tabtitle_image": {
-    "translation": "",
+    "translation": "이미지",
     "defaultMessage": "image",
     "description": "Tab title Image",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "tabtitle_pattern": {
-    "translation": "",
+    "translation": "패턴",
     "defaultMessage": "pattern",
     "description": "Tab title Pattern",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_wallpapers": {
-    "translation": "",
-    "defaultMessage": "Wallpapers",
-    "description": "Sidepanel title for WallpapersView.",
-    "missing": true,
-    "obsolete": true
-  },
   "button_restore": {
-    "translation": "",
+    "translation": "기본값 복원",
     "defaultMessage": "Restore default",
     "description": "Reset setting to default",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "wallpapers": {
-    "translation": "",
+    "translation": "배경화면",
     "defaultMessage": "Wallpapers",
     "description": "Link or title for working with wallpapers.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_blur_wallpaper": {
-    "translation": "",
+    "translation": "흐림:",
     "defaultMessage": "Blur:",
     "description": "Label adjusting blur amount",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

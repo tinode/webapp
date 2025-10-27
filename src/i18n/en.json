@@ -1865,13 +1865,6 @@
     "missing": false,
     "obsolete": false
   },
-  "label_wallpapers": {
-    "translation": "Wallpapers",
-    "defaultMessage": "Wallpapers",
-    "description": "Label for selecting wallpapers in Settings",
-    "missing": false,
-    "obsolete": true
-  },
   "tabtitle_image": {
     "translation": "image",
     "defaultMessage": "image",
