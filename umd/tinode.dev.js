@@ -3753,38 +3753,6 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
   getCredentials() {
     return this._credentials;
   }
-  pinTopic(topic, pin) {
-    if (!this._attached) {
-      return Promise.reject(new Error("Cannot pin topic in inactive 'me' topic"));
-    }
-    if (!_topic_js__WEBPACK_IMPORTED_MODULE_2__["default"].isCommTopicName(topic)) {
-      return Promise.reject(new Error("Invalid topic to pin"));
-    }
-    const tpin = Array.isArray(this.private && this.private.tpin) ? this.private.tpin : [];
-    const found = tpin.includes(topic);
-    if (pin && found || !pin && !found) {
-      return Promise.resolve(tpin);
-    }
-    if (pin) {
-      tpin.unshift(topic);
-    } else {
-      tpin.splice(tpin.indexOf(topic), 1);
-    }
-    return this.setMeta({
-      desc: {
-        private: {
-          tpin: tpin.length > 0 ? tpin : _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR
-        }
-      }
-    });
-  }
-  pinnedTopicRank(topic) {
-    if (!this.private || !this.private.tpin) {
-      return 0;
-    }
-    const idx = this.private.tpin.indexOf(topic);
-    return idx < 0 ? 0 : this.private.tpin.length - idx;
-  }
 }
 
 /***/ }),
@@ -4346,12 +4314,6 @@ class Topic {
       });
     }
     return Promise.resolve();
-  }
-  pinTopic(topic, pin) {
-    return Promise.reject(new Error("Pinning topics is not supported here"));
-  }
-  pinnedTopicRank(topic) {
-    return 0;
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -5044,14 +5006,10 @@ class Topic {
             acs: sub.acs
           });
         }
-        if (!this._users[sub.user]) {
-          this.subcnt++;
-        }
         user = this._updateCachedUser(sub.user, sub);
       } else {
         delete this._users[sub.user];
         user = sub;
-        this.subcnt--;
       }
       if (this.onMetaSub) {
         this.onMetaSub(user);
@@ -5246,7 +5204,7 @@ function rfc3339DateString(d) {
   const millis = d.getUTCMilliseconds();
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + (millis ? '.' + pad(millis, 3) : '') + 'Z';
 }
-function mergeObj(dst, src) {
+function mergeObj(dst, src, ignore) {
   if (typeof src != 'object') {
     if (src === undefined) {
       return dst;
@@ -5257,7 +5215,7 @@ function mergeObj(dst, src) {
     return src;
   }
   if (src === null) {
-    return dst;
+    return src;
   }
   if (src instanceof Date && !isNaN(src)) {
     return !dst || !(dst instanceof Date) || isNaN(dst) || dst < src ? src : dst;
@@ -5272,18 +5230,16 @@ function mergeObj(dst, src) {
     dst = src.constructor();
   }
   for (let prop in src) {
-    if (src.hasOwnProperty(prop) && prop != '_noForwarding') {
+    if (src.hasOwnProperty(prop) && (!ignore || !ignore[prop]) && prop != '_noForwarding') {
       try {
         dst[prop] = mergeObj(dst[prop], src[prop]);
-      } catch (err) {
-        console.warn("Error merging property:", prop, err);
-      }
+      } catch (err) {}
     }
   }
   return dst;
 }
-function mergeToCache(cache, key, newval) {
-  cache[key] = mergeObj(cache[key], newval);
+function mergeToCache(cache, key, newval, ignore) {
+  cache[key] = mergeObj(cache[key], newval, ignore);
   return cache[key];
 }
 function simplify(obj) {
@@ -5429,7 +5385,7 @@ function clipInRange(src, clip) {
     hi: Math.min(src.hi, clip.hi)
   };
   // removed by dead control flow
-
+{}
 }
 
 /***/ }),
@@ -5444,7 +5400,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.0-beta1";
+const PACKAGE_VERSION = "0.24.4";
 
 /***/ })
 
