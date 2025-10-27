@@ -14549,7 +14549,7 @@ const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 const SPACING = 2 * CANVAS_UPSCALING;
 const BAR_COLOR = '#888A';
 const BAR_COLOR_DARK = '#666C';
-const THUMB_COLOR = '#444E';
+const THUMB_COLOR = '#1781d7';
 const MIN_PREVIEW_LENGTH = 16;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   icon_title_play: {

@@ -75,7 +75,7 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-intl": "^7.0.0",
-    "tinode-sdk": "^0.24.0-beta1",
+    "tinode-sdk": "^0.25.0-beta1",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {

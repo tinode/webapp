@@ -15,7 +15,7 @@ const SPACING = 2 * CANVAS_UPSCALING;
 // Color of histogram bars.
 const BAR_COLOR = '#888A';
 const BAR_COLOR_DARK = '#666C';
-const THUMB_COLOR = '#444E';
+const THUMB_COLOR = '#1781d7'; // average between dark and light accent colors.
 // Minimum number of amplitude bars to draw.
 const MIN_PREVIEW_LENGTH = 16;
 
