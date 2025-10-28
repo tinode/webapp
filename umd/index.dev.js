@@ -11133,9 +11133,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
         let lastSeen = null;
         if (isChannel) {
-          lastSeen = formatMessage(messages.subscriber_count, {
-            count: topic.subcnt
-          });
+          if (topic.subcnt) {
+            lastSeen = formatMessage(messages.subscriber_count, {
+              count: topic.subcnt
+            });
+          }
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
           if (cont) {
@@ -11148,9 +11150,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
                 });
               }
             } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isGroupTopicName(cont.topic)) {
-              lastSeen = formatMessage(messages.member_count, {
-                count: topic.subcnt
-              });
+              if (topic.subcnt) {
+                lastSeen = formatMessage(messages.member_count, {
+                  count: topic.subcnt
+                });
+              }
             }
           }
         }

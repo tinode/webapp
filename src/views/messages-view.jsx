@@ -1684,7 +1684,9 @@ class MessagesView extends React.Component {
 
         let lastSeen = null;
         if (isChannel) {
-          lastSeen = formatMessage(messages.subscriber_count, {count: topic.subcnt});
+          if (topic.subcnt) {
+            lastSeen = formatMessage(messages.subscriber_count, {count: topic.subcnt});
+          }
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
           if (cont) {
@@ -1697,7 +1699,9 @@ class MessagesView extends React.Component {
                 // TODO: also handle user agent in c.seen.ua
               }
             } else if (Tinode.isGroupTopicName(cont.topic)) {
-              lastSeen = formatMessage(messages.member_count, {count: topic.subcnt});
+              if (topic.subcnt) {
+                lastSeen = formatMessage(messages.member_count, {count: topic.subcnt});
+              }
             }
           }
         }
