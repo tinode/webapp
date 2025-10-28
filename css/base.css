@@ -1338,7 +1338,7 @@ i.search {
   background-color: var(--clr-background-blue-gray-100); /* blue-gray 100 highlight */
 }
 .contact-box > li.tpinned {
-  border-right: 1px solid var(--clr-secondary-accent);
+  border-right: 1.5px solid var(--clr-secondary-accent);
   background-color: var(--clr-background-blue-gray-75); /* blue-gray 75 highlight */
 }
 .contact-box > li.action {
