@@ -119,9 +119,9 @@
   --clr-button-danger-bg: light-dark(#ec645f, #d74742);
   --clr-button-danger-text: var(--clr-bright);
   --clr-button-danger-hover-bg: light-dark(#f77, #a55);
-  --clr-button-positive-bg: light-dark(#71c46f, #0d1e0d);
+  --clr-button-positive-bg: light-dark(#71c46f, #3f983e);
   --clr-button-positive-text: var(--clr-bright);
-  --clr-button-positive-hover-bg: light-dark(#7fed7f, #0a120a);
+  --clr-button-positive-hover-bg: light-dark(#7fed7f, #6ec26e);
 
   /* Inputs */
   --clr-input-text: var(--clr-text-primary);
@@ -130,7 +130,7 @@
   --clr-input-shadow: var(--clr-shadow-input-underline);
   --clr-input-shadow-focus: var(--clr-primary-accent-focus-shadow);
   --clr-input-invalid-border: light-dark(#e57171, #561010);
-  --clr-input-invalid-shadow: light-dark(rgba(229, 115, 115, 0.25), rgba(26, 12, 12, 0.25));
+  --clr-input-invalid-shadow: light-dark(#e5737340, #1a0c0c40);
   --clr-input-placeholder-text: var(--clr-text-placeholder);
 
   /* Chat Bubbles */
@@ -2296,7 +2296,10 @@ video {
   border-radius: 0.35rem;
   z-index: 1;
   text-shadow: 0 0 1px var(--clr-bright);
-  background-color: rgba(255, 255, 255, 0.7); /* Specific rgba */
+  background-color: var(--clr-background-off-white);
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .call-message {
