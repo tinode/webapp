@@ -12348,9 +12348,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
     this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur, this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
-    console.log("Wallpaper settings:", this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
-    console.log("Wallpaper type:", this.state.wallpaperSize == 0 ? 'wpimg' : 'wppatt');
-    console.log("System color scheme:", this.state.systemColorSchema);
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
@@ -13149,7 +13146,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
   handleChangeColorSchema(schema) {
-    console.log("User color scheme change:", schema);
     this.setState({
       colorSchema: schema
     });
@@ -13161,7 +13157,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleColorSchemeChange(event) {
     const systemSchema = event.matches ? 'dark' : 'light';
-    console.log("System color scheme change:", systemSchema);
     this.setState({
       systemColorSchema: systemSchema
     });
@@ -13169,7 +13164,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   applyColorSchema(schema, systemSchema, size) {
     const effectiveSchema = schema == 'auto' ? systemSchema : schema;
-    console.log("applyColorSchema:", effectiveSchema);
     document.documentElement.style.setProperty('--wallpaper-invert', effectiveSchema == 'dark' && size ? '1' : '0');
     document.documentElement.style.setProperty('--wallpaper-brightness', effectiveSchema == 'dark' && !size ? '0.5' : '1');
   }
@@ -19168,7 +19162,13 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_1___default().PureCom
       className: "panel-form-column"
     }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("label", {
       className: "small"
-    }, "Scan my ID:"), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+      id: "label_scan_id",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Scan my ID:"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       className: "qr-code",
       ref: this.qrCodeRef
     })));

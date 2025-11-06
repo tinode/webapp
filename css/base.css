@@ -2267,6 +2267,8 @@ video {
 
 .incoming-call {
   position: relative;
+  display: flex;
+  flex-direction: column;
   background-color: var(--clr-bright);
   box-shadow: 0.15rem 0.15rem 1.5rem var(--clr-shadow-dialog);
   border-radius: 0.3rem;

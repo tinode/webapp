@@ -325,10 +325,6 @@ class TinodeWeb extends React.Component {
     this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur,
       this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
 
-    console.log("Wallpaper settings:", this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur);
-    console.log("Wallpaper type:", this.state.wallpaperSize == 0 ? 'wpimg' : 'wppatt');
-    console.log("System color scheme:", this.state.systemColorSchema);
-
     // Process background notifications from the service worker.
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
@@ -1263,7 +1259,6 @@ class TinodeWeb extends React.Component {
 
   // Manual change of color scheme: 'dark', 'light', 'auto'.
   handleChangeColorSchema(schema) {
-    console.log("User color scheme change:", schema);
     this.setState({colorSchema: schema});
     LocalStorageUtil.updateObject('settings', {colorSchema: schema});
     document.documentElement.style.colorScheme = schema == 'auto' ? 'light dark' : schema;
@@ -1273,14 +1268,12 @@ class TinodeWeb extends React.Component {
   // System color scheme has changed.
   handleColorSchemeChange(event) {
     const systemSchema = event.matches ? 'dark' : 'light';
-    console.log("System color scheme change:", systemSchema);
     this.setState({systemColorSchema: systemSchema});
     this.applyColorSchema(this.state.colorSchema, systemSchema, this.state.wallpaperSize);
   }
 
   applyColorSchema(schema, systemSchema, size) {
     const effectiveSchema = schema == 'auto' ? systemSchema : schema;
-    console.log("applyColorSchema:", effectiveSchema);
     document.documentElement.style.setProperty('--wallpaper-invert', effectiveSchema == 'dark' && size ? '1' : '0');
     document.documentElement.style.setProperty('--wallpaper-brightness', effectiveSchema == 'dark' && !size ? '0.5' : '1');
   }

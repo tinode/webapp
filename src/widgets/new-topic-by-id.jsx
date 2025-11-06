@@ -77,7 +77,9 @@ class NewTopicById extends React.PureComponent {
         </div>
         <br />
         <div className="panel-form-column">
-        <label className="small">Scan my ID:</label>
+          <label className="small"><FormattedMessage id="label_scan_id"
+            defaultMessage="Scan my ID:" description="Label [Scan my ID:]" />
+          </label>
           <div className="qr-code" ref={this.qrCodeRef} />
         </div>
       </div>

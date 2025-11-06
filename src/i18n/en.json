@@ -1899,5 +1899,12 @@
     "description": "Label adjusting blur amount",
     "missing": false,
     "obsolete": false
+  },
+  "label_scan_id": {
+    "translation": "Scan my ID:",
+    "defaultMessage": "Scan my ID:",
+    "description": "Label [Scan my ID:]",
+    "missing": false,
+    "obsolete": false
   }
 }

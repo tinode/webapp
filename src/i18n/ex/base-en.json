@@ -498,6 +498,10 @@
     "defaultMessage": "Send SMS to reset password",
     "description": "Label for password reset field by phone"
   },
+  "label_scan_id": {
+    "defaultMessage": "Scan my ID:",
+    "description": "Label [Scan my ID:]"
+  },
   "label_sdk": {
     "defaultMessage": "SDK:"
   },
