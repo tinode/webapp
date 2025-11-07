@@ -5215,7 +5215,7 @@ function mergeObj(dst, src, ignore) {
     return src;
   }
   if (src === null) {
-    return dst;
+    return src;
   }
   if (src instanceof Date && !isNaN(src)) {
     return !dst || !(dst instanceof Date) || isNaN(dst) || dst < src ? src : dst;
