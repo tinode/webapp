@@ -377,6 +377,9 @@ class CommError extends Error {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BACKOFF_BASE: () => (/* binding */ BACKOFF_BASE),
+/* harmony export */   BACKOFF_JITTER: () => (/* binding */ BACKOFF_JITTER),
+/* harmony export */   BACKOFF_MAX_ITER: () => (/* binding */ BACKOFF_MAX_ITER),
 /* harmony export */   DEFAULT_MESSAGES_PAGE: () => (/* binding */ DEFAULT_MESSAGES_PAGE),
 /* harmony export */   DEL_CHAR: () => (/* binding */ DEL_CHAR),
 /* harmony export */   EXPIRE_PROMISES_PERIOD: () => (/* binding */ EXPIRE_PROMISES_PERIOD),
@@ -415,7 +418,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const PROTOCOL_VERSION = '0';
-const VERSION = _version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.24';
+const VERSION = _version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.25';
 const LIBRARY = 'tinodejs/' + VERSION;
 const TOPIC_NEW = 'new';
 const TOPIC_NEW_CHAN = 'nch';
@@ -446,6 +449,9 @@ const MAX_PINNED_COUNT = 5;
 const TAG_ALIAS = 'alias:';
 const TAG_EMAIL = 'email:';
 const TAG_PHONE = 'tel:';
+const BACKOFF_BASE = 2000;
+const BACKOFF_MAX_ITER = 10;
+const BACKOFF_JITTER = 0.3;
 
 /***/ }),
 
@@ -460,7 +466,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Connection)
 /* harmony export */ });
 /* harmony import */ var _comm_error_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./comm-error.js */ "./src/comm-error.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+
 
 
 
@@ -471,9 +479,6 @@ const NETWORK_ERROR = 503;
 const NETWORK_ERROR_TEXT = "Connection failed";
 const NETWORK_USER = 418;
 const NETWORK_USER_TEXT = "Disconnected by client";
-const _BOFF_BASE = 2000;
-const _BOFF_MAX_ITER = 10;
-const _BOFF_JITTER = 0.3;
 function makeBaseUrl(host, protocol, version, apiKey) {
   let url = null;
   if (['http', 'https', 'ws', 'wss'].includes(protocol)) {
@@ -546,8 +551,8 @@ class Connection {
   }
   #boffReconnect() {
     clearTimeout(this.#boffTimer);
-    const timeout = _BOFF_BASE * (Math.pow(2, this.#boffIteration) * (1.0 + _BOFF_JITTER * Math.random()));
-    this.#boffIteration = this.#boffIteration >= _BOFF_MAX_ITER ? this.#boffIteration : this.#boffIteration + 1;
+    const timeout = _config_js__WEBPACK_IMPORTED_MODULE_1__.BACKOFF_BASE * (Math.pow(2, this.#boffIteration) * (1.0 + _config_js__WEBPACK_IMPORTED_MODULE_1__.BACKOFF_JITTER * Math.random()));
+    this.#boffIteration = this.#boffIteration >= _config_js__WEBPACK_IMPORTED_MODULE_1__.BACKOFF_MAX_ITER ? this.#boffIteration : this.#boffIteration + 1;
     if (this.onAutoreconnectIteration) {
       this.onAutoreconnectIteration(timeout);
     }
@@ -597,7 +602,7 @@ class Connection {
       poller.onreadystatechange = evt => {
         if (poller.readyState == XDR_DONE) {
           if (poller.status == 201) {
-            let pkt = JSON.parse(poller.responseText, _utils_js__WEBPACK_IMPORTED_MODULE_1__.jsonParseHelper);
+            let pkt = JSON.parse(poller.responseText, _utils_js__WEBPACK_IMPORTED_MODULE_2__.jsonParseHelper);
             _lpURL = url_ + '&sid=' + pkt.ctrl.params.sid;
             poller = lp_poller(_lpURL);
             poller.send(null);
@@ -3753,6 +3758,38 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
   getCredentials() {
     return this._credentials;
   }
+  pinTopic(topic, pin) {
+    if (!this._attached) {
+      return Promise.reject(new Error("Cannot pin topic in inactive 'me' topic"));
+    }
+    if (!_topic_js__WEBPACK_IMPORTED_MODULE_2__["default"].isCommTopicName(topic)) {
+      return Promise.reject(new Error("Invalid topic to pin"));
+    }
+    const tpin = Array.isArray(this.private && this.private.tpin) ? this.private.tpin : [];
+    const found = tpin.includes(topic);
+    if (pin && found || !pin && !found) {
+      return Promise.resolve(tpin);
+    }
+    if (pin) {
+      tpin.unshift(topic);
+    } else {
+      tpin.splice(tpin.indexOf(topic), 1);
+    }
+    return this.setMeta({
+      desc: {
+        private: {
+          tpin: tpin.length > 0 ? tpin : _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR
+        }
+      }
+    });
+  }
+  pinnedTopicRank(topic) {
+    if (!this.private || !this.private.tpin) {
+      return 0;
+    }
+    const idx = this.private.tpin.indexOf(topic);
+    return idx < 0 ? 0 : this.private.tpin.length - idx;
+  }
 }
 
 /***/ }),
@@ -4314,6 +4351,12 @@ class Topic {
       });
     }
     return Promise.resolve();
+  }
+  pinTopic(topic, pin) {
+    return Promise.reject(new Error("Pinning topics is not supported here"));
+  }
+  pinnedTopicRank(topic) {
+    return 0;
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -5006,10 +5049,14 @@ class Topic {
             acs: sub.acs
           });
         }
+        if (!this._users[sub.user]) {
+          this.subcnt++;
+        }
         user = this._updateCachedUser(sub.user, sub);
       } else {
         delete this._users[sub.user];
         user = sub;
+        this.subcnt--;
       }
       if (this.onMetaSub) {
         this.onMetaSub(user);
@@ -5204,7 +5251,7 @@ function rfc3339DateString(d) {
   const millis = d.getUTCMilliseconds();
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + (millis ? '.' + pad(millis, 3) : '') + 'Z';
 }
-function mergeObj(dst, src, ignore) {
+function mergeObj(dst, src) {
   if (typeof src != 'object') {
     if (src === undefined) {
       return dst;
@@ -5215,7 +5262,7 @@ function mergeObj(dst, src, ignore) {
     return src;
   }
   if (src === null) {
-    return src;
+    return dst;
   }
   if (src instanceof Date && !isNaN(src)) {
     return !dst || !(dst instanceof Date) || isNaN(dst) || dst < src ? src : dst;
@@ -5230,16 +5277,18 @@ function mergeObj(dst, src, ignore) {
     dst = src.constructor();
   }
   for (let prop in src) {
-    if (src.hasOwnProperty(prop) && (!ignore || !ignore[prop]) && prop != '_noForwarding') {
+    if (src.hasOwnProperty(prop) && prop != '_noForwarding') {
       try {
         dst[prop] = mergeObj(dst[prop], src[prop]);
-      } catch (err) {}
+      } catch (err) {
+        console.warn("Error merging property:", prop, err);
+      }
     }
   }
   return dst;
 }
-function mergeToCache(cache, key, newval, ignore) {
-  cache[key] = mergeObj(cache[key], newval, ignore);
+function mergeToCache(cache, key, newval) {
+  cache[key] = mergeObj(cache[key], newval);
   return cache[key];
 }
 function simplify(obj) {
@@ -5385,7 +5434,7 @@ function clipInRange(src, clip) {
     hi: Math.min(src.hi, clip.hi)
   };
   // removed by dead control flow
-{}
+
 }
 
 /***/ }),
@@ -5400,7 +5449,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.24.4";
+const PACKAGE_VERSION = "0.25.0-beta3";
 
 /***/ })
 
@@ -5515,7 +5564,7 @@ __webpack_require__.r(__webpack_exports__);
  * @copyright 2015-2025 Tinode LLC.
  * @summary Javascript bindings for Tinode.
  * @license Apache 2.0
- * @version 0.24
+ * @version 0.25
  *
  * See <a href="https://github.com/tinode/webapp">https://github.com/tinode/webapp</a> for real-life usage.
  *

@@ -852,11 +852,11 @@ div.trusted-badge {
 .action-button:hover:not([disabled]),
 .action-button:active:not([disabled]) {
   color: var(--clr-text-tertiary-activated);
-  background-color: var(--clr-background-light-gray);
+  background-color: var(--clr-primary-action-hover);
 }
 .action-button:active {
   color: var(--clr-text-tertiary-activated);
-  background-color: var(--clr-background-extra-light-gray);
+  background-color: var(--clr-primary-action);
 }
 
 .action-button.hidden {
