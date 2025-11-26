@@ -5449,7 +5449,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.0-beta3";
+const PACKAGE_VERSION = "0.25.0-rc1";
 
 /***/ })
 
@@ -5502,18 +5502,6 @@ const PACKAGE_VERSION = "0.25.0-beta3";
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
@@ -5633,7 +5621,7 @@ initForNonBrowserApp();
 function initForNonBrowserApp() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   if (typeof btoa == 'undefined') {
-    __webpack_require__.g.btoa = function (input = '') {
+    globalThis.btoa = function (input = '') {
       let str = input;
       let output = '';
       for (let block = 0, charCode, i = 0, map = chars; str.charAt(i | 0) || (map = '=', i % 1); output += map.charAt(63 & block >> 8 - i % 1 * 8)) {
@@ -5647,7 +5635,7 @@ function initForNonBrowserApp() {
     };
   }
   if (typeof atob == 'undefined') {
-    __webpack_require__.g.atob = function (input = '') {
+    globalThis.atob = function (input = '') {
       let str = input.replace(/=+$/, '');
       let output = '';
       if (str.length % 4 == 1) {
@@ -5660,7 +5648,7 @@ function initForNonBrowserApp() {
     };
   }
   if (typeof window == 'undefined') {
-    __webpack_require__.g.window = {
+    globalThis.window = {
       WebSocket: WebSocketProvider,
       XMLHttpRequest: XHRProvider,
       indexedDB: IndexedDBProvider,
