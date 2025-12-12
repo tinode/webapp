@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.25.0-rc1",
+  "version": "0.25.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tinode/webapp.git"
@@ -75,7 +75,7 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-intl": "^7.0.0",
-    "tinode-sdk": "^0.25.0-rc1",
+    "tinode-sdk": "^0.25.0",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {
@@ -88,7 +88,7 @@
     "browserslist": "^4.21.10",
     "copy-webpack-plugin": "^13.0.0",
     "cssnano": "^7.0.6",
-    "glob": "^11.0.0",
+    "glob": "^13.0.0",
     "jest": "^30.0.0",
     "postcss": "^8.4.27",
     "postcss-cli": "^11.0.0",
