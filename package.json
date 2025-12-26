@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tinode/webapp.git"
@@ -21,7 +21,9 @@
     "compile": "formatjs compile",
     "test": "jest"
   },
-  "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead",
+  "browserslist": [
+    "defaults"
+  ],
   "files": [
     "umd/*.js",
     "umd/*.map",
@@ -31,6 +33,9 @@
     "img/*.png",
     "img/*.svg",
     "img/*.jpeg",
+    "img/bkg/*.jpg",
+    "img/bkg/*.png",
+    "img/bkg/*.json",
     "index-dev.html",
     "index.html",
     "manifest.json",
@@ -75,7 +80,7 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-intl": "^7.0.0",
-    "tinode-sdk": "^0.25.0",
+    "tinode-sdk": "^0.25.1",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {
