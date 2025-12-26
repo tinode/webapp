@@ -1901,10 +1901,10 @@
     "obsolete": false
   },
   "label_scan_id": {
-    "translation": "",
+    "translation": "Scanează ID-ul meu:",
     "defaultMessage": "Scan my ID:",
     "description": "Label [Scan my ID:]",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
