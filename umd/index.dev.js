@@ -19833,7 +19833,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     };
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       ref: this.rootRef,
-      className: `reaction-picker ${this.state.placeAbove}`,
+      className: `reaction-picker ${this.state.placeAbove} ${this.state.expanded ? 'expanded' : ''} `,
       role: "dialog",
       "aria-label": "emoji picker",
       style: style
@@ -19855,11 +19855,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       tabIndex: 0,
       "aria-label": `react ${emo}`
     }, emo)), !this.state.expanded && (this.props.emojis || []).length > REACTIONS_COLLAPSED_COUNT && react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      style: {
-        borderLeft: '1px solid silver',
-        height: '90%',
-        margin: '0 auto'
-      }
+      className: "divider"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reaction-picker-btn",
       role: "button",

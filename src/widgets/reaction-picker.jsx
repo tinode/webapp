@@ -124,7 +124,8 @@ class ReactionPicker extends React.PureComponent {
     const prefix = this.props.dataTestPrefix || 'reaction-picker';
     const style = { ...this.state.position, '--tip-left': this.state.tailLeft };
     return (
-      <div ref={this.rootRef} className={`reaction-picker ${this.state.placeAbove}`}
+      <div ref={this.rootRef}
+          className={`reaction-picker ${this.state.placeAbove} ${this.state.expanded ? 'expanded' : ''} `}
           role="dialog" aria-label="emoji picker" style={style}>
         {(this.props.emojis || [])
             .slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT)
@@ -144,7 +145,7 @@ class ReactionPicker extends React.PureComponent {
         ))}
         {(!this.state.expanded && (this.props.emojis || []).length > REACTIONS_COLLAPSED_COUNT) &&
           <>
-          <div style={{ borderLeft: '1px solid silver', height: '2rem', margin: '0 auto' }}/>
+          <div className="divider"/>
           <div className="reaction-picker-btn" role="button" data-testid="reaction-expand"
               onClick={() => this.setState({expanded: true}, () => this.updatePosition())}>
             <i className="material-icons">expand_more</i>
