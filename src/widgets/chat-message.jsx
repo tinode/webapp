@@ -157,19 +157,22 @@ class BaseChatMessage extends React.PureComponent {
   handleShowPicker(e) {
     e.preventDefault();
     e.stopPropagation();
-    // Capture click coordinates and app bounds so the picker can position itself.
-    const rect = this.props.parentRef.getBoundingClientRect();
+
+    // Capture app bounds so the picker can position itself.
+    // Center of the button is used as the click coordinates.
+    const parentRect = this.props.parentRef.getBoundingClientRect();
+    const buttonRect = e.target.getBoundingClientRect();
     this.setState({
       showPicker: true,
       pickerClickAt: {
-        x: e.pageX,
-        y: e.pageY
+        x: buttonRect.left + buttonRect.width / 2,
+        y: buttonRect.top + buttonRect.height / 2
       },
       parentBounds: {
-        left: rect.left,
-        top: rect.top,
-        right: rect.right,
-        bottom: rect.bottom,
+        left: parentRect.left,
+        top: parentRect.top,
+        right: parentRect.right,
+        bottom: parentRect.bottom,
       }
     });
   }

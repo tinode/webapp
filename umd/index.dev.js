@@ -16226,18 +16226,19 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   handleShowPicker(e) {
     e.preventDefault();
     e.stopPropagation();
-    const rect = this.props.parentRef.getBoundingClientRect();
+    const parentRect = this.props.parentRef.getBoundingClientRect();
+    const buttonRect = e.target.getBoundingClientRect();
     this.setState({
       showPicker: true,
       pickerClickAt: {
-        x: e.pageX,
-        y: e.pageY
+        x: buttonRect.left + buttonRect.width / 2,
+        y: buttonRect.top + buttonRect.height / 2
       },
       parentBounds: {
-        left: rect.left,
-        top: rect.top,
-        right: rect.right,
-        bottom: rect.bottom
+        left: parentRect.left,
+        top: parentRect.top,
+        right: parentRect.right,
+        bottom: parentRect.bottom
       }
     });
   }
@@ -19723,6 +19724,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const REACTIONS_COLLAPSED_COUNT = 6;
 const MAX_EMOJIS = 40;
+const DISPLAY_PREFERENCE = 'top';
+const PANEL_MARGIN = 7;
+const TIP_SIZE = 7;
 class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -19733,7 +19737,8 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       },
       tailLeft: '12px',
       placeAbove: 'below',
-      expanded: false
+      expanded: false,
+      collapsedHeight: 1000
     };
     this.rootRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.emojiRefs = [];
@@ -19806,8 +19811,49 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const panelRect = this.rootRef.current.getBoundingClientRect();
     const hSize = panelRect.width;
     const vSize = panelRect.height;
-    let left = Math.min(6, this.props.viewportBounds.right - this.props.clickAt.x - hSize - 6);
-    let top = this.props.clickAt.y - this.props.viewportBounds.top > vSize + 12 ? -vSize - 7 : 12 + vSize / 2;
+    let collapsedHeight;
+    if (hSize < this.state.collapsedHeight) {
+      this.setState({
+        collapsedHeight: vSize
+      });
+      collapsedHeight = vSize;
+    } else {
+      collapsedHeight = this.state.collapsedHeight;
+    }
+    const spaceLeft = this.props.clickAt.x - this.props.viewportBounds.left - hSize - PANEL_MARGIN;
+    const spaceRight = this.props.viewportBounds.right - this.props.clickAt.x - hSize - PANEL_MARGIN;
+    const spaceTop = this.props.clickAt.y - this.props.viewportBounds.top - vSize - PANEL_MARGIN;
+    const spaceBottom = this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN;
+    let preferred = DISPLAY_PREFERENCE;
+    let space = spaceTop;
+    if (space < 0 && space < spaceBottom) {
+      preferred = 'bottom';
+      space = spaceBottom;
+    }
+    if (space < 0 && space < spaceLeft) {
+      preferred = 'left';
+      space = spaceLeft;
+    }
+    if (space < 0 && space < spaceRight) {
+      preferred = 'right';
+    }
+    let left, top;
+    if (preferred === 'top' || preferred === 'bottom') {
+      left = Math.min(-PANEL_MARGIN, this.props.viewportBounds.right - this.props.clickAt.x - hSize);
+      top = preferred === 'top' ? -vSize - TIP_SIZE : 24 + TIP_SIZE + PANEL_MARGIN;
+    } else {
+      if (preferred === 'left') {
+        left = -PANEL_MARGIN - hSize;
+      } else {
+        left = this.props.clickAt.x + PANEL_MARGIN - this.props.viewportBounds.left;
+      }
+      if (vSize > this.props.viewportBounds.bottom - this.props.viewportBounds.top) {
+        top = (this.props.viewportBounds.bottom - this.props.viewportBounds.top - vSize) / 2;
+      } else {
+        top = Math.min(this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN, Math.max(-PANEL_MARGIN, this.props.clickAt.y - this.props.viewportBounds.top - vSize / 2));
+      }
+    }
+    console.log(`ReactionPicker: pre  ferred=${preferred} space=${space} left=${left}`);
     this.setState({
       tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
     });

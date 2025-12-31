@@ -2,6 +2,10 @@ import React from 'react';
 
 const REACTIONS_COLLAPSED_COUNT = 6;
 const MAX_EMOJIS = 40;
+// Where to show the picker initially: 'top', 'left', 'right', 'bottom'
+const DISPLAY_PREFERENCE = 'top';
+const PANEL_MARGIN = 7;
+const TIP_SIZE = 7;
 
 // Compact emoji picker styled like Telegram/WhatsApp
 // Props:
@@ -17,7 +21,8 @@ class ReactionPicker extends React.PureComponent {
       position: { left: '0', top: '0' },
       tailLeft: '12px',
       placeAbove: 'below',
-      expanded: false
+      expanded: false,
+      collapsedHeight: 1000
     };
     this.rootRef = React.createRef();
     this.emojiRefs = [];
@@ -101,12 +106,59 @@ class ReactionPicker extends React.PureComponent {
     const panelRect = this.rootRef.current.getBoundingClientRect();
     const hSize = panelRect.width;
     const vSize = panelRect.height;
+    // Height of the collapsed panel for position calculations.
+    let collapsedHeight;
+    if (hSize < this.state.collapsedHeight) {
+      // Remember collapsed height for future calculations. It does not change.
+      this.setState({ collapsedHeight: vSize });
+      collapsedHeight = vSize;
+    } else {
+      collapsedHeight = this.state.collapsedHeight;
+    }
+    // Choose maximum available space around click point to display the panel.
+    const spaceLeft = this.props.clickAt.x - this.props.viewportBounds.left - hSize - PANEL_MARGIN;
+    const spaceRight = this.props.viewportBounds.right - this.props.clickAt.x - hSize - PANEL_MARGIN;
+    const spaceTop = this.props.clickAt.y - this.props.viewportBounds.top - vSize - PANEL_MARGIN;
+    const spaceBottom = this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN;
 
-    // Calculate left/top so the panel is fully visible within bounds
-    let left = Math.min(6, this.props.viewportBounds.right - this.props.clickAt.x - hSize - 6);
-    // Too close to top: place below, otherwise above.
-    let top = this.props.clickAt.y - this.props.viewportBounds.top > (vSize + 12) ?
-      (-vSize - 7) : (12 + vSize / 2);
+    let preferred = DISPLAY_PREFERENCE;
+    let space = spaceTop;
+    if (space < 0 && space < spaceBottom) {
+      preferred = 'bottom';
+      space = spaceBottom;
+    }
+    if (space < 0 && space < spaceLeft) {
+      preferred = 'left';
+      space = spaceLeft;
+    }
+    if (space < 0 && space < spaceRight) {
+      preferred = 'right';
+    }
+
+    // Calculate left/top so the panel is fully visible within bounds.
+    let left, top;
+    if (preferred === 'top' || preferred === 'bottom') {
+      left = Math.min(-PANEL_MARGIN, this.props.viewportBounds.right - this.props.clickAt.x - hSize);
+      top = preferred === 'top' ? (-vSize - TIP_SIZE) : 24 + TIP_SIZE + PANEL_MARGIN;
+    } else {
+      // Default placement: above or below based on available space for collapsed panel.
+      if (preferred === 'left') {
+        left = -PANEL_MARGIN - hSize;
+      } else { // right
+        left = this.props.clickAt.x + PANEL_MARGIN - this.props.viewportBounds.left;
+      }
+      if (vSize > (this.props.viewportBounds.bottom - this.props.viewportBounds.top)) {
+        // Panel taller than viewport. Align to the exact middle.
+        top = (this.props.viewportBounds.bottom - this.props.viewportBounds.top - vSize) / 2;
+      } else {
+        // Panel shorter than the viewport. Try to keep as close to the original position as possible without
+        // going offscreen.
+        top = Math.min(this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN,
+                       Math.max(-PANEL_MARGIN, this.props.clickAt.y - this.props.viewportBounds.top - vSize / 2));
+      }
+    }
+
+    console.log(`ReactionPicker: pre  ferred=${preferred} space=${space} left=${left}`);
     // Horizontal placement of tail: place close to click position.
     this.setState({ tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px' });
     // Tail placement above or below the panel depends on whether panel is above or below click point.
