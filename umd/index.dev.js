@@ -19803,7 +19803,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const hSize = panelRect.width;
     const vSize = panelRect.height;
     let left = Math.min(6, this.props.viewportBounds.right - this.props.clickAt.x - hSize - 6);
-    let top = this.props.clickAt.y - this.props.viewportBounds.top > vSize + 8 ? -vSize - 7 : 12 + vSize / 2;
+    let top = this.props.clickAt.y - this.props.viewportBounds.top > vSize + 12 ? -vSize - 7 : 12 + vSize / 2;
     this.setState({
       tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
     });
@@ -19850,7 +19850,13 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       role: "button",
       tabIndex: 0,
       "aria-label": `react ${emo}`
-    }, emo)));
+    }, emo)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "reaction-picker-btn",
+      role: "button",
+      onClick: this.expandFullPicker
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "expand_more")));
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (ReactionPicker);

@@ -565,10 +565,6 @@ datalist {
   width: 100%;
 }
 
-:focus-visible {
-  outline: 0.45px solid var(--clr-primary-accent-transparent-medium);
-}
-
 /* END of input and buttons */
 
 /* BEGIN scrollbar styling.  */
@@ -2643,6 +2639,10 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 .reaction-picker-btn:active {
   transform: translateY(0) scale(1);
 }
+.reaction-picker-btn:focus-visible {
+  outline: 0.45px solid var(--clr-primary-accent-transparent-medium);
+}
+
 /* End Reactions UI */
 
 /* The name of the person who sent the message
