@@ -279,7 +279,7 @@ class TinodeWeb extends React.Component {
       callShouldStart: false,
 
       contextMenuVisible: false,
-      contextMenuBounds: null,
+      applicationBounds: null,
       contextMenuClickAt: null,
       contextMenuParams: null,
       contextMenuItems: [],
@@ -1693,7 +1693,7 @@ class TinodeWeb extends React.Component {
       contextMenuClickAt: {x: params.x, y: params.y},
       contextMenuParams: params,
       contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
-      contextMenuBounds: this.selfRef.current.getBoundingClientRect()
+      applicationBounds: this.selfRef.current.getBoundingClientRect()
     });
   }
 
@@ -1777,7 +1777,7 @@ class TinodeWeb extends React.Component {
       contextMenuVisible: false,
       contextMenuClickAt: null,
       contextMenuParams: null,
-      contextMenuBounds: null
+      applicationBounds: null
     });
   }
 
@@ -2084,7 +2084,7 @@ class TinodeWeb extends React.Component {
         {this.state.contextMenuVisible ?
           <ContextMenu
             tinode={this.tinode}
-            bounds={this.state.contextMenuBounds}
+            bounds={this.state.applicationBounds}
             clickAt={this.state.contextMenuClickAt}
             params={this.state.contextMenuParams}
             items={this.state.contextMenuItems}

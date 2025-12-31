@@ -10,13 +10,15 @@ import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
 import { sanitizeUrl } from '../lib/utils.js';
+import ReactionPicker from './reaction-picker.jsx';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      progress: 0
+      progress: 0,
+      showPicker: false
     };
 
     if (props.uploader) {
@@ -29,6 +31,8 @@ class BaseChatMessage extends React.PureComponent {
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleShowPicker = this.handleShowPicker.bind(this);
+    this.handleReactionSelected = this.handleReactionSelected.bind(this);
 
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
@@ -150,6 +154,31 @@ class BaseChatMessage extends React.PureComponent {
     }
   }
 
+  handleShowPicker(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    // Capture click coordinates and app bounds so the picker can position itself.
+    const rect = this.props.parentRef.getBoundingClientRect();
+    this.setState({
+      showPicker: true,
+      pickerClickAt: {
+        x: e.pageX,
+        y: e.pageY
+      },
+      parentBounds: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+      }
+    });
+  }
+
+  handleReactionSelected(e, emo) {
+    this.props.onReact(this.props.seq, emo);
+    this.setState({showPicker: false});
+  }
+
   render() {
     const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
@@ -228,6 +257,34 @@ class BaseChatMessage extends React.PureComponent {
                 </a>
               </span> : null
             }
+          </div>
+          <div className="reactions">
+            {this.props.reactions.map(r => {
+              const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
+              return (
+                <div key={r.value}
+                  data-testid={`reaction-${r.value}`}
+                  className={'reaction' + (you ? ' active' : '')}
+                  onClick={(e) => this.handleReactionSelected(e, r.value)}>
+                  <span className="emoji">{r.value}</span>
+                  <span className="count">{r.count}</span>
+                </div>
+              );
+            })}
+            <div className="reaction-add"
+              data-testid="reaction-add"
+              onClick={this.handleShowPicker}>
+                <i className="material-icons">thumb_up_off_alt</i>
+            </div>
+            {this.state.showPicker ?
+              <ReactionPicker
+                emojis={["👍","❤️","😂","😮","😢","👏"]}
+                onSelect={(emo) => this.handleReactionSelected(null, emo)}
+                onClose={() => this.setState({showPicker: false})}
+                dataTestPrefix="reaction-picker"
+                clickAt={this.state.pickerClickAt}
+                viewportBounds={this.state.parentBounds} />
+              : null}
           </div>
           {fullDisplay ?
             <div className="author">

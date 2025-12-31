@@ -147,7 +147,7 @@ class MessagesView extends React.Component {
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
-    this.mountDnDEvents = this.mountDnDEvents.bind(this);
+    this.mountComponentEvents = this.mountComponentEvents.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
@@ -179,6 +179,8 @@ class MessagesView extends React.Component {
     this.handleCallHangup = this.handleCallHangup.bind(this);
 
     this.isDragEnabled = this.isDragEnabled.bind(this);
+
+    this.handleReact = this.handleReact.bind(this);
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragIn = this.handleDragIn.bind(this);
     this.handleDragOut = this.handleDragOut.bind(this);
@@ -194,7 +196,7 @@ class MessagesView extends React.Component {
     // when the user takes the mouse pointer over the container:
     // for the component itself and for all nested/child elements.
     this.dragCounter = 0;
-    this.dndRef = null;
+    this.componentRef = null;
 
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
@@ -239,7 +241,7 @@ class MessagesView extends React.Component {
     }
 
     // Drag and drop events
-    this.mountDnDEvents(this.dndRef);
+    this.mountComponentEvents(this.componentRef);
 
     this.componentSetup({}, {});
   }
@@ -253,12 +255,12 @@ class MessagesView extends React.Component {
     this.clearNotificationQueue();
 
     // Drag and drop events
-    if (this.dndRef) {
-      this.dndRef.removeEventListener('dragstart', this.handleDragStart);
-      this.dndRef.removeEventListener('dragenter', this.handleDragIn);
-      this.dndRef.removeEventListener('dragleave', this.handleDragOut);
-      this.dndRef.removeEventListener('dragover', this.handleDrag);
-      this.dndRef.removeEventListener('drop', this.handleDrop);
+    if (this.componentRef) {
+      this.componentRef.removeEventListener('dragstart', this.handleDragStart);
+      this.componentRef.removeEventListener('dragenter', this.handleDragIn);
+      this.componentRef.removeEventListener('dragleave', this.handleDragOut);
+      this.componentRef.removeEventListener('dragover', this.handleDrag);
+      this.componentRef.removeEventListener('drop', this.handleDrop);
     }
   }
 
@@ -646,14 +648,14 @@ class MessagesView extends React.Component {
   }
 
   /* Mount drag and drop events */
-  mountDnDEvents(dnd) {
-    if (dnd) {
-      dnd.addEventListener('dragstart', this.handleDragStart);
-      dnd.addEventListener('dragenter', this.handleDragIn);
-      dnd.addEventListener('dragleave', this.handleDragOut);
-      dnd.addEventListener('dragover', this.handleDrag);
-      dnd.addEventListener('drop', this.handleDrop);
-      this.dndRef = dnd;
+  mountComponentEvents(componentRef) {
+    if (componentRef) {
+      componentRef.addEventListener('dragstart', this.handleDragStart);
+      componentRef.addEventListener('dragenter', this.handleDragIn);
+      componentRef.addEventListener('dragleave', this.handleDragOut);
+      componentRef.addEventListener('dragover', this.handleDrag);
+      componentRef.addEventListener('drop', this.handleDrop);
+      this.componentRef = componentRef;
     }
   }
 
@@ -1418,6 +1420,18 @@ class MessagesView extends React.Component {
     this.props.onCancelForwardMessage();
   }
 
+  // Send or remove a reaction on a message.
+  handleReact(seq, emo) {
+    if (!this.state.topic) return;
+    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : null;
+    if (!topic || typeof topic.msgReactions != 'function') return;
+    const myId = this.props.myUserId;
+    // Determine if user already reacted with this emoji.
+    const reactions = topic.msgReactions(seq) || [];
+    const existing = reactions.find(r => r.value == emo && r.users && r.users.includes(myId));
+    const sendEmo = existing ? Tinode.DEL_CHAR : emo;
+    topic.react(seq, sendEmo);
+  }
 
   handleCancelReply() {
     this.setState({reply: null, contentToEdit: null});
@@ -1667,6 +1681,7 @@ class MessagesView extends React.Component {
                 userIsAdmin={this.state.isAdmin}
                 pinned={this.state.pins.includes(msg.seq)}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
+                reactions={topic.msgReactions(msg.seq)}
                 showContextMenu={this.handleShowMessageContextMenu}
                 onExpandMedia={this.handleExpandMedia}
                 onFormResponse={this.handleFormResponse}
@@ -1676,6 +1691,9 @@ class MessagesView extends React.Component {
                 onQuoteClick={this.handleQuoteClick}
                 onAcceptCall={this.props.onAcceptCall}
                 onError={this.props.onError}
+                onReact={this.handleReact}
+                myUserId={this.props.myUserId}
+                parentRef={this.messagesScroller}
                 ref={ref}
                 key={msg.seq} />
             );
@@ -1844,10 +1862,11 @@ class MessagesView extends React.Component {
           </>
         );
       }
-      component = <div id="topic-view" ref={this.mountDnDEvents}>{component2}{overlay}</div>
+      component = <div id="topic-view" ref={this.mountComponentEvents}>{component2}{overlay}</div>
     }
     return component;
   }
 };
 
 export default injectIntl(MessagesView);
+export { MessagesView as UnwrappedMessagesView };

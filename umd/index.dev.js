@@ -8695,7 +8695,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.1";
+const PACKAGE_VERSION = "0.26.0-alpha1";
 
 /***/ }),
 
@@ -9481,6 +9481,9 @@ class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UnwrappedMessagesView: function() { return /* binding */ MessagesView; }
+/* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
@@ -9787,7 +9790,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
-    this.mountDnDEvents = this.mountDnDEvents.bind(this);
+    this.mountComponentEvents = this.mountComponentEvents.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
@@ -9817,6 +9820,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleUnpinMessage = this.handleUnpinMessage.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
     this.isDragEnabled = this.isDragEnabled.bind(this);
+    this.handleReact = this.handleReact.bind(this);
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragIn = this.handleDragIn.bind(this);
     this.handleDragOut = this.handleDragOut.bind(this);
@@ -9826,7 +9830,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
     this.getVisibleMessageRange = this.getVisibleMessageRange.bind(this);
     this.dragCounter = 0;
-    this.dndRef = null;
+    this.componentRef = null;
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
     this.keyPressTimer = null;
@@ -9873,7 +9877,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
-    this.mountDnDEvents(this.dndRef);
+    this.mountComponentEvents(this.componentRef);
     this.componentSetup({}, {});
   }
   componentWillUnmount() {
@@ -9881,12 +9885,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
     this.clearNotificationQueue();
-    if (this.dndRef) {
-      this.dndRef.removeEventListener('dragstart', this.handleDragStart);
-      this.dndRef.removeEventListener('dragenter', this.handleDragIn);
-      this.dndRef.removeEventListener('dragleave', this.handleDragOut);
-      this.dndRef.removeEventListener('dragover', this.handleDrag);
-      this.dndRef.removeEventListener('drop', this.handleDrop);
+    if (this.componentRef) {
+      this.componentRef.removeEventListener('dragstart', this.handleDragStart);
+      this.componentRef.removeEventListener('dragenter', this.handleDragIn);
+      this.componentRef.removeEventListener('dragleave', this.handleDragOut);
+      this.componentRef.removeEventListener('dragover', this.handleDrag);
+      this.componentRef.removeEventListener('drop', this.handleDrop);
     }
   }
   componentDidUpdate(prevProps, prevState) {
@@ -10221,14 +10225,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     this.processingScrollEvent = false;
   }
-  mountDnDEvents(dnd) {
-    if (dnd) {
-      dnd.addEventListener('dragstart', this.handleDragStart);
-      dnd.addEventListener('dragenter', this.handleDragIn);
-      dnd.addEventListener('dragleave', this.handleDragOut);
-      dnd.addEventListener('dragover', this.handleDrag);
-      dnd.addEventListener('drop', this.handleDrop);
-      this.dndRef = dnd;
+  mountComponentEvents(componentRef) {
+    if (componentRef) {
+      componentRef.addEventListener('dragstart', this.handleDragStart);
+      componentRef.addEventListener('dragenter', this.handleDragIn);
+      componentRef.addEventListener('dragleave', this.handleDragOut);
+      componentRef.addEventListener('dragover', this.handleDrag);
+      componentRef.addEventListener('drop', this.handleDrop);
+      this.componentRef = componentRef;
     }
   }
   goToLatestMessage() {
@@ -10881,6 +10885,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     this.props.onCancelForwardMessage();
   }
+  handleReact(seq, emo) {
+    if (!this.state.topic) return;
+    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : null;
+    if (!topic || typeof topic.msgReactions != 'function') return;
+    const myId = this.props.myUserId;
+    const reactions = topic.msgReactions(seq) || [];
+    const existing = reactions.find(r => r.value == emo && r.users && r.users.includes(myId));
+    const sendEmo = existing ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR : emo;
+    topic.react(seq, sendEmo);
+  }
   handleCancelReply() {
     this.setState({
       reply: null,
@@ -11117,6 +11131,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               userIsAdmin: this.state.isAdmin,
               pinned: this.state.pins.includes(msg.seq),
               viewportWidth: this.props.viewportWidth,
+              reactions: topic.msgReactions(msg.seq),
               showContextMenu: this.handleShowMessageContextMenu,
               onExpandMedia: this.handleExpandMedia,
               onFormResponse: this.handleFormResponse,
@@ -11126,6 +11141,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               onQuoteClick: this.handleQuoteClick,
               onAcceptCall: this.props.onAcceptCall,
               onError: this.props.onError,
+              onReact: this.handleReact,
+              myUserId: this.props.myUserId,
+              parentRef: this.messagesScroller,
               ref: ref,
               key: msg.seq
             }));
@@ -11310,7 +11328,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         id: "topic-view",
-        ref: this.mountDnDEvents
+        ref: this.mountComponentEvents
       }, component2, overlay);
     }
     return component;
@@ -11318,6 +11336,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 }
 ;
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(MessagesView));
+
 
 /***/ }),
 
@@ -12314,7 +12333,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       callAudioOnly: undefined,
       callShouldStart: false,
       contextMenuVisible: false,
-      contextMenuBounds: null,
+      applicationBounds: null,
       contextMenuClickAt: null,
       contextMenuParams: null,
       contextMenuItems: [],
@@ -13566,7 +13585,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       },
       contextMenuParams: params,
       contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
-      contextMenuBounds: this.selfRef.current.getBoundingClientRect()
+      applicationBounds: this.selfRef.current.getBoundingClientRect()
     });
   }
   handleShowForwardDialog(params) {
@@ -13639,7 +13658,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       contextMenuVisible: false,
       contextMenuClickAt: null,
       contextMenuParams: null,
-      contextMenuBounds: null
+      applicationBounds: null
     });
   }
   handleHideForwardDialog(keepForwardedMessage) {
@@ -13920,7 +13939,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       ref: this.selfRef
     }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.tinode,
-      bounds: this.state.contextMenuBounds,
+      bounds: this.state.applicationBounds,
       clickAt: this.state.contextMenuClickAt,
       params: this.state.contextMenuParams,
       items: this.state.contextMenuItems,
@@ -16064,7 +16083,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reaction-picker.jsx */ "./src/widgets/reaction-picker.jsx");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
 
 
 
@@ -16077,7 +16098,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   constructor(props) {
     super(props);
     this.state = {
-      progress: 0
+      progress: 0,
+      showPicker: false
     };
     if (props.uploader) {
       props.uploader.onProgress = this.handleProgress.bind(this);
@@ -16088,6 +16110,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleShowPicker = this.handleShowPicker.bind(this);
+    this.handleReactionSelected = this.handleReactionSelected.bind(this);
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
@@ -16199,6 +16223,30 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       this.props.onQuoteClick(replyToSeq);
     }
   }
+  handleShowPicker(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const rect = this.props.parentRef.getBoundingClientRect();
+    this.setState({
+      showPicker: true,
+      pickerClickAt: {
+        x: e.pageX,
+        y: e.pageY
+      },
+      parentBounds: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom
+      }
+    });
+  }
+  handleReactionSelected(e, emo) {
+    this.props.onReact(this.props.seq, emo);
+    this.setState({
+      showPicker: false
+    });
+  }
   render() {
     const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
     const bubbleClass = this.props.sequence == 'single' || this.props.sequence == 'last' ? 'bubble tip' : 'bubble';
@@ -16271,7 +16319,36 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more"))) : null), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "expand_more"))) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "reactions"
+    }, this.props.reactions.map(r => {
+      const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        key: r.value,
+        "data-testid": `reaction-${r.value}`,
+        className: 'reaction' + (you ? ' active' : ''),
+        onClick: e => this.handleReactionSelected(e, r.value)
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: "emoji"
+      }, r.value), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: "count"
+      }, r.count));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "reaction-add",
+      "data-testid": "reaction-add",
+      onClick: this.handleShowPicker
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "thumb_up_off_alt")), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      emojis: ["👍", "❤️", "😂", "😮", "😢", "👏"],
+      onSelect: emo => this.handleReactionSelected(null, emo),
+      onClose: () => this.setState({
+        showPicker: false
+      }),
+      dataTestPrefix: "reaction-picker",
+      clickAt: this.state.pickerClickAt,
+      viewportBounds: this.state.parentBounds
+    }) : null), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "author"
     }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "user_not_found",
@@ -19634,6 +19711,152 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
 
 /***/ }),
 
+/***/ "./src/widgets/reaction-picker.jsx":
+/*!*****************************************!*\
+  !*** ./src/widgets/reaction-picker.jsx ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      position: {
+        left: '0',
+        top: '0'
+      },
+      tailLeft: '12px',
+      placeAbove: 'below'
+    };
+    this.rootRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.emojiRefs = [];
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.selectEmoji = this.selectEmoji.bind(this);
+  }
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleOutsideClick);
+    document.addEventListener('keydown', this.handleKeyDown);
+    setTimeout(() => {
+      if (this.emojiRefs[0]) this.emojiRefs[0].focus();
+    }, 0);
+    this.updatePosition();
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds) {
+      this.updatePosition();
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleOutsideClick);
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+  handleOutsideClick(e) {
+    e.stopPropagation();
+    if (this.rootRef.current && !this.rootRef.current.contains(e.target)) {
+      this.props.onClose();
+    }
+  }
+  handleKeyDown(e) {
+    if (e.key === 'Escape') {
+      this.props.onClose();
+      return;
+    }
+    const active = document.activeElement;
+    const idx = this.emojiRefs.findIndex(el => el === active);
+    if (e.key === 'ArrowRight') {
+      if (idx === -1) {
+        this.emojiRefs[0] && this.emojiRefs[0].focus();
+      } else {
+        const next = (idx + 1) % this.emojiRefs.length;
+        this.emojiRefs[next] && this.emojiRefs[next].focus();
+      }
+      e.preventDefault();
+    } else if (e.key === 'ArrowLeft') {
+      if (idx === -1) {
+        const last = this.emojiRefs.length - 1;
+        this.emojiRefs[last] && this.emojiRefs[last].focus();
+      } else {
+        const prev = (idx - 1 + this.emojiRefs.length) % this.emojiRefs.length;
+        this.emojiRefs[prev] && this.emojiRefs[prev].focus();
+      }
+      e.preventDefault();
+    } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
+      const emo = emojis[idx];
+      this.selectEmoji(emo);
+      e.preventDefault();
+    }
+  }
+  selectEmoji(emo) {
+    this.props.onSelect(emo);
+    this.props.onClose();
+  }
+  updatePosition() {
+    if (!this.rootRef.current) {
+      return;
+    }
+    const panelRect = this.rootRef.current.getBoundingClientRect();
+    const hSize = panelRect.width;
+    const vSize = panelRect.height;
+    let left = Math.min(6, this.props.viewportBounds.right - this.props.clickAt.x - hSize - 6);
+    let top = this.props.clickAt.y - this.props.viewportBounds.top > vSize + 8 ? -vSize - 7 : 12 + vSize / 2;
+    this.setState({
+      tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
+    });
+    this.setState({
+      placeAbove: top < 0 ? 'below' : 'above'
+    });
+    let newPos = {
+      left: left + 'px',
+      top: top + 'px'
+    };
+    const prevPos = this.state.position;
+    if (!prevPos || prevPos.left !== newPos.left || prevPos.top !== newPos.top) {
+      this.setState({
+        position: newPos
+      });
+    }
+  }
+  render() {
+    const prefix = this.props.dataTestPrefix || 'reaction-picker';
+    const style = {
+      ...this.state.position,
+      '--tip-left': this.state.tailLeft
+    };
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      ref: this.rootRef,
+      className: `reaction-picker ${this.state.placeAbove}`,
+      role: "dialog",
+      "aria-label": "emoji picker",
+      style: style
+    }, (this.props.emojis || []).map((emo, i) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      key: emo,
+      ref: el => this.emojiRefs[i] = el,
+      className: "reaction-picker-btn",
+      "data-testid": `${prefix}-${emo}`,
+      onClick: () => {
+        this.selectEmoji(emo);
+      },
+      onKeyDown: e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.selectEmoji(emo);
+        }
+      },
+      role: "button",
+      tabIndex: 0,
+      "aria-label": `react ${emo}`
+    }, emo)));
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (ReactionPicker);
+
+/***/ }),
+
 /***/ "./src/widgets/received-marker.jsx":
 /*!*****************************************!*\
   !*** ./src/widgets/received-marker.jsx ***!
@@ -21238,6 +21461,12 @@ module.exports = tinode;
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
