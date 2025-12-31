@@ -2621,6 +2621,20 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   border-width: 0 7px 7px 7px;
   border-color: transparent transparent var(--clr-bright) transparent;
 }
+/* Expanded picker grid */
+.reaction-picker.expanded {
+  display: grid;
+  padding: 0.6rem;
+  gap: 0.5rem;
+  border-radius: 12px;
+  grid-template-columns: repeat(var(--cols, 6), 46px);
+}
+.reaction-picker.expanded .reaction-picker-btn {
+  width: 46px;
+  height: 46px;
+  font-size: 1.6rem;
+}
+
 .reaction-picker-btn {
   display: inline-flex;
   align-items: center;

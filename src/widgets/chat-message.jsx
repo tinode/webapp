@@ -278,7 +278,14 @@ class BaseChatMessage extends React.PureComponent {
             </div>
             {this.state.showPicker ?
               <ReactionPicker
-                emojis={["👍","❤️","😂","😮","😢","👏"]}
+                emojis={[
+		"👍", "👎", "❤️", "🔥", "🥰", "👏", "😁", "🤔",
+		"🤯", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩",
+		"🙏", "👌", "🕊", "🤡", "🥱", "🥴", "😍", "💯",
+		"🤣", "💔", "🤨", "😐", "🍓", "🍾", "💋", "🖕",
+		"😈", "😴", "😭", "🤓", "👀", "🙈", "😇", "😨",
+		"🤝", "🤗", "🫡", "🗿", "🙉", "😘", "🙊", "😎",
+	]}
                 onSelect={(emo) => this.handleReactionSelected(null, emo)}
                 onClose={() => this.setState({showPicker: false})}
                 dataTestPrefix="reaction-picker"

@@ -1,5 +1,8 @@
 import React from 'react';
 
+const REACTIONS_COLLAPSED_COUNT = 6;
+const MAX_EMOJIS = 40;
+
 // Compact emoji picker styled like Telegram/WhatsApp
 // Props:
 // - emojis: array of emoji strings
@@ -13,7 +16,8 @@ class ReactionPicker extends React.PureComponent {
       // position is an inline style object for the panel
       position: { left: '0', top: '0' },
       tailLeft: '12px',
-      placeAbove: 'below'
+      placeAbove: 'below',
+      expanded: false
     };
     this.rootRef = React.createRef();
     this.emojiRefs = [];
@@ -31,10 +35,11 @@ class ReactionPicker extends React.PureComponent {
     this.updatePosition();
   }
 
-  componentDidUpdate(prevProps) {
-    // Reposition if clickAt or bounds changed
-    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds) {
-      this.updatePosition();
+  componentDidUpdate(prevProps, prevState) {
+    // Reposition if clickAt or bounds changed or expanded state changed
+    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds || prevState.expanded !== this.state.expanded) {
+      // Use a timeout so DOM updates (expanded grid) are applied before measuring.
+      setTimeout(() => this.updatePosition(), 0);
     }
   }
 
@@ -77,6 +82,7 @@ class ReactionPicker extends React.PureComponent {
       }
       e.preventDefault();
     } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
+      const emojis = this.props.emojis;
       const emo = emojis[idx];
       this.selectEmoji(emo);
       e.preventDefault();
@@ -120,7 +126,9 @@ class ReactionPicker extends React.PureComponent {
     return (
       <div ref={this.rootRef} className={`reaction-picker ${this.state.placeAbove}`}
           role="dialog" aria-label="emoji picker" style={style}>
-        {(this.props.emojis || []).map((emo, i) => (
+        {(this.props.emojis || [])
+            .slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT)
+            .map((emo, i) => (
           <div
             key={emo}
             ref={el => this.emojiRefs[i] = el}
@@ -134,9 +142,14 @@ class ReactionPicker extends React.PureComponent {
             {emo}
           </div>
         ))}
-        <div className="reaction-picker-btn" role="button" onClick={this.expandFullPicker}>
-          <i className="material-icons">expand_more</i>
-        </div>
+        {(!this.state.expanded && (this.props.emojis || []).length > REACTIONS_COLLAPSED_COUNT) &&
+          <>
+          <div style={{ borderLeft: '1px solid silver', height: '2rem', margin: '0 auto' }}/>
+          <div className="reaction-picker-btn" role="button" data-testid="reaction-expand"
+              onClick={() => this.setState({expanded: true}, () => this.updatePosition())}>
+            <i className="material-icons">expand_more</i>
+          </div>
+          </>}
       </div>
     );
   }

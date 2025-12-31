@@ -16340,7 +16340,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "thumb_up_off_alt")), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      emojis: ["👍", "❤️", "😂", "😮", "😢", "👏"],
+      emojis: ["👍", "👎", "❤️", "🔥", "🥰", "👏", "😁", "🤔", "🤯", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩", "🙏", "👌", "🕊", "🤡", "🥱", "🥴", "😍", "💯", "🤣", "💔", "🤨", "😐", "🍓", "🍾", "💋", "🖕", "😈", "😴", "😭", "🤓", "👀", "🙈", "😇", "😨", "🤝", "🤗", "🫡", "🗿", "🙉", "😘", "🙊", "😎"],
       onSelect: emo => this.handleReactionSelected(null, emo),
       onClose: () => this.setState({
         showPicker: false
@@ -19721,6 +19721,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+const REACTIONS_COLLAPSED_COUNT = 6;
+const MAX_EMOJIS = 40;
 class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -19730,7 +19732,8 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         top: '0'
       },
       tailLeft: '12px',
-      placeAbove: 'below'
+      placeAbove: 'below',
+      expanded: false
     };
     this.rootRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.emojiRefs = [];
@@ -19746,9 +19749,9 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, 0);
     this.updatePosition();
   }
-  componentDidUpdate(prevProps) {
-    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds) {
-      this.updatePosition();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds || prevState.expanded !== this.state.expanded) {
+      setTimeout(() => this.updatePosition(), 0);
     }
   }
   componentWillUnmount() {
@@ -19786,6 +19789,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }
       e.preventDefault();
     } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
+      const emojis = this.props.emojis;
       const emo = emojis[idx];
       this.selectEmoji(emo);
       e.preventDefault();
@@ -19833,7 +19837,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       role: "dialog",
       "aria-label": "emoji picker",
       style: style
-    }, (this.props.emojis || []).map((emo, i) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, (this.props.emojis || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: emo,
       ref: el => this.emojiRefs[i] = el,
       className: "reaction-picker-btn",
@@ -19850,13 +19854,22 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       role: "button",
       tabIndex: 0,
       "aria-label": `react ${emo}`
-    }, emo)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, emo)), !this.state.expanded && (this.props.emojis || []).length > REACTIONS_COLLAPSED_COUNT && react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      style: {
+        borderLeft: '1px solid silver',
+        height: '90%',
+        margin: '0 auto'
+      }
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reaction-picker-btn",
       role: "button",
-      onClick: this.expandFullPicker
+      "data-testid": "reaction-expand",
+      onClick: () => this.setState({
+        expanded: true
+      }, () => this.updatePosition())
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more")));
+    }, "expand_more"))));
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (ReactionPicker);
