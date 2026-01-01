@@ -1422,15 +1422,8 @@ class MessagesView extends React.Component {
 
   // Send or remove a reaction on a message.
   handleReact(seq, emo) {
-    if (!this.state.topic) return;
-    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : null;
-    if (!topic || typeof topic.msgReactions != 'function') return;
-    const myId = this.props.myUserId;
-    // Determine if user already reacted with this emoji.
-    const reactions = topic.msgReactions(seq) || [];
-    const existing = reactions.find(r => r.value == emo && r.users && r.users.includes(myId));
-    const sendEmo = existing ? Tinode.DEL_CHAR : emo;
-    topic.react(seq, sendEmo);
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.react(seq, emo);
   }
 
   handleCancelReply() {

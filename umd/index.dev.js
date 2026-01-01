@@ -10886,14 +10886,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.props.onCancelForwardMessage();
   }
   handleReact(seq, emo) {
-    if (!this.state.topic) return;
-    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : null;
-    if (!topic || typeof topic.msgReactions != 'function') return;
-    const myId = this.props.myUserId;
-    const reactions = topic.msgReactions(seq) || [];
-    const existing = reactions.find(r => r.value == emo && r.users && r.users.includes(myId));
-    const sendEmo = existing ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR : emo;
-    topic.react(seq, sendEmo);
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.react(seq, emo);
   }
   handleCancelReply() {
     this.setState({
@@ -16097,6 +16091,10 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    const emojis = props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.REACTION_LIST);
+    if (Array.isArray(emojis) && emojis.length > 0) {
+      this.emojis = emojis;
+    }
     this.state = {
       progress: 0,
       showPicker: false
@@ -16320,18 +16318,18 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more"))) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "expand_more"))) : null), this.emojis && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reactions"
     }, this.props.reactions.map(r => {
       const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: r.value,
-        "data-testid": `reaction-${r.value}`,
+        "data-testid": `reaction-${r.val}`,
         className: 'reaction' + (you ? ' active' : ''),
-        onClick: e => this.handleReactionSelected(e, r.value)
+        onClick: e => this.handleReactionSelected(e, r.val)
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "emoji"
-      }, r.value), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      }, r.val), r.count > 1 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "count"
       }, r.count));
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -16341,7 +16339,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "thumb_up_off_alt")), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      emojis: ["👍", "👎", "❤️", "🔥", "🥰", "👏", "😁", "🤔", "🤯", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩", "🙏", "👌", "🕊", "🤡", "🥱", "🥴", "😍", "💯", "🤣", "💔", "🤨", "😐", "🍓", "🍾", "💋", "🖕", "😈", "😴", "😭", "🤓", "👀", "🙈", "😇", "😨", "🤝", "🤗", "🫡", "🗿", "🙉", "😘", "🙊", "😎"],
+      emojis: this.emojis,
       onSelect: emo => this.handleReactionSelected(null, emo),
       onClose: () => this.setState({
         showPicker: false
@@ -19853,7 +19851,6 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         top = Math.min(this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN, Math.max(-PANEL_MARGIN, this.props.clickAt.y - this.props.viewportBounds.top - vSize / 2));
       }
     }
-    console.log(`ReactionPicker: pre  ferred=${preferred} space=${space} left=${left}`);
     this.setState({
       tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
     });

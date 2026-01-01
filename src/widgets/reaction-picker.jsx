@@ -158,7 +158,6 @@ class ReactionPicker extends React.PureComponent {
       }
     }
 
-    console.log(`ReactionPicker: pre  ferred=${preferred} space=${space} left=${left}`);
     // Horizontal placement of tail: place close to click position.
     this.setState({ tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px' });
     // Tail placement above or below the panel depends on whether panel is above or below click point.

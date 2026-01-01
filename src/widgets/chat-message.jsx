@@ -10,11 +10,17 @@ import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
 import { sanitizeUrl } from '../lib/utils.js';
+import { shortenCount } from '../lib/strformat.js';
 import ReactionPicker from './reaction-picker.jsx';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    const emojis = props.tinode.getServerParam(Tinode.REACTION_LIST);
+    if (Array.isArray(emojis) && emojis.length > 0) {
+      this.emojis = emojis;
+    }
 
     this.state = {
       progress: 0,
@@ -261,46 +267,39 @@ class BaseChatMessage extends React.PureComponent {
               </span> : null
             }
           </div>
-          <div className="reactions">
+          {this.emojis && <div className="reactions">
             {this.props.reactions.map(r => {
               const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
               return (
                 <div key={r.value}
-                  data-testid={`reaction-${r.value}`}
+                  data-testid={`reaction-${r.val}`}
                   className={'reaction' + (you ? ' active' : '')}
-                  onClick={(e) => this.handleReactionSelected(e, r.value)}>
-                  <span className="emoji">{r.value}</span>
-                  <span className="count">{r.count}</span>
+                  onClick={(e) => this.handleReactionSelected(e, r.val)}>
+                  <span className="emoji">{r.val}</span>
+                  {r.count > 1 && <span className="count">{shortenCount(r.count)}</span>}
                 </div>
               );
             })}
-            <div className="reaction-add"
-              data-testid="reaction-add"
-              onClick={this.handleShowPicker}>
-                <i className="material-icons">thumb_up_off_alt</i>
-            </div>
-            {this.state.showPicker ?
-              <ReactionPicker
-                emojis={[
-		"👍", "👎", "❤️", "🔥", "🥰", "👏", "😁", "🤔",
-		"🤯", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩",
-		"🙏", "👌", "🕊", "🤡", "🥱", "🥴", "😍", "💯",
-		"🤣", "💔", "🤨", "😐", "🍓", "🍾", "💋", "🖕",
-		"😈", "😴", "😭", "🤓", "👀", "🙈", "😇", "😨",
-		"🤝", "🤗", "🫡", "🗿", "🙉", "😘", "🙊", "😎",
-	]}
-                onSelect={(emo) => this.handleReactionSelected(null, emo)}
-                onClose={() => this.setState({showPicker: false})}
-                dataTestPrefix="reaction-picker"
-                clickAt={this.state.pickerClickAt}
-                viewportBounds={this.state.parentBounds} />
-              : null}
-          </div>
+              <div className="reaction-add"
+                data-testid="reaction-add"
+                onClick={this.handleShowPicker}>
+                  <i className="material-icons">thumb_up_off_alt</i>
+              </div>
+              {this.state.showPicker ?
+                <ReactionPicker
+                  emojis={this.emojis}
+                  onSelect={(emo) => this.handleReactionSelected(null, emo)}
+                  onClose={() => this.setState({showPicker: false})}
+                  dataTestPrefix="reaction-picker"
+                  clickAt={this.state.pickerClickAt}
+                  viewportBounds={this.state.parentBounds} />
+                : null}
+          </div>}
           {fullDisplay ?
             <div className="author">
               {this.props.userName ||
                 <i><FormattedMessage id="user_not_found" defaultMessage="Not found"
-                description="In place of a user's full name when the user is not found." /></i>
+                  description="In place of a user's full name when the user is not found." /></i>
               }
             </div>
             : null

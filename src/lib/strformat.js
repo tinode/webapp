@@ -65,6 +65,18 @@ export function bytesToHumanSize(bytes) {
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
 
+// Shorten a count number: 1234 -> 1.2K, 1234567 -> 1.2M
+export function shortenCount(count) {
+  count = count | 0;
+  if (count < 1000) {
+    return '' + count;
+  }
+  if (count < 1_000_000) {
+    return (count / 1000).toFixed(count < 10_000 ? 1 : 0) + 'K';
+  }
+  return (count / 1_000_000).toFixed(count < 10_000_000 ? 1 : 0) + 'M';
+}
+
 // Shorten a file name to be under maxLength by clipping out the middle.
 export function shortenFileName(filename, maxLength) {
   if (typeof filename != 'string') {
