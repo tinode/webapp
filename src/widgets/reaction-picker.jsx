@@ -159,21 +159,32 @@ class ReactionPicker extends React.PureComponent {
     }
 
     // Horizontal placement of tail: place close to click position.
-    this.setState({ tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px' });
+    if (preferred == 'top' || preferred == 'bottom') {
+      this.setState({ tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px' });
+    } else {
+      this.setState({ tailTop: Math.max(12, Math.min(panelRect.height - 12, Math.max(12, -top))) + 'px' });
+    }
     // Tail placement above or below the panel depends on whether panel is above or below click point.
-    this.setState({ placeAbove: top < 0 ? 'below' : 'above'});
+    this.setState({ placeAbove: preferred });
 
     // Only update state if values changed to avoid rerenders: new object triggers rerender.
     let newPos = { left: left + 'px', top: top + 'px' };
     const prevPos = this.state.position;
-    if (!prevPos || prevPos.left !== newPos.left || prevPos.top !== newPos.top) {
+    if (!prevPos || prevPos.left != newPos.left || prevPos.top != newPos.top) {
       this.setState({ position: newPos });
     }
   }
 
   render() {
     const prefix = this.props.dataTestPrefix || 'reaction-picker';
-    const style = { ...this.state.position, '--tip-left': this.state.tailLeft };
+    const style = { ...this.state.position };
+    if (this.state.placeAbove == 'top' || this.state.placeAbove == 'bottom') {
+      style['--tip-left'] = this.state.tailLeft;
+      style['--tip-top'] = 'unset';
+    } else {
+      style['--tip-left'] = 'unset';
+      style['--tip-top'] = this.state.tailTop;
+    }
     return (
       <div ref={this.rootRef}
           className={`reaction-picker ${this.state.placeAbove} ${this.state.expanded ? 'expanded' : ''} `}

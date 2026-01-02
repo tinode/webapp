@@ -2570,7 +2570,7 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 }
 .reaction.active {
   background: var(--clr-primary-accent);
-  color: var(--clr-bright);
+  color: azure;
   border-color: transparent;
 }
 .reaction .emoji {
@@ -2585,7 +2585,7 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   justify-content: center;
   color: var(--clr-text-tertiary);
   background-color: var(--clr-background-off-white);
-  padding: 0.25rem;
+  padding: 0.28rem;
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
@@ -2615,29 +2615,45 @@ li:hover .reaction-add:hover,
   transition: height 0.3s cubic-bezier(.2,.8,.2,1),
               left 0.3s cubic-bezier(.2,.8,.2,1),
               top 0.3s cubic-bezier(.2,.8,.2,1);
-  max-width: 21rem;
+  max-width: 22rem;
   z-index: 4;
 }
 .reaction-picker.expanded {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  justify-items: center;
 }
 
 .reaction-picker::after {
   content: "";
   position: absolute;
   left: var(--tip-left);
+  top: var(--tip-top);
   border-style: solid;
 }
-.reaction-picker.below::after {
+/* Panel on top, arrow tip pointing down */
+.reaction-picker.top::after {
   bottom: -7px;
-  border-width: 7px 7px 0;
-  border-color: var(--clr-bright) transparent transparent;
+  border-width: 7px 7px 0 7px; /* top, right, bottom, left */
+  border-color: var(--clr-bright) transparent transparent transparent;
 }
-.reaction-picker.above::after {
+/* Panel on the bottom, arrow arrow tip pointing up */
+.reaction-picker.bottom::after {
   top: -7px;
-  border-width: 0 7px 7px 7px;
+  border-width: 0 7px 7px 7px; /* top, right, bottom, left */
   border-color: transparent transparent var(--clr-bright) transparent;
+}
+/* Panel on the left, arrow tip pointing to the right */
+.reaction-picker.left::after {
+  right: -7px;
+  border-width: 7px 0 7px 7px; /* top, right, bottom, left */
+  border-color: transparent transparent transparent var(--clr-bright);
+}
+/* Panel on the right, arrow tip pointing to the left */
+.reaction-picker.right::after {
+  left: -7px;
+  border-width: 7px 7px 7px 0; /* top, right, bottom, left */
+  border-color: transparent var(--clr-bright) transparent transparent;
 }
 /* Expanded picker grid */
 .reaction-picker.expanded {

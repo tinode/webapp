@@ -8362,6 +8362,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   relativeDateFormat: function() { return /* binding */ relativeDateFormat; },
 /* harmony export */   secondsToTime: function() { return /* binding */ secondsToTime; },
 /* harmony export */   shortDateFormat: function() { return /* binding */ shortDateFormat; },
+/* harmony export */   shortenCount: function() { return /* binding */ shortenCount; },
 /* harmony export */   shortenFileName: function() { return /* binding */ shortenFileName; },
 /* harmony export */   truncateString: function() { return /* binding */ truncateString; }
 /* harmony export */ });
@@ -8428,6 +8429,16 @@ function bytesToHumanSize(bytes) {
   const count = bytes / Math.pow(1024, bucket);
   const round = bucket > 0 ? count < 3 ? 2 : count < 30 ? 1 : 0 : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
+}
+function shortenCount(count) {
+  count = count | 0;
+  if (count < 1000) {
+    return '' + count;
+  }
+  if (count < 1_000_000) {
+    return (count / 1000).toFixed(count < 10_000 ? 1 : 0) + 'K';
+  }
+  return (count / 1_000_000).toFixed(count < 10_000_000 ? 1 : 0) + 'M';
 }
 function shortenFileName(filename, maxLength) {
   if (typeof filename != 'string') {
@@ -16077,8 +16088,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reaction-picker.jsx */ "./src/widgets/reaction-picker.jsx");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./reaction-picker.jsx */ "./src/widgets/reaction-picker.jsx");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
 
 
 
@@ -16331,14 +16344,14 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         className: "emoji"
       }, r.val), r.count > 1 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "count"
-      }, r.count));
+      }, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.shortenCount)(r.count)));
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reaction-add",
       "data-testid": "reaction-add",
       onClick: this.handleShowPicker
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "thumb_up_off_alt")), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    }, "thumb_up_off_alt")), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       emojis: this.emojis,
       onSelect: emo => this.handleReactionSelected(null, emo),
       onClose: () => this.setState({
@@ -19851,18 +19864,24 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         top = Math.min(this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN, Math.max(-PANEL_MARGIN, this.props.clickAt.y - this.props.viewportBounds.top - vSize / 2));
       }
     }
+    if (preferred == 'top' || preferred == 'bottom') {
+      this.setState({
+        tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
+      });
+    } else {
+      this.setState({
+        tailTop: Math.max(12, Math.min(panelRect.height - 12, Math.max(12, -top))) + 'px'
+      });
+    }
     this.setState({
-      tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
-    });
-    this.setState({
-      placeAbove: top < 0 ? 'below' : 'above'
+      placeAbove: preferred
     });
     let newPos = {
       left: left + 'px',
       top: top + 'px'
     };
     const prevPos = this.state.position;
-    if (!prevPos || prevPos.left !== newPos.left || prevPos.top !== newPos.top) {
+    if (!prevPos || prevPos.left != newPos.left || prevPos.top != newPos.top) {
       this.setState({
         position: newPos
       });
@@ -19871,9 +19890,15 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   render() {
     const prefix = this.props.dataTestPrefix || 'reaction-picker';
     const style = {
-      ...this.state.position,
-      '--tip-left': this.state.tailLeft
+      ...this.state.position
     };
+    if (this.state.placeAbove == 'top' || this.state.placeAbove == 'bottom') {
+      style['--tip-left'] = this.state.tailLeft;
+      style['--tip-top'] = 'unset';
+    } else {
+      style['--tip-left'] = 'unset';
+      style['--tip-top'] = this.state.tailTop;
+    }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       ref: this.rootRef,
       className: `reaction-picker ${this.state.placeAbove} ${this.state.expanded ? 'expanded' : ''} `,
