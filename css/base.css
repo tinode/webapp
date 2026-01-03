@@ -592,7 +592,7 @@ ul.menu {
   position: absolute;
   list-style: none;
   width: 12rem;
-  border-radius: 0.2rem;
+  border-radius: 0.25rem;
   padding-top: 0.35rem;
   padding-bottom: 0.35rem;
   box-shadow: 0 1px 6px var(--clr-shadow-dialog);
@@ -2612,7 +2612,7 @@ li:hover .reaction-add:hover,
   position: absolute;
   display: flex;
   align-items: center;
-  border-radius: 1.25rem;
+  border-radius: 0.25rem;
   padding: 0.1rem 0.35rem;
   background-color: var(--clr-bright);
   filter: drop-shadow(0 2px 6px var(--clr-shadow-dialog));
@@ -2689,9 +2689,9 @@ li:hover .reaction-add:hover,
 }
 .reaction-picker .divider {
   width: 1px;
-  background-color: var(--clr-border-muted);
   margin: 0 0.25rem;
   height: 2rem;
+  border-left: var(--clr-border-muted) 2px groove;
 }
 /* End Reactions UI */
 

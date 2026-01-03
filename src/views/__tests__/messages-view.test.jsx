@@ -15,7 +15,7 @@ import { Tinode } from 'tinode-sdk';
 const DEL_CHAR = Tinode.DEL_CHAR;
 
 describe('MessagesView.handleReact', () => {
-  test('sends DEL_CHAR when user already reacted with that emoji', () => {
+  test('delegates reaction call to topic.react with the selected emoji', () => {
     const fakeTopic = {
       msgReactions: (seq) => [{value: '❤️', count: 3, users: ['me', 'u2']}],
       react: jest.fn()
@@ -29,16 +29,22 @@ describe('MessagesView.handleReact', () => {
     // Call the handler as defined on the prototype
     UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [1, '❤️']);
 
-    expect(fakeTopic.react).toHaveBeenCalledWith(1, DEL_CHAR);
+    // MessagesView no longer decides delete semantics: it delegates to Topic.react.
+    expect(fakeTopic.react).toHaveBeenCalledWith(1, '❤️');
   });
 
-  test('handleReact is no-op when topic missing or unavailable', () => {
-    // No topic in state
+  test('handleReact throws when tinode or topic is unavailable, succeeds when topic exists', () => {
+    // tinode missing -> throws when trying to call getTopic
     let fakeThis = { state: {}, props: { myUserId: 'me' } };
-    expect(() => UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [1, '👍'])).not.toThrow();
+    expect(() => UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [1, '👍'])).toThrow();
 
-    // Topic name present but tinode.getTopic returns null
+    // tinode.getTopic returns null -> topic is unavailable -> calling topic.react will throw
     fakeThis = { state: {topic: 't2'}, props: { myUserId: 'me', tinode: { getTopic: () => null } } };
+    expect(() => UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [1, '👍'])).toThrow();
+
+    // Valid topic object -> no throw
+    const fakeTopic = { react: jest.fn() };
+    fakeThis = { state: {topic: 't2'}, props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } } };
     expect(() => UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [1, '👍'])).not.toThrow();
   });
 

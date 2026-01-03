@@ -19772,9 +19772,8 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         marginTop: '0'
       },
       tailLeft: '12px',
-      placeAbove: 'below',
-      expanded: false,
-      collapsedHeight: 1000
+      placeAbove: 'top',
+      expanded: false
     };
     this.rootRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.emojiRefs = [];
@@ -19847,15 +19846,6 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const panelRect = this.rootRef.current.getBoundingClientRect();
     const hSize = panelRect.width;
     const vSize = panelRect.height;
-    let collapsedHeight;
-    if (hSize < this.state.collapsedHeight) {
-      this.setState({
-        collapsedHeight: vSize
-      });
-      collapsedHeight = vSize;
-    } else {
-      collapsedHeight = this.state.collapsedHeight;
-    }
     const spaceLeft = this.props.anchor.viewX - this.props.viewportBounds.left - hSize - PANEL_MARGIN * 2 - TIP_SIZE;
     const spaceRight = this.props.viewportBounds.right - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE;
     const spaceTop = this.props.anchor.viewY - this.props.viewportBounds.top - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
@@ -19873,7 +19863,6 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     if (space < 0 && space < spaceRight) {
       preferred = 'right';
     }
-    console.log('Preferred', preferred, 'space', 'space t, r, b, l', spaceTop, spaceRight, spaceBottom, spaceLeft);
     let marginTop, marginLeft;
     if (preferred == 'top' || preferred == 'bottom') {
       if (hSize > this.props.viewportBounds.right - this.props.viewportBounds.left) {

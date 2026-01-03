@@ -26,9 +26,8 @@ class ReactionPicker extends React.PureComponent {
       // position is an inline style object for the panel
       position: { marginLeft: '0', marginTop: '0' },
       tailLeft: '12px',
-      placeAbove: 'below',
-      expanded: false,
-      collapsedHeight: 1000
+      placeAbove: 'top',
+      expanded: false
     };
     this.rootRef = React.createRef();
     this.emojiRefs = [];
@@ -113,15 +112,7 @@ class ReactionPicker extends React.PureComponent {
     const panelRect = this.rootRef.current.getBoundingClientRect();
     const hSize = panelRect.width;
     const vSize = panelRect.height;
-    // Height of the collapsed panel for position calculations.
-    let collapsedHeight;
-    if (hSize < this.state.collapsedHeight) {
-      // Remember collapsed height for future calculations. It does not change.
-      this.setState({ collapsedHeight: vSize });
-      collapsedHeight = vSize;
-    } else {
-      collapsedHeight = this.state.collapsedHeight;
-    }
+
     // Choose maximum available space around click point to display the panel.
     const spaceLeft = this.props.anchor.viewX - this.props.viewportBounds.left - hSize - PANEL_MARGIN * 2 - TIP_SIZE;
     const spaceRight = this.props.viewportBounds.right - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE;
@@ -141,8 +132,6 @@ class ReactionPicker extends React.PureComponent {
     if (space < 0 && space < spaceRight) {
       preferred = 'right';
     }
-
-    console.log('Preferred', preferred, 'space', 'space t, r, b, l', spaceTop, spaceRight, spaceBottom, spaceLeft);
 
     // Calculate left/top/right/bottom so the panel is fully visible within message view bounds.
     let marginTop, marginLeft;
