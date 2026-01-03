@@ -60,6 +60,7 @@ class ReactionPicker extends React.PureComponent {
 
   handleOutsideClick(e) {
     e.stopPropagation();
+    e.preventDefault();
     if (this.rootRef.current && !this.rootRef.current.contains(e.target)) {
       this.props.onClose();
     }

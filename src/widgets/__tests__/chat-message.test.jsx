@@ -8,7 +8,7 @@ import ReactionPicker from '../reaction-picker.jsx';
 
 describe('ChatMessage reactions UI', () => {
   const defaultProps = {
-    tinode: { authorizeURL: () => {} },
+    tinode: { authorizeURL: () => {}, getServerParam: () => ['👍','😂','❤️','e0','e1','e2','e3'] },
     topic: {},
     content: null,
     mimeType: null,
@@ -124,7 +124,7 @@ describe('ChatMessage reactions UI', () => {
       <IntlProvider locale="en">
         {/* Render picker standalone to test expansion UI */}
         <div id="test-host">
-          <ReactionPicker emojis={emojis} onSelect={(emo) => defaultProps.onReact(123, emo)} onClose={() => {}} dataTestPrefix="reaction-picker-test" clickAt={{x:150,y:150}} bounds={{left:0,top:0,right:300,bottom:200,width:300,height:200}} />
+          <ReactionPicker emojis={emojis} onSelect={(emo) => defaultProps.onReact(123, emo)} onClose={() => {}} dataTestPrefix="reaction-picker-test" anchor={{viewX:150,viewY:150,offsetX:150}} viewportBounds={{left:0,top:0,right:300,bottom:200,width:300,height:200}} />
         </div>
       </IntlProvider>
     );

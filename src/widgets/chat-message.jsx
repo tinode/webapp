@@ -37,7 +37,7 @@ class BaseChatMessage extends React.PureComponent {
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.handleShowPicker = this.handleShowPicker.bind(this);
+    this.handleTogglePicker = this.handleTogglePicker.bind(this);
     this.handleReactionSelected = this.handleReactionSelected.bind(this);
 
     this.formatterContext = {
@@ -160,9 +160,13 @@ class BaseChatMessage extends React.PureComponent {
     }
   }
 
-  handleShowPicker(e) {
+  handleTogglePicker(e) {
     e.preventDefault();
-    e.stopPropagation();
+
+    if (this.state.showPicker) {
+      this.setState({showPicker: false});
+      return;
+    }
 
     // Capture app bounds so the picker can position itself.
     // Center of the button is used as the click coordinates.
@@ -272,7 +276,7 @@ class BaseChatMessage extends React.PureComponent {
             {this.props.reactions.map(r => {
               const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
               return (
-                <div key={r.value}
+                <div key={r.val}
                   data-testid={`reaction-${r.val}`}
                   className={'reaction' + (you ? ' active' : '')}
                   onClick={(e) => this.handleReactionSelected(e, r.val)}>
@@ -283,7 +287,8 @@ class BaseChatMessage extends React.PureComponent {
             })}
             <div className="reaction-add"
               data-testid="reaction-add"
-              onClick={this.handleShowPicker}>
+              onMouseDown={(e) => { e.stopPropagation(); }}
+              onClick={this.handleTogglePicker}>
                 <i className="material-icons">thumb_up_off_alt</i>
             </div>
           </div>}

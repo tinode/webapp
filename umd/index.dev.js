@@ -16141,7 +16141,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.handleShowPicker = this.handleShowPicker.bind(this);
+    this.handleTogglePicker = this.handleTogglePicker.bind(this);
     this.handleReactionSelected = this.handleReactionSelected.bind(this);
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
@@ -16254,9 +16254,14 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       this.props.onQuoteClick(replyToSeq);
     }
   }
-  handleShowPicker(e) {
+  handleTogglePicker(e) {
     e.preventDefault();
-    e.stopPropagation();
+    if (this.state.showPicker) {
+      this.setState({
+        showPicker: false
+      });
+      return;
+    }
     const parentRect = this.props.parentRef.getBoundingClientRect();
     const buttonRect = e.target.getBoundingClientRect();
     this.setState({
@@ -16357,7 +16362,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, this.props.reactions.map(r => {
       const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: r.value,
+        key: r.val,
         "data-testid": `reaction-${r.val}`,
         className: 'reaction' + (you ? ' active' : ''),
         onClick: e => this.handleReactionSelected(e, r.val)
@@ -16369,7 +16374,10 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reaction-add",
       "data-testid": "reaction-add",
-      onClick: this.handleShowPicker
+      onMouseDown: e => {
+        e.stopPropagation();
+      },
+      onClick: this.handleTogglePicker
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "thumb_up_off_alt"))), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
@@ -19800,6 +19808,8 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
   handleOutsideClick(e) {
     e.stopPropagation();
+    e.preventDefault();
+    console.log('ReactionPicker handleOutsideClick', e.target);
     if (this.rootRef.current && !this.rootRef.current.contains(e.target)) {
       this.props.onClose();
     }
