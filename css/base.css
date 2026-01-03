@@ -2335,10 +2335,15 @@ video {
 }
 
 .chat-box li {
+  position: relative;
   display: flex;
   margin: 0;
   padding: 0;
   align-items: flex-end;
+}
+
+.chat-box li > div {
+  position: relative;
 }
 
 .chat-box .right {
@@ -2362,23 +2367,23 @@ video {
 }
 
 .chat-box li.single {
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.8rem;
 }
 
 .chat-box li.first {
-  margin-top: 0.25rem;
-  margin-bottom: 0.15rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.25rem;
 }
 
 .chat-box li.middle {
-  margin-top: 0.15rem;
-  margin-bottom: 0.15rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .chat-box li.last {
-  margin-top: 0.15rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.8rem;
 }
 
 .left .bubble {
@@ -2409,8 +2414,8 @@ video {
 
 .chat-box .meta {
   justify-content: center;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 .chat-box .meta .bubble {
@@ -2544,18 +2549,18 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 /* Reactions UI */
 /* Panel with reactions and button to add more */
 .reactions {
+  position: absolute;
   display: flex;
   align-items: center;
-  margin-top: -0.8rem;
+  margin-top: -1.4rem;
   flex-wrap: wrap;
-  position: relative; /* anchor for picker popup */
+  z-index: 1;
 }
 .reaction {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 16px;
+  padding: 0.1rem 0.5rem;
+  border-radius: 14px;
   background: var(--clr-background-extra-light-gray);
   color: var(--clr-text-primary);
   border: 1px solid var(--clr-border-muted);
@@ -2574,7 +2579,7 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   border-color: transparent;
 }
 .reaction .emoji {
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 .reaction .count {
   font-size: 0.85rem; opacity: 0.9;
@@ -2585,14 +2590,14 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   justify-content: center;
   color: var(--clr-text-tertiary);
   background-color: var(--clr-background-off-white);
-  padding: 0.28rem;
+  padding: 0.25rem;
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
   margin-left: 0;
 }
 .reaction-add .material-icons{
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 li:hover .reaction-add {
   opacity: 0.5;
@@ -2607,7 +2612,7 @@ li:hover .reaction-add:hover,
   position: absolute;
   display: flex;
   align-items: center;
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
   padding: 0.1rem 0.35rem;
   background-color: var(--clr-bright);
   filter: drop-shadow(0 2px 6px var(--clr-shadow-dialog));

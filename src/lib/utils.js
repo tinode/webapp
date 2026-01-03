@@ -85,6 +85,32 @@ export function arrayEqual(a, b) {
   return true;
 }
 
+// Shallow compare two objects: compare only own enumerable properties.
+export function objectEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+
+  if (typeof a != 'object' || typeof b != 'object' || a == null || b == null) {
+    return false;
+  }
+
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+
+  if (aKeys.length != bKeys.length) {
+    return false;
+  }
+
+  for (let key of aKeys) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 // Checks (loosely) if the given string is a phone. If so, returns the phone number in a format
 // as close to E.164 as possible.
 export function asPhone(val) {

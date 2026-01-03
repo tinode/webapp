@@ -170,9 +170,10 @@ class BaseChatMessage extends React.PureComponent {
     const buttonRect = e.target.getBoundingClientRect();
     this.setState({
       showPicker: true,
-      pickerClickAt: {
-        x: buttonRect.left + buttonRect.width / 2,
-        y: buttonRect.top + buttonRect.height / 2
+      pickerAnchor: {
+        viewX: buttonRect.left + buttonRect.width / 2,
+        viewY: buttonRect.top + buttonRect.height / 2,
+        offsetX: e.target.offsetLeft
       },
       parentBounds: {
         left: parentRect.left,
@@ -280,21 +281,21 @@ class BaseChatMessage extends React.PureComponent {
                 </div>
               );
             })}
-              <div className="reaction-add"
-                data-testid="reaction-add"
-                onClick={this.handleShowPicker}>
-                  <i className="material-icons">thumb_up_off_alt</i>
-              </div>
-              {this.state.showPicker ?
-                <ReactionPicker
-                  emojis={this.emojis}
-                  onSelect={(emo) => this.handleReactionSelected(null, emo)}
-                  onClose={() => this.setState({showPicker: false})}
-                  dataTestPrefix="reaction-picker"
-                  clickAt={this.state.pickerClickAt}
-                  viewportBounds={this.state.parentBounds} />
-                : null}
+            <div className="reaction-add"
+              data-testid="reaction-add"
+              onClick={this.handleShowPicker}>
+                <i className="material-icons">thumb_up_off_alt</i>
+            </div>
           </div>}
+          {this.state.showPicker ?
+            <ReactionPicker
+              emojis={this.emojis}
+              onSelect={(emo) => this.handleReactionSelected(null, emo)}
+              onClose={() => this.setState({showPicker: false})}
+              dataTestPrefix="reaction-picker"
+              anchor={this.state.pickerAnchor}
+              viewportBounds={this.state.parentBounds} />
+            : null}
           {fullDisplay ?
             <div className="author">
               {this.props.userName ||

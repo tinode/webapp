@@ -8493,6 +8493,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   defaultWallpaper: function() { return /* binding */ defaultWallpaper; },
 /* harmony export */   deliveryMarker: function() { return /* binding */ deliveryMarker; },
 /* harmony export */   isUrlRelative: function() { return /* binding */ isUrlRelative; },
+/* harmony export */   objectEqual: function() { return /* binding */ objectEqual; },
 /* harmony export */   sanitizeUrl: function() { return /* binding */ sanitizeUrl; },
 /* harmony export */   sanitizeUrlForMime: function() { return /* binding */ sanitizeUrlForMime; },
 /* harmony export */   theCard: function() { return /* binding */ theCard; },
@@ -8565,6 +8566,25 @@ function arrayEqual(a, b) {
   b.sort();
   for (let i = 0, l = a.length; i < l; i++) {
     if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+function objectEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (typeof a != 'object' || typeof b != 'object' || a == null || b == null) {
+    return false;
+  }
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length != bKeys.length) {
+    return false;
+  }
+  for (let key of aKeys) {
+    if (a[key] !== b[key]) {
       return false;
     }
   }
@@ -16241,9 +16261,10 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const buttonRect = e.target.getBoundingClientRect();
     this.setState({
       showPicker: true,
-      pickerClickAt: {
-        x: buttonRect.left + buttonRect.width / 2,
-        y: buttonRect.top + buttonRect.height / 2
+      pickerAnchor: {
+        viewX: buttonRect.left + buttonRect.width / 2,
+        viewY: buttonRect.top + buttonRect.height / 2,
+        offsetX: e.target.offsetLeft
       },
       parentBounds: {
         left: parentRect.left,
@@ -16351,16 +16372,16 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onClick: this.handleShowPicker
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "thumb_up_off_alt")), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }, "thumb_up_off_alt"))), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       emojis: this.emojis,
       onSelect: emo => this.handleReactionSelected(null, emo),
       onClose: () => this.setState({
         showPicker: false
       }),
       dataTestPrefix: "reaction-picker",
-      clickAt: this.state.pickerClickAt,
+      anchor: this.state.pickerAnchor,
       viewportBounds: this.state.parentBounds
-    }) : null), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }) : null, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "author"
     }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "user_not_found",
@@ -19732,19 +19753,23 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/utils */ "./src/lib/utils.js");
+
 
 const REACTIONS_COLLAPSED_COUNT = 6;
 const MAX_EMOJIS = 40;
 const DISPLAY_PREFERENCE = 'top';
-const PANEL_MARGIN = 7;
+const PANEL_MARGIN = 8;
 const TIP_SIZE = 7;
+const BUTTON_SIZE = 14;
+const TIP_STOP = 12;
 class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.state = {
       position: {
-        left: '0',
-        top: '0'
+        marginLeft: '0',
+        marginTop: '0'
       },
       tailLeft: '12px',
       placeAbove: 'below',
@@ -19831,10 +19856,10 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     } else {
       collapsedHeight = this.state.collapsedHeight;
     }
-    const spaceLeft = this.props.clickAt.x - this.props.viewportBounds.left - hSize - PANEL_MARGIN;
-    const spaceRight = this.props.viewportBounds.right - this.props.clickAt.x - hSize - PANEL_MARGIN;
-    const spaceTop = this.props.clickAt.y - this.props.viewportBounds.top - vSize - PANEL_MARGIN;
-    const spaceBottom = this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN;
+    const spaceLeft = this.props.anchor.viewX - this.props.viewportBounds.left - hSize - PANEL_MARGIN * 2 - TIP_SIZE;
+    const spaceRight = this.props.viewportBounds.right - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE;
+    const spaceTop = this.props.anchor.viewY - this.props.viewportBounds.top - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
+    const spaceBottom = this.props.viewportBounds.bottom - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
     let preferred = DISPLAY_PREFERENCE;
     let space = spaceTop;
     if (space < 0 && space < spaceBottom) {
@@ -19848,40 +19873,54 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     if (space < 0 && space < spaceRight) {
       preferred = 'right';
     }
-    let left, top;
-    if (preferred === 'top' || preferred === 'bottom') {
-      left = Math.min(-PANEL_MARGIN, this.props.viewportBounds.right - this.props.clickAt.x - hSize);
-      top = preferred === 'top' ? -vSize - TIP_SIZE : 24 + TIP_SIZE + PANEL_MARGIN;
-    } else {
-      if (preferred === 'left') {
-        left = -PANEL_MARGIN - hSize;
+    console.log('Preferred', preferred, 'space', 'space t, r, b, l', spaceTop, spaceRight, spaceBottom, spaceLeft);
+    let marginTop, marginLeft;
+    if (preferred == 'top' || preferred == 'bottom') {
+      if (hSize > this.props.viewportBounds.right - this.props.viewportBounds.left) {
+        marginLeft = (this.props.viewportBounds.right - this.props.viewportBounds.left - hSize) / 2;
       } else {
-        left = this.props.clickAt.x + PANEL_MARGIN - this.props.viewportBounds.left;
+        if (spaceRight > spaceLeft) {
+          marginLeft = -PANEL_MARGIN;
+        } else {
+          const available = this.props.viewportBounds.right - this.props.anchor.viewX - PANEL_MARGIN;
+          marginLeft = Math.min(-PANEL_MARGIN, available - hSize);
+        }
+      }
+      this.setState({
+        tailLeft: Math.max(TIP_STOP, Math.min(panelRect.width - TIP_STOP, this.props.anchor.offsetX - marginLeft)) + 'px'
+      });
+      if (preferred == 'top') {
+        marginTop = -vSize - TIP_SIZE - PANEL_MARGIN - BUTTON_SIZE;
+      } else {
+        marginTop = TIP_SIZE + PANEL_MARGIN;
+      }
+      marginTop = marginTop + 'px';
+      marginLeft = marginLeft + 'px';
+    } else {
+      if (preferred == 'left') {
+        marginLeft = this.props.anchor.offsetX - hSize - TIP_SIZE - PANEL_MARGIN;
+      } else {
+        marginLeft = this.props.anchor.offsetX + PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE;
       }
       if (vSize > this.props.viewportBounds.bottom - this.props.viewportBounds.top) {
-        top = (this.props.viewportBounds.bottom - this.props.viewportBounds.top - vSize) / 2;
+        marginTop = (this.props.viewportBounds.bottom - this.props.viewportBounds.top - vSize) / 2;
       } else {
-        top = Math.min(this.props.viewportBounds.bottom - this.props.clickAt.y - vSize - PANEL_MARGIN, Math.max(-PANEL_MARGIN, this.props.clickAt.y - this.props.viewportBounds.top - vSize / 2));
+        marginTop = Math.min(-(PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE), spaceBottom);
       }
-    }
-    if (preferred == 'top' || preferred == 'bottom') {
       this.setState({
-        tailLeft: Math.max(12, Math.min(panelRect.width - 12, Math.max(12, -left))) + 'px'
+        tailTop: Math.max(TIP_STOP, Math.min(vSize - TIP_STOP, -marginTop - BUTTON_SIZE / 2 - TIP_SIZE)) + 'px'
       });
-    } else {
-      this.setState({
-        tailTop: Math.max(12, Math.min(panelRect.height - 12, Math.max(12, -top))) + 'px'
-      });
+      marginTop = marginTop + 'px';
+      marginLeft = marginLeft + 'px';
     }
     this.setState({
       placeAbove: preferred
     });
     let newPos = {
-      left: left + 'px',
-      top: top + 'px'
+      marginLeft: marginLeft,
+      marginTop: marginTop
     };
-    const prevPos = this.state.position;
-    if (!prevPos || prevPos.left != newPos.left || prevPos.top != newPos.top) {
+    if (!(0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.objectEqual)(this.state.position, newPos)) {
       this.setState({
         position: newPos
       });
@@ -19901,7 +19940,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       ref: this.rootRef,
-      className: `reaction-picker ${this.state.placeAbove} ${this.state.expanded ? 'expanded' : ''} `,
+      className: `reaction-picker ${this.state.placeAbove}${this.state.expanded ? ' expanded' : ''} `,
       role: "dialog",
       "aria-label": "emoji picker",
       style: style
