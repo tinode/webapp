@@ -285,7 +285,7 @@ class BaseChatMessage extends React.PureComponent {
                 </div>
               );
             })}
-            <div className="reaction-add"
+            <div className={`reaction-add${this.state.showPicker ? ' active' : ''}`}
               data-testid="reaction-add"
               onMouseDown={(e) => { e.stopPropagation(); }}
               onClick={this.handleTogglePicker}>

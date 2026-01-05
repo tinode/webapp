@@ -9826,6 +9826,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
+    this.handleReactUpdate = this.handleReactUpdate.bind(this);
     this.handleAuxUpdate = this.handleAuxUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
@@ -9954,6 +9955,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
         topic.onAuxUpdated = this.handleAuxUpdate;
+        topic.onReact = this.handleReactUpdate;
       }
     }
     if (topic) {
@@ -10416,6 +10418,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
+  }
+  handleReactUpdate(seqIds) {
+    if (!this.state.topic) {
+      return;
+    }
+    this.forceUpdate();
   }
   handleAllMessagesReceived(count) {
     this.setState({
@@ -16372,7 +16380,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         className: "count"
       }, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.shortenCount)(r.count)));
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reaction-add",
+      className: `reaction-add${this.state.showPicker ? ' active' : ''}`,
       "data-testid": "reaction-add",
       onMouseDown: e => {
         e.stopPropagation();
@@ -19809,7 +19817,6 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   handleOutsideClick(e) {
     e.stopPropagation();
     e.preventDefault();
-    console.log('ReactionPicker handleOutsideClick', e.target);
     if (this.rootRef.current && !this.rootRef.current.contains(e.target)) {
       this.props.onClose();
     }

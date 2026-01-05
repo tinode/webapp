@@ -152,6 +152,7 @@ class MessagesView extends React.Component {
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
+    this.handleReactUpdate = this.handleReactUpdate.bind(this);
     this.handleAuxUpdate = this.handleAuxUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
@@ -306,6 +307,7 @@ class MessagesView extends React.Component {
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
         topic.onAuxUpdated = this.handleAuxUpdate;
+        topic.onReact = this.handleReactUpdate;
       }
     }
 
@@ -825,6 +827,13 @@ class MessagesView extends React.Component {
     if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
+  }
+
+  handleReactUpdate(seqIds) {
+    if (!this.state.topic) {
+      return;
+    }
+    this.forceUpdate();
   }
 
   handleAllMessagesReceived(count) {

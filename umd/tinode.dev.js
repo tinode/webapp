@@ -3674,7 +3674,7 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         case 'ua':
           cont.seen = {
             when: new Date(),
-            ua: pres.ua
+            ua: pres.val
           };
           break;
         case 'recv':
@@ -3698,6 +3698,13 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
           }
           break;
         case 'del':
+          break;
+        case 'react':
+          cont._processMetaReact(undefined, {
+            seq: pres.seq,
+            user: pres.actor,
+            val: pres.val
+          });
           break;
         default:
           this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
@@ -4023,6 +4030,7 @@ class Topic {
       this.onTagsUpdated = callbacks.onTagsUpdated;
       this.onCredsUpdated = callbacks.onCredsUpdated;
       this.onAuxUpdated = callbacks.onAuxUpdated;
+      this.onReact = callbacks.onReact;
       this.onDeleteTopic = callbacks.onDeleteTopic;
       this.onAllMessagesReceived = callbacks.onAllMessagesReceived;
     }
@@ -4312,6 +4320,9 @@ class Topic {
       if (params.aux) {
         this._processMetaAux(params.aux);
       }
+      if (params.react) {
+        this._processMetaReact(undefined, params.react);
+      }
       return ctrl;
     });
   }
@@ -4382,6 +4393,21 @@ class Topic {
   }
   pinnedTopicRank(topic) {
     return 0;
+  }
+  react(seq, emo) {
+    if (!seq || !emo) {
+      return Promise.reject(new Error("Invalid parameters"));
+    }
+    const curr = this.msgMyReaction(seq);
+    if (curr == emo) {
+      emo = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
+    }
+    this.setMeta({
+      react: {
+        seq: seq,
+        val: emo
+      }
+    });
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -4516,63 +4542,6 @@ class Topic {
       return;
     }
     this._tinode.videoCall(this.name, seq, evt, payload);
-  }
-  react(seq, emo) {
-    if (!seq || !emo) {
-      this._tinode.logger("INFO: Invalid parameters to react()");
-      return;
-    }
-    if (!this._attached) {
-      this._tinode.logger("INFO: Cannot send react note in inactive topic");
-      return;
-    }
-    const msg = this.findMessage(seq);
-    if (!msg) {
-      return;
-    }
-    const reacts = msg.react || [];
-    const myUid = this._tinode.getCurrentUserID();
-    const found = reacts.findIndex(r => r.users.includes(myUid));
-    if (found >= 0) {
-      const existing = reacts[found];
-      if (existing.val == emo) {
-        existing.count--;
-        if (existing.count <= 0) {
-          reacts.splice(found, 1);
-        } else {
-          const userIdx = existing.users.indexOf(myUid);
-          existing.users.splice(userIdx, 1);
-        }
-        emo = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
-      } else {
-        const userIdx = existing.users.indexOf(myUid);
-        existing.users.splice(userIdx, 1);
-        existing.count--;
-        if (existing.count <= 0) {
-          reacts.splice(found, 1);
-        }
-        const emoIndex = reacts.findIndex(r => r.val == emo);
-        if (emoIndex >= 0) {
-          reacts[emoIndex].users.push(myUid);
-          reacts[emoIndex].count++;
-        } else {
-          reacts.push({
-            users: [myUid],
-            count: 1,
-            val: emo
-          });
-        }
-      }
-    } else {
-      reacts.push({
-        users: [myUid],
-        count: 1,
-        val: emo
-      });
-    }
-    this._tinode.react(this.name, seq, emo);
-    this._tinode._db.updMessageReact(this.name, seq, reacts);
-    msg.react = reacts;
   }
   _updateMyReadRecv(what, seq, ts) {
     let oldVal,
@@ -4756,6 +4725,16 @@ class Topic {
       return [];
     }
     return msg.react || [];
+  }
+  msgMyReaction(seq) {
+    const reactions = this.msgReactions(seq);
+    const me = this._tinode.getCurrentUserID();
+    for (let i = 0; i < reactions.length; i++) {
+      if ((reactions[i].users || []).includes(me)) {
+        return reactions[i].val;
+      }
+    }
+    return null;
   }
   msgHasMoreMessages(min, max, newer) {
     const gaps = [];
@@ -5013,22 +4992,8 @@ class Topic {
     if (meta.aux) {
       this._processMetaAux(meta.aux);
     }
-    if (meta.react && Array.isArray(meta.react)) {
-      meta.react.forEach(mr => {
-        const msg = this.findMessage(mr.seq);
-        if (msg) {
-          const reacts = (mr.data || []).map(r => ({
-            val: r.val,
-            count: r.count | 0,
-            users: Array.isArray(r.users) ? r.users.slice() : []
-          }));
-          msg.react = reacts;
-          this._tinode._db.updMessageReact(this.name, mr.seq, msg.react);
-        }
-      });
-      if (this.onData) {
-        this.onData();
-      }
+    if (meta.react) {
+      this._processMetaReact(meta.react);
     }
     if (this.onMeta) {
       this.onMeta(meta);
@@ -5059,6 +5024,13 @@ class Topic {
         break;
       case 'aux':
         this.getMeta(this.startMetaQuery().withAux().build());
+        break;
+      case 'react':
+        this._processMetaReact(undefined, {
+          seq: pres.seq,
+          user: pres.actor,
+          val: pres.val
+        });
         break;
       case 'acs':
         uid = pres.src || this._tinode.getCurrentUserID();
@@ -5196,6 +5168,83 @@ class Topic {
     this._tinode._db.updTopic(this);
     if (this.onAuxUpdated) {
       this.onAuxUpdated(this._aux);
+    }
+  }
+  _handleReactionDiff(msg, delta) {
+    const reacts = [...(msg.react || [])];
+    const user = delta.users[0];
+    const found = reacts.findIndex(r => r.users.includes(user));
+    if (found >= 0) {
+      const existing = reacts[found];
+      if (delta.val == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR || existing.val == delta.val) {
+        existing.count--;
+        if (existing.count <= 0) {
+          reacts.splice(found, 1);
+        } else {
+          const userIdx = existing.users.indexOf(user);
+          existing.users.splice(userIdx, 1);
+        }
+      } else {
+        const userIdx = existing.users.indexOf(user);
+        existing.users.splice(userIdx, 1);
+        existing.count--;
+        if (existing.count <= 0) {
+          reacts.splice(found, 1);
+        }
+        const emoIndex = reacts.findIndex(r => r.val == delta.val);
+        if (emoIndex >= 0) {
+          reacts[emoIndex].users.push(user);
+          reacts[emoIndex].count++;
+        } else {
+          reacts.push({
+            users: [user],
+            count: 1,
+            val: delta.val
+          });
+        }
+      }
+    } else if (delta.val != _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
+      reacts.push({
+        users: [user],
+        count: 1,
+        val: delta.val
+      });
+    }
+    return reacts;
+  }
+  _processMetaReact(reacts, oneReaction) {
+    if (!Array.isArray(reacts)) {
+      reacts = [{
+        _diff: true,
+        seq: oneReaction.seq,
+        data: [{
+          val: oneReaction.val,
+          count: 1,
+          users: [oneReaction.user || this._tinode.getCurrentUserID()]
+        }]
+      }];
+    }
+    const seqIds = [];
+    reacts.forEach(mr => {
+      const msg = this.findMessage(mr.seq);
+      if (msg) {
+        seqIds.push(mr.seq);
+        let upd;
+        if (mr._diff) {
+          upd = this._handleReactionDiff(msg, mr.data[0]);
+        } else {
+          upd = (mr.data || []).map(r => ({
+            val: r.val,
+            count: r.count | 0,
+            users: Array.isArray(r.users) ? r.users.slice() : []
+          }));
+        }
+        msg.react = upd;
+        this._tinode._db.updMessageReact(this.name, mr.seq, msg.react);
+      }
+    });
+    if (this.onReact) {
+      this.onReact(seqIds);
     }
   }
   _processDelMessages(clear, delseq) {
@@ -6767,7 +6816,7 @@ class Tinode {
     const pkt = this.#initPacket('set', topic);
     const what = [];
     if (params) {
-      ['desc', 'sub', 'tags', 'cred', 'aux'].forEach(key => {
+      ['desc', 'sub', 'tags', 'cred', 'aux', 'react'].forEach(key => {
         if (params.hasOwnProperty(key)) {
           what.push(key);
           pkt.set[key] = params[key];

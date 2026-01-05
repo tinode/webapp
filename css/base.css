@@ -2599,7 +2599,8 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 .reaction-add .material-icons{
   font-size: 1.1rem;
 }
-li:hover .reaction-add {
+li:hover .reaction-add,
+.reaction-add.active {
   opacity: 0.5;
 }
 li:hover .reaction-add:hover,
@@ -2692,6 +2693,7 @@ li:hover .reaction-add:hover,
   margin: 0 0.25rem;
   height: 2rem;
   border-left: var(--clr-border-muted) 2px groove;
+  opacity: 0.5;
 }
 /* End Reactions UI */
 
