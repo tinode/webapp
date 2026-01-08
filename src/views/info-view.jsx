@@ -15,6 +15,7 @@ import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import ShowQRCode from '../widgets/show-qrcode.jsx';
 import TopicCommonView from './topic-common-view.jsx';
 import TopicSecurity from '../widgets/topic-security.jsx';
+import TopicReactions from '../widgets/topic-reactions.jsx';
 
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH,
   NO_ACCESS_MODE, TOAST_DURATION } from '../config.js';
@@ -84,6 +85,11 @@ const messages = defineMessages({
     defaultMessage: 'Scan QR Code',
     description: 'Title for scanning QR code'
   },
+  reactions: {
+    id: 'panel_title_reactions',
+    defaultMessage: 'Reactions',
+    description: 'Title for reaction settings panel'
+  },
   text_copied: {
     id: 'text_copied',
     defaultMessage: 'Copied to clipboard',
@@ -150,6 +156,7 @@ class InfoView extends React.Component {
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
+    this.handleUpdateReactions = this.handleUpdateReactions.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
     this.handleBackNavigate = this.handleBackNavigate.bind(this);
   }
@@ -439,6 +446,23 @@ class InfoView extends React.Component {
     this.setState({selectedContact: uid});
   }
 
+  handleUpdateReactions(reactConfig) {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    if (!topic) {
+      return;
+    }
+    // Update aux with new reaction config
+    topic.setMeta({
+      aux: {
+        react: reactConfig
+      }
+    }).then(() => {
+      this.props.onNavigate('info');
+    }).catch(err => {
+      this.props.onError(err.message, 'err');
+    });
+  }
+
   handleBackNavigate() {
     const args = (this.props.panel || 'info').split('/');
     if (args[0] == 'info') {
@@ -495,6 +519,7 @@ class InfoView extends React.Component {
 
     const topic = this.props.tinode.getTopic(this.state.topic);
     const alias = topic && topic.alias();
+    const reactions = this.props.tinode.getServerParam('reactions');
 
     return (
       <div id="info-view">
@@ -577,6 +602,14 @@ class InfoView extends React.Component {
         view == 'qrcode' ?
           <ShowQRCode
             uri={Tinode.URI_TOPIC_ID_PREFIX + this.props.topic}
+            onCancel={this.handleBackNavigate} />
+          :
+        view == 'reactions' ?
+          <TopicReactions
+            react={topic ? topic.aux('react') : null}
+            availableReactions={reactions}
+            maxReactions={this.props.tinode.getServerParam('maxReactions')}
+            onUpdateReactions={this.handleUpdateReactions}
             onCancel={this.handleBackNavigate} />
           :
           <div id="info-view-content" className="scrollable-panel">
@@ -702,6 +735,15 @@ class InfoView extends React.Component {
             }
             {!this.state.isSelf ?
               <><div className="hr" />
+              {this.state.groupTopic && this.state.admin && reactions ?
+                <div className="panel-form-row">
+                  <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('reactions');}}>
+                    <i className="material-icons">thumb_up_off_alt</i>&nbsp;<FormattedMessage id="button_reactions"
+                      defaultMessage="Reactions" description="Navigation button for reactions panel." />
+                  </a>
+                </div>
+                : null
+              }
               <div className="panel-form-row">
                 <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
                   <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"

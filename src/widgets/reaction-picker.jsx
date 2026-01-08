@@ -12,6 +12,8 @@ const TIP_SIZE = 7;
 const BUTTON_SIZE = 14;
 // Distance from edge to tip point
 const TIP_STOP = 12;
+// Left margin of the right-side button.
+const BUBBLE_MARGIN_LEFT = 23;
 
 // Compact emoji picker styled like Telegram/WhatsApp
 // Props:
@@ -25,7 +27,7 @@ class ReactionPicker extends React.PureComponent {
     this.state = {
       // position is an inline style object for the panel
       position: { marginLeft: '0', marginTop: '0' },
-      tailLeft: '12px',
+      tipLeft: '12px',
       placeAbove: 'top',
       expanded: false
     };
@@ -115,13 +117,14 @@ class ReactionPicker extends React.PureComponent {
     const vSize = panelRect.height;
 
     // Choose maximum available space around click point to display the panel.
-    const spaceLeft = this.props.anchor.viewX - this.props.viewportBounds.left - hSize - PANEL_MARGIN * 2 - TIP_SIZE;
-    const spaceRight = this.props.viewportBounds.right - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE;
-    const spaceTop = this.props.anchor.viewY - this.props.viewportBounds.top - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
-    const spaceBottom = this.props.viewportBounds.bottom - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
+    const spaceLeft = this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
+    const spaceRight = this.props.viewportBounds.width - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
+    const spaceTop = this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
+    const spaceBottom = this.props.viewportBounds.height - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE / 2 ;
 
     let preferred = DISPLAY_PREFERENCE;
     let space = spaceTop;
+    let bubbleMargin = spaceRight > spaceLeft ? 0 : BUBBLE_MARGIN_LEFT;
     if (space < 0 && space < spaceBottom) {
       preferred = 'bottom';
       space = spaceBottom;
@@ -134,49 +137,61 @@ class ReactionPicker extends React.PureComponent {
       preferred = 'right';
     }
 
-    // Calculate left/top/right/bottom so the panel is fully visible within message view bounds.
+    // Calculate position so the panel is fully visible within the message view bounds.
     let marginTop, marginLeft;
     if (preferred == 'top' || preferred == 'bottom') {
       // Place panel in such a way than anchor point is under/above the panel.
-      if (hSize > (this.props.viewportBounds.right - this.props.viewportBounds.left)) {
+      if (hSize > this.props.viewportBounds.width) {
         // The panel wider than viewport: align to the exact middle.
-        marginLeft = (this.props.viewportBounds.right - this.props.viewportBounds.left - hSize) / 2;
+        marginLeft = (this.props.viewportBounds.width - hSize) / 2;
       } else {
         if (spaceRight > spaceLeft) {
           // When the bubble is on the left, the margin is fixed.
-          marginLeft = -PANEL_MARGIN;
+          marginLeft = Math.max(-PANEL_MARGIN, this.props.anchor.offsetX - hSize * 0.67 + BUTTON_SIZE / 2);
         } else {
-          // When the bubble is on the right, adjust margin to keep panel inside the viewport.
-          const available = this.props.viewportBounds.right - this.props.anchor.viewX - PANEL_MARGIN;
-          marginLeft = Math.min(-PANEL_MARGIN, available - hSize);
+          // Preferred position: 2/3 of panel width to the left of click point, but make sure panel is fully visible.
+          const available = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
+          const offsetX = this.props.anchor.offsetX - hSize * 0.67;
+          marginLeft = offsetX + Math.min(0, BUBBLE_MARGIN_LEFT + available - hSize * 0.33);
         }
       }
       // Horizontal placement of tail: place close to click position.
-      this.setState({ tailLeft: Math.max(TIP_STOP,
-        Math.min(panelRect.width - TIP_STOP, this.props.anchor.offsetX - marginLeft)) + 'px' });
+      this.setState({ tipLeft: Math.max(TIP_STOP, Math.min(hSize - TIP_STOP - TIP_SIZE * 2,
+        this.props.anchor.offsetX - marginLeft + bubbleMargin)) + 'px' });
       // Fixed vertical positioning: above or below the button.
       if (preferred == 'top') {
-        marginTop = -vSize - TIP_SIZE - PANEL_MARGIN - BUTTON_SIZE;
+        marginTop = this.props.anchor.offsetY - vSize - TIP_SIZE - PANEL_MARGIN;
       } else {
-        marginTop = TIP_SIZE + PANEL_MARGIN;
+        marginTop = this.props.anchor.offsetY + TIP_SIZE + PANEL_MARGIN + BUTTON_SIZE;
       }
       marginTop = marginTop + 'px';
       marginLeft = marginLeft + 'px';
     } else {
       // Left or right placement: panel is too tall to completely display above or below the anchor point.
       if (preferred == 'left') {
-        marginLeft = this.props.anchor.offsetX - hSize - TIP_SIZE - PANEL_MARGIN;
+        marginLeft = this.props.anchor.offsetX - hSize - TIP_SIZE - PANEL_MARGIN + bubbleMargin;
       } else { // right
         marginLeft = this.props.anchor.offsetX + PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE;
       }
-      if (vSize > (this.props.viewportBounds.bottom - this.props.viewportBounds.top)) {
+      if (vSize > this.props.viewportBounds.height) {
         // The panel is taller than viewport: align to the exact middle.
-        marginTop = (this.props.viewportBounds.bottom - this.props.viewportBounds.top - vSize) / 2;
+        marginTop = (this.props.viewportBounds.height - vSize) / 2 - this.props.anchor.viewY;
       } else {
-        marginTop = Math.min(-(PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE), spaceBottom);
+        // Click above or below center of viewport?
+        const above = this.props.viewportBounds.height / 2 > this.props.anchor.viewY;
+        if (above) {
+          // More space below the anchor point (message is close to top).
+          // Keep panel close to top.
+          marginTop = -this.props.anchor.viewY + this.props.anchor.offsetY + PANEL_MARGIN + BUTTON_SIZE / 2;
+        } else {
+          // More space above the anchor point (message is close to bottom).
+          // Keep panel close to top.
+          marginTop = spaceBottom - PANEL_MARGIN + this.props.anchor.offsetY + BUTTON_SIZE / 2;
+        }
       }
       // Vertical placement of tip: place close to the anchor position.
-      this.setState({ tailTop: Math.max(TIP_STOP, Math.min(vSize - TIP_STOP, -marginTop - BUTTON_SIZE/2 - TIP_SIZE)) + 'px' });
+      this.setState({ tipTop: Math.max(TIP_STOP, Math.min(vSize - TIP_STOP - TIP_SIZE * 2,
+         this.props.anchor.offsetY - marginTop)) + 'px' });
       marginTop = marginTop + 'px';
       marginLeft = marginLeft + 'px';
     }
@@ -195,11 +210,11 @@ class ReactionPicker extends React.PureComponent {
     const prefix = this.props.dataTestPrefix || 'reaction-picker';
     const style = { ...this.state.position };
     if (this.state.placeAbove == 'top' || this.state.placeAbove == 'bottom') {
-      style['--tip-left'] = this.state.tailLeft;
+      style['--tip-left'] = this.state.tipLeft;
       style['--tip-top'] = 'unset';
     } else {
       style['--tip-left'] = 'unset';
-      style['--tip-top'] = this.state.tailTop;
+      style['--tip-top'] = this.state.tipTop;
     }
     return (
       <div ref={this.rootRef}

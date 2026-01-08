@@ -6,12 +6,27 @@ import { Drafty, Tinode } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
+import ReactionStrip from './reaction-strip.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
 import { sanitizeUrl } from '../lib/utils.js';
-import { shortenCount } from '../lib/strformat.js';
 import ReactionPicker from './reaction-picker.jsx';
+
+const testReactions = [
+  {val: '👍', count: 2, users: ['user1', 'user2']},
+  {val: '❤️', count: 1, users: ['user3']},
+  {val: '😂', count: 5, users: ['user4', 'user5', 'user6', 'user7', 'user8']},
+  {val: '🔥', count: 3, users: ['user9', 'user10', 'user11']},
+  {val: "🙏", count: 1, users: ['user1']},
+  {val: "✨", count: 2, users: ['user1', 'user2']},
+  {val: "😁", count: 1, users: ['user1']},
+  {val: "😍", count: 1, users: ['user1']},
+  {val: "😊", count: 4, users: ['user1', 'user2', 'user3', 'user4']},
+  {val: "🥰", count: 1, users: ['user1']},
+  {val: "😭", count: 2, users: ['user1', 'user2']},
+  {val: "🙄", count: 1, users: ['user1']}
+];
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -23,8 +38,7 @@ class BaseChatMessage extends React.PureComponent {
     }
 
     this.state = {
-      progress: 0,
-      showPicker: false
+      progress: 0
     };
 
     if (props.uploader) {
@@ -163,8 +177,8 @@ class BaseChatMessage extends React.PureComponent {
   handleTogglePicker(e) {
     e.preventDefault();
 
-    if (this.state.showPicker) {
-      this.setState({showPicker: false});
+    if (this.props.showPicker) {
+      this.props.onToggleReactionPicker(-1);
       return;
     }
 
@@ -173,24 +187,23 @@ class BaseChatMessage extends React.PureComponent {
     const parentRect = this.props.parentRef.getBoundingClientRect();
     const buttonRect = e.target.getBoundingClientRect();
     this.setState({
-      showPicker: true,
       pickerAnchor: {
-        viewX: buttonRect.left + buttonRect.width / 2,
-        viewY: buttonRect.top + buttonRect.height / 2,
-        offsetX: e.target.offsetLeft
+        viewX: buttonRect.left + buttonRect.width / 2 - parentRect.left,
+        viewY: buttonRect.top + buttonRect.height / 2 - parentRect.top,
+        offsetX: e.target.offsetLeft,
+        offsetY: e.target.offsetTop
       },
       parentBounds: {
-        left: parentRect.left,
-        top: parentRect.top,
-        right: parentRect.right,
-        bottom: parentRect.bottom,
+        width: parentRect.right - parentRect.left,
+        height: parentRect.bottom - parentRect.top,
       }
     });
+
+    this.props.onToggleReactionPicker(this.props.seq);
   }
 
   handleReactionSelected(e, emo) {
     this.props.onReact(this.props.seq, emo);
-    this.setState({showPicker: false});
   }
 
   render() {
@@ -257,6 +270,14 @@ class BaseChatMessage extends React.PureComponent {
                 {content}
                 {attachments}
               </div>
+              {this.emojis &&
+                <ReactionStrip
+                  reactions={testReactions || this.props.reactions}
+                  myUserId={this.props.myUserId}
+                  pickerShown={this.props.showPicker}
+                  onTogglePicker={this.handleTogglePicker}
+                  onReactionSelected={this.handleReactionSelected} />
+              }
               {this.props.timestamp ?
                 <ReceivedMarker
                   edited={this.props.edited}
@@ -272,31 +293,11 @@ class BaseChatMessage extends React.PureComponent {
               </span> : null
             }
           </div>
-          {this.emojis && <div className="reactions">
-            {this.props.reactions.map(r => {
-              const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
-              return (
-                <div key={r.val}
-                  data-testid={`reaction-${r.val}`}
-                  className={'reaction' + (you ? ' active' : '')}
-                  onClick={(e) => this.handleReactionSelected(e, r.val)}>
-                  <span className="emoji">{r.val}</span>
-                  {r.count > 1 && <span className="count">{shortenCount(r.count)}</span>}
-                </div>
-              );
-            })}
-            <div className={`reaction-add${this.state.showPicker ? ' active' : ''}`}
-              data-testid="reaction-add"
-              onMouseDown={(e) => { e.stopPropagation(); }}
-              onClick={this.handleTogglePicker}>
-                <i className="material-icons">thumb_up_off_alt</i>
-            </div>
-          </div>}
-          {this.state.showPicker ?
+          {this.props.showPicker ?
             <ReactionPicker
               emojis={this.emojis}
               onSelect={(emo) => this.handleReactionSelected(null, emo)}
-              onClose={() => this.setState({showPicker: false})}
+              onClose={() => this.props.onToggleReactionPicker(-1)}
               dataTestPrefix="reaction-picker"
               anchor={this.state.pickerAnchor}
               viewportBounds={this.state.parentBounds} />

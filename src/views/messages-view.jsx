@@ -182,6 +182,8 @@ class MessagesView extends React.Component {
     this.isDragEnabled = this.isDragEnabled.bind(this);
 
     this.handleReact = this.handleReact.bind(this);
+    this.handleToggleReactionPicker = this.handleToggleReactionPicker.bind(this);
+
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragIn = this.handleDragIn.bind(this);
     this.handleDragOut = this.handleDragOut.bind(this);
@@ -362,7 +364,8 @@ class MessagesView extends React.Component {
         pins: [],
         pinsLoaded: false,
         selectedPin: 0,
-        subsVersion: 0
+        subsVersion: 0,
+        reactionPickerShownFor: -1,
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -383,7 +386,8 @@ class MessagesView extends React.Component {
         showGoToLastButton: false,
         contentToEdit: null,
         dragging: false,
-        selectedPin: 0
+        selectedPin: 0,
+        reactionPickerShownFor: -1,
       };
 
       if (nextProps.forwardMessage) {
@@ -834,6 +838,22 @@ class MessagesView extends React.Component {
       return;
     }
     this.forceUpdate();
+  }
+
+
+  // Send or remove a reaction on a message.
+  handleReact(seq, emo) {
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.react(seq, emo);
+    this.setState({
+      reactionPickerShownFor: -1
+    });
+  }
+
+  handleToggleReactionPicker(seqId) {
+    this.setState({
+      reactionPickerShownFor: (seqId == -1 || this.state.reactionPickerShownFor == seqId) ? -1 : seqId
+    });
   }
 
   handleAllMessagesReceived(count) {
@@ -1429,12 +1449,6 @@ class MessagesView extends React.Component {
     this.props.onCancelForwardMessage();
   }
 
-  // Send or remove a reaction on a message.
-  handleReact(seq, emo) {
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    topic.react(seq, emo);
-  }
-
   handleCancelReply() {
     this.setState({reply: null, contentToEdit: null});
     this.props.onCancelForwardMessage();
@@ -1681,6 +1695,7 @@ class MessagesView extends React.Component {
                 uploader={msg._uploader}
                 userIsWriter={this.state.isWriter}
                 userIsAdmin={this.state.isAdmin}
+                showPicker={this.state.reactionPickerShownFor == msg.seq}
                 pinned={this.state.pins.includes(msg.seq)}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 reactions={topic.msgReactions(msg.seq)}
@@ -1694,6 +1709,7 @@ class MessagesView extends React.Component {
                 onAcceptCall={this.props.onAcceptCall}
                 onError={this.props.onError}
                 onReact={this.handleReact}
+                onToggleReactionPicker={this.handleToggleReactionPicker}
                 myUserId={this.props.myUserId}
                 parentRef={this.messagesScroller}
                 ref={ref}

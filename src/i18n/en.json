@@ -1906,5 +1906,61 @@
     "description": "Label [Scan my ID:]",
     "missing": false,
     "obsolete": false
+  },
+  "button_reactions": {
+    "translation": "Reactions",
+    "defaultMessage": "Reactions",
+    "description": "Navigation button for reactions panel.",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_save": {
+    "translation": "Save",
+    "defaultMessage": "Save",
+    "description": "Button [Save]",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_available_reactions": {
+    "translation": "Available reactions",
+    "defaultMessage": "Available reactions",
+    "description": "Label for available reactions picker",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reaction_settings": {
+    "translation": "Selected reactions",
+    "defaultMessage": "Selected reactions",
+    "description": "Label for topic reaction settings",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_reactions_selected": {
+    "translation": "No reactions selected",
+    "defaultMessage": "No reactions selected",
+    "description": "Shown when no reactions are selected",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_reactions": {
+    "translation": "Reactions",
+    "defaultMessage": "Reactions",
+    "description": "Title for reaction settings panel",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_max_reactions_per_message": {
+    "translation": "Maximum reactions per message",
+    "defaultMessage": "Maximum reaction types per message",
+    "description": "Label for max reactions per message setting",
+    "missing": false,
+    "obsolete": false
+  },
+  "max_reactions_per_message_description": {
+    "translation": "Limit how many different reaction types can be added to a single message.",
+    "defaultMessage": "Limit how many different reaction types can be added to a single message.",
+    "description": "Description of max reactions per message",
+    "missing": false,
+    "obsolete": false
   }
 }

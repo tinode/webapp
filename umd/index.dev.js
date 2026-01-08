@@ -9853,6 +9853,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleCallHangup = this.handleCallHangup.bind(this);
     this.isDragEnabled = this.isDragEnabled.bind(this);
     this.handleReact = this.handleReact.bind(this);
+    this.handleToggleReactionPicker = this.handleToggleReactionPicker.bind(this);
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragIn = this.handleDragIn.bind(this);
     this.handleDragOut = this.handleDragOut.bind(this);
@@ -10005,7 +10006,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         pins: [],
         pinsLoaded: false,
         selectedPin: 0,
-        subsVersion: 0
+        subsVersion: 0,
+        reactionPickerShownFor: -1
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -10025,7 +10027,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         showGoToLastButton: false,
         contentToEdit: null,
         dragging: false,
-        selectedPin: 0
+        selectedPin: 0,
+        reactionPickerShownFor: -1
       };
       if (nextProps.forwardMessage) {
         nextState.reply = {
@@ -10424,6 +10427,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
     this.forceUpdate();
+  }
+  handleReact(seq, emo) {
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.react(seq, emo);
+    this.setState({
+      reactionPickerShownFor: -1
+    });
+  }
+  handleToggleReactionPicker(seqId) {
+    this.setState({
+      reactionPickerShownFor: seqId == -1 || this.state.reactionPickerShownFor == seqId ? -1 : seqId
+    });
   }
   handleAllMessagesReceived(count) {
     this.setState({
@@ -10924,10 +10939,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     this.props.onCancelForwardMessage();
   }
-  handleReact(seq, emo) {
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    topic.react(seq, emo);
-  }
   handleCancelReply() {
     this.setState({
       reply: null,
@@ -11162,6 +11173,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               uploader: msg._uploader,
               userIsWriter: this.state.isWriter,
               userIsAdmin: this.state.isAdmin,
+              showPicker: this.state.reactionPickerShownFor == msg.seq,
               pinned: this.state.pins.includes(msg.seq),
               viewportWidth: this.props.viewportWidth,
               reactions: topic.msgReactions(msg.seq),
@@ -11175,6 +11187,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               onAcceptCall: this.props.onAcceptCall,
               onError: this.props.onError,
               onReact: this.handleReact,
+              onToggleReactionPicker: this.handleToggleReactionPicker,
               myUserId: this.props.myUserId,
               parentRef: this.messagesScroller,
               ref: ref,
@@ -16113,10 +16126,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reaction-strip.jsx */ "./src/widgets/reaction-strip.jsx");
+/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./reaction-picker.jsx */ "./src/widgets/reaction-picker.jsx");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
@@ -16129,6 +16142,55 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 
 
 
+const testReactions = [{
+  val: '👍',
+  count: 2,
+  users: ['user1', 'user2']
+}, {
+  val: '❤️',
+  count: 1,
+  users: ['user3']
+}, {
+  val: '😂',
+  count: 5,
+  users: ['user4', 'user5', 'user6', 'user7', 'user8']
+}, {
+  val: '🔥',
+  count: 3,
+  users: ['user9', 'user10', 'user11']
+}, {
+  val: "🙏",
+  count: 1,
+  users: ['user1']
+}, {
+  val: "✨",
+  count: 2,
+  users: ['user1', 'user2']
+}, {
+  val: "😁",
+  count: 1,
+  users: ['user1']
+}, {
+  val: "😍",
+  count: 1,
+  users: ['user1']
+}, {
+  val: "😊",
+  count: 4,
+  users: ['user1', 'user2', 'user3', 'user4']
+}, {
+  val: "🥰",
+  count: 1,
+  users: ['user1']
+}, {
+  val: "😭",
+  count: 2,
+  users: ['user1', 'user2']
+}, {
+  val: "🙄",
+  count: 1,
+  users: ['user1']
+}];
 class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -16137,8 +16199,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       this.emojis = emojis;
     }
     this.state = {
-      progress: 0,
-      showPicker: false
+      progress: 0
     };
     if (props.uploader) {
       props.uploader.onProgress = this.handleProgress.bind(this);
@@ -16196,7 +16257,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       data.resp[e.target.dataset.name] = e.target.dataset.val ? e.target.dataset.val : e.target.dataset.val === undefined ? 1 : '' + e.target.dataset.val;
     }
     if (e.target.dataset.act == 'url') {
-      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
+      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
     }
     const text = e.target.dataset.title || 'unknown';
     this.props.onFormResponse(e.target.dataset.act, text, data);
@@ -16264,34 +16325,28 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   }
   handleTogglePicker(e) {
     e.preventDefault();
-    if (this.state.showPicker) {
-      this.setState({
-        showPicker: false
-      });
+    if (this.props.showPicker) {
+      this.props.onToggleReactionPicker(-1);
       return;
     }
     const parentRect = this.props.parentRef.getBoundingClientRect();
     const buttonRect = e.target.getBoundingClientRect();
     this.setState({
-      showPicker: true,
       pickerAnchor: {
-        viewX: buttonRect.left + buttonRect.width / 2,
-        viewY: buttonRect.top + buttonRect.height / 2,
-        offsetX: e.target.offsetLeft
+        viewX: buttonRect.left + buttonRect.width / 2 - parentRect.left,
+        viewY: buttonRect.top + buttonRect.height / 2 - parentRect.top,
+        offsetX: e.target.offsetLeft,
+        offsetY: e.target.offsetTop
       },
       parentBounds: {
-        left: parentRect.left,
-        top: parentRect.top,
-        right: parentRect.right,
-        bottom: parentRect.bottom
+        width: parentRect.right - parentRect.left,
+        height: parentRect.bottom - parentRect.top
       }
     });
+    this.props.onToggleReactionPicker(this.props.seq);
   }
   handleReactionSelected(e, emo) {
     this.props.onReact(this.props.seq, emo);
-    this.setState({
-      showPicker: false
-    });
   }
   render() {
     const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
@@ -16319,7 +16374,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           key: i
         }));
       }, this);
-      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.fullFormatter, this.formatterContext);
+      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.fullFormatter, this.formatterContext);
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
     } else if (typeof content == 'string') {
       if (new RegExp('^\\p{RGI_Emoji}{1,5}$', 'v').test(content || '')) {
@@ -16354,7 +16409,13 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "content-meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: textSizeClass
-    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, content, attachments), this.emojis && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      reactions: testReactions || this.props.reactions,
+      myUserId: this.props.myUserId,
+      pickerShown: this.props.showPicker,
+      onTogglePicker: this.handleTogglePicker,
+      onReactionSelected: this.handleReactionSelected
+    }), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       edited: this.props.edited,
       timestamp: this.props.timestamp,
       received: this.props.received
@@ -16365,35 +16426,10 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more"))) : null), this.emojis && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reactions"
-    }, this.props.reactions.map(r => {
-      const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: r.val,
-        "data-testid": `reaction-${r.val}`,
-        className: 'reaction' + (you ? ' active' : ''),
-        onClick: e => this.handleReactionSelected(e, r.val)
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "emoji"
-      }, r.val), r.count > 1 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "count"
-      }, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.shortenCount)(r.count)));
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `reaction-add${this.state.showPicker ? ' active' : ''}`,
-      "data-testid": "reaction-add",
-      onMouseDown: e => {
-        e.stopPropagation();
-      },
-      onClick: this.handleTogglePicker
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "thumb_up_off_alt"))), this.state.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }, "expand_more"))) : null), this.props.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       emojis: this.emojis,
       onSelect: emo => this.handleReactionSelected(null, emo),
-      onClose: () => this.setState({
-        showPicker: false
-      }),
+      onClose: () => this.props.onToggleReactionPicker(-1),
       dataTestPrefix: "reaction-picker",
       anchor: this.state.pickerAnchor,
       viewportBounds: this.state.parentBounds
@@ -19779,6 +19815,7 @@ const PANEL_MARGIN = 8;
 const TIP_SIZE = 7;
 const BUTTON_SIZE = 14;
 const TIP_STOP = 12;
+const BUBBLE_MARGIN_LEFT = 23;
 class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -19787,7 +19824,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         marginLeft: '0',
         marginTop: '0'
       },
-      tailLeft: '12px',
+      tipLeft: '12px',
       placeAbove: 'top',
       expanded: false
     };
@@ -19863,12 +19900,13 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const panelRect = this.rootRef.current.getBoundingClientRect();
     const hSize = panelRect.width;
     const vSize = panelRect.height;
-    const spaceLeft = this.props.anchor.viewX - this.props.viewportBounds.left - hSize - PANEL_MARGIN * 2 - TIP_SIZE;
-    const spaceRight = this.props.viewportBounds.right - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE;
-    const spaceTop = this.props.anchor.viewY - this.props.viewportBounds.top - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
-    const spaceBottom = this.props.viewportBounds.bottom - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE;
+    const spaceLeft = this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
+    const spaceRight = this.props.viewportBounds.width - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
+    const spaceTop = this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
+    const spaceBottom = this.props.viewportBounds.height - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE / 2;
     let preferred = DISPLAY_PREFERENCE;
     let space = spaceTop;
+    let bubbleMargin = spaceRight > spaceLeft ? 0 : BUBBLE_MARGIN_LEFT;
     if (space < 0 && space < spaceBottom) {
       preferred = 'bottom';
       space = spaceBottom;
@@ -19882,39 +19920,45 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }
     let marginTop, marginLeft;
     if (preferred == 'top' || preferred == 'bottom') {
-      if (hSize > this.props.viewportBounds.right - this.props.viewportBounds.left) {
-        marginLeft = (this.props.viewportBounds.right - this.props.viewportBounds.left - hSize) / 2;
+      if (hSize > this.props.viewportBounds.width) {
+        marginLeft = (this.props.viewportBounds.width - hSize) / 2;
       } else {
         if (spaceRight > spaceLeft) {
-          marginLeft = -PANEL_MARGIN;
+          marginLeft = Math.max(-PANEL_MARGIN, this.props.anchor.offsetX - hSize * 0.67 + BUTTON_SIZE / 2);
         } else {
-          const available = this.props.viewportBounds.right - this.props.anchor.viewX - PANEL_MARGIN;
-          marginLeft = Math.min(-PANEL_MARGIN, available - hSize);
+          const available = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
+          const offsetX = this.props.anchor.offsetX - hSize * 0.67;
+          marginLeft = offsetX + Math.min(0, BUBBLE_MARGIN_LEFT + available - hSize * 0.33);
         }
       }
       this.setState({
-        tailLeft: Math.max(TIP_STOP, Math.min(panelRect.width - TIP_STOP, this.props.anchor.offsetX - marginLeft)) + 'px'
+        tipLeft: Math.max(TIP_STOP, Math.min(hSize - TIP_STOP - TIP_SIZE * 2, this.props.anchor.offsetX - marginLeft + bubbleMargin)) + 'px'
       });
       if (preferred == 'top') {
-        marginTop = -vSize - TIP_SIZE - PANEL_MARGIN - BUTTON_SIZE;
+        marginTop = this.props.anchor.offsetY - vSize - TIP_SIZE - PANEL_MARGIN;
       } else {
-        marginTop = TIP_SIZE + PANEL_MARGIN;
+        marginTop = this.props.anchor.offsetY + TIP_SIZE + PANEL_MARGIN + BUTTON_SIZE;
       }
       marginTop = marginTop + 'px';
       marginLeft = marginLeft + 'px';
     } else {
       if (preferred == 'left') {
-        marginLeft = this.props.anchor.offsetX - hSize - TIP_SIZE - PANEL_MARGIN;
+        marginLeft = this.props.anchor.offsetX - hSize - TIP_SIZE - PANEL_MARGIN + bubbleMargin;
       } else {
         marginLeft = this.props.anchor.offsetX + PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE;
       }
-      if (vSize > this.props.viewportBounds.bottom - this.props.viewportBounds.top) {
-        marginTop = (this.props.viewportBounds.bottom - this.props.viewportBounds.top - vSize) / 2;
+      if (vSize > this.props.viewportBounds.height) {
+        marginTop = (this.props.viewportBounds.height - vSize) / 2 - this.props.anchor.viewY;
       } else {
-        marginTop = Math.min(-(PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE), spaceBottom);
+        const above = this.props.viewportBounds.height / 2 > this.props.anchor.viewY;
+        if (above) {
+          marginTop = -this.props.anchor.viewY + this.props.anchor.offsetY + PANEL_MARGIN + BUTTON_SIZE / 2;
+        } else {
+          marginTop = spaceBottom - PANEL_MARGIN + this.props.anchor.offsetY + BUTTON_SIZE / 2;
+        }
       }
       this.setState({
-        tailTop: Math.max(TIP_STOP, Math.min(vSize - TIP_STOP, -marginTop - BUTTON_SIZE / 2 - TIP_SIZE)) + 'px'
+        tipTop: Math.max(TIP_STOP, Math.min(vSize - TIP_STOP - TIP_SIZE * 2, this.props.anchor.offsetY - marginTop)) + 'px'
       });
       marginTop = marginTop + 'px';
       marginLeft = marginLeft + 'px';
@@ -19938,11 +19982,11 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       ...this.state.position
     };
     if (this.state.placeAbove == 'top' || this.state.placeAbove == 'bottom') {
-      style['--tip-left'] = this.state.tailLeft;
+      style['--tip-left'] = this.state.tipLeft;
       style['--tip-top'] = 'unset';
     } else {
       style['--tip-left'] = 'unset';
-      style['--tip-top'] = this.state.tailTop;
+      style['--tip-top'] = this.state.tipTop;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       ref: this.rootRef,
@@ -19982,6 +20026,52 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (ReactionPicker);
+
+/***/ }),
+
+/***/ "./src/widgets/reaction-strip.jsx":
+/*!****************************************!*\
+  !*** ./src/widgets/reaction-strip.jsx ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+
+
+const MAX_REACTIONS_SHOWN = 6;
+class ReactionStrip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  render() {
+    const more = this.props.reactions.length - MAX_REACTIONS_SHOWN;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "reactions"
+    }, this.props.reactions.slice(0, MAX_REACTIONS_SHOWN).map(r => {
+      const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        key: r.val,
+        "data-testid": `reaction-${r.val}`,
+        className: 'reaction' + (you ? ' active' : ''),
+        onClick: e => this.props.onReactionSelected(e, r.val)
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: "emoji"
+      }, r.val), r.count > 1 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: "count"
+      }, (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.shortenCount)(r.count)));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: `reaction-add${this.props.pickerShown || more > 0 ? ' active' : ''}`,
+      "data-testid": "reaction-add",
+      onMouseDown: e => {
+        e.stopPropagation();
+      },
+      onClick: this.props.onTogglePicker
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, more > 0 ? 'more_horiz' : 'thumb_up_off_alt')));
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (ReactionStrip);
 
 /***/ }),
 

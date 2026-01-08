@@ -1906,5 +1906,68 @@
     "description": "Label [Scan my ID:]",
     "missing": false,
     "obsolete": false
+  },
+  "button_reactions": {
+    "translation": "",
+    "defaultMessage": "Reactions",
+    "description": "Navigation button for reactions panel.",
+    "missing": true,
+    "obsolete": false
+  },
+  "button_save": {
+    "translation": "",
+    "defaultMessage": "Save",
+    "description": "Button [Save]",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_available_reactions": {
+    "translation": "",
+    "defaultMessage": "Available reactions",
+    "description": "Label for available reactions picker",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_reaction_settings": {
+    "translation": "",
+    "defaultMessage": "Selected reactions",
+    "description": "Label for topic reaction settings",
+    "missing": true,
+    "obsolete": false
+  },
+  "no_reactions_selected": {
+    "translation": "",
+    "defaultMessage": "No reactions selected",
+    "description": "Shown when no reactions are selected",
+    "missing": true,
+    "obsolete": false
+  },
+  "panel_title_reactions": {
+    "translation": "",
+    "defaultMessage": "Reactions",
+    "description": "Title for reaction settings panel",
+    "missing": true,
+    "obsolete": false
+  },
+  "reaction_settings_description": {
+    "translation": "",
+    "defaultMessage": "Select reactions for this topic.",
+    "description": "Description of reaction settings",
+    "missing": true,
+    "obsolete": true
+  },
+  "label_max_reactions_per_message": {
+    "translation": "",
+    "defaultMessage": "Maximum reaction types per message",
+    "description": "Label for max reactions per message setting",
+    "missing": true,
+    "obsolete": false
+  },
+  "max_reactions_per_message_description": {
+    "translation": "",
+    "defaultMessage": "Limit how many different reaction types can be added to a single message.",
+    "description": "Description of max reactions per message",
+    "missing": true,
+    "obsolete": false
   }
 }

@@ -51,6 +51,7 @@
   --clr-background-off-white: light-dark(#fafafa, #222); /* Common very light background */
   --clr-background-light-gray: light-dark(#f0f0f0, #0f0f0f); /* HR background, action button hover */
   --clr-background-extra-light-gray: light-dark(#eee, #222); /* Flat button faux bg, tabbar bg, chip bg */
+  --clr-background-reaction: light-dark(#eee, #354146); /* Reactions background */
   --clr-background-blue-gray-50: light-dark(#edf0f2, #202c33); /* Contact hover, messages panel, send message panel */
   --clr-background-blue-gray-75: light-dark(#e1e8eb, #182124); /* Contact pinned */
   --clr-background-blue-gray-100: light-dark(#cfd8dc, #20272a); /* Contact selected, uploader bar */
@@ -2344,6 +2345,8 @@ video {
 
 .chat-box li > div {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-box .right {
@@ -2549,26 +2552,33 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 /* Reactions UI */
 /* Panel with reactions and button to add more */
 .reactions {
-  position: absolute;
-  display: flex;
+  position: static;
+  display: inline-flex;
   align-items: center;
-  margin-top: -1.4rem;
   flex-wrap: wrap;
-  z-index: 1;
+  overflow: clip;
+  overflow-clip-margin: 0.25rem;
+  margin-bottom: -0.6rem;
+  margin-right: 0.25rem;
+  margin-top: 0.6rem;
 }
 .reaction {
+  position: relative;
   display: inline-flex;
+  gap: 0.25rem;
   align-items: center;
   padding: 0.1rem 0.5rem;
   border-radius: 14px;
-  background: var(--clr-background-extra-light-gray);
+  background: var(--clr-background-reaction);
   color: var(--clr-text-primary);
-  border: 1px solid var(--clr-border-muted);
   cursor: pointer;
   font-size: 0.95rem;
+  opacity: 0.85;
+  box-shadow: 0.5px 0.5px 2px var(--clr-shadow-silver-subtle);
+
 }
 .reaction:not(:first-child) {
-  margin-left: -0.35rem;
+  margin-left: -0.15rem;
 }
 .reaction:hover {
   background: var(--clr-primary-wash);
@@ -2692,10 +2702,78 @@ li:hover .reaction-add:hover,
   width: 1px;
   margin: 0 0.25rem;
   height: 2rem;
-  border-left: var(--clr-border-muted) 2px groove;
-  opacity: 0.5;
+  border-left: var(--clr-border-muted) 1.5px groove;
+  opacity: 0.35;
 }
 /* End Reactions UI */
+
+/* Topic Reactions Settings Panel */
+/* Container for the selected reactions palette */
+#topic-reactions .selected-reactions-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 3.9rem;
+  padding: 0.5rem;
+  border: 1px solid var(--clr-border-light);
+  border-radius: 0.25rem;
+  background-color: var(--clr-background-off-white);
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+}
+
+/* Empty state message in selected reactions palette */
+#topic-reactions .selected-reactions-empty {
+  color: var(--clr-text-tertiary);
+  align-self: center;
+  font-weight: 300;
+}
+
+/* Individual selected reaction emoji */
+#topic-reactions .selected-reaction {
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.2rem;
+  background-color: var(--clr-primary-accent);
+  color: var(--clr-bright);
+  user-select: none;
+}
+
+/* Container for the available reactions grid */
+#topic-reactions .available-reactions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  justify-content: center;
+}
+
+/* Individual available reaction emoji */
+#topic-reactions .available-reaction {
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  background-color: var(--clr-transparent);
+  border: 2px solid var(--clr-transparent);
+  user-select: none;
+  transition: all 0.2s;
+}
+
+/* Selected state for available reaction */
+#topic-reactions .available-reaction.selected {
+  background-color: var(--clr-background-off-white);
+  opacity: 0.3;
+  border: 2px solid var(--clr-primary-accent);
+}
+
+/* Disabled state for available reaction */
+#topic-reactions .available-reaction.disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
 
 /* The name of the person who sent the message
  * (group chat only)
@@ -2804,7 +2882,7 @@ img.image-preview::before {
   display: flex;
 }
 .attachment:last-of-type {
-  margin-bottom: -0.45rem;
+  margin-bottom: -0.25rem;
 }
 
 /* END of talk bubbles */
@@ -3921,3 +3999,4 @@ div.toast.show {
     border-radius: unset;
   }
 }
+

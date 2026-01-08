@@ -103,6 +103,10 @@
     "defaultMessage": "OK",
     "description": "Button [OK]"
   },
+  "button_reactions": {
+    "defaultMessage": "Reactions",
+    "description": "Navigation button for reactions panel."
+  },
   "button_reset": {
     "defaultMessage": "Reset",
     "description": "Button [Reset]"
@@ -110,6 +114,10 @@
   "button_restore": {
     "defaultMessage": "Restore default",
     "description": "Reset setting to default"
+  },
+  "button_save": {
+    "defaultMessage": "Save",
+    "description": "Button [Save]"
   },
   "button_security": {
     "defaultMessage": "Security",
@@ -410,6 +418,10 @@
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias"
   },
+  "label_available_reactions": {
+    "defaultMessage": "Available reactions",
+    "description": "Label for available reactions picker"
+  },
   "label_blur_wallpaper": {
     "defaultMessage": "Blur:",
     "description": "Label adjusting blur amount"
@@ -450,6 +462,10 @@
     "defaultMessage": "Keyboard:",
     "description": "Label for send on enter settings"
   },
+  "label_max_reactions_per_message": {
+    "defaultMessage": "Maximum reaction types per message",
+    "description": "Label for max reactions per message setting"
+  },
   "label_member_count": {
     "defaultMessage": "Members:",
     "description": "Label for the count of group topic members"
@@ -489,6 +505,10 @@
   "label_push_notifications_disabled": {
     "defaultMessage": "Notification alerts (requires HTTPS):",
     "description": "Label for push notifications switch"
+  },
+  "label_reaction_settings": {
+    "defaultMessage": "Selected reactions",
+    "description": "Label for topic reaction settings"
   },
   "label_reset_password": {
     "defaultMessage": "Send a password reset email",
@@ -591,6 +611,10 @@
   "login_prompt": {
     "defaultMessage": "Login",
     "description": "Placeholer for username/login"
+  },
+  "max_reactions_per_message_description": {
+    "defaultMessage": "Limit how many different reaction types can be added to a single message.",
+    "description": "Description of max reactions per message"
   },
   "member_count": {
     "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
@@ -740,6 +764,10 @@
     "defaultMessage": "You have no contacts :-(",
     "description": "Shown in ContactsView when the user has no contacts"
   },
+  "no_reactions_selected": {
+    "defaultMessage": "No reactions selected",
+    "description": "Shown when no reactions are selected"
+  },
   "numeric_confirmation_code_prompt": {
     "defaultMessage": "Numbers only",
     "description": "Prompt for numeric conformation code"
@@ -763,6 +791,10 @@
   "panel_title_members": {
     "defaultMessage": "Members",
     "description": "Title for managing group members view."
+  },
+  "panel_title_reactions": {
+    "defaultMessage": "Reactions",
+    "description": "Title for reaction settings panel"
   },
   "panel_title_security": {
     "defaultMessage": "Security",
