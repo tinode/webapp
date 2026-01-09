@@ -65,10 +65,14 @@ export function bytesToHumanSize(bytes) {
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
 
-// Shorten a count number: 1234 -> 1.2K, 1234567 -> 1.2M
-export function shortenCount(count) {
+// Shorten a count number: 1234 -> 1.2K, 1234567 -> 1.2M.
+// If limit is provided, numbers equal or above the limit are displayed as 'N+'.
+export function shortenCount(count, limit) {
   count = count | 0;
   if (count < 1000) {
+    if (limit && count >= limit) {
+      return limit + '+';
+    }
     return '' + count;
   }
   if (count < 1_000_000) {

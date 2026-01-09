@@ -9,7 +9,7 @@ export default class FileProgress extends React.PureComponent {
         <div><span style={{width: (this.props.progress * 100) + "%"}}></span></div>
         {this.props.progress < 0.999 ?
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancel();}}>
-            <i className="material-icons">close</i> <FormattedMessage id="action_cancel"
+            <i className="material-symbols-outlined">close</i> <FormattedMessage id="action_cancel"
               defaultMessage="cancel" description="Call to action [cancel]" />
           </a>
           :

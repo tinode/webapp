@@ -32,11 +32,6 @@ class BaseChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const emojis = props.tinode.getServerParam(Tinode.REACTION_LIST);
-    if (Array.isArray(emojis) && emojis.length > 0) {
-      this.emojis = emojis;
-    }
-
     this.state = {
       progress: 0
     };
@@ -245,7 +240,7 @@ class BaseChatMessage extends React.PureComponent {
         textSizeClass += ' emoji-' + (content || '').match(/\p{RGI_Emoji}/vg).length;
       }
     } else {
-      content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
+      content = <><i className="material-symbols-outlined gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
           defaultMessage="invalid content" description="Shown when the message is unreadable" /></i></>
     }
@@ -270,9 +265,11 @@ class BaseChatMessage extends React.PureComponent {
                 {content}
                 {attachments}
               </div>
-              {this.emojis &&
+              {this.props.reactionList &&
                 <ReactionStrip
                   reactions={testReactions || this.props.reactions}
+                  reactionList={this.props.reactionList}
+                  maxReactions={this.props.maxReactions}
                   myUserId={this.props.myUserId}
                   pickerShown={this.props.showPicker}
                   onTogglePicker={this.handleTogglePicker}
@@ -288,14 +285,16 @@ class BaseChatMessage extends React.PureComponent {
             {this.props.showContextMenu ?
               <span className="menuTrigger">
                 <a href="#" onClick={this.handleContextClick}>
-                  <i className="material-icons">expand_more</i>
+                  <i className="material-symbols-outlined">expand_more</i>
                 </a>
               </span> : null
             }
           </div>
           {this.props.showPicker ?
             <ReactionPicker
-              emojis={this.emojis}
+              reactions={testReactions || this.props.reactions}
+              reactionList={this.props.reactionList}
+              maxReactions={this.props.maxReactions}
               onSelect={(emo) => this.handleReactionSelected(null, emo)}
               onClose={() => this.props.onToggleReactionPicker(-1)}
               dataTestPrefix="reaction-picker"

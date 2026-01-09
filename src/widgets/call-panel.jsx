@@ -692,17 +692,17 @@ class CallPanel extends React.PureComponent {
           </div>
         </div>
         <button className="full-screen" onClick={this.props.onToggleMinimize}>
-          <i className="material-icons">{fullScreen}</i>
+          <i className="material-symbols-outlined">{fullScreen}</i>
         </button>
         <div id="controls" className={minimizedClass}>
           <button className="danger" onClick={this.handleCloseClick}>
-            <i className="material-icons">call_end</i>
+            <i className="material-symbols-outlined">call_end</i>
           </button>
           <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
-            <i className="material-icons">{videoIcon}</i>
+            <i className="material-symbols-outlined">{videoIcon}</i>
           </button>
           <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
-            <i className="material-icons">{audioIcon}</i>
+            <i className="material-symbols-outlined">{audioIcon}</i>
           </button>
         </div>
       </div>

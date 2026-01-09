@@ -34,7 +34,7 @@ export default class ErrorPanel extends React.PureComponent {
     const className = 'info-box ' + level;
     return (
       <div className={className}>
-        <div className="icon"><i className="material-icons">{level}</i></div>
+        <div className="icon"><i className="material-symbols-outlined">{level}</i></div>
         <span>
           {this.props.text}
           {this.props.action ?

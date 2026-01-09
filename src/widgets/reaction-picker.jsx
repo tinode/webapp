@@ -1,10 +1,13 @@
 import React from 'react';
 
 import { objectEqual } from '../lib/utils';
+import CountBadge from './count-badge.jsx';
 
+// Number of emojis to show in collapsed panel.
 const REACTIONS_COLLAPSED_COUNT = 6;
+// Maximum number of emojis to show in a panel (expanded).
 const MAX_EMOJIS = 40;
-// Where to show the picker initially: 'top', 'left', 'right', 'bottom'
+// Where to show the picker all else being equal: 'top', 'left', 'right', 'bottom'
 const DISPLAY_PREFERENCE = 'top';
 const PANEL_MARGIN = 8;
 const TIP_SIZE = 7;
@@ -12,12 +15,19 @@ const TIP_SIZE = 7;
 const BUTTON_SIZE = 14;
 // Distance from edge to tip point
 const TIP_STOP = 12;
-// Left margin of the right-side button.
+// Right-side visible message bubble has a margin on the left.
 const BUBBLE_MARGIN_LEFT = 23;
 
 // Compact emoji picker styled like Telegram/WhatsApp
 // Props:
-// - emojis: array of emoji strings
+// - reactionList: array of emoji strings that can be used.
+// - anchor: { // Position of the click which launched the picker.
+//     offsetX: number, // X coordinate relative to message bubble.
+//     offsetY: number, // Y coordinate relative to message bubble.
+//     viewX: number,   // X coordinate relative to viewport
+//     viewY: number    // Y coordinate relative to viewport
+//   }
+// - viewportBounds: { width: number, height: number } size of the viewport
 // - onSelect: (emo) => void
 // - onClose: () => void
 // - dataTestPrefix: optional prefix for data-testid
@@ -36,6 +46,7 @@ class ReactionPicker extends React.PureComponent {
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.selectEmoji = this.selectEmoji.bind(this);
+    this.updatePosition = this.updatePosition.bind(this);
   }
 
   componentDidMount() {
@@ -48,8 +59,10 @@ class ReactionPicker extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Reposition if clickAt or bounds changed or expanded state changed
-    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds || prevState.expanded !== this.state.expanded) {
+    // Reposition if anchor or viewportBounds changed or expanded state changed.
+    if (prevProps.anchor !== this.props.anchor ||
+        prevProps.viewportBounds !== this.props.viewportBounds ||
+        prevState.expanded !== this.state.expanded) {
       // Use a timeout so DOM updates (expanded grid) are applied before measuring.
       setTimeout(() => this.updatePosition(), 0);
     }
@@ -78,7 +91,7 @@ class ReactionPicker extends React.PureComponent {
     const active = document.activeElement;
     const idx = this.emojiRefs.findIndex(el => el === active);
     if (e.key === 'ArrowRight') {
-      if (idx === -1) {
+      if (idx == -1) {
         this.emojiRefs[0] && this.emojiRefs[0].focus();
       } else {
         const next = (idx + 1) % this.emojiRefs.length;
@@ -86,7 +99,7 @@ class ReactionPicker extends React.PureComponent {
       }
       e.preventDefault();
     } else if (e.key === 'ArrowLeft') {
-      if (idx === -1) {
+      if (idx == -1) {
         const last = this.emojiRefs.length - 1;
         this.emojiRefs[last] && this.emojiRefs[last].focus();
       } else {
@@ -95,7 +108,7 @@ class ReactionPicker extends React.PureComponent {
       }
       e.preventDefault();
     } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
-      const emojis = this.props.emojis;
+      const emojis = this.props.reactionList || [];
       const emo = emojis[idx];
       this.selectEmoji(emo);
       e.preventDefault();
@@ -220,28 +233,33 @@ class ReactionPicker extends React.PureComponent {
       <div ref={this.rootRef}
           className={`reaction-picker ${this.state.placeAbove}${this.state.expanded ? ' expanded' : ''} `}
           role="dialog" aria-label="emoji picker" style={style}>
-        {(this.props.emojis || [])
+        {(this.props.reactionList || [])
             .slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT)
-            .map((emo, i) => (
-          <div
-            key={emo}
-            ref={el => this.emojiRefs[i] = el}
-            className="reaction-picker-btn"
-            data-testid={`${prefix}-${emo}`}
-            onClick={() => { this.selectEmoji(emo); }}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectEmoji(emo); } }}
-            role="button"
-            tabIndex={0}
-            aria-label={`react ${emo}`}>
-            {emo}
-          </div>
-        ))}
-        {(!this.state.expanded && (this.props.emojis || []).length > REACTIONS_COLLAPSED_COUNT) &&
+            .map((emo, i) => {
+              const applied = (this.props.reactions || []).find(r => r.val == emo);
+              const count = (applied && applied.count > 1) ? (applied.count | 0) : 123456;
+              return <div
+                key={emo}
+                ref={el => this.emojiRefs[i] = el}
+                className={`reaction-picker-btn${applied ? ' selected' : ''}`}
+                data-testid={`${prefix}-${emo}`}
+                onClick={() => { this.selectEmoji(emo); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectEmoji(emo); } }}
+                role="button"
+                tabIndex={0}
+                aria-label={`react ${emo}`}>
+                {emo}
+                {count && <CountBadge rect={true} count={count} size="medium"
+                  style={{ position: 'absolute', right: '-2px',bottom: '-2px' }} />
+                }
+              </div>;
+        })}
+        {(!this.state.expanded && (this.props.reactionList || []).length > REACTIONS_COLLAPSED_COUNT) &&
           <>
           <div className="divider"/>
           <div className="reaction-picker-btn" role="button" data-testid="reaction-expand"
               onClick={() => this.setState({expanded: true}, () => this.updatePosition())}>
-            <i className="material-icons">expand_more</i>
+            <i className="material-symbols-outlined">expand_more</i>
           </div>
           </>}
       </div>

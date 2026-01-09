@@ -7829,7 +7829,7 @@ function fullFormatter(style, data, values, key, stack) {
         }
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "x0",
-          className: "material-icons gray"
+          className: "material-symbols-outlined gray"
         }, "extension"), ' '].concat(body);
       }
       break;
@@ -7922,7 +7922,7 @@ function previewFormatter(style, data, values, key) {
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "au",
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.secondsToTime)(data.duration / 1000)];
       break;
     case 'BR':
@@ -7940,7 +7940,7 @@ function previewFormatter(style, data, values, key) {
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "im",
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "photo"), ' ', this.formatMessage(messages.drafty_image)];
       break;
     case 'BN':
@@ -7951,8 +7951,8 @@ function previewFormatter(style, data, values, key) {
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "fm",
-        className: "material-icons"
-      }, "dashboard"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
+        className: "material-symbols-outlined"
+      }, "browse"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
       break;
     case 'RW':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -7968,7 +7968,7 @@ function previewFormatter(style, data, values, key) {
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "ex",
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "attachment"), ' ', this.formatMessage(messages.drafty_attachment)];
       break;
     case 'VC':
@@ -7989,7 +7989,7 @@ function previewFormatter(style, data, values, key) {
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "im",
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "play_circle_outline"), ' ', this.formatMessage(messages.drafty_video)];
       break;
     default:
@@ -7997,7 +7997,7 @@ function previewFormatter(style, data, values, key) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "x0",
-          className: "material-icons gray"
+          className: "material-symbols-outlined gray"
         }, "extension"), ' ', this.formatMessage(messages.drafty_unknown)];
       }
       break;
@@ -8088,7 +8088,7 @@ function quoteFormatter(style, data, values, key) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
-          className: "material-icons"
+          className: "material-symbols-outlined"
         }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
@@ -8182,7 +8182,7 @@ function replyFormatter(style, data, values, key, stack) {
         key: key
       }, [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "qq",
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "format_quote"), ' ']);
     }
     const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue('QQ', data) || {};
@@ -8430,9 +8430,12 @@ function bytesToHumanSize(bytes) {
   const round = bucket > 0 ? count < 3 ? 2 : count < 30 ? 1 : 0 : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
-function shortenCount(count) {
+function shortenCount(count, limit) {
   count = count | 0;
   if (count < 1000) {
+    if (limit && count >= limit) {
+      return limit + '+';
+    }
     return '' + count;
   }
   if (count < 1_000_000) {
@@ -8839,7 +8842,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "value": "Light"
       }]
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons orange large"
+      className: "material-symbols-outlined orange large"
     }, "light_mode"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       key: "dark"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
@@ -8858,7 +8861,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "value": "Dark"
       }]
     }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons blue large"
+      className: "material-symbols-outlined blue large"
     }, "dark_mode")))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -8867,7 +8870,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       onClick: this.props.onSelectWallpapers,
       className: "flat-button"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "wallpaper"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "wallpapers",
       defaultMessage: [{
@@ -9110,7 +9113,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "flat-button",
       target: "_blank"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "email"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "link_contact_us",
       defaultMessage: [{
@@ -9122,7 +9125,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "flat-button",
       target: "_blank"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "description"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "link_terms_of_service",
       defaultMessage: [{
@@ -9134,7 +9137,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "flat-button",
       target: "_blank"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "policy"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "link_privacy_policy",
       defaultMessage: [{
@@ -10007,13 +10010,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         pinsLoaded: false,
         selectedPin: 0,
         subsVersion: 0,
-        reactionPickerShownFor: -1
+        reactionPickerShownFor: -1,
+        reactionList: null,
+        maxReactions: 0
       };
     } else if (nextProps.topic != prevState.topic) {
-      const topic = nextProps.tinode.getTopic(nextProps.topic);
       nextState = {
         topic: nextProps.topic,
-        deleted: topic._deleted,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -10038,7 +10041,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       } else {
         nextState.reply = null;
       }
+      const topic = nextProps.tinode.getTopic(nextProps.topic);
       if (topic) {
+        nextState.deleted = topic._deleted;
         const subs = [];
         if (nextProps.connected) {
           topic.subscribers(sub => {
@@ -10087,6 +10092,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           nextState.rtcPanel = nextProps.callTopic;
         }
+        nextState.reactionList = topic.reactions();
+        nextState.maxReactions = topic.maxReactions();
       } else {
         Object.assign(nextState, {
           minSeqId: -1,
@@ -11177,6 +11184,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               pinned: this.state.pins.includes(msg.seq),
               viewportWidth: this.props.viewportWidth,
               reactions: topic.msgReactions(msg.seq),
+              reactionList: this.state.reactionList,
+              maxReactions: this.state.maxReactions,
               showContextMenu: this.handleShowMessageContextMenu,
               onExpandMedia: this.handleExpandMedia,
               onFormResponse: this.handleFormResponse,
@@ -11234,7 +11243,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
           onClick: this.goToLatestMessage
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "material-icons"
+          className: "material-symbols-outlined"
         }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-panel",
           ref: this.handleScrollReference
@@ -11254,7 +11263,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "peer-messaging-disabled-note"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "material-icons secondary"
+          className: "material-symbols-outlined secondary"
         }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "peers_messaging_disabled",
           defaultMessage: [{
@@ -11302,7 +11311,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             this.props.onHideMessagesView();
           }
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "material-icons"
+          className: "material-symbols-outlined"
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "avatar-box"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
@@ -11350,7 +11359,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           href: "#",
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "material-icons"
+          className: "material-symbols-outlined"
         }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
           pins: this.state.pins,
@@ -11949,13 +11958,23 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
       onError: this.props.onError
-    })) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+    })) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "panel-form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
       transport: this.props.transport,
       serverAddress: this.props.serverAddress,
       secureConnection: this.props.secureConnection,
       onCancel: this.props.onCancel,
       onUpdate: this.props.onGlobalSettings
-    }) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+    })) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
       fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "panel-form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -12045,14 +12064,24 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       showContextMenu: this.props.showContextMenu,
       onTopicSelected: this.props.onTopicSelected,
       onShowArchive: this.props.onShowArchive
-    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "panel-form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       tinode: this.props.tinode,
       searchResults: this.props.searchResults,
       onInitFind: this.props.onInitFind,
       onSearchContacts: this.props.onSearchContacts,
       onCreateTopic: this.props.onCreateTopic,
       onError: this.props.onError
-    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+    })) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
       credCode: this.props.credCode,
       credMethod: this.props.credMethod,
       credToken: this.props.credToken,
@@ -14560,7 +14589,7 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       helperFunc = null;
     }
     const downloadWidget = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "save_attachment",
       defaultMessage: [{
@@ -14571,7 +14600,7 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "attachment"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons big gray"
+      className: "material-symbols-outlined big gray"
     }, "insert_drive_file")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, filename, " ", size), this.props.uploading || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -14807,7 +14836,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
   }
   render() {
-    const playClass = 'material-icons' + (this.props.short ? '' : ' large') + (this.state.canPlay ? '' : ' disabled');
+    const playClass = 'material-symbols-outlined' + (this.props.short ? '' : ' large') + (this.state.canPlay ? '' : ' disabled');
     const play = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handlePlay,
@@ -14972,7 +15001,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         this.props.onImageUpdated();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "clear")), this.state.source ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.state.source, 'image')),
       className: "preview"
@@ -14995,7 +15024,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       htmlFor: randId,
       className: "round"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "file_upload")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       show: this.props.uploading,
       large: true,
@@ -15057,7 +15086,7 @@ class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       badges = [];
       this.props.trustedBadges.forEach(b => {
         const comment = this.props.short ? null : formatMessage(messages['badge_' + b]);
-        const style = 'material-icons ' + b + '-color';
+        const style = 'material-symbols-outlined ' + b + '-color';
         badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "trusted-badge",
           key: b
@@ -15097,7 +15126,7 @@ class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         this.props.onBack();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "arrow_back"));
   }
 }
@@ -15247,12 +15276,12 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "danger",
       onClick: this.handleRejectCall
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "positive",
       onClick: this.handleAcceptCall
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "call"))) : null)));
   }
 }
@@ -15281,7 +15310,7 @@ __webpack_require__.r(__webpack_exports__);
 class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
-    const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
+    const successClass = 'material-symbols-outlined medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
     const title = this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "calls_incoming",
@@ -15348,7 +15377,7 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-message"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons big gray"
+      className: "material-symbols-outlined big gray"
     }, "call")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column narrow"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, title), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -15990,7 +16019,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: "full-screen",
       onClick: this.props.onToggleMinimize
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, fullScreen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "controls",
       className: minimizedClass
@@ -15998,19 +16027,19 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: "danger",
       onClick: this.handleCloseClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
       onClick: this.handleToggleCameraClick,
       disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
       onClick: this.handleToggleMicClick,
       disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, audioIcon))));
   }
 }
@@ -16101,9 +16130,9 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "composed-material"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "call"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons second"
+      className: "material-symbols-outlined second"
     }, icon2)), " ", duration);
   }
 }
@@ -16194,10 +16223,6 @@ const testReactions = [{
 class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    const emojis = props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.REACTION_LIST);
-    if (Array.isArray(emojis) && emojis.length > 0) {
-      this.emojis = emojis;
-    }
     this.state = {
       progress: 0
     };
@@ -16382,7 +16407,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       }
     } else {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons gray"
+        className: "material-symbols-outlined gray"
       }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "gray"
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -16409,8 +16434,10 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "content-meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: textSizeClass
-    }, content, attachments), this.emojis && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, content, attachments), this.props.reactionList && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       reactions: testReactions || this.props.reactions,
+      reactionList: this.props.reactionList,
+      maxReactions: this.props.maxReactions,
       myUserId: this.props.myUserId,
       pickerShown: this.props.showPicker,
       onTogglePicker: this.handleTogglePicker,
@@ -16425,9 +16452,11 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       href: "#",
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "expand_more"))) : null), this.props.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      emojis: this.emojis,
+      reactions: testReactions || this.props.reactions,
+      reactionList: this.props.reactionList,
+      maxReactions: this.props.maxReactions,
       onSelect: emo => this.handleReactionSelected(null, emo),
       onClose: () => this.props.onToggleReactionPicker(-1),
       dataTestPrefix: "reaction-picker",
@@ -16475,7 +16504,7 @@ class CheckBox extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
     this.props.onChange(this.props.name, !this.props.checked);
   }
   render() {
-    let classList = ['material-icons'];
+    let classList = ['material-symbols-outlined'];
     let iconName;
     if (Array.isArray(this.props.className)) {
       classList.push(...this.props.className);
@@ -16784,7 +16813,7 @@ class ContactBadges extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         const color = b.color ? ' ' + b.color : '';
         if (b.icon) {
           badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            className: 'material-icons as-badge' + color,
+            className: 'material-symbols-outlined as-badge' + color,
             key: b.key || b.icon
           }, icon_mapping[b.icon] || b.icon));
         } else {
@@ -16991,7 +17020,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+/* harmony import */ var _count_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./count-badge.jsx */ "./src/widgets/count-badge.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
@@ -17112,7 +17141,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       }));
     } else if (this.props.preview) {
       preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons gray"
+        className: "material-symbols-outlined gray"
       }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "gray"
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -17125,7 +17154,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
+      className: 'material-symbols-outlined small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
     const comment = preview || this.props.comment || (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
@@ -17142,23 +17171,24 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       topic: this.props.item,
       deleted: this.props.deleted
     }), this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "deleted material-icons"
+      className: "deleted material-symbols-outlined"
     }, "cancel") : !self && this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: online
     }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "checkmark material-icons"
+      className: "checkmark material-symbols-outlined"
     }, "check_circle") : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "text-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: titleClass
     }, title), this.props.isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons as-badge"
+      className: "material-symbols-outlined as-badge"
     }, "group") : null, this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons as-badge"
+      className: "material-symbols-outlined as-badge"
     }, "podcasts") : null, !self ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: icon_badges
-    }) : null, !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      count: this.props.unread
+    }) : null, !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      count: this.props.unread,
+      limit: 9
     }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -17169,7 +17199,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       href: "#",
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "expand_more"))) : null);
   }
 }
@@ -17750,6 +17780,35 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
 /***/ }),
 
+/***/ "./src/widgets/count-badge.jsx":
+/*!*************************************!*\
+  !*** ./src/widgets/count-badge.jsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ CountBadge; }
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+
+
+class CountBadge extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  render() {
+    const className = 'counter-badge' + (this.props.size ? ` ${this.props.size}` : '') + (this.props.rect ? ' rect' : '');
+    const displayCount = (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.shortenCount)(this.props.count, this.props.limit);
+    return this.props.count > 0 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: className,
+      style: this.props.style
+    }, displayCount);
+  }
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/cropper.jsx":
 /*!*********************************!*\
   !*** ./src/widgets/cropper.jsx ***!
@@ -18049,13 +18108,13 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         this.props.onClose();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "doc-card"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_file_name",
       defaultMessage: [{
@@ -18139,7 +18198,7 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "icon"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, level)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.text, this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, "\xA0 ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       style: {
@@ -18191,7 +18250,7 @@ class FileProgress extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         this.props.onCancel();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "close"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "action_cancel",
       defaultMessage: [{
@@ -18288,7 +18347,7 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       href: "#",
       onClick: this.handleClose
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "close")))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "forward_to_search_placeholder",
       defaultMessage: [{
@@ -18555,7 +18614,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       href: download_url,
       download: this.props.content.filename
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "download_action",
       defaultMessage: [{
@@ -18569,7 +18628,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         this.props.onClose();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container",
       ref: node => this.assignWidth(node)
@@ -18733,9 +18792,9 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         className: spanClass,
         onClick: this.handleStartEditing
       }, this.props.iconLeft && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons light-gray"
+        className: "material-symbols-outlined light-gray"
       }, this.props.iconLeft), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, spanText), this.props.iconRight && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons light-gray"
+        className: "material-symbols-outlined light-gray"
       }, this.props.iconRight));
     }
     let element;
@@ -18772,9 +18831,9 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     }
     if (this.props.iconLeft || this.props.iconRight) {
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.iconLeft && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons light-gray"
+        className: "material-symbols-outlined light-gray"
       }, this.props.iconLeft), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null), this.props.iconRight && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons light-gray"
+        className: "material-symbols-outlined light-gray"
       }, this.props.iconRight));
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null);
@@ -18818,7 +18877,7 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "play-control"
     }, this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons white x-big"
+      className: "material-symbols-outlined white x-big"
     }, "play_arrow") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: "img/broken_video.png",
       style: {
@@ -19023,7 +19082,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
             className: className
           }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
         } else {
-          const className = 'material-icons ' + iconColor + (this.props.deleted ? ' disabled' : '');
+          const className = 'material-symbols-outlined ' + iconColor + (this.props.deleted ? ' disabled' : '');
           avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
             className: className
           }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -19100,7 +19159,7 @@ class MenuCancel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         this.props.onCancel();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "close"));
   }
 }
@@ -19129,7 +19188,7 @@ class MenuContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         this.props.onNewTopic();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "chat")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
@@ -19137,7 +19196,7 @@ class MenuContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         this.props.onSettings();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "settings")));
   }
 }
@@ -19167,7 +19226,7 @@ class MenuStart extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         this.props.onSignUp();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "person_add")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
@@ -19175,7 +19234,7 @@ class MenuStart extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         this.props.onSettings();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "settings")));
   }
 }
@@ -19765,9 +19824,9 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       href: "#",
       onClick: this.handleCancel
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "close"))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "push_pin")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned-scroll"
     }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -19781,14 +19840,14 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       href: "#",
       onClick: this.handleMovePrev
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "expand_less")) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger lower"
     }, this.props.selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleMoveNext
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "expand_more")) : null)));
   }
 }
@@ -19806,6 +19865,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/utils */ "./src/lib/utils.js");
+/* harmony import */ var _count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./count-badge.jsx */ "./src/widgets/count-badge.jsx");
+
 
 
 const REACTIONS_COLLAPSED_COUNT = 6;
@@ -19833,6 +19894,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.selectEmoji = this.selectEmoji.bind(this);
+    this.updatePosition = this.updatePosition.bind(this);
   }
   componentDidMount() {
     document.addEventListener('mousedown', this.handleOutsideClick);
@@ -19843,7 +19905,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.updatePosition();
   }
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.clickAt !== this.props.clickAt || prevProps.bounds !== this.props.bounds || prevState.expanded !== this.state.expanded) {
+    if (prevProps.anchor !== this.props.anchor || prevProps.viewportBounds !== this.props.viewportBounds || prevState.expanded !== this.state.expanded) {
       setTimeout(() => this.updatePosition(), 0);
     }
   }
@@ -19866,7 +19928,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const active = document.activeElement;
     const idx = this.emojiRefs.findIndex(el => el === active);
     if (e.key === 'ArrowRight') {
-      if (idx === -1) {
+      if (idx == -1) {
         this.emojiRefs[0] && this.emojiRefs[0].focus();
       } else {
         const next = (idx + 1) % this.emojiRefs.length;
@@ -19874,7 +19936,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }
       e.preventDefault();
     } else if (e.key === 'ArrowLeft') {
-      if (idx === -1) {
+      if (idx == -1) {
         const last = this.emojiRefs.length - 1;
         this.emojiRefs[last] && this.emojiRefs[last].focus();
       } else {
@@ -19883,7 +19945,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }
       e.preventDefault();
     } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
-      const emojis = this.props.emojis;
+      const emojis = this.props.reactionList || [];
       const emo = emojis[idx];
       this.selectEmoji(emo);
       e.preventDefault();
@@ -19994,24 +20056,37 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       role: "dialog",
       "aria-label": "emoji picker",
       style: style
-    }, (this.props.emojis || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      key: emo,
-      ref: el => this.emojiRefs[i] = el,
-      className: "reaction-picker-btn",
-      "data-testid": `${prefix}-${emo}`,
-      onClick: () => {
-        this.selectEmoji(emo);
-      },
-      onKeyDown: e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
+    }, (this.props.reactionList || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => {
+      const applied = (this.props.reactions || []).find(r => r.val == emo);
+      const count = applied && applied.count > 1 ? applied.count | 0 : 123456;
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        key: emo,
+        ref: el => this.emojiRefs[i] = el,
+        className: `reaction-picker-btn${applied ? ' selected' : ''}`,
+        "data-testid": `${prefix}-${emo}`,
+        onClick: () => {
           this.selectEmoji(emo);
+        },
+        onKeyDown: e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.selectEmoji(emo);
+          }
+        },
+        role: "button",
+        tabIndex: 0,
+        "aria-label": `react ${emo}`
+      }, emo, count && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        rect: true,
+        count: count,
+        size: "medium",
+        style: {
+          position: 'absolute',
+          right: '-2px',
+          bottom: '-2px'
         }
-      },
-      role: "button",
-      tabIndex: 0,
-      "aria-label": `react ${emo}`
-    }, emo)), !this.state.expanded && (this.props.emojis || []).length > REACTIONS_COLLAPSED_COUNT && react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      }));
+    }), !this.state.expanded && (this.props.reactionList || []).length > REACTIONS_COLLAPSED_COUNT && react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "divider"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reaction-picker-btn",
@@ -20021,7 +20096,7 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         expanded: true
       }, () => this.updatePosition())
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "expand_more"))));
   }
 }
@@ -20041,13 +20116,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
 
 
-const MAX_REACTIONS_SHOWN = 6;
 class ReactionStrip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const more = this.props.reactions.length - MAX_REACTIONS_SHOWN;
+    const more = this.props.reactions.length - this.props.maxReactions;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "reactions"
-    }, this.props.reactions.slice(0, MAX_REACTIONS_SHOWN).map(r => {
+    }, this.props.reactions.slice(0, this.props.maxReactions).map(r => {
       const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: r.val,
@@ -20067,7 +20141,7 @@ class ReactionStrip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       },
       onClick: this.props.onTogglePicker
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, more > 0 ? 'more_horiz' : 'thumb_up_off_alt')));
   }
 }
@@ -20133,7 +20207,7 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: 'material-icons small ' + icon.color
+      className: 'material-symbols-outlined small ' + icon.color
     }, icon.name) : null;
     const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
@@ -20219,7 +20293,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons search"
+      className: "material-symbols-outlined search"
     }, "search"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       className: "search",
       type: "text",
@@ -20233,9 +20307,9 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       href: "#",
       onClick: this.handleClear
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "highlight_off")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "\xA0"))));
   }
 }
@@ -20519,7 +20593,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         this.props.onCancelReply();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "close"))), this.state.quote) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -20534,7 +20608,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       },
       title: formatMessage(messages.icon_title_add_image)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons secondary"
+      className: "material-symbols-outlined secondary"
     }, "photo")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
@@ -20543,7 +20617,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       },
       title: formatMessage(messages.icon_title_attach_file)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons secondary"
+      className: "material-symbols-outlined secondary"
     }, "attach_file"))) : null, this.props.noInput ? quote || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr thin"
     }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
@@ -20574,7 +20648,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       onClick: this.handleSend,
       title: formatMessage(messages.icon_title_send)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, sendIcon)) : !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
@@ -20585,7 +20659,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       },
       title: formatMessage(messages.icon_title_record_voice)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "mic")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "file",
       ref: ref => {
@@ -20884,7 +20958,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
         });
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "edit"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_manage_tags",
       defaultMessage: [{
@@ -21323,30 +21397,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
 /***/ }),
 
-/***/ "./src/widgets/unread-badge.jsx":
-/*!**************************************!*\
-  !*** ./src/widgets/unread-badge.jsx ***!
-  \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ UnreadBadge; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-class UnreadBadge extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  render() {
-    return this.props.count > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "unread"
-    }, this.props.count > 9 ? "9+" : this.props.count) : null;
-  }
-}
-;
-
-/***/ }),
-
 /***/ "./src/widgets/uploading-image.jsx":
 /*!*****************************************!*\
   !*** ./src/widgets/uploading-image.jsx ***!
@@ -21468,7 +21518,7 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         this.props.onClose();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
@@ -21611,7 +21661,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       onClick: this.handleVisibility
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons clickable light-gray"
+      className: "material-symbols-outlined clickable light-gray"
     }, this.state.visible ? 'visibility' : 'visibility_off')));
   }
 }

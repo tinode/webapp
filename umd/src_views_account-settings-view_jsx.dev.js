@@ -110,7 +110,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
           });
         }
       }, val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, " ", cred.done ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "pending"), "\xA0", !cred.done || validated[cred.meth] > 1 || this.props.reqCredMethod != cred.meth ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         onClick: e => {
@@ -118,7 +118,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
           this.props.onCredDelete(cred.meth, cred.val);
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons"
+        className: "material-symbols-outlined"
       }, "delete")) : null)));
     });
     if (credentials.length > 0) {
@@ -145,7 +145,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         this.props.onNavigate('general');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "edit"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_edit",
       defaultMessage: [{
@@ -224,7 +224,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         this.props.onNavigate('acc_general');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "tune"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "sidepanel_title_acc_general",
       defaultMessage: [{
@@ -239,7 +239,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         this.props.onNavigate('notif');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "notifications"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "sidepanel_title_acc_notifications",
       defaultMessage: [{
@@ -254,7 +254,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         this.props.onNavigate('security');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "security"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_security",
       defaultMessage: [{
@@ -269,7 +269,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         this.props.onNavigate('support');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "contact_support"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "sidepanel_title_acc_support",
       defaultMessage: [{

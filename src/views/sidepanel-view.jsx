@@ -179,12 +179,15 @@ class SidepanelView extends React.PureComponent {
           </Suspense> :
 
           view === 'settings' ?
-          <SettingsView
-            transport={this.props.transport}
-            serverAddress={this.props.serverAddress}
-            secureConnection={this.props.secureConnection}
-            onCancel={this.props.onCancel}
-            onUpdate={this.props.onGlobalSettings} /> :
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <SettingsView
+              transport={this.props.transport}
+              serverAddress={this.props.serverAddress}
+              secureConnection={this.props.secureConnection}
+              onCancel={this.props.onCancel}
+              onUpdate={this.props.onGlobalSettings} />
+          </Suspense> :
 
           view === 'edit' ?
           <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
@@ -273,13 +276,16 @@ class SidepanelView extends React.PureComponent {
             onShowArchive={this.props.onShowArchive} /> :
 
           view === 'newtpk' ?
-          <NewTopicView
-            tinode={this.props.tinode}
-            searchResults={this.props.searchResults}
-            onInitFind={this.props.onInitFind}
-            onSearchContacts={this.props.onSearchContacts}
-            onCreateTopic={this.props.onCreateTopic}
-            onError={this.props.onError} /> :
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+              defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <NewTopicView
+              tinode={this.props.tinode}
+              searchResults={this.props.searchResults}
+              onInitFind={this.props.onInitFind}
+              onSearchContacts={this.props.onSearchContacts}
+              onCreateTopic={this.props.onCreateTopic}
+              onError={this.props.onError} />
+          </Suspense> :
 
           view === 'cred' ?
           <ValidationView

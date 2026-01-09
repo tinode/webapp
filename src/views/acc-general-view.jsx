@@ -63,7 +63,7 @@ export default class AccGeneralView extends React.PureComponent {
                     onChange={this.handleColorSchemaSelected} />&nbsp;
                   <label htmlFor="light">
                     <FormattedMessage id="color_schema_light" defaultMessage="Light" description="Name of the color schema"/>&nbsp;
-                    <i className="material-icons orange large">light_mode</i>
+                    <i className="material-symbols-outlined orange large">light_mode</i>
                   </label>
                 </li>
                 <li key="dark">
@@ -72,7 +72,7 @@ export default class AccGeneralView extends React.PureComponent {
                     onChange={this.handleColorSchemaSelected} />&nbsp;
                   <label htmlFor="dark">
                     <FormattedMessage id="color_schema_dark" defaultMessage="Dark" description="Name of the color schema"/>&nbsp;
-                    <i className="material-icons blue large">dark_mode</i>
+                    <i className="material-symbols-outlined blue large">dark_mode</i>
                   </label>
                 </li>
               </ul>
@@ -81,7 +81,7 @@ export default class AccGeneralView extends React.PureComponent {
           <div className="hr" />
           <div className="panel-form-row clean-clickable">
             <a onClick={this.props.onSelectWallpapers} className="flat-button">
-              <i className="material-icons">wallpaper</i>&nbsp;
+              <i className="material-symbols-outlined">wallpaper</i>&nbsp;
               <FormattedMessage id="wallpapers" defaultMessage="Wallpapers"
                   description="Link or title for working with wallpapers." />
             </a>

@@ -82,11 +82,11 @@ export default class ImagePreview extends React.PureComponent {
             <span>{fname}</span>
             :
             <a href={download_url} download={this.props.content.filename}>
-              <i className="material-icons">file_download</i> <FormattedMessage
+              <i className="material-symbols-outlined">file_download</i> <FormattedMessage
                 id="download_action" defaultMessage="download" description="Call to action [download]" />
             </a>
           }
-          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
+          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-symbols-outlined gray">close</i></a>
         </div>
         <div id="image-preview-container" ref={node => this.assignWidth(node)}>
           <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.filename} />

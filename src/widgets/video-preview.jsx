@@ -83,7 +83,7 @@ class VideoPreview extends React.PureComponent {
       <div id="image-preview">
         <div id="image-preview-caption-panel">
           <span>{this.props.content.filename}</span>
-          <a href="#" onClick={e => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
+          <a href="#" onClick={e => {e.preventDefault(); this.props.onClose();}}><i className="material-symbols-outlined gray">close</i></a>
         </div>
         <div id="image-preview-container">
           <video

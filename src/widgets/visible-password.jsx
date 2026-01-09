@@ -79,7 +79,7 @@ export default class VisiblePassword extends React.PureComponent {
           onKeyDown={this.handleKeyDown}
           ref={this.inputRef} />
         <span onClick={this.handleVisibility}>
-          <i className="material-icons clickable light-gray">
+          <i className="material-symbols-outlined clickable light-gray">
             {this.state.visible ? 'visibility' : 'visibility_off'}
           </i>
         </span>

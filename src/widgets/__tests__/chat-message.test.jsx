@@ -30,6 +30,7 @@ describe('ChatMessage reactions UI', () => {
     pinned: false,
     viewportWidth: 800,
     showContextMenu: false,
+    showPicker: false,
     onExpandMedia: () => {},
     onFormResponse: () => {},
     onCancelUpload: () => {},
@@ -39,11 +40,13 @@ describe('ChatMessage reactions UI', () => {
     onAcceptCall: () => {},
     onError: () => {},
     onReact: jest.fn(),
-    myUserId: 'me'
+    onToggleReactionPicker: jest.fn(),
+    myUserId: 'me',
+    parentRef: { getBoundingClientRect: () => ({ left: 0, top: 0, right: 800, bottom: 600, width: 800, height: 600 }) }
   };
 
   test('renders reactions and triggers onReact when clicked', () => {
-    const reactions = [{ value: '👍', count: 2, users: ['me','u2'] }];
+    const reactions = [{ val: '👍', count: 2, users: ['me','u2'] }];
     render(
       <IntlProvider locale="en">
         <ChatMessage {...defaultProps} reactions={reactions} />
@@ -61,23 +64,14 @@ describe('ChatMessage reactions UI', () => {
     expect(defaultProps.onReact).toHaveBeenCalledWith(123, '👍');
   });
 
-  test('opens picker and selects emoji', () => {
-    // Reset mock
+  test('opens picker via toggle button', () => {
+    // Reset mocks
     defaultProps.onReact.mockClear();
-
-    // Ensure an app container exists for picker positioning logic (used when no bounds provided).
-    const app = document.createElement('div');
-    app.id = 'app-container';
-    // Provide bounding rect used by the picker positioning logic.
-    app.getBoundingClientRect = () => ({ left: 0, top: 0, right: 800, bottom: 600, width: 800, height: 600 });
-    document.body.appendChild(app);
-
-    // Provide parentRef so ChatMessage won't throw when querying bounds.
-    const parentRef = { getBoundingClientRect: () => ({ left: 0, top: 0, right: 800, bottom: 600, width: 800, height: 600 }) };
+    defaultProps.onToggleReactionPicker.mockClear();
 
     render(
       <IntlProvider locale="en">
-        <ChatMessage {...defaultProps} reactions={[]} parentRef={parentRef} />
+        <ChatMessage {...defaultProps} reactions={[]} />
       </IntlProvider>
     );
 
@@ -85,46 +79,27 @@ describe('ChatMessage reactions UI', () => {
     // Click the add button
     fireEvent.click(addBtn);
 
-    // Picker should be visible and contain emojis
-    const pickerBtn = screen.getByTestId('reaction-picker-👍');
-    expect(pickerBtn).toBeInTheDocument();
-
-    fireEvent.click(pickerBtn);
-    expect(defaultProps.onReact).toHaveBeenCalledWith(123, '👍');
-
-    // Cleanup
-    document.body.removeChild(app);
+    // Should call onToggleReactionPicker with message seq
+    expect(defaultProps.onToggleReactionPicker).toHaveBeenCalledWith(123);
   });
 
-  test('expand picker shows all emojis and remains open after selection', () => {
+  test('expand picker shows all emojis', () => {
     defaultProps.onReact.mockClear();
-
-    const app = document.createElement('div');
-    app.id = 'app-container';
-    app.getBoundingClientRect = () => ({ left: 0, top: 0, right: 300, bottom: 200, width: 300, height: 200 });
-    document.body.appendChild(app);
-
-    const parentRef = { getBoundingClientRect: () => ({ left: 0, top: 0, right: 300, bottom: 200, width: 300, height: 200 }) };
 
     // Prepare >6 emojis
     const emojis = Array.from({length: 10}, (_, i) => `e${i}`);
 
-    render(
-      <IntlProvider locale="en">
-        <ChatMessage {...defaultProps} reactions={[]} parentRef={parentRef} />
-      </IntlProvider>
-    );
-
-    // Open picker
-    const addBtn = screen.getByTestId('reaction-add');
-    fireEvent.click(addBtn);
-
-    // Expand button should be present (since we pass emojis via ReactionPicker props indirectly in real app, simulate by rendering ReactionPicker directly)
+    // Render picker standalone to test expansion UI
     const { container } = render(
       <IntlProvider locale="en">
-        {/* Render picker standalone to test expansion UI */}
         <div id="test-host">
-          <ReactionPicker emojis={emojis} onSelect={(emo) => defaultProps.onReact(123, emo)} onClose={() => {}} dataTestPrefix="reaction-picker-test" anchor={{viewX:150,viewY:150,offsetX:150}} viewportBounds={{left:0,top:0,right:300,bottom:200,width:300,height:200}} />
+          <ReactionPicker
+            reactionList={emojis}
+            onSelect={(emo) => defaultProps.onReact(123, emo)}
+            onClose={() => {}}
+            dataTestPrefix="reaction-picker-test"
+            anchor={{viewX:150,viewY:150,offsetX:150,offsetY:0}}
+            viewportBounds={{width:300,height:200}} />
         </div>
       </IntlProvider>
     );
@@ -135,7 +110,7 @@ describe('ChatMessage reactions UI', () => {
     // Click expand
     fireEvent.click(expandBtn);
 
-    // After expansion, expand button should not be present in this picker
+    // After expansion, expand button should not be present
     expect(within(container).queryByTestId('reaction-expand')).not.toBeInTheDocument();
 
     // Click on one of the emojis (last one)
@@ -145,7 +120,5 @@ describe('ChatMessage reactions UI', () => {
 
     // Picker remains visible after selection (since expanded)
     expect(within(container).getByTestId('reaction-picker-test-e0')).toBeInTheDocument();
-
-    document.body.removeChild(app);
   });
 });

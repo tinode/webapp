@@ -386,7 +386,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EXPIRE_PROMISES_TIMEOUT: function() { return /* binding */ EXPIRE_PROMISES_TIMEOUT; },
 /* harmony export */   LIBRARY: function() { return /* binding */ LIBRARY; },
 /* harmony export */   LOCAL_SEQID: function() { return /* binding */ LOCAL_SEQID; },
+/* harmony export */   MAX_FILE_UPLOAD_SIZE: function() { return /* binding */ MAX_FILE_UPLOAD_SIZE; },
+/* harmony export */   MAX_MESSAGE_SIZE: function() { return /* binding */ MAX_MESSAGE_SIZE; },
 /* harmony export */   MAX_PINNED_COUNT: function() { return /* binding */ MAX_PINNED_COUNT; },
+/* harmony export */   MAX_REACTIONS: function() { return /* binding */ MAX_REACTIONS; },
+/* harmony export */   MAX_SUBSCRIBER_COUNT: function() { return /* binding */ MAX_SUBSCRIBER_COUNT; },
+/* harmony export */   MAX_TAG_COUNT: function() { return /* binding */ MAX_TAG_COUNT; },
+/* harmony export */   MAX_TAG_LENGTH: function() { return /* binding */ MAX_TAG_LENGTH; },
 /* harmony export */   MESSAGE_STATUS_FAILED: function() { return /* binding */ MESSAGE_STATUS_FAILED; },
 /* harmony export */   MESSAGE_STATUS_FATAL: function() { return /* binding */ MESSAGE_STATUS_FATAL; },
 /* harmony export */   MESSAGE_STATUS_NONE: function() { return /* binding */ MESSAGE_STATUS_NONE; },
@@ -396,8 +402,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MESSAGE_STATUS_SENDING: function() { return /* binding */ MESSAGE_STATUS_SENDING; },
 /* harmony export */   MESSAGE_STATUS_SENT: function() { return /* binding */ MESSAGE_STATUS_SENT; },
 /* harmony export */   MESSAGE_STATUS_TO_ME: function() { return /* binding */ MESSAGE_STATUS_TO_ME; },
+/* harmony export */   MIN_TAG_LENGTH: function() { return /* binding */ MIN_TAG_LENGTH; },
+/* harmony export */   MSG_DELETE_AGE: function() { return /* binding */ MSG_DELETE_AGE; },
 /* harmony export */   PROTOCOL_VERSION: function() { return /* binding */ PROTOCOL_VERSION; },
+/* harmony export */   REACTION_LIST: function() { return /* binding */ REACTION_LIST; },
 /* harmony export */   RECV_TIMEOUT: function() { return /* binding */ RECV_TIMEOUT; },
+/* harmony export */   REQ_CRED_VALIDATORS: function() { return /* binding */ REQ_CRED_VALIDATORS; },
 /* harmony export */   TAG_ALIAS: function() { return /* binding */ TAG_ALIAS; },
 /* harmony export */   TAG_EMAIL: function() { return /* binding */ TAG_EMAIL; },
 /* harmony export */   TAG_PHONE: function() { return /* binding */ TAG_PHONE; },
@@ -452,6 +462,16 @@ const TAG_PHONE = 'tel:';
 const BACKOFF_BASE = 2000;
 const BACKOFF_MAX_ITER = 10;
 const BACKOFF_JITTER = 0.3;
+const MAX_MESSAGE_SIZE = 'maxMessageSize';
+const MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
+const MIN_TAG_LENGTH = 'minTagLength';
+const MAX_TAG_LENGTH = 'maxTagLength';
+const MAX_TAG_COUNT = 'maxTagCount';
+const MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
+const REQ_CRED_VALIDATORS = 'reqCred';
+const MSG_DELETE_AGE = 'msgDelAge';
+const REACTION_LIST = 'reactions';
+const MAX_REACTIONS = 'maxReactions';
 
 /***/ }),
 
@@ -4409,6 +4429,20 @@ class Topic {
       }
     });
   }
+  reactions() {
+    const react = this.aux('react');
+    if (react) {
+      return react.vals;
+    }
+    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.REACTION_LIST);
+  }
+  maxReactions() {
+    const react = this.aux('react');
+    if (react) {
+      return react.max;
+    }
+    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_REACTIONS, 0);
+  }
   delMessages(ranges, hard) {
     if (!this._attached) {
       return Promise.reject(new Error("Cannot delete messages in inactive topic"));
@@ -7007,15 +7041,16 @@ Tinode.MESSAGE_STATUS_RECEIVED = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE
 Tinode.MESSAGE_STATUS_READ = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_READ;
 Tinode.MESSAGE_STATUS_TO_ME = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_TO_ME;
 Tinode.DEL_CHAR = _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR;
-Tinode.MAX_MESSAGE_SIZE = 'maxMessageSize';
-Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
-Tinode.MIN_TAG_LENGTH = 'minTagLength';
-Tinode.MAX_TAG_LENGTH = 'maxTagLength';
-Tinode.MAX_TAG_COUNT = 'maxTagCount';
-Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
-Tinode.REQ_CRED_VALIDATORS = 'reqCred';
-Tinode.MSG_DELETE_AGE = 'msgDelAge';
-Tinode.REACTION_LIST = 'reactions';
+Tinode.MAX_MESSAGE_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_MESSAGE_SIZE;
+Tinode.MAX_SUBSCRIBER_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_SUBSCRIBER_COUNT;
+Tinode.MIN_TAG_LENGTH = _config_js__WEBPACK_IMPORTED_MODULE_1__.MIN_TAG_LENGTH;
+Tinode.MAX_TAG_LENGTH = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_LENGTH;
+Tinode.MAX_TAG_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_COUNT;
+Tinode.MAX_FILE_UPLOAD_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_FILE_UPLOAD_SIZE;
+Tinode.REQ_CRED_VALIDATORS = _config_js__WEBPACK_IMPORTED_MODULE_1__.REQ_CRED_VALIDATORS;
+Tinode.MSG_DELETE_AGE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MSG_DELETE_AGE;
+Tinode.REACTION_LIST = _config_js__WEBPACK_IMPORTED_MODULE_1__.REACTION_LIST;
+Tinode.MAX_REACTIONS = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_REACTIONS;
 Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
 Tinode.TAG_ALIAS = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_ALIAS;
 Tinode.TAG_EMAIL = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_EMAIL;

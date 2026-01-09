@@ -40,7 +40,7 @@ export default class CallStatus extends React.PureComponent {
     return (
       <>
         <div className="composed-material">
-          <i className="material-icons">call</i><i className="material-icons second">{icon2}</i>
+          <i className="material-symbols-outlined">call</i><i className="material-symbols-outlined second">{icon2}</i>
         </div> {duration}
       </>
     );

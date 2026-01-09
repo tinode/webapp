@@ -142,9 +142,9 @@ class PinnedMessages extends React.PureComponent {
       <div id="pinned-wrapper" ref={this.touchSurface}>
         {this.props.isAdmin ?
           <div className="cancel">
-            <a href="#" onClick={this.handleCancel}><i className="material-icons gray">close</i></a>
+            <a href="#" onClick={this.handleCancel}><i className="material-symbols-outlined gray">close</i></a>
           </div> :
-          <div><i className="material-icons gray">push_pin</i></div>
+          <div><i className="material-symbols-outlined gray">push_pin</i></div>
         }
         <div className="pinned-scroll">{dots}</div>
         <div className="pinned" onClick={this.handleSelected}><p>{messageShown}</p></div>
@@ -152,7 +152,7 @@ class PinnedMessages extends React.PureComponent {
           <span className="menuTrigger upper">
             {selected > 0 ?
               <a href="#" onClick={this.handleMovePrev}>
-                <i className="material-icons">expand_less</i>
+                <i className="material-symbols-outlined">expand_less</i>
               </a>
               : null
             }
@@ -160,7 +160,7 @@ class PinnedMessages extends React.PureComponent {
           <span className="menuTrigger lower">
             {this.props.selected > 0 ?
               <a href="#" onClick={this.handleMoveNext}>
-                <i className="material-icons">expand_more</i>
+                <i className="material-symbols-outlined">expand_more</i>
               </a>
               : null
             }

@@ -366,13 +366,12 @@ class MessagesView extends React.Component {
         selectedPin: 0,
         subsVersion: 0,
         reactionPickerShownFor: -1,
+        reactionList: null,
+        maxReactions: 0,
       };
     } else if (nextProps.topic != prevState.topic) {
-      const topic = nextProps.tinode.getTopic(nextProps.topic);
-
       nextState = {
         topic: nextProps.topic,
-        deleted: topic._deleted,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -400,10 +399,12 @@ class MessagesView extends React.Component {
         nextState.reply = null;
       }
 
+      const topic = nextProps.tinode.getTopic(nextProps.topic);
       if (topic) {
         // Topic exists.
-        const subs = [];
+        nextState.deleted = topic._deleted;
 
+        const subs = [];
         if (nextProps.connected) {
           topic.subscribers((sub) => {
             if (sub.online && sub.user != nextProps.myUserId) {
@@ -455,6 +456,9 @@ class MessagesView extends React.Component {
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           nextState.rtcPanel = nextProps.callTopic;
         }
+
+        nextState.reactionList = topic.reactions();
+        nextState.maxReactions = topic.maxReactions();
       } else {
         // Invalid topic.
         Object.assign(nextState, {
@@ -1699,6 +1703,8 @@ class MessagesView extends React.Component {
                 pinned={this.state.pins.includes(msg.seq)}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 reactions={topic.msgReactions(msg.seq)}
+                reactionList={this.state.reactionList}
+                maxReactions={this.state.maxReactions}
                 showContextMenu={this.handleShowMessageContextMenu}
                 onExpandMedia={this.handleExpandMedia}
                 onFormResponse={this.handleFormResponse}
@@ -1753,7 +1759,7 @@ class MessagesView extends React.Component {
             <div id="messages-container" className={darkModeClass}>
               <button id="go-to-latest" className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
-                <i className="material-icons">arrow_downward</i>
+                <i className="material-symbols-outlined">arrow_downward</i>
               </button>
               <div id="messages-panel" ref={this.handleScrollReference}>
                 <ul id="scroller" className={chatBoxClass}>
@@ -1773,7 +1779,7 @@ class MessagesView extends React.Component {
             </div>
             {this.state.peerMessagingDisabled && !this.state.unconfirmed ?
               <div id="peer-messaging-disabled-note">
-                <i className="material-icons secondary">block</i> <FormattedMessage
+                <i className="material-symbols-outlined secondary">block</i> <FormattedMessage
                   id="peers_messaging_disabled" defaultMessage="Peer's messaging is disabled."
                   description="Shown when the p2p peer's messaging is disabled" /> <a href="#"
                     onClick={this.handleEnablePeer}><FormattedMessage id="enable_peers_messaging"
@@ -1807,7 +1813,7 @@ class MessagesView extends React.Component {
             <div id="topic-caption-panel" className="caption-panel">
               {this.props.displayMobile ?
                 <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.leave(this.state.topic); this.props.onHideMessagesView();}}>
-                  <i className="material-icons">arrow_back</i>
+                  <i className="material-symbols-outlined">arrow_back</i>
                 </a>
                 :
                 null}
@@ -1848,7 +1854,7 @@ class MessagesView extends React.Component {
               }
               <div>
                 <a href="#" onClick={this.handleContextClick}>
-                  <i className="material-icons">more_vert</i>
+                  <i className="material-symbols-outlined">more_vert</i>
                 </a>
               </div>
             </div>

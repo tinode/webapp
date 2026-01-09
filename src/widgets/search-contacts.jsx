@@ -55,15 +55,15 @@ export default class SearchContacts extends React.PureComponent {
     return (
       <div className="panel-form">
         <div className="panel-form-row">
-          <i className="material-icons search">search</i>
+          <i className="material-symbols-outlined search">search</i>
           <input className="search" type="text"
               placeholder={this.props.placeholder}
               value={this.state.search} onChange={this.handleSearchChange}
               onKeyDown={this.handleKeyDown} required autoFocus />
           {this.state.search ?
-            <a href="#" onClick={this.handleClear}><i className="material-icons">highlight_off</i></a>
+            <a href="#" onClick={this.handleClear}><i className="material-symbols-outlined">highlight_off</i></a>
             :
-            <span><i className="material-icons">&nbsp;</i></span>}
+            <span><i className="material-symbols-outlined">&nbsp;</i></span>}
         </div>
       </div>
     );

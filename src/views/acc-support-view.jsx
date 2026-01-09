@@ -12,15 +12,15 @@ export default class AccSupportView extends React.PureComponent {
       <div className="scrollable-panel">
         <div className="panel-form-column">
           <a href={LINK_CONTACT_US} className="flat-button" target="_blank">
-            <i className="material-icons">email</i> &nbsp;<FormattedMessage id="link_contact_us"
+            <i className="material-symbols-outlined">email</i> &nbsp;<FormattedMessage id="link_contact_us"
               defaultMessage="Contact Us" description="Ancor text for contacting us by email" />
           </a>
           <a href={LINK_TERMS_OF_SERVICE} className="flat-button" target="_blank">
-            <i className="material-icons">description</i> &nbsp;<FormattedMessage id="link_terms_of_service"
+            <i className="material-symbols-outlined">description</i> &nbsp;<FormattedMessage id="link_terms_of_service"
               defaultMessage="Terms of Service" description="Ancor text for terms of service link" />
           </a>
           <a href={LINK_PRIVACY_POLICY} className="flat-button" target="_blank">
-            <i className="material-icons">policy</i> &nbsp;<FormattedMessage id="link_privacy_policy"
+            <i className="material-symbols-outlined">policy</i> &nbsp;<FormattedMessage id="link_privacy_policy"
               defaultMessage="Privacy Policy" description="Ancor text for privacy policy link" />
           </a>
         </div>

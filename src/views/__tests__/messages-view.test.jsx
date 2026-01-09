@@ -17,13 +17,14 @@ const DEL_CHAR = Tinode.DEL_CHAR;
 describe('MessagesView.handleReact', () => {
   test('delegates reaction call to topic.react with the selected emoji', () => {
     const fakeTopic = {
-      msgReactions: (seq) => [{value: '❤️', count: 3, users: ['me', 'u2']}],
+      msgReactions: (seq) => [{val: '❤️', count: 3, users: ['me', 'u2']}],
       react: jest.fn()
     };
 
     const fakeThis = {
       state: { topic: 't1' },
-      props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } }
+      props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } },
+      setState: jest.fn()
     };
 
     // Call the handler as defined on the prototype
@@ -44,19 +45,20 @@ describe('MessagesView.handleReact', () => {
 
     // Valid topic object -> no throw
     const fakeTopic = { react: jest.fn() };
-    fakeThis = { state: {topic: 't2'}, props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } } };
+    fakeThis = { state: {topic: 't2'}, props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } }, setState: jest.fn() };
     expect(() => UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [1, '👍'])).not.toThrow();
   });
 
   test('adds reaction when user has not reacted yet', () => {
     const fakeTopic = {
-      msgReactions: (seq) => [{value: '😂', count: 1, users: ['u2']}],
+      msgReactions: (seq) => [{val: '😂', count: 1, users: ['u2']}],
       react: jest.fn()
     };
 
     const fakeThis = {
       state: { topic: 't3' },
-      props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } }
+      props: { myUserId: 'me', tinode: { getTopic: () => fakeTopic } },
+      setState: jest.fn()
     };
 
     UnwrappedMessagesView.prototype.handleReact.apply(fakeThis, [2, '😂']);

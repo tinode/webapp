@@ -384,11 +384,11 @@ class AudioRecorder extends React.PureComponent {
 
   render() {
     const {formatMessage} = this.props.intl;
-    const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
+    const resumeClass = 'material-symbols-outlined ' + (this.state.enabled ? 'red' : 'gray');
     return (
       <div className="audio">
         <a href="#" onClick={this.handleDelete} title={formatMessage(messages.icon_title_delete)}>
-          <i className="material-icons gray">delete_outline</i>
+          <i className="material-symbols-outlined gray">delete_outline</i>
         </a>
         {this.state.recording ?
           <canvas ref={this.canvasRef} />
@@ -402,14 +402,14 @@ class AudioRecorder extends React.PureComponent {
         <div className="duration">{this.state.duration}</div>
         {this.state.recording ?
           <a href="#" onClick={this.handlePause} title={formatMessage(messages.icon_title_pause)}>
-            <i className="material-icons">pause_circle_outline</i>
+            <i className="material-symbols-outlined">pause_circle_outline</i>
           </a> :
           <a href="#" onClick={this.handleResume} title={formatMessage(messages.icon_title_resume)}>
             <i className={resumeClass}>radio_button_checked</i>
           </a>
         }
         <a href="#" onClick={this.handleDone} title={formatMessage(messages.icon_title_send)}>
-          <i className="material-icons">send</i>
+          <i className="material-symbols-outlined">send</i>
         </a>
       </div>
     );

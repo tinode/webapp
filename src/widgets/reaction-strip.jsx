@@ -2,14 +2,12 @@ import React from 'react';
 
 import { shortenCount } from '../lib/strformat';
 
-const MAX_REACTIONS_SHOWN = 6;
-
 class ReactionStrip extends React.PureComponent {
   render() {
-    const more = this.props.reactions.length - MAX_REACTIONS_SHOWN;
+    const more = this.props.reactions.length - this.props.maxReactions;
     return (
       <div className="reactions">
-        {this.props.reactions.slice(0, MAX_REACTIONS_SHOWN).map(r => {
+        {this.props.reactions.slice(0, this.props.maxReactions).map(r => {
           const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
           return (
             <div key={r.val}
@@ -25,7 +23,7 @@ class ReactionStrip extends React.PureComponent {
           data-testid="reaction-add"
           onMouseDown={(e) => { e.stopPropagation(); }}
           onClick={this.props.onTogglePicker}>
-            <i className="material-icons">{more > 0 ? 'more_horiz' : 'thumb_up_off_alt'}</i>
+            <i className="material-symbols-outlined">{more > 0 ? 'more_horiz' : 'thumb_up_off_alt'}</i>
         </div>
       </div>
     );

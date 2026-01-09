@@ -63,7 +63,7 @@ export default class WallpapersView extends React.PureComponent {
       <div className="flex-column">
         <div className="panel-form-row clean-clickable">
           <a className="flat-button" onClick={() => this.handleWallpaperSelected(null)}>
-            <i className="material-icons">undo</i>&nbsp;
+            <i className="material-symbols-outlined">undo</i>&nbsp;
             <FormattedMessage id="button_restore" defaultMessage="Restore default" description="Reset setting to default"/>
           </a>
         </div>

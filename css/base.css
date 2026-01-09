@@ -1033,11 +1033,11 @@ span.in-place-edit, div.in-place-edit {
   width: 100%;
 }
 
-.in-place-edit .material-icons {
+.in-place-edit .material-symbols-outlined {
   display: inline-block;
 }
 
-.material-icons.invalid {
+.material-symbols-outlined.invalid {
   color: var(--clr-error-text-muted);
 }
 
@@ -1067,12 +1067,12 @@ table.permission-editor td.checkbox {
   color: var(--clr-text-tertiary);
 }
 
-.permission-editor .material-icons {
+.permission-editor .material-symbols-outlined {
   font-size: 1.3rem;
   line-height: 1.3rem;
 }
 
-.material-icons.clickable {
+.material-symbols-outlined.clickable {
   cursor: pointer;
   border-bottom: none;
 }
@@ -1139,6 +1139,7 @@ table.permission-editor td.checkbox {
   flex-direction: column;
   overflow: hidden;
   min-width: 8rem;
+  width: fit-content;
   line-height: 2rem;
 }
 .bot-form div {
@@ -1261,27 +1262,27 @@ i.search {
   color: var(--clr-info-text-dark);
 }
 
-.info-box .cancel .material-icons {
+.info-box .cancel .material-symbols-outlined {
   font-size: 1rem;
   color: var(--clr-text-secondary);
 }
-.info-box.error .cancel .material-icons {
+.info-box.error .cancel .material-symbols-outlined {
   color: var(--clr-error-text-dark);
 }
 .info-box .icon {
   display: block;
   margin-right: 0.5rem;
 }
-.info-box .icon .material-icons {
+.info-box .icon .material-symbols-outlined {
   font-size: 1.5rem;
 }
-.info-box.warning .icon .material-icons {
+.info-box.warning .icon .material-symbols-outlined {
   color: var(--clr-warning-icon);
 }
-.info-box.error .icon .material-icons {
+.info-box.error .icon .material-symbols-outlined {
   color: var(--clr-error-icon);
 }
-.info-box.info .icon .material-icons {
+.info-box.info .icon .material-symbols-outlined {
   color: var(--clr-info-text-dark);
 }
 /* List of contacts */
@@ -1381,7 +1382,7 @@ i.search {
   font-weight: bolder;
 }
 
-.contact-box .contact-comment .material-icons {
+.contact-box .contact-comment .material-symbols-outlined {
   margin-bottom: 0.2rem;
   color: light-dark(#777, #666); /* #777 */
 }
@@ -1421,14 +1422,14 @@ i.search {
   filter: grayscale(1);
 }
 
-.contact-box .avatar-box > .material-icons {
+.contact-box .avatar-box > .material-symbols-outlined {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   font-size: 2.4rem;
   line-height: 3rem;
 }
-.contact-box.small .avatar-box > .material-icons {
+.contact-box.small .avatar-box > .material-symbols-outlined {
   font-size: 1.6rem;
   line-height: 2rem;
 }
@@ -1497,7 +1498,7 @@ img.channel {
   }
 }
 
-.contact-box .checkmark.material-icons {
+.contact-box .checkmark.material-symbols-outlined {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
@@ -1511,7 +1512,7 @@ img.channel {
   padding-left: 0.5px;
 }
 
-.contact-box .deleted.material-icons {
+.contact-box .deleted.material-symbols-outlined {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
@@ -1610,7 +1611,7 @@ img.channel {
   height: 10rem;
 }
 
-.avatar-upload .avatar-box > .material-icons {
+.avatar-upload .avatar-box > .material-symbols-outlined {
   position: relative;
   font-size: 4rem;
   line-height: 10rem;
@@ -1723,7 +1724,7 @@ img.channel {
   margin-right: 0.35rem;
 }
 
-#topic-caption-panel .avatar-box > .material-icons {
+#topic-caption-panel .avatar-box > .material-symbols-outlined {
   font-size: 2.4rem;
   line-height: 3rem;
 }
@@ -1753,7 +1754,7 @@ img.channel {
   margin-right: 0.2rem;
 }
 
-#topic-users .avatar-box > .material-icons {
+#topic-users .avatar-box > .material-symbols-outlined {
   font-size: 1.4rem;
   line-height: 1.8rem;
 }
@@ -1872,16 +1873,16 @@ img.channel {
   overflow-wrap: break-word;
 }
 
-#send-message-panel .material-icons {
+#send-message-panel .material-symbols-outlined {
   min-width: 2rem;
   font-size: 1.6rem;
 }
 
-#send-message-panel .material-icons.secondary, .material-icons.disabled {
+#send-message-panel .material-symbols-outlined.secondary, .material-symbols-outlined.disabled {
   color: var(--clr-text-tertiary)!important;
 }
 
-#send-message-panel .material-icons.secondary:hover {
+#send-message-panel .material-symbols-outlined.secondary:hover {
   color: var(--clr-primary-accent)!important;
 }
 
@@ -1996,7 +1997,7 @@ img.channel {
   z-index: 1;
 }
 
-#image-preview-container .material-icons {
+#image-preview-container .material-symbols-outlined {
   font-size: 6rem;
 }
 
@@ -2075,11 +2076,11 @@ img.channel {
   box-shadow: 0 2px 4px 0 var(--clr-shadow-button);
 }
 
-#controls button .material-icons {
+#controls button .material-symbols-outlined {
   font-size: 1.8rem;
 }
 
-#controls.minimized button .material-icons {
+#controls.minimized button .material-symbols-outlined {
   font-size: 1.4rem;
 }
 
@@ -2108,11 +2109,11 @@ button.full-screen:hover:not([disabled]), button:active:not([disabled]) {
   color: var(--clr-text-secondary);
 }
 
-button.full-screen .material-icons {
+button.full-screen .material-symbols-outlined {
   font-size: x-large;
 }
 
-.minimized button.full-screen .material-icons {
+.minimized button.full-screen .material-symbols-outlined {
   font-size: large;
 }
 
@@ -2203,7 +2204,7 @@ video {
   animation: active-call 1.5s linear infinite;
 }
 
-.caller-card .avatar-box .material-icons {
+.caller-card .avatar-box .material-symbols-outlined {
   font-size: 6rem;
   line-height: 1.6;
 }
@@ -2606,7 +2607,7 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   opacity: 0;
   margin-left: 0;
 }
-.reaction-add .material-icons{
+.reaction-add .material-symbols-outlined{
   font-size: 1.1rem;
 }
 li:hover .reaction-add,
@@ -2625,6 +2626,7 @@ li:hover .reaction-add:hover,
   align-items: center;
   border-radius: 0.25rem;
   padding: 0.1rem 0.35rem;
+  gap: 0.25rem;
   background-color: var(--clr-bright);
   filter: drop-shadow(0 2px 6px var(--clr-shadow-dialog));
   border: 1px solid rgba(0,0,0,0.06);
@@ -2638,8 +2640,9 @@ li:hover .reaction-add:hover,
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   justify-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
 }
-
 .reaction-picker::after {
   content: "";
   position: absolute;
@@ -2671,13 +2674,8 @@ li:hover .reaction-add:hover,
   border-width: 7px 7px 7px 0; /* top, right, bottom, left */
   border-color: transparent var(--clr-bright) transparent transparent;
 }
-/* Expanded picker grid */
-.reaction-picker.expanded {
-  display: grid;
-  padding: 0.6rem;
-  grid-template-columns: repeat(var(--cols, 6), 46px);
-}
 .reaction-picker-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2689,14 +2687,23 @@ li:hover .reaction-add:hover,
   height: 2.75rem;
   transition: transform 0.09s cubic-bezier(.2,.8,.2,1), background 0.12s ease;
 }
+.reaction-picker-btn.selected {
+  background: var(--clr-primary-accent);
+}
+.reaction-picker-btn:focus-visible {
+  background: var(--clr-primary-wash);
+  outline: none;
+}
+.reaction-picker-btn.selected:focus-visible {
+  background: var(--clr-primary-accent);
+  border: 2px solid var(--clr-primary-wash);
+  transform: translateY(-1px) scale(1.05);
+}
 .reaction-picker-btn:hover {
   transform: translateY(-1px) scale(1.05);
 }
 .reaction-picker-btn:active {
   transform: translateY(0) scale(1);
-}
-.reaction-picker-btn:focus-visible {
-  outline: 0.45px solid var(--clr-primary-accent-transparent-medium);
 }
 .reaction-picker .divider {
   width: 1px;
@@ -3004,8 +3011,9 @@ ul.tabbar li.active > a {
 
 /* Miscellaneous */
 
-/* Badge with the number of unread messages */
-.unread {
+/* Badge with the number, i.e. of unread messages */
+.counter-badge {
+  position: relative;
   display: inline-block;
   font-size: 0.75rem;
   font-weight: bolder;
@@ -3019,8 +3027,30 @@ ul.tabbar li.active > a {
   text-align: center;
   vertical-align: middle;
 }
+.counter-badge.medium {
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 0.8rem;
+  line-height: 1.85rem;
+  font-weight: unset;
+}
+.counter-badge.large {
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 0.9rem;
+  line-height: 2.45rem;
+  font-weight: unset;
+}
+.counter-badge.rect {
+  line-height: 1.5;
+  height: min-content;
+  padding: 0 0.15rem;
+  border-radius: 0.5rem;
+  min-width: 1.5rem;
+  width: fit-content;
+}
 
-.material-icons.as-badge {
+.material-symbols-outlined.as-badge {
   padding-left: 0.2rem;
   font-size: 1.15rem;
   color: var(--clr-chip-remove-icon-bg); /* #aaa */
@@ -3175,29 +3205,29 @@ ul.tabbar li.active > a {
 .dk-fg-15 { color: var(--clr-dk-fg-15)!important; }
 
 /* Material icons resized from the default 24pt */
-.material-icons {
+.material-symbols-outlined {
   font-size: 1.4rem;
   line-height: 1;
   vertical-align: middle;
   text-align: center;
   user-select: none;
 }
-.material-icons.small {
+.material-symbols-outlined.small {
   font-size: 1rem;
 }
-.material-icons.medium {
+.material-symbols-outlined.medium {
   font-size: 1.2rem;
 }
-.material-icons.large {
+.material-symbols-outlined.large {
   font-size: 1.6rem;
 }
-.material-icons.big {
+.material-symbols-outlined.big {
   font-size: 2.2rem;
 }
-.material-icons.x-big {
+.material-symbols-outlined.x-big {
   font-size: 3rem;
 }
-.material-icons.huge {
+.material-symbols-outlined.huge {
   font-size: 4rem;
 }
 .composed-material {
@@ -3220,16 +3250,16 @@ ul.tabbar li.active > a {
 }
 
 /* White outline */
-.material-icons.outline {
+.material-symbols-outlined.outline {
   position: relative;
   text-shadow: -1px 1px var(--clr-bright), 1px 1px var(--clr-bright), 1px -1px var(--clr-bright), -1px -1px var(--clr-bright);
 }
 
-#self-avatar .material-icons {
+#self-avatar .material-symbols-outlined {
   font-size: 2.4rem;
   line-height: 3rem;
 }
-.avatar-box .material-icons {
+.avatar-box .material-symbols-outlined {
   color: var(--clr-lettertile-default-text); /* #fafafa, gray 50 */
   border-radius: 50%;
   width: inherit;
@@ -3332,7 +3362,7 @@ ul.tabbar li.active > a {
   margin-right: 0.2rem;
 }
 
-.chip .avatar-box .material-icons {
+.chip .avatar-box .material-symbols-outlined {
   font-size: 1.4rem;
   line-height: 1.8rem;
 }
@@ -3631,12 +3661,12 @@ ul.tabbar li.active > a {
   align-items: center;
 }
 
-.audio-player .material-icons.large {
+.audio-player .material-symbols-outlined.large {
   font-size: 2.4rem;
   color: var(--clr-audio-icon);
 }
 
-.audio-player .material-icons.disabled {
+.audio-player .material-symbols-outlined.disabled {
   color: var(--clr-audio-icon-disabled);
   cursor: default;
 }

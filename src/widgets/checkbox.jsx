@@ -13,7 +13,7 @@ export default class CheckBox extends React.PureComponent {
   }
 
   render() {
-    let classList = ['material-icons'];
+    let classList = ['material-symbols-outlined'];
     let iconName;
     if (Array.isArray(this.props.className)) {
       classList.push(...this.props.className);

@@ -161,7 +161,7 @@ export function fullFormatter(style, data, values, key, stack) {
         if (!Array.isArray(values) || !values.join('').trim()) {
           body = [<span key="x1" className="gray">{this.formatMessage(messages.drafty_unknown)}</span>];
         }
-        values = [<i key="x0" className="material-icons gray">extension</i>, ' '].concat(body);
+        values = [<i key="x0" className="material-symbols-outlined gray">extension</i>, ' '].concat(body);
       }
       break;
   }
@@ -269,7 +269,7 @@ export function previewFormatter(style, data, values, key) {
     case 'AU':
       // Voicemail as '[mic] 0:00'.
       el = React.Fragment;
-      values = [<i key="au" className="material-icons">mic</i>, ' ', secondsToTime(data.duration/1000)];
+      values = [<i key="au" className="material-symbols-outlined">mic</i>, ' ', secondsToTime(data.duration/1000)];
       break;
     case 'BR':
       // Replace new line with a space.
@@ -288,7 +288,7 @@ export function previewFormatter(style, data, values, key) {
     case 'IM':
       // Replace image with '[icon] Image'.
       el = React.Fragment;
-      values = [<i key="im" className="material-icons">photo</i>, ' ', this.formatMessage(messages.drafty_image)];
+      values = [<i key="im" className="material-symbols-outlined">photo</i>, ' ', this.formatMessage(messages.drafty_image)];
       break;
     case 'BN':
       el = 'span';
@@ -296,7 +296,7 @@ export function previewFormatter(style, data, values, key) {
       break;
     case 'FM':
       el = React.Fragment;
-      values = [<i key="fm" className="material-icons">dashboard</i>,
+      values = [<i key="fm" className="material-symbols-outlined">browse</i>,
         this.formatMessage(messages.drafty_form)].concat(' ', values || []);
       break;
     case 'RW':
@@ -313,7 +313,7 @@ export function previewFormatter(style, data, values, key) {
         delete data.ref;
       }
       el = React.Fragment;
-      values = [<i key="ex" className="material-icons">attachment</i>, ' ', this.formatMessage(messages.drafty_attachment)];
+      values = [<i key="ex" className="material-symbols-outlined">attachment</i>, ' ', this.formatMessage(messages.drafty_attachment)];
       break;
     case 'VC':
       el = CallStatus;
@@ -332,13 +332,13 @@ export function previewFormatter(style, data, values, key) {
     case 'VD':
       // Replace image with '[icon] Video'.
       el = React.Fragment;
-      values = [<i key="im" className="material-icons">play_circle_outline</i>, ' ', this.formatMessage(messages.drafty_video)];
+      values = [<i key="im" className="material-symbols-outlined">play_circle_outline</i>, ' ', this.formatMessage(messages.drafty_video)];
       break;
     default:
       if (!el) {
         // Unknown element.
         el = React.Fragment;
-        values = [<i key="x0" className="material-icons gray">extension</i>, ' ', this.formatMessage(messages.drafty_unknown)];
+        values = [<i key="x0" className="material-symbols-outlined gray">extension</i>, ' ', this.formatMessage(messages.drafty_unknown)];
       }
       break;
   }
@@ -436,7 +436,7 @@ function quoteFormatter(style, data, values, key) {
           delete data.ref;
         }
         el = React.Fragment;
-        values = [<i key="ex" className="material-icons">attachment</i>,
+        values = [<i key="ex" className="material-symbols-outlined">attachment</i>,
           shortenFileName(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
@@ -538,7 +538,7 @@ export function replyFormatter(style, data, values, key, stack) {
     if (stack.includes('QQ')) {
       // Quote inside quote when forwarding a message.
       return React.createElement('span', {key: key},
-        [<i key="qq" className="material-icons">format_quote</i>, ' ']);
+        [<i key="qq" className="material-symbols-outlined">format_quote</i>, ' ']);
     }
 
     const attr = Drafty.attrValue('QQ', data) || {};

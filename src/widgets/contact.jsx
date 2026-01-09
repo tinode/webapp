@@ -6,7 +6,7 @@ import { Tinode } from 'tinode-sdk';
 
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
-import UnreadBadge from './unread-badge.jsx';
+import CountBadge from './count-badge.jsx';
 
 import { Drafty } from 'tinode-sdk';
 
@@ -103,14 +103,14 @@ class Contact extends React.Component {
         {formatMessage: this.props.intl.formatMessage, previewIsResponse: this.props.previewIsResponse}));
     } else if (this.props.preview) {
       preview =
-        <><i className="material-icons gray">warning_amber</i> <i className="gray">
+        <><i className="material-symbols-outlined gray">warning_amber</i> <i className="gray">
           <FormattedMessage id="invalid_content"
             defaultMessage="invalid content" description="Shown when the message is unreadable" /></i>
         </>;
     }
 
     const icon = deliveryMarker(this.props.received);
-    const marker = icon ? <i className={'material-icons small space-right' +
+    const marker = icon ? <i className={'material-symbols-outlined small space-right' +
       (icon.color ? ' ' + icon.color : '')}>{icon.name}</i> : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
 
@@ -127,18 +127,18 @@ class Contact extends React.Component {
             title={this.props.title}
             topic={this.props.item}
             deleted={this.props.deleted} />
-          {this.props.deleted ? <i className="deleted material-icons">cancel</i> :
+          {this.props.deleted ? <i className="deleted material-symbols-outlined">cancel</i> :
             (!self && this.props.showOnline) ? <span className={online} /> :
             (this.props.showCheckmark && this.props.selected) ?
-            <i className="checkmark material-icons">check_circle</i>
+            <i className="checkmark material-symbols-outlined">check_circle</i>
             : null}
         </div>
         <div className="text-box">
           <div><span className={titleClass}>{title}</span>
-            {this.props.isGroup ? <i className="material-icons as-badge">group</i> : null}
-            {this.props.isChannel ? <i className="material-icons as-badge">podcasts</i> : null}
+            {this.props.isGroup ? <i className="material-symbols-outlined as-badge">group</i> : null}
+            {this.props.isChannel ? <i className="material-symbols-outlined as-badge">podcasts</i> : null}
             {!self ? <ContactBadges badges={icon_badges} /> : null}
-            {!this.props.deleted ? <UnreadBadge count={this.props.unread} /> : null}
+            {!this.props.deleted ? <CountBadge count={this.props.unread} limit={9} /> : null}
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
@@ -147,7 +147,7 @@ class Contact extends React.Component {
         {this.props.showContextMenu ?
           <span className="menuTrigger">
             <a href="#" onClick={this.handleContextClick}>
-              <i className="material-icons">expand_more</i>
+              <i className="material-symbols-outlined">expand_more</i>
             </a>
           </span> : null}
       </li>

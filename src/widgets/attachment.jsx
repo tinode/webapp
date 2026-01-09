@@ -71,11 +71,11 @@ export default class Attachment extends React.Component {
       url = sanitizeUrl(this.props.downloadUrl);
       helperFunc = null;
     }
-    const downloadWidget = <><i className="material-icons">file_download</i> <FormattedMessage id="save_attachment"
+    const downloadWidget = <><i className="material-symbols-outlined">file_download</i> <FormattedMessage id="save_attachment"
       defaultMessage="save" description="Call to save an attachment" /></>;
     return (
       <div className="attachment">
-        <div><i className="material-icons big gray">insert_drive_file</i></div>
+        <div><i className="material-symbols-outlined big gray">insert_drive_file</i></div>
         <div className="flex-column">
           <div>{filename} {size}</div>
           {this.props.uploading || this.state.downloader ?

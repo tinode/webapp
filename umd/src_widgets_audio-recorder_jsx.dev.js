@@ -343,7 +343,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
+    const resumeClass = 'material-symbols-outlined ' + (this.state.enabled ? 'red' : 'gray');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "audio"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -351,7 +351,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onClick: this.handleDelete,
       title: formatMessage(messages.icon_title_delete)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "material-symbols-outlined gray"
     }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
       ref: this.canvasRef
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -366,7 +366,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onClick: this.handlePause,
       title: formatMessage(messages.icon_title_pause)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "pause_circle_outline")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleResume,
@@ -378,7 +378,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onClick: this.handleDone,
       title: formatMessage(messages.icon_title_send)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-symbols-outlined"
     }, "send")));
   }
 }

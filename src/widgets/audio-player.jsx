@@ -244,7 +244,7 @@ class AudioPlayer extends React.PureComponent {
   }
 
   render() {
-    const playClass = 'material-icons' +
+    const playClass = 'material-symbols-outlined' +
       (this.props.short ? '' : ' large') +
       (this.state.canPlay ? '' : ' disabled');
     const play = (<a href="#" onClick={this.handlePlay} title={this.props.intl.formatMessage(messages.icon_title_play)}>

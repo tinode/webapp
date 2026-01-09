@@ -61,7 +61,7 @@ export default class ForwardDialog extends React.Component {
           <div className="title with-control">
             <div><FormattedMessage id="forward_to" defaultMessage="Forward to"
               desription="Title of the contact selector dialog when forwarding a message" /></div>
-            <div><a href="#" onClick={this.handleClose}><i className="material-icons">close</i></a></div>
+            <div><a href="#" onClick={this.handleClose}><i className="material-symbols-outlined">close</i></a></div>
           </div>
           <FormattedMessage id="forward_to_search_placeholder" defaultMessage="Search contacts"
             description="Contact search prompt when forwarding a message.">{
