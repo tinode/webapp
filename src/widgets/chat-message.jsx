@@ -13,6 +13,7 @@ import { fullFormatter } from '../lib/formatters.js';
 import { sanitizeUrl } from '../lib/utils.js';
 import ReactionPicker from './reaction-picker.jsx';
 
+/*
 const testReactions = [
   {val: '👍', count: 2, users: ['user1', 'user2']},
   {val: '❤️', count: 1, users: ['user3']},
@@ -27,6 +28,7 @@ const testReactions = [
   {val: "😭", count: 2, users: ['user1', 'user2']},
   {val: "🙄", count: 1, users: ['user1']}
 ];
+*/
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -267,7 +269,7 @@ class BaseChatMessage extends React.PureComponent {
               </div>
               {this.props.reactionList &&
                 <ReactionStrip
-                  reactions={testReactions || this.props.reactions}
+                  reactions={this.props.reactions}
                   reactionList={this.props.reactionList}
                   maxReactions={this.props.maxReactions}
                   myUserId={this.props.myUserId}
@@ -292,14 +294,15 @@ class BaseChatMessage extends React.PureComponent {
           </div>
           {this.props.showPicker ?
             <ReactionPicker
-              reactions={testReactions || this.props.reactions}
+              reactions={this.props.reactions}
               reactionList={this.props.reactionList}
               maxReactions={this.props.maxReactions}
+              myUserId={this.props.myUserId}
+              anchor={this.state.pickerAnchor}
+              viewportBounds={this.state.parentBounds}
               onSelect={(emo) => this.handleReactionSelected(null, emo)}
               onClose={() => this.props.onToggleReactionPicker(-1)}
-              dataTestPrefix="reaction-picker"
-              anchor={this.state.pickerAnchor}
-              viewportBounds={this.state.parentBounds} />
+              dataTestPrefix="reaction-picker" />
             : null}
           {fullDisplay ?
             <div className="author">

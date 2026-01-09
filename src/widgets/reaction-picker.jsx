@@ -237,11 +237,12 @@ class ReactionPicker extends React.PureComponent {
             .slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT)
             .map((emo, i) => {
               const applied = (this.props.reactions || []).find(r => r.val == emo);
-              const count = (applied && applied.count > 1) ? (applied.count | 0) : 123456;
+              const count = (applied && applied.count > 1) ? (applied.count | 0) : false;
+              const mine = applied && applied.users.includes(this.props.myUserId);
               return <div
                 key={emo}
                 ref={el => this.emojiRefs[i] = el}
-                className={`reaction-picker-btn${applied ? ' selected' : ''}`}
+                className={`reaction-picker-btn${mine ? ' mine' : applied ? ' applied' : ''}`}
                 data-testid={`${prefix}-${emo}`}
                 onClick={() => { this.selectEmoji(emo); }}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectEmoji(emo); } }}

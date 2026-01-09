@@ -16171,55 +16171,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 
 
 
-const testReactions = [{
-  val: '👍',
-  count: 2,
-  users: ['user1', 'user2']
-}, {
-  val: '❤️',
-  count: 1,
-  users: ['user3']
-}, {
-  val: '😂',
-  count: 5,
-  users: ['user4', 'user5', 'user6', 'user7', 'user8']
-}, {
-  val: '🔥',
-  count: 3,
-  users: ['user9', 'user10', 'user11']
-}, {
-  val: "🙏",
-  count: 1,
-  users: ['user1']
-}, {
-  val: "✨",
-  count: 2,
-  users: ['user1', 'user2']
-}, {
-  val: "😁",
-  count: 1,
-  users: ['user1']
-}, {
-  val: "😍",
-  count: 1,
-  users: ['user1']
-}, {
-  val: "😊",
-  count: 4,
-  users: ['user1', 'user2', 'user3', 'user4']
-}, {
-  val: "🥰",
-  count: 1,
-  users: ['user1']
-}, {
-  val: "😭",
-  count: 2,
-  users: ['user1', 'user2']
-}, {
-  val: "🙄",
-  count: 1,
-  users: ['user1']
-}];
 class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -16435,7 +16386,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: textSizeClass
     }, content, attachments), this.props.reactionList && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      reactions: testReactions || this.props.reactions,
+      reactions: this.props.reactions,
       reactionList: this.props.reactionList,
       maxReactions: this.props.maxReactions,
       myUserId: this.props.myUserId,
@@ -16454,14 +16405,15 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-symbols-outlined"
     }, "expand_more"))) : null), this.props.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      reactions: testReactions || this.props.reactions,
+      reactions: this.props.reactions,
       reactionList: this.props.reactionList,
       maxReactions: this.props.maxReactions,
+      myUserId: this.props.myUserId,
+      anchor: this.state.pickerAnchor,
+      viewportBounds: this.state.parentBounds,
       onSelect: emo => this.handleReactionSelected(null, emo),
       onClose: () => this.props.onToggleReactionPicker(-1),
-      dataTestPrefix: "reaction-picker",
-      anchor: this.state.pickerAnchor,
-      viewportBounds: this.state.parentBounds
+      dataTestPrefix: "reaction-picker"
     }) : null, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "author"
     }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -20058,11 +20010,12 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       style: style
     }, (this.props.reactionList || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => {
       const applied = (this.props.reactions || []).find(r => r.val == emo);
-      const count = applied && applied.count > 1 ? applied.count | 0 : 123456;
+      const count = applied && applied.count > 1 ? applied.count | 0 : false;
+      const mine = applied && applied.users.includes(this.props.myUserId);
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: emo,
         ref: el => this.emojiRefs[i] = el,
-        className: `reaction-picker-btn${applied ? ' selected' : ''}`,
+        className: `reaction-picker-btn${mine ? ' mine' : applied ? ' applied' : ''}`,
         "data-testid": `${prefix}-${emo}`,
         onClick: () => {
           this.selectEmoji(emo);

@@ -7,8 +7,9 @@ import ChatMessage from '../chat-message.jsx';
 import ReactionPicker from '../reaction-picker.jsx';
 
 describe('ChatMessage reactions UI', () => {
+  const reactionList = ['👍','😂','❤️','e0','e1','e2','e3'];
   const defaultProps = {
-    tinode: { authorizeURL: () => {}, getServerParam: () => ['👍','😂','❤️','e0','e1','e2','e3'] },
+    tinode: { authorizeURL: () => {}, getServerParam: () => reactionList },
     topic: {},
     content: null,
     mimeType: null,
@@ -42,7 +43,9 @@ describe('ChatMessage reactions UI', () => {
     onReact: jest.fn(),
     onToggleReactionPicker: jest.fn(),
     myUserId: 'me',
-    parentRef: { getBoundingClientRect: () => ({ left: 0, top: 0, right: 800, bottom: 600, width: 800, height: 600 }) }
+    parentRef: { getBoundingClientRect: () => ({ left: 0, top: 0, right: 800, bottom: 600, width: 800, height: 600 }) },
+    reactionList: reactionList,
+    maxReactions: 6
   };
 
   test('renders reactions and triggers onReact when clicked', () => {
