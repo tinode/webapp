@@ -104,9 +104,9 @@ export default class InPlaceEdit extends React.Component {
       }
 
       return (<span className={spanClass} onClick={this.handleStartEditing}>
-        {this.props.iconLeft && <i className="material-symbols-outlined light-gray">{this.props.iconLeft}</i>}
+        {this.props.iconLeft && <i className="m-icon light-gray">{this.props.iconLeft}</i>}
         <span>{spanText}</span>
-        {this.props.iconRight && <i className="material-symbols-outlined light-gray">{this.props.iconRight}</i>}
+        {this.props.iconRight && <i className="m-icon light-gray">{this.props.iconRight}</i>}
       </span>);
     }
 
@@ -147,9 +147,9 @@ export default class InPlaceEdit extends React.Component {
     if (this.props.iconLeft || this.props.iconRight) {
       return (
         <>
-          {this.props.iconLeft && <i className="material-symbols-outlined light-gray">{this.props.iconLeft}</i>}
+          {this.props.iconLeft && <i className="m-icon light-gray">{this.props.iconLeft}</i>}
           {React.createElement(element, attr, null)}
-          {this.props.iconRight && <i className="material-symbols-outlined light-gray">{this.props.iconRight}</i>}
+          {this.props.iconRight && <i className="m-icon light-gray">{this.props.iconRight}</i>}
         </>
       );
     }

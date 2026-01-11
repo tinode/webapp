@@ -5,7 +5,7 @@ export default class MenuCancel extends React.PureComponent {
   render() {
     return (
       <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancel();}}>
-        <i className="material-symbols-outlined">close</i>
+        <i className="m-icon">close</i>
       </a>
     );
   }

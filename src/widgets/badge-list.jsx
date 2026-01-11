@@ -31,7 +31,7 @@ class BadgeList extends React.PureComponent {
       badges = [];
       this.props.trustedBadges.forEach(b => {
         const comment = this.props.short ? null : formatMessage(messages['badge_' + b]);
-        const style = 'material-symbols-outlined ' + b + '-color';
+        const style = 'm-icon fill ' + b + '-color';
         badges.push(<div className="trusted-badge" key={b}><i className={style}>{icon_mapping[b] || b}</i> {comment}</div>);
       });
       return <>{badges}</>;

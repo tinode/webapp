@@ -255,7 +255,7 @@ class SendMessage extends React.PureComponent {
     const quote = this.state.quote ?
       (<div id="reply-quote-preview">
         <div className="cancel">
-          <a href="#" onClick={e => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-symbols-outlined gray">close</i></a>
+          <a href="#" onClick={e => {e.preventDefault(); this.props.onCancelReply();}}><i className="m-icon gray">close</i></a>
         </div>
         {this.state.quote}
       </div>) : null;
@@ -269,10 +269,10 @@ class SendMessage extends React.PureComponent {
               {this.props.onAttachFile && !this.state.audioRec ?
                 <>
                   <a href="#" onClick={e => {e.preventDefault(); this.attachImage.click();}} title={formatMessage(messages.icon_title_add_image)}>
-                    <i className="material-symbols-outlined secondary">photo</i>
+                    <i className="m-icon secondary">photo</i>
                   </a>
                   <a href="#" onClick={e => {e.preventDefault(); this.attachFile.click();}} title={formatMessage(messages.icon_title_attach_file)}>
-                    <i className="material-symbols-outlined secondary">attach_file</i>
+                    <i className="m-icon secondary">attach_file</i>
                   </a>
                 </>
                 :
@@ -293,11 +293,11 @@ class SendMessage extends React.PureComponent {
                     ref={ref => {this.messageEditArea = ref;}} />)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
-                  <i className="material-symbols-outlined">{sendIcon}</i>
+                  <i className="m-icon fill">{sendIcon}</i>
                 </a> :
                 !this.state.audioRec ?
                   <a href="#" onClick={e => {e.preventDefault(); this.setState({audioRec: true})}} title={formatMessage(messages.icon_title_record_voice)}>
-                    <i className="material-symbols-outlined">mic</i>
+                    <i className="m-icon fill">mic</i>
                   </a> :
                   null
               }

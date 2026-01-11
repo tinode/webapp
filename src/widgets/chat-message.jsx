@@ -242,7 +242,7 @@ class BaseChatMessage extends React.PureComponent {
         textSizeClass += ' emoji-' + (content || '').match(/\p{RGI_Emoji}/vg).length;
       }
     } else {
-      content = <><i className="material-symbols-outlined gray">warning_amber</i> <i className="gray">
+      content = <><i className="m-icon gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
           defaultMessage="invalid content" description="Shown when the message is unreadable" /></i></>
     }
@@ -287,7 +287,7 @@ class BaseChatMessage extends React.PureComponent {
             {this.props.showContextMenu ?
               <span className="menuTrigger">
                 <a href="#" onClick={this.handleContextClick}>
-                  <i className="material-symbols-outlined">expand_more</i>
+                  <i className="m-icon">expand_more</i>
                 </a>
               </span> : null
             }

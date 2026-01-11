@@ -134,10 +134,10 @@ export default class CallIncoming extends React.Component {
             {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
               <>
                 <button className="danger" onClick={this.handleRejectCall}>
-                  <i className="material-symbols-outlined">call_end</i>
+                  <i className="m-icon">call_end</i>
                 </button>
                 <button className="positive" onClick={this.handleAcceptCall}>
-                  <i className="material-symbols-outlined">call</i>
+                  <i className="m-icon">call</i>
                 </button>
               </>
               :

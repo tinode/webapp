@@ -587,6 +587,58 @@ datalist {
 
 /* END of Scrollbar styling.  */
 
+/* BEGIN Material Icons font */
+.m-icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-size: 1.4rem;
+  vertical-align: middle;
+  text-align: center;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+  --m-icon-fill: 0;
+  --m-icon-wght: 400;
+  font-variation-settings:
+    'FILL' var(--m-icon-fill),
+    'wght' var(--m-icon-wght);
+}
+
+.m-icon.fill { --m-icon-fill: 1; }
+.m-icon.bold { --m-icon-wght: 500; }
+.m-icon.thin { --m-icon-wght: 300; }
+
+.m-icon.small {
+  font-size: 1rem;
+}
+.m-icon.medium {
+  font-size: 1.2rem;
+}
+.m-icon.large {
+  font-size: 1.6rem;
+}
+.m-icon.big {
+  font-size: 2.2rem;
+}
+.m-icon.x-big {
+  font-size: 3rem;
+}
+.m-icon.huge {
+  font-size: 4rem;
+}
+
+/* END Material Icons font */
+
 /* BEGIN Popup/dropdown menu */
 
 ul.menu {
@@ -1033,11 +1085,11 @@ span.in-place-edit, div.in-place-edit {
   width: 100%;
 }
 
-.in-place-edit .material-symbols-outlined {
+.in-place-edit .m-icon {
   display: inline-block;
 }
 
-.material-symbols-outlined.invalid {
+.m-icon.invalid {
   color: var(--clr-error-text-muted);
 }
 
@@ -1067,12 +1119,12 @@ table.permission-editor td.checkbox {
   color: var(--clr-text-tertiary);
 }
 
-.permission-editor .material-symbols-outlined {
+.permission-editor .m-icon {
   font-size: 1.3rem;
   line-height: 1.3rem;
 }
 
-.material-symbols-outlined.clickable {
+.m-icon.clickable {
   cursor: pointer;
   border-bottom: none;
 }
@@ -1262,27 +1314,27 @@ i.search {
   color: var(--clr-info-text-dark);
 }
 
-.info-box .cancel .material-symbols-outlined {
+.info-box .cancel .m-icon {
   font-size: 1rem;
   color: var(--clr-text-secondary);
 }
-.info-box.error .cancel .material-symbols-outlined {
+.info-box.error .cancel .m-icon {
   color: var(--clr-error-text-dark);
 }
 .info-box .icon {
   display: block;
   margin-right: 0.5rem;
 }
-.info-box .icon .material-symbols-outlined {
+.info-box .icon .m-icon {
   font-size: 1.5rem;
 }
-.info-box.warning .icon .material-symbols-outlined {
+.info-box.warning .icon .m-icon {
   color: var(--clr-warning-icon);
 }
-.info-box.error .icon .material-symbols-outlined {
+.info-box.error .icon .m-icon {
   color: var(--clr-error-icon);
 }
-.info-box.info .icon .material-symbols-outlined {
+.info-box.info .icon .m-icon {
   color: var(--clr-info-text-dark);
 }
 /* List of contacts */
@@ -1382,7 +1434,7 @@ i.search {
   font-weight: bolder;
 }
 
-.contact-box .contact-comment .material-symbols-outlined {
+.contact-box .contact-comment .m-icon {
   margin-bottom: 0.2rem;
   color: light-dark(#777, #666); /* #777 */
 }
@@ -1422,14 +1474,14 @@ i.search {
   filter: grayscale(1);
 }
 
-.contact-box .avatar-box > .material-symbols-outlined {
+.contact-box .avatar-box > .m-icon {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   font-size: 2.4rem;
   line-height: 3rem;
 }
-.contact-box.small .avatar-box > .material-symbols-outlined {
+.contact-box.small .avatar-box > .m-icon {
   font-size: 1.6rem;
   line-height: 2rem;
 }
@@ -1498,7 +1550,7 @@ img.channel {
   }
 }
 
-.contact-box .checkmark.material-symbols-outlined {
+.contact-box .checkmark.m-icon {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
@@ -1512,7 +1564,7 @@ img.channel {
   padding-left: 0.5px;
 }
 
-.contact-box .deleted.material-symbols-outlined {
+.contact-box .deleted.m-icon {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
@@ -1611,7 +1663,7 @@ img.channel {
   height: 10rem;
 }
 
-.avatar-upload .avatar-box > .material-symbols-outlined {
+.avatar-upload .avatar-box > .m-icon {
   position: relative;
   font-size: 4rem;
   line-height: 10rem;
@@ -1724,7 +1776,7 @@ img.channel {
   margin-right: 0.35rem;
 }
 
-#topic-caption-panel .avatar-box > .material-symbols-outlined {
+#topic-caption-panel .avatar-box > .m-icon {
   font-size: 2.4rem;
   line-height: 3rem;
 }
@@ -1754,7 +1806,7 @@ img.channel {
   margin-right: 0.2rem;
 }
 
-#topic-users .avatar-box > .material-symbols-outlined {
+#topic-users .avatar-box > .m-icon {
   font-size: 1.4rem;
   line-height: 1.8rem;
 }
@@ -1873,16 +1925,16 @@ img.channel {
   overflow-wrap: break-word;
 }
 
-#send-message-panel .material-symbols-outlined {
+#send-message-panel .m-icon {
   min-width: 2rem;
   font-size: 1.6rem;
 }
 
-#send-message-panel .material-symbols-outlined.secondary, .material-symbols-outlined.disabled {
+#send-message-panel .m-icon.secondary, .m-icon.disabled {
   color: var(--clr-text-tertiary)!important;
 }
 
-#send-message-panel .material-symbols-outlined.secondary:hover {
+#send-message-panel .m-icon.secondary:hover {
   color: var(--clr-primary-accent)!important;
 }
 
@@ -1997,7 +2049,7 @@ img.channel {
   z-index: 1;
 }
 
-#image-preview-container .material-symbols-outlined {
+#image-preview-container .m-icon {
   font-size: 6rem;
 }
 
@@ -2076,11 +2128,11 @@ img.channel {
   box-shadow: 0 2px 4px 0 var(--clr-shadow-button);
 }
 
-#controls button .material-symbols-outlined {
+#controls button .m-icon {
   font-size: 1.8rem;
 }
 
-#controls.minimized button .material-symbols-outlined {
+#controls.minimized button .m-icon {
   font-size: 1.4rem;
 }
 
@@ -2109,11 +2161,11 @@ button.full-screen:hover:not([disabled]), button:active:not([disabled]) {
   color: var(--clr-text-secondary);
 }
 
-button.full-screen .material-symbols-outlined {
+button.full-screen .m-icon {
   font-size: x-large;
 }
 
-.minimized button.full-screen .material-symbols-outlined {
+.minimized button.full-screen .m-icon {
   font-size: large;
 }
 
@@ -2204,7 +2256,7 @@ video {
   animation: active-call 1.5s linear infinite;
 }
 
-.caller-card .avatar-box .material-symbols-outlined {
+.caller-card .avatar-box .m-icon {
   font-size: 6rem;
   line-height: 1.6;
 }
@@ -2587,7 +2639,6 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
 .reaction.active {
   background: var(--clr-primary-accent);
   color: azure;
-  border-color: transparent;
 }
 .reaction .emoji {
   font-size: 0.95rem;
@@ -2607,7 +2658,7 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   opacity: 0;
   margin-left: 0;
 }
-.reaction-add .material-symbols-outlined{
+.reaction-add .m-icon{
   font-size: 1.1rem;
 }
 li:hover .reaction-add,
@@ -3049,7 +3100,7 @@ ul.tabbar li.active > a {
   width: fit-content;
 }
 
-.material-symbols-outlined.as-badge {
+.m-icon.as-badge {
   padding-left: 0.2rem;
   font-size: 1.15rem;
   color: var(--clr-chip-remove-icon-bg); /* #aaa */
@@ -3204,31 +3255,6 @@ ul.tabbar li.active > a {
 .dk-fg-15 { color: var(--clr-dk-fg-15)!important; }
 
 /* Material icons resized from the default 24pt */
-.material-symbols-outlined {
-  font-size: 1.4rem;
-  line-height: 1;
-  vertical-align: middle;
-  text-align: center;
-  user-select: none;
-}
-.material-symbols-outlined.small {
-  font-size: 1rem;
-}
-.material-symbols-outlined.medium {
-  font-size: 1.2rem;
-}
-.material-symbols-outlined.large {
-  font-size: 1.6rem;
-}
-.material-symbols-outlined.big {
-  font-size: 2.2rem;
-}
-.material-symbols-outlined.x-big {
-  font-size: 3rem;
-}
-.material-symbols-outlined.huge {
-  font-size: 4rem;
-}
 .composed-material {
   display: inline-block;
   position: relative;
@@ -3249,16 +3275,16 @@ ul.tabbar li.active > a {
 }
 
 /* White outline */
-.material-symbols-outlined.outline {
+.m-icon.outline {
   position: relative;
   text-shadow: -1px 1px var(--clr-bright), 1px 1px var(--clr-bright), 1px -1px var(--clr-bright), -1px -1px var(--clr-bright);
 }
 
-#self-avatar .material-symbols-outlined {
+#self-avatar .m-icon {
   font-size: 2.4rem;
   line-height: 3rem;
 }
-.avatar-box .material-symbols-outlined {
+.avatar-box .m-icon {
   color: var(--clr-lettertile-default-text); /* #fafafa, gray 50 */
   border-radius: 50%;
   width: inherit;
@@ -3361,7 +3387,7 @@ ul.tabbar li.active > a {
   margin-right: 0.2rem;
 }
 
-.chip .avatar-box .material-symbols-outlined {
+.chip .avatar-box .m-icon {
   font-size: 1.4rem;
   line-height: 1.8rem;
 }
@@ -3660,12 +3686,12 @@ ul.tabbar li.active > a {
   align-items: center;
 }
 
-.audio-player .material-symbols-outlined.large {
+.audio-player .m-icon.large {
   font-size: 2.4rem;
   color: var(--clr-audio-icon);
 }
 
-.audio-player .material-symbols-outlined.disabled {
+.audio-player .m-icon.disabled {
   color: var(--clr-audio-icon-disabled);
   cursor: default;
 }

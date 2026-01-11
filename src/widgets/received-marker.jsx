@@ -38,7 +38,7 @@ class ReceivedMarker extends React.PureComponent {
     }
 
     const icon = deliveryMarker(this.props.received);
-    const marker = icon ? <i className={'material-symbols-outlined small ' + icon.color}>{icon.name}</i> : null;
+    const marker = icon ? <i className={'m-icon small ' + icon.color}>{icon.name}</i> : null;
     const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
 
     return (

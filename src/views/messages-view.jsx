@@ -1759,7 +1759,7 @@ class MessagesView extends React.Component {
             <div id="messages-container" className={darkModeClass}>
               <button id="go-to-latest" className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
-                <i className="material-symbols-outlined">arrow_downward</i>
+                <i className="m-icon">arrow_downward</i>
               </button>
               <div id="messages-panel" ref={this.handleScrollReference}>
                 <ul id="scroller" className={chatBoxClass}>
@@ -1779,7 +1779,7 @@ class MessagesView extends React.Component {
             </div>
             {this.state.peerMessagingDisabled && !this.state.unconfirmed ?
               <div id="peer-messaging-disabled-note">
-                <i className="material-symbols-outlined secondary">block</i> <FormattedMessage
+                <i className="m-icon secondary">block</i> <FormattedMessage
                   id="peers_messaging_disabled" defaultMessage="Peer's messaging is disabled."
                   description="Shown when the p2p peer's messaging is disabled" /> <a href="#"
                     onClick={this.handleEnablePeer}><FormattedMessage id="enable_peers_messaging"
@@ -1813,7 +1813,7 @@ class MessagesView extends React.Component {
             <div id="topic-caption-panel" className="caption-panel">
               {this.props.displayMobile ?
                 <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.leave(this.state.topic); this.props.onHideMessagesView();}}>
-                  <i className="material-symbols-outlined">arrow_back</i>
+                  <i className="m-icon">arrow_back</i>
                 </a>
                 :
                 null}
@@ -1854,7 +1854,7 @@ class MessagesView extends React.Component {
               }
               <div>
                 <a href="#" onClick={this.handleContextClick}>
-                  <i className="material-symbols-outlined">more_vert</i>
+                  <i className="m-icon">more_vert</i>
                 </a>
               </div>
             </div>

@@ -153,7 +153,7 @@ class TopicSecurity extends React.PureComponent {
         <div className="panel-form-column">
           {!this.props.channel ?
             <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-              <i className="material-symbols-outlined">delete_outline</i> &nbsp;{
+              <i className="m-icon">delete_outline</i> &nbsp;{
                 formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)
               }
             </a>
@@ -162,23 +162,23 @@ class TopicSecurity extends React.PureComponent {
           }
           {this.props.owner ?
             <a href="#" className="danger flat-button" onClick={this.handleDeleteTopic}>
-              <i className="material-symbols-outlined">delete</i> &nbsp;{formatMessage(messages.topic_delete)}
+              <i className="m-icon">delete</i> &nbsp;{formatMessage(messages.topic_delete)}
             </a>
             :
             <a href="#" className="danger flat-button" onClick={this.handleLeave}>
-              <i className="material-symbols-outlined">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
+              <i className="m-icon">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
             </a>
           }
           {!this.props.groupTopic ?
             <a href="#" className="danger flat-button" onClick={this.handleBlock}>
-              <i className="material-symbols-outlined">block</i> &nbsp;{formatMessage(messages.block_contact)}
+              <i className="m-icon">block</i> &nbsp;{formatMessage(messages.block_contact)}
             </a>
             :
             null
           }
           {!this.props.owner ?
             <a href="#" className="danger flat-button" onClick={this.handleReport}>
-              <i className="material-symbols-outlined">report</i> &nbsp;{formatMessage(messages.report_chat)}
+              <i className="m-icon">report</i> &nbsp;{formatMessage(messages.report_chat)}
             </a>
             :
             null

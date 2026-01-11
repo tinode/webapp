@@ -5,7 +5,7 @@ export default class ButtonBack extends React.PureComponent {
   render() {
     return (
       <a href="#" onClick={(e) => {e.preventDefault(); this.props.onBack();}}>
-        <i className="material-symbols-outlined">arrow_back</i>
+        <i className="m-icon">arrow_back</i>
       </a>
     );
   }

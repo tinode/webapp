@@ -260,7 +260,7 @@ class ReactionPicker extends React.PureComponent {
           <div className="divider"/>
           <div className="reaction-picker-btn" role="button" data-testid="reaction-expand"
               onClick={() => this.setState({expanded: true}, () => this.updatePosition())}>
-            <i className="material-symbols-outlined">expand_more</i>
+            <i className="m-icon">expand_more</i>
           </div>
           </>}
       </div>

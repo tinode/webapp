@@ -41,7 +41,7 @@ export default class AvatarUpload extends React.Component {
         {this.props.readOnly || !this.state.source ?
           null :
           <a href="#" className="clear-avatar" onClick={(e) => {e.preventDefault(); this.props.onImageUpdated();}}>
-            <i className="material-symbols-outlined">clear</i>
+            <i className="m-icon">clear</i>
           </a>}
         {this.state.source ?
           <img src={this.props.tinode.authorizeURL(sanitizeUrlForMime(this.state.source, 'image'))} className="preview" /> :
@@ -60,7 +60,7 @@ export default class AvatarUpload extends React.Component {
             accept="image/*" onChange={this.handleFileReceived} />}
         {this.props.readOnly ? null :
         <label htmlFor={randId} className="round">
-          <i className="material-symbols-outlined">file_upload</i>
+          <i className="m-icon">file_upload</i>
         </label>}
         <LoadSpinner show={this.props.uploading} large={true} clear={true} centered={true} />
       </div>

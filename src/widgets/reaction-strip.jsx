@@ -7,6 +7,8 @@ class ReactionStrip extends React.PureComponent {
     const more = this.props.reactions.length - this.props.maxReactions;
     return (
       <div className="reactions">
+        {/* Invisible zero-width element to prevent layout shift */}
+        <div style={{opacity:0, userSelect: 'none', width: '0.01rem'}}>0</div>
         {this.props.reactions.slice(0, this.props.maxReactions).map(r => {
           const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
           return (
@@ -23,7 +25,7 @@ class ReactionStrip extends React.PureComponent {
           data-testid="reaction-add"
           onMouseDown={(e) => { e.stopPropagation(); }}
           onClick={this.props.onTogglePicker}>
-            <i className="material-symbols-outlined">{more > 0 ? 'more_horiz' : 'thumb_up_off_alt'}</i>
+            <i className="m-icon">{more > 0 ? 'more_horiz' : 'thumb_up_off_alt'}</i>
         </div>
       </div>
     );

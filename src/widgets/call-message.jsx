@@ -8,7 +8,7 @@ import { secondsToTime } from '../lib/strformat.js';
 export default class CallMessage extends React.PureComponent {
   render() {
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
-    const successClass = 'material-symbols-outlined medium ' + (isCallDropped ? 'red' : 'green');
+    const successClass = 'm-icon medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ?
       (isCallDropped ? 'call_missed' : 'call_received') :
       (isCallDropped ? 'call_missed_outgoing' : 'call_made');
@@ -37,7 +37,7 @@ export default class CallMessage extends React.PureComponent {
       duration = <span>{secondsToTime(this.props.duration / 1000)}</span>;
     }
     return <div className="call-message">
-      <div><i className="material-symbols-outlined big gray">call</i></div>
+      <div><i className="m-icon big gray">call</i></div>
       <div className="flex-column narrow">
         <div>{title}</div>
         <div className="duration"><i className={successClass}>{callIcon}</i> {duration}</div>

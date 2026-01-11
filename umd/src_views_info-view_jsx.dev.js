@@ -644,7 +644,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.props.onNavigate('general');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "edit"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_edit",
       defaultMessage: [{
@@ -670,7 +670,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "large ellipsized"
     }, this.state.fullName, "\xA0", this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "podcasts") : null)), this.state.private ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
@@ -703,12 +703,12 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.handleCopyToClipboard(e, this.state.address);
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "content_copy")), "\xA0 \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleShowQRCode
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "qr_code")), "\xA0")), alias ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
@@ -729,9 +729,9 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.handleCopyToClipboard(e, alias);
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "content_copy")), "\xA0 \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined",
+      className: "m-icon",
       style: {
         opacity: 0
       }
@@ -805,7 +805,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.props.onNavigate('reactions');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "thumb_up_off_alt"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_reactions",
       defaultMessage: [{
@@ -822,7 +822,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.props.onNavigate('security');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "security"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_security",
       defaultMessage: [{
@@ -848,7 +848,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "flat-button",
       onClick: this.handleShowAddMembers
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "person_add"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_add_members",
       defaultMessage: [{
@@ -1793,31 +1793,31 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: "flat-button",
       onClick: this.handleDeleteMessages
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "delete_outline"), " \xA0", formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)) : null, this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleDeleteTopic
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "delete"), " \xA0", formatMessage(messages.topic_delete)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleLeave
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleBlock
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleReport
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-symbols-outlined"
+      className: "m-icon"
     }, "report"), " \xA0", formatMessage(messages.report_chat)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

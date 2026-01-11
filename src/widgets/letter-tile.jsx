@@ -22,7 +22,7 @@ export default class LetterTile extends React.PureComponent {
           const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
           avatar = (<div className={className}><div>{letter}</div></div>)
         } else {
-          const className = 'material-symbols-outlined ' + iconColor + (this.props.deleted ? ' disabled' : '');
+          const className = 'm-icon ' + iconColor + (this.props.deleted ? ' disabled' : '');
           avatar = isGroup ? <i className={className}>group</i> : <i className={className}>person</i>;
         }
       }

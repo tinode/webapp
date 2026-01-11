@@ -7,7 +7,7 @@ import { bytesToHumanSize, shortenFileName } from '../lib/strformat.js';
 // Get material icon name from mime type.
 function iconFromMime(mime) {
   // If more icons become available in material icons, add them to this mime-to-icon mapping.
-  const mimeToIcon = {default: 'insert_drive_file', image: 'image', text: 'description', video: 'theaters'};
+  const mimeToIcon = {default: 'draft', image: 'image', text: 'description', video: 'theaters'};
 
   return mimeToIcon[mime] || mimeToIcon[(mime || '').split('/')[0]] || mimeToIcon['default'];
 }
@@ -48,11 +48,11 @@ export default class DocPreview extends React.PureComponent {
       <div id="image-preview">
         <div id="image-preview-caption-panel">
           <span>{this.props.content.name}</span>
-          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-symbols-outlined gray">close</i></a>
+          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="m-icon gray">close</i></a>
         </div>
         <div id="image-preview-container">
           <div className="doc-card">
-            <i className="material-symbols-outlined gray">{iconFromMime(this.props.content.type)}</i>
+            <i className="m-icon gray">{iconFromMime(this.props.content.type)}</i>
             <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
               description="Label for a file name" /></b> {shortenFileName(this.props.content.name, 24) || '-'}</div>
             <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"

@@ -132,11 +132,11 @@ class AccSecurityView extends React.Component {
           <div className="hr" />
           <div className="panel-form-column">
             <a href="#" className="danger flat-button" onClick={(e) => {e.preventDefault(); this.props.onLogout();}}>
-              <i className="material-symbols-outlined">exit_to_app</i> &nbsp;<FormattedMessage id="button_logout"
+              <i className="m-icon">exit_to_app</i> &nbsp;<FormattedMessage id="button_logout"
                 defaultMessage="Logout" description="Button [Logout]" />
             </a>
             <a href="#" className="danger flat-button" onClick={(e) => {this.handleDeleteAccount(e);}}>
-              <i className="material-symbols-outlined">delete</i> &nbsp;<FormattedMessage id="button_delete_account"
+              <i className="m-icon">delete</i> &nbsp;<FormattedMessage id="button_delete_account"
                 defaultMessage="Delete account" description="Button [Delete account]" />
             </a>
           </div>
@@ -159,7 +159,7 @@ class AccSecurityView extends React.Component {
             <>
               <div className="hr" />
               <div className="panel-form-row">
-                <i className="material-symbols-outlined">block</i>&nbsp;
+                <i className="m-icon">block</i>&nbsp;
                 <a href="#" className="gray" onClick={(e) => {e.preventDefault(); this.props.onShowBlocked();}}>
                   <FormattedMessage id="blocked_contacts_link" defaultMessage="Blocked contacts ({count})"
                     values={{ count: this.state.blockedCount }} description="Blocked contacts link" />

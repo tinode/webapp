@@ -616,7 +616,7 @@ class InfoView extends React.Component {
             <div className="panel-form-column">
               {!this.state.isSelf ?
                 <a href="#" className="flat-button float-right" onClick={e => {e.preventDefault(); this.props.onNavigate('general');}}>
-                  <i className="material-symbols-outlined">edit</i>&nbsp;
+                  <i className="m-icon">edit</i>&nbsp;
                   <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
                 </a>
                 : null
@@ -635,7 +635,7 @@ class InfoView extends React.Component {
                     description="Label for editing topic name" />
                 </label></div>
                 <div className="large ellipsized">{this.state.fullName}&nbsp;
-                {this.state.channel ? <i className="material-symbols-outlined">podcasts</i> : null}</div>
+                {this.state.channel ? <i className="m-icon">podcasts</i> : null}</div>
               </div>
               {this.state.private ?
                 <div className="group">
@@ -657,10 +657,10 @@ class InfoView extends React.Component {
                   </div>
                   <div style={{marginLeft: 'auto'}}>
                     &nbsp;<a href="#" onClick={e => {this.handleCopyToClipboard(e, this.state.address);}}>
-                      <i className="material-symbols-outlined">content_copy</i>
+                      <i className="m-icon">content_copy</i>
                     </a>&nbsp;
                     &nbsp;<a href="#" onClick={this.handleShowQRCode}>
-                      <i className="material-symbols-outlined">qr_code</i>
+                      <i className="m-icon">qr_code</i>
                     </a>&nbsp;
                   </div>
                 </div>
@@ -673,9 +673,9 @@ class InfoView extends React.Component {
                     </div>
                     <div style={{marginLeft: 'auto'}}>
                       &nbsp;<a href="#" onClick={e => {this.handleCopyToClipboard(e, alias);}}>
-                        <i className="material-symbols-outlined">content_copy</i>
+                        <i className="m-icon">content_copy</i>
                       </a>&nbsp;
-                      &nbsp;<i className="material-symbols-outlined" style={{opacity: 0}}>qr_code</i>&nbsp;
+                      &nbsp;<i className="m-icon" style={{opacity: 0}}>qr_code</i>&nbsp;
                     </div>
                   </div>
                 : null}
@@ -738,7 +738,7 @@ class InfoView extends React.Component {
               {this.state.groupTopic && this.state.admin && reactions ?
                 <div className="panel-form-row">
                   <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('reactions');}}>
-                    <i className="material-symbols-outlined">thumb_up_off_alt</i>&nbsp;<FormattedMessage id="button_reactions"
+                    <i className="m-icon">thumb_up_off_alt</i>&nbsp;<FormattedMessage id="button_reactions"
                       defaultMessage="Reactions" description="Navigation button for reactions panel." />
                   </a>
                 </div>
@@ -746,7 +746,7 @@ class InfoView extends React.Component {
               }
               <div className="panel-form-row">
                 <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
-                  <i className="material-symbols-outlined">security</i>&nbsp;<FormattedMessage id="button_security"
+                  <i className="m-icon">security</i>&nbsp;<FormattedMessage id="button_security"
                     defaultMessage="Security" description="Navigaton button for security panel." />
                 </a>
               </div></>
@@ -763,7 +763,7 @@ class InfoView extends React.Component {
                 </div>
                 <div className="panel-form-row">
                   <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                    <i className="material-symbols-outlined">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
+                    <i className="m-icon">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
                       defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
                   </a>
                 </div>
