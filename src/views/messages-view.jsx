@@ -714,6 +714,10 @@ class MessagesView extends React.Component {
     // Set up the timer if it's not running already.
     if (!this.readNotificationTimer) {
       this.readNotificationTimer = setInterval(_ => {
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        if (topic) {
+          topic.markReactionsSeen();
+        }
         if (this.readNotificationQueue.length == 0) {
           // Shut down the timer if the queue is empty.
           clearInterval(this.readNotificationTimer);
@@ -744,13 +748,10 @@ class MessagesView extends React.Component {
 
         // Send only one notification for the whole batch of messages.
         if (seq >= 0) {
-          const topic = this.props.tinode.getTopic(this.state.topic);
-          if (topic) {
-            try {
-              topic.noteRead(seq);
-            } catch (err) {
-              console.error("Failed to send read notification", err);
-            }
+          try {
+            topic.noteRead(seq);
+          } catch (err) {
+            console.error("Failed to send read notification", err);
           }
         }
       }, NOTIFICATION_EXEC_INTERVAL);

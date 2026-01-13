@@ -10319,6 +10319,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     if (!this.readNotificationTimer) {
       this.readNotificationTimer = setInterval(_ => {
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        if (topic) {
+          topic.markReactionsSeen();
+        }
         if (this.readNotificationQueue.length == 0) {
           clearInterval(this.readNotificationTimer);
           this.readNotificationTimer = null;
@@ -10342,13 +10346,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         }
         if (seq >= 0) {
-          const topic = this.props.tinode.getTopic(this.state.topic);
-          if (topic) {
-            try {
-              topic.noteRead(seq);
-            } catch (err) {
-              console.error("Failed to send read notification", err);
-            }
+          try {
+            topic.noteRead(seq);
+          } catch (err) {
+            console.error("Failed to send read notification", err);
           }
         }
       }, NOTIFICATION_EXEC_INTERVAL);
@@ -16874,6 +16875,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           }
           const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isChannelTopicName(key);
           const isGroup = !isChannel && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isGroupTopicName(key);
+          const isP2p = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(key);
           const selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
           const badges = [];
           if (this.props.showMode) {
@@ -16926,6 +16928,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             showOnline: this.props.showOnline && !isChannel,
             isChannel: isChannel,
             isGroup: isGroup,
+            reaction: isP2p && c.hasUnseenReactions && c.hasUnseenReactions(),
             showContextMenu: this.props.showContextMenu,
             isVerified: c.trusted && c.trusted.verified,
             isStaff: c.trusted && c.trusted.staff,
@@ -17144,15 +17147,19 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "contact-comment"
-    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, comment))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: `contact-comment${this.props.reaction ? ' with-reaction' : ''}`
+    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, comment))), this.props.showContextMenu && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "m-icon"
-    }, "expand_more"))) : null);
+    }, "expand_more"))), this.props.reaction && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "react-icon"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "m-icon small"
+    }, "favorite")));
   }
 }
 ;

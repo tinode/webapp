@@ -82,6 +82,7 @@ class ContactList extends React.Component {
 
           const isChannel = Tinode.isChannelTopicName(key);
           const isGroup = !isChannel && Tinode.isGroupTopicName(key);
+          const isP2p = Tinode.isP2PTopicName(key);
           const selected = showCheckmark ?
             (this.props.topicSelected.indexOf(key) > -1) :
             (this.props.topicSelected === key);
@@ -136,6 +137,7 @@ class ContactList extends React.Component {
               showOnline={this.props.showOnline && !isChannel}
               isChannel={isChannel}
               isGroup={isGroup}
+              reaction={isP2p && c.hasUnseenReactions && c.hasUnseenReactions()}
               showContextMenu={this.props.showContextMenu}
               isVerified={c.trusted && c.trusted.verified}
               isStaff={c.trusted && c.trusted.staff}

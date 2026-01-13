@@ -142,14 +142,16 @@ class Contact extends React.Component {
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            this.props.small ? null : <div className="contact-comment">{marker}<span>{comment}</span></div>}
+            this.props.small ? null : <div className={`contact-comment${this.props.reaction ? ' with-reaction' : ''}`}>{marker}<span>{comment}</span></div>}
         </div>
-        {this.props.showContextMenu ?
+        {this.props.showContextMenu &&
           <span className="menuTrigger">
             <a href="#" onClick={this.handleContextClick}>
               <i className="m-icon">expand_more</i>
             </a>
-          </span> : null}
+          </span>}
+        {this.props.reaction && <div className="react-icon">
+          <i className="m-icon small">favorite</i></div>}
       </li>
     );
   }
