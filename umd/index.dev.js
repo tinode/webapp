@@ -8486,7 +8486,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sanitizeUrlForMime: function() { return /* binding */ sanitizeUrlForMime; },
 /* harmony export */   theCard: function() { return /* binding */ theCard; },
 /* harmony export */   updateFavicon: function() { return /* binding */ updateFavicon; },
-/* harmony export */   urlAsAttachment: function() { return /* binding */ urlAsAttachment; }
+/* harmony export */   urlAsAttachment: function() { return /* binding */ urlAsAttachment; },
+/* harmony export */   wallpaperNameFromUrl: function() { return /* binding */ wallpaperNameFromUrl; },
+/* harmony export */   wallpaperTypeFromUrl: function() { return /* binding */ wallpaperTypeFromUrl; }
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -8681,6 +8683,22 @@ function defaultWallpaper() {
     name: `../${_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLPAPER_DEFAULTS.path}${wp.name}`,
     size: wp.size
   };
+}
+function wallpaperNameFromUrl(wallpaperUrl) {
+  const parts = wallpaperUrl.split('/');
+  return parts[parts.length - 1];
+}
+function wallpaperTypeFromUrl(wallpaperUrl) {
+  const fname = wallpaperNameFromUrl(wallpaperUrl);
+  const wallpaperIndex = __webpack_require__(/*! ../../img/bkg/index.json */ "./img/bkg/index.json");
+  for (const type in wallpaperIndex) {
+    for (let i = 0; i < wallpaperIndex[type].length; i++) {
+      if (wallpaperIndex[type][i].name == fname) {
+        return type;
+      }
+    }
+  }
+  return null;
 }
 
 /***/ }),
@@ -11967,6 +11985,9 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         }]
       }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(WallpapersView, {
+      wallpaper: this.props.wallpaper,
+      wallpaperSize: this.props.wallpaperSize,
+      wallpaperBlur: this.props.wallpaperBlur,
       colorSchema: this.props.colorSchema !== 'auto' ? this.props.colorSchema : this.props.systemColorSchema,
       onWallpaperSelected: this.props.onWallpaperSelected
     })) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
@@ -14000,6 +14021,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       reqCredMethod: this.state.reqCredMethod,
       textSize: this.state.textSize,
       colorSchema: this.state.colorSchema,
+      wallpaper: this.state.wallpaper,
+      wallpaperSize: this.state.wallpaperSize,
+      wallpaperBlur: this.state.wallpaperBlur,
       systemColorSchema: this.state.systemColorSchema,
       sendOnEnter: this.state.sendOnEnter,
       onGlobalSettings: this.handleGlobalSettings,
@@ -21238,6 +21262,12 @@ module.exports = tinode;
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {

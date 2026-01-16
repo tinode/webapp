@@ -816,6 +816,15 @@ div.trusted-badge {
   text-decoration: none;
 }
 
+.flat-button.disabled,
+.flat-button.disabled:hover,
+.flat-button.disabled:focus {
+  color: var(--clr-primary-accent);
+  cursor: default;
+  opacity: 0.75;
+  filter: grayscale(75%);
+}
+
 .flat-button.faux {
   display: inline-block;
   height: 1.4em;

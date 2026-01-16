@@ -2179,6 +2179,9 @@ class TinodeWeb extends React.Component {
             reqCredMethod={this.state.reqCredMethod}
             textSize={this.state.textSize}
             colorSchema={this.state.colorSchema}
+            wallpaper={this.state.wallpaper}
+            wallpaperSize={this.state.wallpaperSize}
+            wallpaperBlur={this.state.wallpaperBlur}
             systemColorSchema={this.state.systemColorSchema}
             sendOnEnter={this.state.sendOnEnter}
 
