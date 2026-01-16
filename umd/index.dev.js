@@ -19943,7 +19943,6 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       preferred = 'right';
       space = spaceRight;
     }
-    console.log(`ReactionPicker: preferred=${preferred} space=${space}`);
     let marginTop, marginLeft;
     if (preferred == 'top' || preferred == 'bottom') {
       if (hSize > this.props.viewportBounds.width) {
