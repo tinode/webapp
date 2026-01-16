@@ -12984,7 +12984,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: cont.acs
         });
       }
-    } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
+    } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else if (what == 'react') {
+      this.resetContactList();
+    } else {
       console.info("Unsupported (yet) presence update:", what, "in", (cont || {}).topic);
     }
   }
@@ -16410,6 +16412,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       reactionList: this.props.reactionList,
       maxReactions: this.props.maxReactions,
       myUserId: this.props.myUserId,
+      leftBubble: this.props.response,
       anchor: this.state.pickerAnchor,
       viewportBounds: this.state.parentBounds,
       onSelect: emo => this.handleReactionSelected(null, emo),
@@ -19925,9 +19928,9 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const spaceRight = this.props.viewportBounds.width - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
     const spaceTop = this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
     const spaceBottom = this.props.viewportBounds.height - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE / 2;
+    const bubbleMargin = this.props.leftBubble ? 0 : BUBBLE_MARGIN_LEFT;
     let preferred = DISPLAY_PREFERENCE;
     let space = spaceTop;
-    let bubbleMargin = spaceRight > spaceLeft ? 0 : BUBBLE_MARGIN_LEFT;
     if (space < 0 && space < spaceBottom) {
       preferred = 'bottom';
       space = spaceBottom;
@@ -19938,18 +19941,22 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }
     if (space < 0 && space < spaceRight) {
       preferred = 'right';
+      space = spaceRight;
     }
+    console.log(`ReactionPicker: preferred=${preferred} space=${space}`);
     let marginTop, marginLeft;
     if (preferred == 'top' || preferred == 'bottom') {
       if (hSize > this.props.viewportBounds.width) {
         marginLeft = (this.props.viewportBounds.width - hSize) / 2;
       } else {
         if (spaceRight > spaceLeft) {
-          marginLeft = Math.max(-PANEL_MARGIN, this.props.anchor.offsetX - hSize * 0.67 + BUTTON_SIZE / 2);
+          const availableLeft = this.props.anchor.viewX - this.props.anchor.offsetX - PANEL_MARGIN;
+          const preferredX = this.props.anchor.offsetX - hSize * 0.33;
+          marginLeft = Math.max(-availableLeft, preferredX);
         } else {
-          const available = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
+          const availableRight = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
           const offsetX = this.props.anchor.offsetX - hSize * 0.67;
-          marginLeft = offsetX + Math.min(0, BUBBLE_MARGIN_LEFT + available - hSize * 0.33);
+          marginLeft = offsetX + Math.min(0, bubbleMargin + availableRight - hSize * 0.33);
         }
       }
       this.setState({

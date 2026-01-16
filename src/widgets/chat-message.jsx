@@ -298,6 +298,7 @@ class BaseChatMessage extends React.PureComponent {
               reactionList={this.props.reactionList}
               maxReactions={this.props.maxReactions}
               myUserId={this.props.myUserId}
+              leftBubble={this.props.response}
               anchor={this.state.pickerAnchor}
               viewportBounds={this.state.parentBounds}
               onSelect={(emo) => this.handleReactionSelected(null, emo)}

@@ -1510,11 +1510,15 @@ i.search {
 
 .contact-box .react-icon {
   position: absolute;
-  right: 0.25rem;
-  bottom: 0.25rem;
+  right: 0.35rem;
+  bottom: 0.35rem;
   opacity: 0.6;
   text-align: center;
   user-select: none;
+  width: 1rem;
+  height: 1rem;
+  overflow: clip;
+  overflow-clip-margin: 0.5rem;
 }
 
 .contact-box .react-icon .m-icon {
@@ -4026,7 +4030,7 @@ div.toast.show {
 
   /* Must make it a bit visible on mobile because there is no :hover */
   .menuTrigger {
-    opacity: 0.3;
+    opacity: 0.25;
   }
 
   #send-message-input {
@@ -4069,6 +4073,10 @@ div.toast.show {
   .call-party.self {
     bottom: 8.5rem;
     border-radius: unset;
+  }
+
+  .reaction-add {
+    opacity: 0.25;
   }
 }
 

@@ -35,7 +35,7 @@ class ReactionPicker extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      // position is an inline style object for the panel
+      // position is an inline style object for the panel.
       position: { marginLeft: '0', marginTop: '0' },
       tipLeft: '12px',
       placeAbove: 'top',
@@ -135,9 +135,9 @@ class ReactionPicker extends React.PureComponent {
     const spaceTop = this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
     const spaceBottom = this.props.viewportBounds.height - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE / 2 ;
 
+    const bubbleMargin = this.props.leftBubble ? 0 : BUBBLE_MARGIN_LEFT;
     let preferred = DISPLAY_PREFERENCE;
     let space = spaceTop;
-    let bubbleMargin = spaceRight > spaceLeft ? 0 : BUBBLE_MARGIN_LEFT;
     if (space < 0 && space < spaceBottom) {
       preferred = 'bottom';
       space = spaceBottom;
@@ -148,6 +148,7 @@ class ReactionPicker extends React.PureComponent {
     }
     if (space < 0 && space < spaceRight) {
       preferred = 'right';
+      space = spaceRight;
     }
 
     // Calculate position so the panel is fully visible within the message view bounds.
@@ -158,14 +159,24 @@ class ReactionPicker extends React.PureComponent {
         // The panel wider than viewport: align to the exact middle.
         marginLeft = (this.props.viewportBounds.width - hSize) / 2;
       } else {
+        // Desired position if panel is fully visible:
+        // 1. if click point is on left side, place panel 1/3 to the left of the click point.
+        // 2. if click point is on right side, place panel 2/3 to the left of the click point.
+        // Then make sure panel is fully visible.
         if (spaceRight > spaceLeft) {
-          // When the bubble is on the left, the margin is fixed.
-          marginLeft = Math.max(-PANEL_MARGIN, this.props.anchor.offsetX - hSize * 0.67 + BUTTON_SIZE / 2);
+          // Clickpoint on left  of center (bubble is probably on the left).
+          // Margin space available to the left of click point, positive value.
+          const availableLeft = this.props.anchor.viewX - this.props.anchor.offsetX - PANEL_MARGIN;
+          // Preferred margin: 1/3 of panel width to the left of click point, could be negative.
+          const preferredX = this.props.anchor.offsetX - hSize * 0.33;
+          // Make sure panel is fully visible: availableLeft + offsetX > 0.
+          marginLeft = Math.max(-availableLeft, preferredX);
         } else {
+          // Clickpoint on right of center (bubble is probably on the right).
           // Preferred position: 2/3 of panel width to the left of click point, but make sure panel is fully visible.
-          const available = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
+          const availableRight = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
           const offsetX = this.props.anchor.offsetX - hSize * 0.67;
-          marginLeft = offsetX + Math.min(0, BUBBLE_MARGIN_LEFT + available - hSize * 0.33);
+          marginLeft = offsetX + Math.min(0, bubbleMargin + availableRight - hSize * 0.33);
         }
       }
       // Horizontal placement of tail: place close to click position.

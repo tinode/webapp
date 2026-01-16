@@ -115,7 +115,6 @@ class ContactList extends React.Component {
               }
             }
           }
-
           contactNodes.push(
             <Contact
               tinode={this.props.tinode}

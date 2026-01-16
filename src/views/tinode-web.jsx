@@ -944,6 +944,8 @@ class TinodeWeb extends React.Component {
       // TODO: messages deleted (hard or soft) -- update pill counter.
     } else if (what == 'upd' || what == 'call') {
       // upd, call - handled by the SDK. Explicitly ignoring here.
+    } else if (what == 'react') {
+      this.resetContactList();
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).

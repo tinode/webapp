@@ -1374,7 +1374,7 @@ class DB {
       };
     });
   }
-  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'mrrid', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted', '_mrrKnown', '_mrrSeen'];
+  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'mrrid', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted', '_mrrSeen'];
   static #deserializeTopic(topic, src) {
     DB.#topic_fields.forEach(f => {
       if (src.hasOwnProperty(f)) {
@@ -3721,6 +3721,7 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
           break;
         case 'react':
           cont._processMetaReact(undefined, {
+            mrrid: pres.id2 | 0,
             seq: pres.seq,
             user: pres.actor,
             val: pres.val
@@ -4451,7 +4452,10 @@ class Topic {
     return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_REACTIONS, 0);
   }
   markReactionsSeen() {
-    this._mrrSeen = this.mrrid;
+    if (this._mrrSeen != this.mrrid) {
+      this._mrrSeen = this.mrrid;
+      this._tinode.getMeTopic()._refreshContact('react', this);
+    }
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -5301,8 +5305,8 @@ class Topic {
     const seqIds = [];
     reacts.forEach(mr => {
       const msg = this.findMessage(mr.seq);
+      seqIds.push(mr.seq);
       if (msg) {
-        seqIds.push(mr.seq);
         let upd;
         if (mr._diff) {
           upd = this._handleReactionDiff(msg, mr.data[0]);
