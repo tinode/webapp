@@ -680,7 +680,7 @@ class CallPanel extends React.PureComponent {
                 <div className={`caller-card${pulseAnimation} draggable`}>
                   <div className="avatar-box">
                     <LetterTile
-                      tinode={this.props.tinode}
+                      authorizeURL={this.props.tinode.authorizeURL}
                       avatar={this.props.avatar}
                       topic={this.props.topic}
                       title={this.props.title} />

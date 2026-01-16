@@ -1,13 +1,14 @@
 import React from 'react';
 import { defineMessages } from 'react-intl';
 
-import { Drafty } from 'tinode-sdk';
+import { Drafty, TheCard } from 'tinode-sdk';
 
 import AudioPlayer from '../widgets/audio-player.jsx'
 import CallMessage from '../widgets/call-message.jsx'
 import CallStatus from '../widgets/call-status.jsx';
 import InlineVideo from '../widgets/inline-video.jsx';
-import LazyImage from '../widgets/lazy-image.jsx'
+import LazyImage from '../widgets/lazy-image.jsx';
+import TheCardViewer from '../widgets/the-card-viewer.jsx';
 import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { BROKEN_IMAGE_SIZE, CLICKABLE_URL_SCHEMES, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO,
@@ -48,10 +49,7 @@ const messages = defineMessages({
 // 'this' must contain:
 //    viewportWidth:
 //    authorizeURL:
-//    onImagePreview:
-//    onVideoPreview:
-//    onFormButtonClick:
-//    onQuoteClick:
+//    onHandleClick:
 export function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
@@ -100,7 +98,7 @@ export function fullFormatter(style, data, values, key, stack) {
       break;
     case 'BN':
       // Button
-      attr.onClick = this.onFormButtonClick;
+      attr.onClick = (e) => this.onHandleClick(e, 'form_button');
       let inner = React.Children.map(values, (child) => {
         return typeof child == 'string' ? child : undefined;
       });
@@ -133,7 +131,16 @@ export function fullFormatter(style, data, values, key, stack) {
     case 'QQ':
       // Quote/citation.
       attr.className = 'reply-quote'
-      attr.onClick = this.onQuoteClick;
+      attr.onClick = (e) => this.onHandleClick(e, 'quote');
+      break;
+    case 'TC':
+      // TheCard
+      el = TheCardViewer;
+      attr.content = data;
+      attr.authorizeURL = this.authorizeURL;
+      attr.onChatClick = (e) => this.onHandleClick(e, 'contact_chat');
+      attr.onFindClick = (e) => this.onHandleClick(e, 'contact_find');
+      values = null;
       break;
     case 'VC':
       el = CallMessage;
@@ -200,7 +207,7 @@ function handleImageData(el, data, attr) {
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
         // Allow previews for large enough images.
-        attr.onClick = this.onImagePreview;
+        attr.onClick = (e) => this.onHandleClick(e, 'image');
         attr.className += ' image-clickable';
       }
       attr.loading = 'lazy';
@@ -241,7 +248,7 @@ function handleVideoData(el, data, attr) {
     attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
     attr.alt = data.name;
     if (data.ref || data.val) {
-      attr.onClick = this.onVideoPreview;
+      attr.onClick = (e) => this.onHandleClick(e, 'video');
       attr.loading = 'lazy';
     }
     el = InlineVideo;
@@ -329,6 +336,12 @@ export function previewFormatter(style, data, values, key) {
       el = null;
       values = null;
       break;
+    case 'TC':
+      // TheCard
+      el = React.Fragment;
+      values = [<i key="tc" className="material-icons">contact_mail</i>, ' ',
+        TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
+      break;
     case 'VD':
       // Replace image with '[icon] Video'.
       el = React.Fragment;
@@ -392,7 +405,7 @@ function inlineVideoAttr(attr, data) {
 //    formatMessage: this.props.intl.formatMessage
 //    messages: formatjs messages defined with defineMessages.
 //    authorizeURL: this.props.tinode.authorizeURL
-//    onQuoteClick: this.handleQuoteClick (optional)
+//    onHandleClick: this.handleDraftyClick
 function quoteFormatter(style, data, values, key) {
   if (['BR', 'EX', 'IM', 'MN', 'VD'].includes(style)) {
     let el = Drafty.tagName(style);

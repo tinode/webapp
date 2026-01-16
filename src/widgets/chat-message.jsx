@@ -26,20 +26,44 @@ class BaseChatMessage extends React.PureComponent {
     this.handleExpandImage = this.handleExpandImage.bind(this);
     this.handlePlayVideo = this.handlePlayVideo.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
-    this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleDraftyClick = this.handleDraftyClick.bind(this);
 
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
 
-      onImagePreview: this.handleExpandImage,
-      onVideoPreview: this.handlePlayVideo,
-      onFormButtonClick: this.handleFormButtonClick,
-      onQuoteClick: this.handleQuoteClick
+      onHandleClick: this.handleDraftyClick
     };
+  }
+
+  handleDraftyClick = (e, action) => {
+    switch (action) {
+      case 'image':
+        this.handleExpandImage(e);
+        break;
+      case 'video':
+        this.handlePlayVideo(e);
+        break;
+      case 'form_button':
+        this.handleFormButtonClick(e);
+        break;
+      case 'quote':
+        this.handleQuoteClick(e);
+        break;
+      case 'contact_chat':
+      case 'contact_find':
+        e.preventDefault();
+        console.log('Contact click handling not implemented yet.', action, e.target.dataset);
+        break;
+      default:
+        // No special handling; let the browser deal with it.
+        console.log('Unhandled drafty action.', action, e.target.dataset);
+        break;
+    }
   }
 
   handleExpandImage(e) {
@@ -99,7 +123,7 @@ class BaseChatMessage extends React.PureComponent {
         if (!this.props.response) {
           let immutable = false;
           Drafty.entities(this.props.content, (_0, _1, tp) => {
-            immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
+            immutable = ['AU', 'EX', 'FM', 'IM', 'TC', 'VC', 'VD'].includes(tp);
             return immutable;
           });
           if (!immutable) {
@@ -200,7 +224,7 @@ class BaseChatMessage extends React.PureComponent {
           <div className="avatar-box">
             {fullDisplay ?
               <LetterTile
-                tinode={this.props.tinode}
+                authorizeURL={this.props.tinode.authorizeURL}
                 topic={this.props.userFrom}
                 title={this.props.userName}
                 avatar={avatar} /> :

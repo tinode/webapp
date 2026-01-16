@@ -26,7 +26,7 @@ export default class SideNavbar extends React.PureComponent {
         {avatar ?
           <div id="self-avatar" className="avatar-box">
             <LetterTile
-              tinode={this.props.tinode}
+              authorizeURL={this.props.tinode.authorizeURL}
               avatar={avatar}
               topic={this.props.myUserId}
               title={this.props.title} />

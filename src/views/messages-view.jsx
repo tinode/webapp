@@ -3,7 +3,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import { Drafty, Tinode } from 'tinode-sdk';
+import { Drafty, Tinode, TheCard } from 'tinode-sdk';
 
 import CallPanel from '../widgets/call-panel.jsx';
 import ChatMessage from '../widgets/chat-message.jsx';
@@ -104,6 +104,11 @@ const messages = defineMessages({
       'other {{count, number} members}}',
     description: 'Count of group topic members'
   },
+  cannot_parse_vcard: {
+    id: 'cannot_parse_vcard',
+    defaultMessage: 'Cannot parse vCard file.',
+    description: 'Error message when vCard file cannot be parsed'
+  }
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -144,6 +149,7 @@ class MessagesView extends React.Component {
     this.sendVideoAttachment = this.sendVideoAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
+    this.sendTheCardAttachment = this.sendTheCardAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -1039,13 +1045,22 @@ class MessagesView extends React.Component {
       });
   }
 
-  // Send attachment as Drafty message:
+  // sendFileAttachment sends the file as Drafty message:
   // - if file is too large, upload it and send a s link.
   // - if file is small enough, just send it in-band.
   sendFileAttachment(file) {
     // Server-provided limit reduced for base64 encoding and overhead.
     const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
+
+    if (TheCard.isFileSupported(file.type, file.name)) {
+      // This is a vCard file, try to convert and send as TheCard.
+      if (this.sendTheCardAttachment(file, maxInbandAttachmentSize)) {
+        // Successfully sent as TheCard.
+        return;
+      }
+      // Sending as TheCard failed, fall through to sending as generic file attachment.
+    }
 
     // If the attachment is a JSON file, then use 'application/octet-stream' instead of 'application/json'.
     // This is a temporary workaround for the collision with the 'application/json' MIME type of form responses.
@@ -1079,6 +1094,26 @@ class MessagesView extends React.Component {
         })))
         .catch(err => this.props.onError(err.message, 'err'));
     }
+  }
+
+  // Convert attached vCard to TheCard and send.
+  sendTheCardAttachment(file, maxInbandAttachmentSize) {
+    if (file.size > maxInbandAttachmentSize) {
+      // Cannot convert to TheCard, send as a generic file attachment instead.
+      return false;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const card = TheCard.importVCard(e.target.result);
+      if (!card) {
+        // Failed to parse vCard.
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_parse_vcard), 'err');
+      }
+      this.sendMessage(Drafty.appendTheCard(null, card));
+    };
+    reader.readAsText(file);
+    return true;
   }
 
   // handleAttachFile method is called when [Attach file] button is clicked: launch attachment preview.
@@ -1777,7 +1812,7 @@ class MessagesView extends React.Component {
                 null}
               <div className="avatar-box">
                 <LetterTile
-                  tinode={this.props.tinode}
+                  authorizeURL={this.props.tinode.authorizeURL}
                   avatar={avatar}
                   topic={this.state.topic}
                   title={this.state.title}

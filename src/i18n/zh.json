@@ -1906,5 +1906,40 @@
     "description": "Label [Scan my ID:]",
     "missing": false,
     "obsolete": false
+  },
+  "unknown_name": {
+    "translation": "",
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing",
+    "missing": true,
+    "obsolete": false
+  },
+  "save_action": {
+    "translation": "",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": true,
+    "obsolete": false
+  },
+  "cannot_parse_vcard": {
+    "translation": "",
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed",
+    "missing": true,
+    "obsolete": false
+  },
+  "chat_now": {
+    "translation": "",
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card",
+    "missing": true,
+    "obsolete": false
+  },
+  "find_user": {
+    "translation": "",
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card",
+    "missing": true,
+    "obsolete": false
   }
 }

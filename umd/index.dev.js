@@ -7679,11 +7679,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/call-status.jsx */ "./src/widgets/call-status.jsx");
 /* harmony import */ var _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/inline-video.jsx */ "./src/widgets/inline-video.jsx");
 /* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_the_card_viewer_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/the-card-viewer.jsx */ "./src/widgets/the-card-viewer.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -7747,7 +7749,7 @@ function fullFormatter(style, data, values, key, stack) {
   switch (style) {
     case 'AU':
       if (attr.src) {
-        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(attr.src, 'audio'));
         attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
         attr.preview = data.preview;
         attr.loading = 'lazy';
@@ -7772,7 +7774,7 @@ function fullFormatter(style, data, values, key, stack) {
       values = null;
       break;
     case 'BN':
-      attr.onClick = this.onFormButtonClick;
+      attr.onClick = e => this.onHandleClick(e, 'form_button');
       let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
         return typeof child == 'string' ? child : undefined;
       });
@@ -7783,13 +7785,13 @@ function fullFormatter(style, data, values, key, stack) {
       break;
     case 'LN':
       if (attr) {
-        attr.href = typeof attr.href == 'string' ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrl)(attr.href, _config_js__WEBPACK_IMPORTED_MODULE_9__.CLICKABLE_URL_SCHEMES) : '';
+        attr.href = typeof attr.href == 'string' ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrl)(attr.href, _config_js__WEBPACK_IMPORTED_MODULE_10__.CLICKABLE_URL_SCHEMES) : '';
       }
       break;
     case 'MN':
       attr.className = 'mention';
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.idToColorClass)(data.val, false, true);
       }
       break;
     case 'FM':
@@ -7799,7 +7801,15 @@ function fullFormatter(style, data, values, key, stack) {
       break;
     case 'QQ':
       attr.className = 'reply-quote';
-      attr.onClick = this.onQuoteClick;
+      attr.onClick = e => this.onHandleClick(e, 'quote');
+      break;
+    case 'TC':
+      el = _widgets_the_card_viewer_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+      attr.content = data;
+      attr.authorizeURL = this.authorizeURL;
+      attr.onChatClick = e => this.onHandleClick(e, 'contact_chat');
+      attr.onFindClick = e => this.onHandleClick(e, 'contact_find');
+      values = null;
       break;
     case 'VC':
       el = _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
@@ -7843,15 +7853,15 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -7860,11 +7870,11 @@ function handleImageData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM) {
-        attr.onClick = this.onImagePreview;
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM) {
+        attr.onClick = e => this.onHandleClick(e, 'image');
         attr.className += ' image-clickable';
       }
       attr.loading = 'lazy';
@@ -7872,7 +7882,7 @@ function handleImageData(el, data, attr) {
       attr.src = null;
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_9__["default"];
   }
   return el;
 }
@@ -7880,15 +7890,15 @@ function handleVideoData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_video.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.NO_DIMENSIONS_VIDEO,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.NO_DIMENSIONS_VIDEO
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -7897,15 +7907,15 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
     if (data.ref || data.val) {
-      attr.onClick = this.onVideoPreview;
+      attr.onClick = e => this.onHandleClick(e, 'video');
       attr.loading = 'lazy';
     }
     el = _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_9__["default"];
   }
   return el;
 }
@@ -7923,7 +7933,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "au",
         className: "material-icons"
-      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.secondsToTime)(data.duration / 1000)];
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.secondsToTime)(data.duration / 1000)];
       break;
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -7985,6 +7995,13 @@ function previewFormatter(style, data, values, key) {
       el = null;
       values = null;
       break;
+    case 'TC':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "tc",
+        className: "material-icons"
+      }, "contact_mail"), ' ', tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
+      break;
     case 'VD':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -8010,10 +8027,10 @@ function previewFormatter(style, data, values, key) {
 ;
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
@@ -8026,12 +8043,12 @@ function inlineImageAttr(attr, data) {
   return attr;
 }
 function inlineVideoAttr(attr, data) {
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM);
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.fitImageSize)(data.width, data.height, _config_js__WEBPACK_IMPORTED_MODULE_10__.VIDEO_THUMBNAIL_WIDTH, _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM);
   attr.style = {
     width: dim.width + 'px',
     height: dim.height + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.VIDEO_THUMBNAIL_WIDTH + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_video);
@@ -8072,7 +8089,7 @@ function quoteFormatter(style, data, values, key) {
         el = 'span';
         attr.className = 'mention';
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.idToColorClass)(data.val, false, true);
         }
         break;
       case 'EX':
@@ -8089,7 +8106,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
@@ -8109,13 +8126,13 @@ function quoteImageOrVideo(data, isVideo) {
     ref = data.ref;
   }
   if (bits) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.base64ToBlob)(bits, mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.base64ToBlob)(bits, mime);
     if (!blob) {
       throw new Error("Invalid image");
     }
     promise = Promise.resolve(blob);
   } else if (ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(ref, 'image'))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -8126,7 +8143,7 @@ function quoteImageOrVideo(data, isVideo) {
     throw new Error("Missing image data");
   }
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.imageScaled)(blob, isVideo ? _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH : _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, -1, !isVideo);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.imageScaled)(blob, isVideo ? _config_js__WEBPACK_IMPORTED_MODULE_10__.VIDEO_THUMBNAIL_WIDTH : _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM, -1, !isVideo);
   }).then(scaled => {
     if (isVideo) {
       data.premime = scaled.mime;
@@ -8139,7 +8156,7 @@ function quoteImageOrVideo(data, isVideo) {
     delete data.ref;
     delete data.preref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     if (isVideo) {
       data.preview = b64.bits;
@@ -8151,8 +8168,8 @@ function quoteImageOrVideo(data, isVideo) {
     delete data.val;
     delete data.preview;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
@@ -8166,10 +8183,10 @@ function replyFormatter(style, data, values, key, stack) {
     }, data);
     let loadedPromise;
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(quoteImageOrVideo.call(this, data, style == 'VD'));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.cancelablePromise)(quoteImageOrVideo.call(this, data, style == 'VD'));
     } catch (error) {
       console.warn("Failed to quote image:", error.message);
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(error);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.cancelablePromise)(error);
     }
     attr.whenDone = loadedPromise;
     values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], attr, null), ' ', attr.alt];
@@ -9771,6 +9788,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "offset": 0,
       "pluralType": "cardinal"
     }]
+  },
+  cannot_parse_vcard: {
+    id: "cannot_parse_vcard",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Cannot parse vCard file."
+    }]
   }
 });
 function isUnconfirmed(acs) {
@@ -9802,6 +9826,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.sendVideoAttachment = this.sendVideoAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
+    this.sendTheCardAttachment = this.sendTheCardAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -10605,6 +10630,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendFileAttachment(file) {
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.isFileSupported(file.type, file.name)) {
+      if (this.sendTheCardAttachment(file, maxInbandAttachmentSize)) {
+        return;
+      }
+    }
     const jsonMimeConverter = fileType => fileType === _config_js__WEBPACK_IMPORTED_MODULE_18__.DRAFTY_FR_MIME_TYPE_LEGACY ? 'application/octet-stream' : fileType;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -10628,6 +10658,21 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         size: file.size
       }))).catch(err => this.props.onError(err.message, 'err'));
     }
+  }
+  sendTheCardAttachment(file, maxInbandAttachmentSize) {
+    if (file.size > maxInbandAttachmentSize) {
+      return false;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const card = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.importVCard(e.target.result);
+      if (!card) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_parse_vcard), 'err');
+      }
+      this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendTheCard(null, card));
+    };
+    reader.readAsText(file);
+    return true;
   }
   handleAttachFile(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
@@ -11260,7 +11305,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "avatar-box"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-          tinode: this.props.tinode,
+          authorizeURL: this.props.tinode.authorizeURL,
           avatar: avatar,
           topic: this.state.topic,
           title: this.state.title,
@@ -14938,7 +14983,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: true,
       topic: this.props.uid,
       title: this.props.title
@@ -15191,7 +15236,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: this.state.avatar || true,
       topic: this.props.topic,
       title: this.state.fullName
@@ -15939,7 +15984,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: this.props.avatar,
       topic: this.props.topic,
       title: this.props.title
@@ -16109,19 +16154,41 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleExpandImage = this.handleExpandImage.bind(this);
     this.handlePlayVideo = this.handlePlayVideo.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
-    this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleDraftyClick = this.handleDraftyClick.bind(this);
     this.formatterContext = {
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
-      onImagePreview: this.handleExpandImage,
-      onVideoPreview: this.handlePlayVideo,
-      onFormButtonClick: this.handleFormButtonClick,
-      onQuoteClick: this.handleQuoteClick
+      onHandleClick: this.handleDraftyClick
     };
   }
+  handleDraftyClick = (e, action) => {
+    switch (action) {
+      case 'image':
+        this.handleExpandImage(e);
+        break;
+      case 'video':
+        this.handlePlayVideo(e);
+        break;
+      case 'form_button':
+        this.handleFormButtonClick(e);
+        break;
+      case 'quote':
+        this.handleQuoteClick(e);
+        break;
+      case 'contact_chat':
+      case 'contact_find':
+        e.preventDefault();
+        console.log('Contact click handling not implemented yet.', action, e.target.dataset);
+        break;
+      default:
+        console.log('Unhandled drafty action.', action, e.target.dataset);
+        break;
+    }
+  };
   handleExpandImage(e) {
     e.preventDefault();
     this.props.onExpandMedia({
@@ -16175,7 +16242,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         if (!this.props.response) {
           let immutable = false;
           tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
-            immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
+            immutable = ['AU', 'EX', 'FM', 'IM', 'TC', 'VC', 'VD'].includes(tp);
             return immutable;
           });
           if (!immutable) {
@@ -16274,7 +16341,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, this.props.isGroup && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       topic: this.props.userFrom,
       title: this.props.userName,
       avatar: avatar
@@ -16563,7 +16630,7 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: this.props.avatar || true,
       topic: this.props.topic,
       title: this.props.title
@@ -16998,7 +17065,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: avatar,
       title: this.props.title,
       topic: this.props.item,
@@ -18216,7 +18283,7 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         className: "avatar-box",
         key: sub.user
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        tinode: this.props.tinode,
+        authorizeURL: this.props.tinode.authorizeURL,
         topic: sub.user,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
         title: sub.public ? sub.public.fn : null
@@ -18894,7 +18961,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         }
       }
     } else if (this.props.avatar) {
-      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
+      const url = this.props.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
         className: className,
@@ -20247,7 +20314,7 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       id: "self-avatar",
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: avatar,
       topic: this.props.myUserId,
       title: this.props.title
@@ -20478,6 +20545,132 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   }
 }
 ;
+
+/***/ }),
+
+/***/ "./src/widgets/the-card-viewer.jsx":
+/*!*****************************************!*\
+  !*** ./src/widgets/the-card-viewer.jsx ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+
+
+
+
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  unknown_name: {
+    id: "unknown_name",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Unknown"
+    }]
+  }
+});
+class TheCardViewer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.handleDownload = this.handleDownload.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
+  }
+  handleDownload(e) {
+    e.preventDefault();
+    try {
+      const vcard = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.exportVCard(this.props.content);
+      const blob = new Blob([vcard], {
+        type: 'text/vcard'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = (this.props.content.fn || 'contact') + '.vcf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error("Failed to download vcard", err);
+      if (this.props.onError) {
+        this.props.onError("Failed to download vcard", 'err');
+      }
+    }
+  }
+  handleMessage(e) {}
+  render() {
+    const card = this.props.content;
+    if (!card) {
+      return null;
+    }
+    const uid = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFirstTinodeID(card);
+    const contacts = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getEmails(card).concat(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhones(card));
+    const org = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getOrg(card);
+    console.log('Rendering TheCardViewer', JSON.stringify(contacts), uid);
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-card"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-body"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      authorizeURL: this.props.authorizeURL,
+      topic: uid || 'usr123XXX',
+      avatar: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhotoUrl(card) || true,
+      title: card.fn
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "name-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "name"
+    }, card.fn || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, messages.unknown_name)), org && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "org"
+    }, org))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-actions"
+    }, uid && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      className: "flat-button",
+      "data-val": uid,
+      onClick: this.props.onChatClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "chat_now",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Chat"
+      }]
+    })), uid && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "divider"
+    }), contacts.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      className: "flat-button",
+      "data-val": contacts.join(','),
+      onClick: this.props.onChatClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "find_user",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Find"
+      }]
+    })), contacts.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "divider"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      className: "flat-button",
+      onClick: this.handleDownload
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "save_action",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Save"
+      }]
+    }))));
+  }
+}
+;
+/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(TheCardViewer));
 
 /***/ }),
 
@@ -21262,12 +21455,6 @@ module.exports = tinode;
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
