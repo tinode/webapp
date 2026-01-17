@@ -26,7 +26,6 @@ export default class TheCardPreview extends React.PureComponent {
 
     importVCard(props.content.file)
       .then(card => {
-        console.log('Imported vCard:', card);
         this.setState({ content: card });
       });
 
@@ -57,8 +56,6 @@ export default class TheCardPreview extends React.PureComponent {
   render() {
     const card = this.state.content;
 
-    console.log('Rendering TheCardPreview for card:', JSON.stringify(card));
-
     const fullName = TheCard.getFn(card);
     const photoUrl = TheCard.getPhotoUrl(card) || null;
     const note = card?.note;
@@ -66,13 +63,9 @@ export default class TheCardPreview extends React.PureComponent {
 
     // Get communication methods
     const emails = TheCard.getComm(card, 'email') || [];
-    console.log('Emails:', emails);
     const phones = TheCard.getComm(card, 'tel') || [];
-    console.log('Phones:', phones);
     const tinodeIds = TheCard.getComm(card, 'tinode') || [];
-    console.log('Tinode IDs:', tinodeIds);
     const urls = TheCard.getComm(card, 'http') || [];
-    console.log('URLs:', urls);
 
     const contacts = [];
 

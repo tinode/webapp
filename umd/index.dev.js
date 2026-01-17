@@ -24570,7 +24570,6 @@ class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       content: null
     };
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.importVCard)(props.content.file).then(card => {
-      console.log('Imported vCard:', card);
       this.setState({
         content: card
       });
@@ -24596,19 +24595,14 @@ class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
   render() {
     const card = this.state.content;
-    console.log('Rendering TheCardPreview for card:', JSON.stringify(card));
     const fullName = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getFn(card);
     const photoUrl = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getPhotoUrl(card) || null;
     const note = card?.note;
     const org = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getOrg(card);
     const emails = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getComm(card, 'email') || [];
-    console.log('Emails:', emails);
     const phones = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getComm(card, 'tel') || [];
-    console.log('Phones:', phones);
     const tinodeIds = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getComm(card, 'tinode') || [];
-    console.log('Tinode IDs:', tinodeIds);
     const urls = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.TheCard.getComm(card, 'http') || [];
-    console.log('URLs:', urls);
     const contacts = [];
     emails.forEach((email, idx) => {
       const types = Array.isArray(email.des) ? email.des.join(', ') : '';
