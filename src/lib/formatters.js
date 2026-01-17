@@ -8,7 +8,7 @@ import CallMessage from '../widgets/call-message.jsx'
 import CallStatus from '../widgets/call-status.jsx';
 import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx';
-import TheCardViewer from '../widgets/the-card-viewer.jsx';
+import TheCardMini from '../widgets/the-card-mini.jsx';
 import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { BROKEN_IMAGE_SIZE, CLICKABLE_URL_SCHEMES, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO,
@@ -135,7 +135,7 @@ export function fullFormatter(style, data, values, key, stack) {
       break;
     case 'TC':
       // TheCard
-      el = TheCardViewer;
+      el = TheCardMini;
       attr.content = data;
       attr.authorizeURL = this.authorizeURL;
       attr.onChatClick = (e) => this.onHandleClick(e, 'contact_chat');

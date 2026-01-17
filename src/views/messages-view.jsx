@@ -19,13 +19,14 @@ import LogoView from './logo-view.jsx';
 import MetaMessage from '../widgets/meta-message.jsx';
 import PinnedMessages from '../widgets/pinned-messages.jsx';
 import SendMessage from '../widgets/send-message.jsx';
+import TheCardPreview from '../widgets/the-card-preview.jsx';
 import VideoPreview from '../widgets/video-preview.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, IMMEDIATE_P2P_SUBSCRIPTION,
   DRAFTY_FR_MIME_TYPE_LEGACY, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM,
   MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
-import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+import { blobToBase64, fileToBase64, imageScaled, importVCard, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, relativeDateFormat, shortDateFormat } from '../lib/strformat.js';
 
@@ -1103,16 +1104,13 @@ class MessagesView extends React.Component {
       return false;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const card = TheCard.importVCard(e.target.result);
-      if (!card) {
-        // Failed to parse vCard.
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_parse_vcard), 'err');
-      }
-      this.sendMessage(Drafty.appendTheCard(null, card));
-    };
-    reader.readAsText(file);
+    importVCard(file)
+      .then(card => {
+        this.sendMessage(Drafty.appendTheCard(null, card));
+      })
+      .catch(err => {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_parse_vcard, {error: err.message}), 'err');
+      });
     return true;
   }
 
@@ -1523,7 +1521,7 @@ class MessagesView extends React.Component {
 
     // P2P call is an overlay, not a separate component because it cannot be
     // re-mounted between full screen/minimized.
-    const overlay = this.state.rtcPanel ? (
+    const overlay = this.state.rtcPanel &&
         <CallPanel
           topic={this.state.topic}
           seq={this.props.callSeq}
@@ -1533,23 +1531,20 @@ class MessagesView extends React.Component {
           title={this.state.title}
           avatar={this.state.avatar || true}
           minimized={this.state.minimizedCallPanel}
-
           onError={this.props.onError}
           onHangup={this.handleCallHangup}
           onToggleMinimize={this.handleCallPanelToggle}
           onInvite={this.props.onCallInvite}
           onSendOffer={this.props.onCallSendOffer}
           onIceCandidate={this.props.onCallIceCandidate}
-          onSendAnswer={this.props.onCallSendAnswer} />
-      ) : null;
+          onSendAnswer={this.props.onCallSendAnswer} />;
 
     let component;
     if (!this.state.topic) {
-      component = (
-        <LogoView
+      component = <LogoView
           serverVersion={this.props.serverVersion}
-          serverAddress={this.props.serverAddress} />
-      );
+          serverAddress={this.props.serverAddress} />;
+
     } else {
       let component2;
       if (this.state.imagePreview) {
@@ -1565,43 +1560,48 @@ class MessagesView extends React.Component {
         );
       } else if (this.state.videoPreview) {
           // Preview video.
-        component2 = (
-          <VideoPreview
+        component2 = <VideoPreview
             content={this.state.videoPreview}
             tinode={this.props.tinode}
             reply={this.state.reply}
             onError={this.props.onError}
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
-            onSendMessage={this.sendVideoAttachment} />
-        );
+            onSendMessage={this.sendVideoAttachment} />;
+
       } else if (this.state.imagePostview) {
         // Expand received image.
-        component2 = (
-          <ImagePreview
+        component2 = <ImagePreview
             content={this.state.imagePostview}
-            onClose={this.handleClosePreview} />
-        );
+            onClose={this.handleClosePreview} />;
+
       } else if (this.state.videoPostview) {
         // Play received video.
-        component2 = (
-          <VideoPreview
+        component2 = <VideoPreview
             content={this.state.videoPostview}
             tinode={this.props.tinode}
             onError={this.props.onError}
-            onClose={this.handleClosePreview} />
-        );
+            onClose={this.handleClosePreview} />;
+
       } else if (this.state.docPreview) {
         // Preview attachment before sending.
-        component2 = (
-          <DocPreview
+        if (TheCard.isFileSupported(this.state.docPreview.type, this.state.docPreview.name)) {
+          component2 = <TheCardPreview
             content={this.state.docPreview}
             tinode={this.props.tinode}
             reply={this.state.reply}
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
-            onSendMessage={this.sendFileAttachment} />
-        );
+            onSendMessage={this.sendFileAttachment} />;
+        } else {
+          component2 = <DocPreview
+            content={this.state.docPreview}
+            tinode={this.props.tinode}
+            reply={this.state.reply}
+            onCancelReply={this.handleCancelReply}
+            onClose={this.handleClosePreview}
+            onSendMessage={this.sendFileAttachment} />;
+        }
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType() || topic.chan;

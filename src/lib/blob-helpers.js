@@ -1,4 +1,5 @@
 // File and image helper functions.
+import { TheCard } from 'tinode-sdk';
 
 // Supported image MIME types and corresponding file extensions.
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
@@ -304,4 +305,22 @@ export function base64ToIntArray(b64) {
     return arr;
   } catch (err) {}
   return null;
+}
+
+export function importVCard(fileOrBlob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = _ => {
+      reject(reader.error);
+    };
+    reader.onload = _ => {
+      const card = TheCard.importVCard(reader.result);
+      if (!card) {
+        reject(new Error("Failed to parse vCard"));
+        return;
+      }
+      resolve(card);
+    };
+    reader.readAsText(fileOrBlob);
+  });
 }

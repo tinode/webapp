@@ -1941,5 +1941,33 @@
     "description": "Label for search button in contact card",
     "missing": false,
     "obsolete": false
+  },
+  "label_contact_card": {
+    "translation": "Contact Card",
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Contacts",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_full_name": {
+    "translation": "Full name",
+    "defaultMessage": "Full name",
+    "description": "Label for full name",
+    "missing": false,
+    "obsolete": true
+  },
+  "label_organization": {
+    "translation": "Organization",
+    "defaultMessage": "Organization",
+    "description": "Label for organization",
+    "missing": false,
+    "obsolete": true
   }
 }

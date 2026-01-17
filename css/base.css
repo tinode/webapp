@@ -2035,6 +2035,12 @@ img.channel {
   border-radius: 0.5rem;
 }
 
+.doc-card .avatar-box {
+  width: 10rem;
+  height: 10rem;
+  font-size: 4.5rem;
+}
+
 /* Video-call related styles */
 
 #video-container {
@@ -3550,6 +3556,79 @@ ul.tabbar li.active > a {
   position: relative;
   right: 0;
 }
+/* END of pinned messages */
+
+/* Contact attachments */
+.contact-card {
+  position: relative;
+  background-color: var(--clr-background-off-white);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 14rem;
+}
+
+.contact-card .avatar-box {
+  position: relative;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 1rem;
+  margin-right: 0.75rem;
+  margin-bottom: 0;
+}
+
+.contact-card .contact-body {
+  align-items: center;
+  background-color: var(--clr-background-blue-gray-50);
+  display: flex;
+  padding: 0.75rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  border-bottom: none;
+}
+
+.contact-card .contact-body .name-box {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contact-card .contact-body .name-box .name {
+  color: var(--clr-text-primary);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-card .contact-body .name-box .org {
+  color: var(--clr-text-secondary);
+  font-size: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 300;
+}
+
+.contact-card .contact-actions {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0 0.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  border-top: none;
+  background-color: var(--clr-bright);
+}
+
+.contact-card .contact-actions a {
+  cursor: pointer;
+}
+
+.contact-card .contact-actions .divider {
+  height: 1.8rem;
+  opacity: 0.5;
+}
+
+/* END of contact attachments */
 
 /*
  Drag-and-drop area.
@@ -3791,72 +3870,4 @@ div.toast.show {
     bottom: 8.5rem;
     border-radius: unset;
   }
-}
-
-.contact-card {
-  position: relative;
-  background-color: var(--clr-background-off-white);
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.contact-card .avatar-box {
-  position: relative;
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 1rem;
-  margin-right: 0.75rem;
-  margin-bottom: 0;
-}
-
-.contact-card .contact-body {
-  align-items: center;
-  background-color: var(--clr-background-blue-gray-50);
-  display: flex;
-  padding: 0.75rem;
-  border-radius: 0.5rem 0.5rem 0 0;
-  border-bottom: none;
-}
-
-.contact-card .contact-body .name-box {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.contact-card .contact-body .name-box .name {
-  color: var(--clr-text-primary);
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.contact-card .contact-body .name-box .org {
-  color: var(--clr-text-secondary);
-  font-size: 90%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 300;
-}
-
-.contact-card .contact-actions {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 0 0.5rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  border-top: none;
-  background-color: var(--clr-bright);
-}
-
-.contact-card .contact-actions a {
-  cursor: pointer;
-}
-
-.contact-card .contact-actions .divider {
-  height: 1.8rem;
-  opacity: 0.5;
 }
