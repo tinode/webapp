@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl';
 
-import { AccessMode, Tinode } from 'tinode-sdk';
+import { AccessMode, Tinode, TheCard } from 'tinode-sdk';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
@@ -20,7 +20,6 @@ import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH,
   NO_ACCESS_MODE, TOAST_DURATION } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { theCard } from '../lib/utils.js';
 import { truncateString } from '../lib/strformat.js';
 
 const messages = defineMessages({
@@ -147,6 +146,7 @@ class InfoView extends React.Component {
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
     this.handleShowQRCode = this.handleShowQRCode.bind(this);
     this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this);
+    this.handleShare = this.handleShare.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
@@ -299,7 +299,7 @@ class InfoView extends React.Component {
 
   handleImageChanged(mime, img) {
     this.setState({avatar: img});
-    this.props.onTopicDescUpdate(this.props.topic, theCard(null, img || Tinode.DEL_CHAR), null);
+    this.props.onTopicDescUpdate(this.props.topic, new TheCard(null, img || Tinode.DEL_CHAR), null);
   }
 
   handleMuted(ignored, checked) {
@@ -421,7 +421,13 @@ class InfoView extends React.Component {
       this.setState({toast: this.props.intl.formatMessage(messages.text_copied)});
       setTimeout(_ => { this.setState({toast: ''}); }, TOAST_DURATION);
     });
+  }
 
+  handleShare(e) {
+    e.preventDefault();
+    const card = new TheCard(this.state.fullName, this.state.avatar, null, this.state.description);
+    TheCard.setTinodeID(card, Tinode.URI_TOPIC_ID_PREFIX + this.props.topic);
+    this.props.onShareTheCard(card);
   }
 
   handleShowAddMembers(e) {
@@ -629,6 +635,9 @@ class InfoView extends React.Component {
                     &nbsp;<a href="#" onClick={this.handleShowQRCode}>
                       <i className="material-icons">qr_code</i>
                     </a>&nbsp;
+                    &nbsp;<a href="#" onClick={this.handleShare}>
+                      <i className="material-icons">share</i>
+                    </a>&nbsp;
                   </div>
                 </div>
                 {alias ?
@@ -673,7 +682,7 @@ class InfoView extends React.Component {
                 <div className="group">
                   <label className="small">
                     <FormattedMessage id="label_description" defaultMessage="Description"
-                      description="Label for editing topic description" />
+                      description="Label for description of user or topic" />
                   </label>
                   <div>{this.state.description}</div>
                 </div> : null}

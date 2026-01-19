@@ -452,7 +452,7 @@
   },
   "label_description": {
     "defaultMessage": "Description",
-    "description": "Label for editing topic description"
+    "description": "Label for description of user or topic"
   },
   "label_file_name": {
     "defaultMessage": "File name:",

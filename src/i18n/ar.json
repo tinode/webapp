@@ -1225,7 +1225,7 @@
   "label_description": {
     "translation": "الوصف",
     "defaultMessage": "Description",
-    "description": "Label for editing topic description",
+    "description": "Label for description of user or topic",
     "missing": false,
     "obsolete": false
   },

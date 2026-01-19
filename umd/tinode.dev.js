@@ -2607,6 +2607,7 @@ Drafty.attrValue = function (style, data) {
 Drafty.getContentType = function () {
   return DRAFTY_MIME_TYPE;
 };
+Drafty.contentType = DRAFTY_MIME_TYPE;
 Drafty.isFormResponseType = function (mimeType) {
   return mimeType === DRAFTY_FR_MIME_TYPE || mimeType === DRAFTY_FR_MIME_TYPE_LEGACY;
 };
@@ -3978,16 +3979,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const THE_CARD_MIME_TYPE = 'text/x-the-card';
 class TheCard {
   constructor(fn, imageUrl, imageMimeType, note) {
-    this.card = theCard(fn, imageUrl, imageMimeType, note);
+    Object.assign(this, theCard(fn, imageUrl, imageMimeType, note) || {});
   }
-  getCard() {
-    return this.card;
+  merge(that) {
+    Object.assign(this, that);
+  }
+  get contentType() {
+    return THE_CARD_MIME_TYPE;
   }
 }
-TheCard.init = theCard;
-TheCard.contentType = 'text/x-card';
+TheCard.contentType = THE_CARD_MIME_TYPE;
 TheCard.setFn = function (card, fn) {
   fn = fn && fn.trim();
   card = card || {};
@@ -4130,6 +4134,12 @@ TheCard.exportVCard = function (card) {
   if (card.note && card.note != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
     vcard += `NOTE:${card.note}\r\n`;
   }
+  if (card.bday && card.bday.m && card.bday.d) {
+    const year = card.bday.y ? String(card.bday.y).padStart(4, '0') : '--';
+    const month = String(card.bday.m).padStart(2, '0');
+    const day = String(card.bday.d).padStart(2, '0');
+    vcard += `BDAY:${year}-${month}-${day}\r\n`;
+  }
   if (card.photo) {
     if (card.photo.ref && card.photo.ref != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
       vcard += `PHOTO;VALUE=URI:${card.photo.ref}\r\n`;
@@ -4165,6 +4175,8 @@ TheCard.importVCard = function (vcardStr) {
     const line = rawLines[i];
     if (line.startsWith(' ') || line.startsWith('\t')) {
       currentLine += line.substring(1);
+    } else if (currentLine.endsWith('=')) {
+      currentLine = currentLine.substring(0, currentLine.length - 1) + line;
     } else {
       if (currentLine) {
         lines.push(currentLine);
@@ -4177,6 +4189,39 @@ TheCard.importVCard = function (vcardStr) {
   }
   let card = {};
   const commMap = new Map();
+  const unescapeValue = val => {
+    return val.replace(/\\([,;\\n])/g, (match, char) => {
+      if (char === 'n') return '\n';
+      return char;
+    });
+  };
+  const decodeQuotedPrintable = val => {
+    const bytes = [];
+    let i = 0;
+    while (i < val.length) {
+      if (val[i] === '=' && i + 2 < val.length) {
+        const hex = val.substring(i + 1, i + 3);
+        if (/^[0-9A-F]{2}$/i.test(hex)) {
+          bytes.push(parseInt(hex, 16));
+          i += 3;
+        } else {
+          bytes.push(val.charCodeAt(i));
+          i++;
+        }
+      } else {
+        bytes.push(val.charCodeAt(i));
+        i++;
+      }
+    }
+    try {
+      const uint8Array = new Uint8Array(bytes);
+      return new TextDecoder('utf-8').decode(uint8Array);
+    } catch (e) {
+      return val.replace(/=([0-9A-F]{2})/gi, (match, hex) => {
+        return String.fromCharCode(parseInt(hex, 16));
+      });
+    }
+  };
   lines.forEach(line => {
     const [keyPart, ...valueParts] = line.split(':');
     if (!keyPart || valueParts.length === 0) {
@@ -4185,32 +4230,104 @@ TheCard.importVCard = function (vcardStr) {
     const value = valueParts.join(':');
     const keyParams = keyPart.split(';');
     const key = keyParams[0].trim().toUpperCase();
+    const isQuotedPrintable = keyParams.some(param => param.trim().toUpperCase() === 'QUOTED-PRINTABLE' || param.trim().toUpperCase() === 'ENCODING=QUOTED-PRINTABLE');
     if (key === 'FN') {
-      card.fn = value;
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      card.fn = unescapeValue(processedValue);
     } else if (key === 'N') {
-      const parts = value.split(';');
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      const parts = processedValue.split(';');
       card.n = {
-        surname: parts[0] || undefined,
-        given: parts[1] || undefined,
-        additional: parts[2] || undefined,
-        prefix: parts[3] || undefined,
-        suffix: parts[4] || undefined
+        surname: parts[0] ? unescapeValue(parts[0]) : undefined,
+        given: parts[1] ? unescapeValue(parts[1]) : undefined,
+        additional: parts[2] ? unescapeValue(parts[2]) : undefined,
+        prefix: parts[3] ? unescapeValue(parts[3]) : undefined,
+        suffix: parts[4] ? unescapeValue(parts[4]) : undefined
       };
       Object.keys(card.n).forEach(key => card.n[key] === undefined && delete card.n[key]);
       if (Object.keys(card.n).length === 0) {
         delete card.n;
       }
     } else if (key === 'ORG') {
-      const parts = value.split(';');
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      const parts = processedValue.split(';');
       card.org = card.org || {};
-      card.org.fn = parts[0] || undefined;
+      card.org.fn = parts[0] ? unescapeValue(parts[0]) : undefined;
       if (!card.org.fn) delete card.org.fn;
     } else if (key === 'TITLE') {
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
       card.org = card.org || {};
-      card.org.title = value || undefined;
+      card.org.title = processedValue ? unescapeValue(processedValue) : undefined;
       if (!card.org.title) delete card.org.title;
     } else if (key === 'NOTE') {
-      card.note = value;
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      card.note = unescapeValue(processedValue);
+    } else if (key === 'BDAY') {
+      let dateStr = value.split(/[T ]/)[0].trim();
+      let year = null;
+      let month = null;
+      let day = null;
+      const noHyphens = dateStr.replace(/-/g, '');
+      if (noHyphens.length === 6 && /^\d{6}$/.test(noHyphens)) {
+        const yy = parseInt(noHyphens.substring(0, 2), 10);
+        month = parseInt(noHyphens.substring(2, 4), 10);
+        day = parseInt(noHyphens.substring(4, 6), 10);
+        year = yy >= 35 ? 1900 + yy : 2000 + yy;
+      } else if (dateStr.startsWith('--') || dateStr.startsWith('----')) {
+        const cleaned = dateStr.replace(/^-+/, '');
+        if (cleaned.length === 4 && /^\d{4}$/.test(cleaned)) {
+          month = parseInt(cleaned.substring(0, 2), 10);
+          day = parseInt(cleaned.substring(2, 4), 10);
+        } else if (cleaned.includes('-')) {
+          const parts = cleaned.split('-');
+          if (parts.length >= 2) {
+            month = parseInt(parts[0], 10);
+            day = parseInt(parts[1], 10);
+          }
+        }
+      } else if (noHyphens.length === 8 && /^\d{8}$/.test(noHyphens)) {
+        year = parseInt(noHyphens.substring(0, 4), 10);
+        month = parseInt(noHyphens.substring(4, 6), 10);
+        day = parseInt(noHyphens.substring(6, 8), 10);
+      } else if (dateStr.includes('-')) {
+        const parts = dateStr.split('-');
+        if (parts[0] && parts[0] !== '' && !/^-+$/.test(parts[0])) {
+          year = parseInt(parts[0], 10);
+        }
+        if (parts.length >= 2) {
+          month = parseInt(parts[1], 10);
+        }
+        if (parts.length >= 3) {
+          day = parseInt(parts[2], 10);
+        }
+      }
+      const isValidMonth = month && month >= 1 && month <= 12;
+      const isValidDay = day && day >= 1 && day <= 31;
+      const isValidYear = !year || year >= 1800 && year <= 2200;
+      if (isValidMonth && isValidDay && isValidYear) {
+        card.bday = {
+          m: month,
+          d: day
+        };
+        if (year) {
+          card.bday.y = year;
+        }
+      }
     } else if (key === 'PHOTO') {
       const params = keyPart.split(';').slice(1);
       let type = 'jpeg';
@@ -4313,7 +4430,7 @@ TheCard.importVCard = function (vcardStr) {
   return card;
 };
 TheCard.isFileSupported = function (type, name) {
-  return type == 'text/vcard' || (name || '').endsWith('.vcf') || (name || '').endsWith('.vcr') || (name || '').endsWith('.vcard');
+  return type == 'text/vcard' || (name || '').endsWith('.vcf') || (name || '').endsWith('.vcard');
 };
 function theCard(fn, imageUrl, imageMimeType, note) {
   let card = null;

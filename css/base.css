@@ -1978,7 +1978,7 @@ img.channel {
 }
 
 
-#image-preview-caption-panel {
+#preview-caption-panel {
   display: flex;
   justify-content: space-between;
   background-color: var(--clr-background-blue-gray-50);
@@ -1988,15 +1988,16 @@ img.channel {
   flex-grow: 0;
   height: var(--caption-panel-height);
   padding: 1rem 0.75rem 0 0.75rem;
+  font-size: 120%;
   z-index: 3;
 }
 
-#image-preview-caption-panel a {
+#preview-caption-panel a {
   color: var(--clr-text-secondary);
   text-decoration: none;
 }
 
-#image-preview-caption-panel a:hover {
+#preview-caption-panel a:hover {
   color: var(--clr-dark);
 }
 
@@ -2033,12 +2034,17 @@ img.channel {
   background-color: var(--clr-std-ltgray);
   padding: 1rem;
   border-radius: 0.5rem;
+  max-width: 30rem;
 }
 
 .doc-card .avatar-box {
   width: 10rem;
   height: 10rem;
   font-size: 4.5rem;
+}
+
+.doc-card .avatar-box .material-icons {
+  line-height: 10rem;
 }
 
 /* Video-call related styles */

@@ -21,13 +21,15 @@ export default class TheCardPreview extends React.PureComponent {
     super(props);
 
     this.state = {
-      content: null
+      content: props.content.object
     };
 
-    importVCard(props.content.file)
-      .then(card => {
-        this.setState({ content: card });
-      });
+    if (!props.content.object) {
+      importVCard(props.content.file)
+        .then(card => {
+          this.setState({ content: card });
+        });
+    }
 
     this.handleSendCard = this.handleSendCard.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -122,7 +124,7 @@ export default class TheCardPreview extends React.PureComponent {
 
     return (
       <div id="image-preview">
-        <div id="image-preview-caption-panel">
+        <div id="preview-caption-panel">
           <span><FormattedMessage id="label_contact_card" defaultMessage="Contact Card"
             description="Label for contact card preview" /></span>
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}>
@@ -153,7 +155,7 @@ export default class TheCardPreview extends React.PureComponent {
                 <div className="group">
                   <label className="small">
                     <FormattedMessage id="label_description" defaultMessage="Description"
-                      description="Label for description" />
+                      description="Label for description of user or topic" />
                   </label>
                   <div className="quoted">{note}</div>
                 </div>

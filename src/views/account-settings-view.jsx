@@ -138,7 +138,7 @@ export default class AccountSettingsView extends React.Component {
             <div className="group">
               <label className="small">
                 <FormattedMessage id="label_description" defaultMessage="Description"
-                  description="Label for editing topic description" />
+                  description="Label for description of user or topic" />
               </label>
               <div className="quoted">{this.state.description}</div>
             </div> : null}
