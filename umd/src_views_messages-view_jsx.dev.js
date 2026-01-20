@@ -1215,7 +1215,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return false;
     }
     if (file.type == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.contentType) {
-      console.log("TheCard attachment", file.object);
       this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendTheCard(null, file.object));
       return true;
     }
@@ -2200,10 +2199,9 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         hashUrl = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].addUrlParam(hashUrl, 'q', e.target.dataset.val);
         hashUrl = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].addUrlParam(hashUrl, 'tab', 'find');
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].navigateTo(hashUrl);
-        console.log('Finding contact(s):', hashUrl);
         break;
       default:
-        console.log('Unhandled drafty action.', action, e.target.dataset);
+        console.info('Unhandled drafty action.', action, e.target.dataset);
         break;
     }
   };

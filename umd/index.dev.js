@@ -8361,6 +8361,16 @@ class HashNavigation {
     delete parsed.params[key];
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
+  static removeUrlParams(hash, keys) {
+    if (!Array.isArray(keys)) {
+      keys = [keys];
+    }
+    const parsed = HashNavigation.parseUrlHash(hash);
+    for (const key of keys) {
+      delete parsed.params[key];
+    }
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
+  }
   static setUrlSidePanel(hash, sidepanel) {
     const parsed = HashNavigation.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
@@ -8751,7 +8761,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.0";
+const PACKAGE_VERSION = "0.25.2";
 
 /***/ }),
 
@@ -9581,12 +9591,12 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   handleSearchResultSelected(topicName) {
     if (this.state.tabSelected == 'find') {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParams(window.location.hash, ['tab', 'q']));
       this.props.onCreateTopic(topicName);
     }
   }
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParams(window.location.hash, ['tab', 'q']));
     this.props.onCreateTopic(undefined, {
       public: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(name, dataUrl, null, description),
       private: priv,
@@ -9594,7 +9604,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, isChannel);
   }
   handleGroupByID(topicName) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParams(window.location.hash, ['tab', 'q']));
     this.props.onCreateTopic(topicName);
   }
   render() {
@@ -11209,12 +11219,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    console.log("handleSendMessage", msg);
     return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
   sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
-    console.log("sendMessageToTopic", msg, head);
     msg._uploader = uploader;
     if (head) {
       msg.head = Object.assign(msg.head || {}, head);
