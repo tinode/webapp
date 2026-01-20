@@ -7396,9 +7396,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getMimeType: function() { return /* binding */ getMimeType; },
 /* harmony export */   imageCrop: function() { return /* binding */ imageCrop; },
 /* harmony export */   imageScaled: function() { return /* binding */ imageScaled; },
+/* harmony export */   importVCard: function() { return /* binding */ importVCard; },
 /* harmony export */   intArrayToBase64: function() { return /* binding */ intArrayToBase64; },
 /* harmony export */   makeImageUrl: function() { return /* binding */ makeImageUrl; }
 /* harmony export */ });
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
+
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
 function makeImageUrl(photo) {
@@ -7653,6 +7657,23 @@ function base64ToIntArray(b64) {
   } catch (err) {}
   return null;
 }
+function importVCard(fileOrBlob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = _ => {
+      reject(reader.error);
+    };
+    reader.onload = _ => {
+      const card = tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.TheCard.importVCard(reader.result);
+      if (!card) {
+        reject(new Error("Failed to parse vCard"));
+        return;
+      }
+      resolve(card);
+    };
+    reader.readAsText(fileOrBlob);
+  });
+}
 
 /***/ }),
 
@@ -7679,11 +7700,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/call-status.jsx */ "./src/widgets/call-status.jsx");
 /* harmony import */ var _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/inline-video.jsx */ "./src/widgets/inline-video.jsx");
 /* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_the_card_mini_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/the-card-mini.jsx */ "./src/widgets/the-card-mini.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -7747,7 +7770,7 @@ function fullFormatter(style, data, values, key, stack) {
   switch (style) {
     case 'AU':
       if (attr.src) {
-        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(attr.src, 'audio'));
         attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
         attr.preview = data.preview;
         attr.loading = 'lazy';
@@ -7772,7 +7795,7 @@ function fullFormatter(style, data, values, key, stack) {
       values = null;
       break;
     case 'BN':
-      attr.onClick = this.onFormButtonClick;
+      attr.onClick = e => this.onHandleClick(e, 'form_button');
       let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
         return typeof child == 'string' ? child : undefined;
       });
@@ -7783,13 +7806,13 @@ function fullFormatter(style, data, values, key, stack) {
       break;
     case 'LN':
       if (attr) {
-        attr.href = typeof attr.href == 'string' ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrl)(attr.href, _config_js__WEBPACK_IMPORTED_MODULE_9__.CLICKABLE_URL_SCHEMES) : '';
+        attr.href = typeof attr.href == 'string' ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrl)(attr.href, _config_js__WEBPACK_IMPORTED_MODULE_10__.CLICKABLE_URL_SCHEMES) : '';
       }
       break;
     case 'MN':
       attr.className = 'mention';
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.idToColorClass)(data.val, false, true);
       }
       break;
     case 'FM':
@@ -7799,7 +7822,15 @@ function fullFormatter(style, data, values, key, stack) {
       break;
     case 'QQ':
       attr.className = 'reply-quote';
-      attr.onClick = this.onQuoteClick;
+      attr.onClick = e => this.onHandleClick(e, 'quote');
+      break;
+    case 'TC':
+      el = _widgets_the_card_mini_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+      attr.content = data;
+      attr.authorizeURL = this.authorizeURL;
+      attr.onChatClick = e => this.onHandleClick(e, 'contact_chat');
+      attr.onFindClick = e => this.onHandleClick(e, 'contact_find');
+      values = null;
       break;
     case 'VC':
       el = _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
@@ -7843,15 +7874,15 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -7860,11 +7891,11 @@ function handleImageData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM) {
-        attr.onClick = this.onImagePreview;
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM) {
+        attr.onClick = e => this.onHandleClick(e, 'image');
         attr.className += ' image-clickable';
       }
       attr.loading = 'lazy';
@@ -7872,7 +7903,7 @@ function handleImageData(el, data, attr) {
       attr.src = null;
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_9__["default"];
   }
   return el;
 }
@@ -7880,15 +7911,15 @@ function handleVideoData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_video.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_10__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.NO_DIMENSIONS_VIDEO,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.NO_DIMENSIONS_VIDEO
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -7897,15 +7928,15 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
     if (data.ref || data.val) {
-      attr.onClick = this.onVideoPreview;
+      attr.onClick = e => this.onHandleClick(e, 'video');
       attr.loading = 'lazy';
     }
     el = _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_9__["default"];
   }
   return el;
 }
@@ -7923,7 +7954,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "au",
         className: "m-icon thin"
-      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.secondsToTime)(data.duration / 1000)];
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.secondsToTime)(data.duration / 1000)];
       break;
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -7985,6 +8016,13 @@ function previewFormatter(style, data, values, key) {
       el = null;
       values = null;
       break;
+    case 'TC':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "tc",
+        className: "material-icons"
+      }, "contact_mail"), ' ', tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
+      break;
     case 'VD':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -8010,10 +8048,10 @@ function previewFormatter(style, data, values, key) {
 ;
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
@@ -8026,12 +8064,12 @@ function inlineImageAttr(attr, data) {
   return attr;
 }
 function inlineVideoAttr(attr, data) {
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM);
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.fitImageSize)(data.width, data.height, _config_js__WEBPACK_IMPORTED_MODULE_10__.VIDEO_THUMBNAIL_WIDTH, _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM);
   attr.style = {
     width: dim.width + 'px',
     height: dim.height + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_10__.VIDEO_THUMBNAIL_WIDTH + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_video);
@@ -8072,7 +8110,7 @@ function quoteFormatter(style, data, values, key) {
         el = 'span';
         attr.className = 'mention';
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.idToColorClass)(data.val, false, true);
         }
         break;
       case 'EX':
@@ -8089,7 +8127,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "m-icon"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
@@ -8109,13 +8147,13 @@ function quoteImageOrVideo(data, isVideo) {
     ref = data.ref;
   }
   if (bits) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.base64ToBlob)(bits, mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.base64ToBlob)(bits, mime);
     if (!blob) {
       throw new Error("Invalid image");
     }
     promise = Promise.resolve(blob);
   } else if (ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(ref, 'image'))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.sanitizeUrlForMime)(ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -8126,7 +8164,7 @@ function quoteImageOrVideo(data, isVideo) {
     throw new Error("Missing image data");
   }
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.imageScaled)(blob, isVideo ? _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH : _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, -1, !isVideo);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.imageScaled)(blob, isVideo ? _config_js__WEBPACK_IMPORTED_MODULE_10__.VIDEO_THUMBNAIL_WIDTH : _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM, -1, !isVideo);
   }).then(scaled => {
     if (isVideo) {
       data.premime = scaled.mime;
@@ -8139,7 +8177,7 @@ function quoteImageOrVideo(data, isVideo) {
     delete data.ref;
     delete data.preref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     if (isVideo) {
       data.preview = b64.bits;
@@ -8151,8 +8189,8 @@ function quoteImageOrVideo(data, isVideo) {
     delete data.val;
     delete data.preview;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_10__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
@@ -8166,10 +8204,10 @@ function replyFormatter(style, data, values, key, stack) {
     }, data);
     let loadedPromise;
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(quoteImageOrVideo.call(this, data, style == 'VD'));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.cancelablePromise)(quoteImageOrVideo.call(this, data, style == 'VD'));
     } catch (error) {
       console.warn("Failed to quote image:", error.message);
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(error);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_13__.cancelablePromise)(error);
     }
     attr.whenDone = loadedPromise;
     values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], attr, null), ' ', attr.alt];
@@ -8321,6 +8359,16 @@ class HashNavigation {
   static removeUrlParam(hash, key) {
     const parsed = HashNavigation.parseUrlHash(hash);
     delete parsed.params[key];
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
+  }
+  static removeUrlParams(hash, keys) {
+    if (!Array.isArray(keys)) {
+      keys = [keys];
+    }
+    const parsed = HashNavigation.parseUrlHash(hash);
+    for (const key of keys) {
+      delete parsed.params[key];
+    }
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
   static setUrlSidePanel(hash, sidepanel) {
@@ -8501,7 +8549,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sanitizeUrlForMime: function() { return /* binding */ sanitizeUrlForMime; },
 /* harmony export */   theCard: function() { return /* binding */ theCard; },
 /* harmony export */   updateFavicon: function() { return /* binding */ updateFavicon; },
-/* harmony export */   urlAsAttachment: function() { return /* binding */ urlAsAttachment; }
+/* harmony export */   urlAsAttachment: function() { return /* binding */ urlAsAttachment; },
+/* harmony export */   wallpaperNameFromUrl: function() { return /* binding */ wallpaperNameFromUrl; },
+/* harmony export */   wallpaperTypeFromUrl: function() { return /* binding */ wallpaperTypeFromUrl; }
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -8715,6 +8765,22 @@ function defaultWallpaper() {
     name: `../${_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLPAPER_DEFAULTS.path}${wp.name}`,
     size: wp.size
   };
+}
+function wallpaperNameFromUrl(wallpaperUrl) {
+  const parts = wallpaperUrl.split('/');
+  return parts[parts.length - 1];
+}
+function wallpaperTypeFromUrl(wallpaperUrl) {
+  const fname = wallpaperNameFromUrl(wallpaperUrl);
+  const wallpaperIndex = __webpack_require__(/*! ../../img/bkg/index.json */ "./img/bkg/index.json");
+  for (const type in wallpaperIndex) {
+    for (let i = 0; i < wallpaperIndex[type].length; i++) {
+      if (wallpaperIndex[type][i].name == fname) {
+        return type;
+      }
+    }
+  }
+  return null;
 }
 
 /***/ }),
@@ -9457,1945 +9523,6 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
 /***/ }),
 
-/***/ "./src/views/logo-view.jsx":
-/*!*********************************!*\
-  !*** ./src/views/logo-view.jsx ***!
-  \*********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ LogoView; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-
-
-
-
-class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  render() {
-    const version = _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary() + ')';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "dummy-view"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "https://github.com/tinode/chat/"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      id: "logo",
-      alt: "logo",
-      src: "img/logo.svg"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Tinode Web")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_client",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Client:"
-      }]
-    }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_server",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Server:"
-      }]
-    }), " ", this.props.serverVersion, " (", this.props.serverAddress, ")")));
-  }
-}
-;
-
-/***/ }),
-
-/***/ "./src/views/messages-view.jsx":
-/*!*************************************!*\
-  !*** ./src/views/messages-view.jsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UnwrappedMessagesView: function() { return /* binding */ MessagesView; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/call-panel.jsx */ "./src/widgets/call-panel.jsx");
-/* harmony import */ var _widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/chat-message.jsx */ "./src/widgets/chat-message.jsx");
-/* harmony import */ var _widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
-/* harmony import */ var _widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx");
-/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
-/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
-/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
-/* harmony import */ var _widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/invitation.jsx */ "./src/widgets/invitation.jsx");
-/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
-/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
-/* harmony import */ var _widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/meta-message.jsx */ "./src/widgets/meta-message.jsx");
-/* harmony import */ var _widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../widgets/pinned-messages.jsx */ "./src/widgets/pinned-messages.jsx");
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const NOTIFICATION_EXEC_INTERVAL = 300;
-const SHOW_GO_TO_LAST_DIST = 100;
-const FETCH_PAGE_TRIGGER = 40;
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  online_now: {
-    id: "online_now",
-    defaultMessage: [{
-      "type": 0,
-      "value": "online now"
-    }]
-  },
-  last_seen: {
-    id: "last_seen_timestamp",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Last seen: "
-    }, {
-      "type": 1,
-      "value": "timestamp"
-    }]
-  },
-  not_found: {
-    id: "title_not_found",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Not found"
-    }]
-  },
-  channel: {
-    id: "channel",
-    defaultMessage: [{
-      "type": 0,
-      "value": "channel"
-    }]
-  },
-  file_attachment_too_large: {
-    id: "file_attachment_too_large",
-    defaultMessage: [{
-      "type": 0,
-      "value": "The file size "
-    }, {
-      "type": 1,
-      "value": "size"
-    }, {
-      "type": 0,
-      "value": " exceeds the "
-    }, {
-      "type": 1,
-      "value": "limit"
-    }, {
-      "type": 0,
-      "value": " limit."
-    }]
-  },
-  invalid_content: {
-    id: "invalid_content",
-    defaultMessage: [{
-      "type": 0,
-      "value": "invalid content"
-    }]
-  },
-  editing_message: {
-    id: "editing_message",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Editing"
-    }]
-  },
-  drag_file: {
-    id: "drag_file",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Drag file here"
-    }]
-  },
-  self_topic_name: {
-    id: "self_topic_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Saved messages"
-    }]
-  },
-  subscriber_count: {
-    id: "subscriber_count",
-    defaultMessage: [{
-      "type": 6,
-      "value": "count",
-      "options": {
-        "one": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscriber"
-          }]
-        },
-        "two": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "three": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "few": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "many": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "other": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        }
-      },
-      "offset": 0,
-      "pluralType": "cardinal"
-    }]
-  },
-  member_count: {
-    id: "member_count",
-    defaultMessage: [{
-      "type": 6,
-      "value": "count",
-      "options": {
-        "one": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " member"
-          }]
-        },
-        "two": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "three": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "few": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "many": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "other": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        }
-      },
-      "offset": 0,
-      "pluralType": "cardinal"
-    }]
-  }
-});
-function isUnconfirmed(acs) {
-  if (acs) {
-    const ex = acs.getExcessive() || '';
-    return acs.isJoiner('given') && (ex.includes('R') || ex.includes('W'));
-  }
-  return false;
-}
-function isPeerRestricted(acs) {
-  if (acs) {
-    const ms = acs.getMissing() || '';
-    return acs.isJoiner('want') && (ms.includes('R') || ms.includes('W'));
-  }
-  return false;
-}
-function shouldPresentCallPanel(callState) {
-  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_19__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_19__.CALL_STATE_IN_PROGRESS;
-}
-class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
-  constructor(props) {
-    super(props);
-    this.state = MessagesView.getDerivedStateFromProps(props, {});
-    this.componentSetup = this.componentSetup.bind(this);
-    this.leave = this.leave.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.retrySend = this.retrySend.bind(this);
-    this.sendImageAttachment = this.sendImageAttachment.bind(this);
-    this.sendVideoAttachment = this.sendVideoAttachment.bind(this);
-    this.sendFileAttachment = this.sendFileAttachment.bind(this);
-    this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
-    this.sendKeyPress = this.sendKeyPress.bind(this);
-    this.subscribe = this.subscribe.bind(this);
-    this.handleScrollReference = this.handleScrollReference.bind(this);
-    this.mountComponentEvents = this.mountComponentEvents.bind(this);
-    this.handleScrollEvent = this.handleScrollEvent.bind(this);
-    this.handleDescChange = this.handleDescChange.bind(this);
-    this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
-    this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
-    this.handleReactUpdate = this.handleReactUpdate.bind(this);
-    this.handleAuxUpdate = this.handleAuxUpdate.bind(this);
-    this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
-    this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleExpandMedia = this.handleExpandMedia.bind(this);
-    this.handleClosePreview = this.handleClosePreview.bind(this);
-    this.handleCallPanelToggle = this.handleCallPanelToggle.bind(this);
-    this.handleFormResponse = this.handleFormResponse.bind(this);
-    this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleShowMessageContextMenu = this.handleShowMessageContextMenu.bind(this);
-    this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
-    this.handleEnablePeer = this.handleEnablePeer.bind(this);
-    this.handleAttachFile = this.handleAttachFile.bind(this);
-    this.handleAttachImageOrVideo = this.handleAttachImageOrVideo.bind(this);
-    this.handleCancelUpload = this.handleCancelUpload.bind(this);
-    this.postReadNotification = this.postReadNotification.bind(this);
-    this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
-    this.goToLatestMessage = this.goToLatestMessage.bind(this);
-    this.handleFileDrop = this.handleFileDrop.bind(this);
-    this.handlePickReply = this.handlePickReply.bind(this);
-    this.handleEditMessage = this.handleEditMessage.bind(this);
-    this.handleCancelReply = this.handleCancelReply.bind(this);
-    this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.handleUnpinMessage = this.handleUnpinMessage.bind(this);
-    this.handleCallHangup = this.handleCallHangup.bind(this);
-    this.isDragEnabled = this.isDragEnabled.bind(this);
-    this.handleReact = this.handleReact.bind(this);
-    this.handleToggleReactionPicker = this.handleToggleReactionPicker.bind(this);
-    this.handleDragStart = this.handleDragStart.bind(this);
-    this.handleDragIn = this.handleDragIn.bind(this);
-    this.handleDragOut = this.handleDragOut.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);
-    this.handleDrop = this.handleDrop.bind(this);
-    this.chatMessageRefs = [];
-    this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
-    this.getVisibleMessageRange = this.getVisibleMessageRange.bind(this);
-    this.dragCounter = 0;
-    this.componentRef = null;
-    this.readNotificationQueue = [];
-    this.readNotificationTimer = null;
-    this.keyPressTimer = null;
-  }
-  getOrCreateMessageRef(seqId) {
-    if (this.chatMessageRefs[seqId]) {
-      return this.chatMessageRefs[seqId];
-    }
-    const ref = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.chatMessageRefs[seqId] = ref;
-    return ref;
-  }
-  getVisibleMessageRange(holderRect) {
-    let min = Number.MAX_SAFE_INTEGER,
-      max = -1;
-    let visibilityStatus = false;
-    this.chatMessageRefs.every((ref, seq) => {
-      if (ref.current) {
-        const {
-          top,
-          bottom,
-          height
-        } = ref.current.getBoundingClientRect();
-        const visible = top <= holderRect.top ? holderRect.top - top <= height : bottom - holderRect.bottom <= height;
-        if (visible) {
-          visibilityStatus = true;
-          min = Math.min(min, seq);
-          max = Math.max(max, seq);
-        } else if (visibilityStatus) {
-          return false;
-        }
-      }
-      return true;
-    });
-    return max >= min ? {
-      min: min,
-      max: max
-    } : {
-      min: 0,
-      max: 0
-    };
-  }
-  componentDidMount() {
-    if (this.messagesScroller) {
-      this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
-    }
-    this.mountComponentEvents(this.componentRef);
-    this.componentSetup({}, {});
-  }
-  componentWillUnmount() {
-    if (this.messagesScroller) {
-      this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
-    }
-    this.clearNotificationQueue();
-    if (this.componentRef) {
-      this.componentRef.removeEventListener('dragstart', this.handleDragStart);
-      this.componentRef.removeEventListener('dragenter', this.handleDragIn);
-      this.componentRef.removeEventListener('dragleave', this.handleDragOut);
-      this.componentRef.removeEventListener('dragover', this.handleDrag);
-      this.componentRef.removeEventListener('drop', this.handleDrop);
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.maxSeqId != this.state.maxSeqId || prevState.minSeqId != this.state.minSeqId)) {
-      if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
-      }
-    }
-    if (!this.props.applicationVisible) {
-      this.clearNotificationQueue();
-    } else {
-      this.postReadNotification(0);
-    }
-    this.componentSetup(prevProps, prevState);
-  }
-  componentSetup(prevProps, prevState) {
-    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
-    if (this.state.topic != prevState.topic) {
-      if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNewGroupTopicName(prevState.topic)) {
-        this.leave(prevState.topic);
-        if (prevState.rtcPanel) {
-          this.handleCallHangup(prevState.topic, prevProps.callSeq);
-        }
-      }
-      if (topic) {
-        topic.onData = this.handleMessageUpdate;
-        topic.onAllMessagesReceived = this.handleAllMessagesReceived;
-        topic.onInfo = this.handleInfoReceipt;
-        topic.onMetaDesc = this.handleDescChange;
-        topic.onSubsUpdated = this.handleSubsUpdated;
-        topic.onPres = this.handleSubsUpdated;
-        topic.onAuxUpdated = this.handleAuxUpdate;
-        topic.onReact = this.handleReactUpdate;
-      }
-    }
-    if (topic) {
-      if (this.state.topic != prevState.topic || this.props.myUserId && !prevProps.myUserId) {
-        const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-        if (topic.isP2PType() && newTopic && !_config_js__WEBPACK_IMPORTED_MODULE_18__.IMMEDIATE_P2P_SUBSCRIPTION) {
-          topic.getMeta(topic.startMetaQuery().withDesc().build());
-        } else if (this.props.myUserId) {
-          this.subscribe(topic);
-        }
-      } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
-        topic.getMeta(topic.startMetaQuery().withLaterData().build());
-      }
-    }
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let nextState = {};
-    if (!nextProps.topic) {
-      nextState = {
-        minSeqId: -1,
-        maxSeqId: -1,
-        latestClearId: -1,
-        onlineSubs: [],
-        topic: null,
-        title: '',
-        avatar: null,
-        isVerified: false,
-        isStaff: false,
-        isDangerous: false,
-        deleted: false,
-        docPreview: null,
-        imagePreview: null,
-        imagePostview: null,
-        videoPreview: null,
-        videoPostview: null,
-        rtcPanel: null,
-        minimizedCallPanel: false,
-        typingIndicator: false,
-        scrollPosition: 0,
-        fetchingMessages: false,
-        peerMessagingDisabled: false,
-        channel: false,
-        reply: null,
-        contentToEdit: null,
-        showGoToLastButton: false,
-        dragging: false,
-        pins: [],
-        pinsLoaded: false,
-        selectedPin: 0,
-        subsVersion: 0,
-        reactionPickerShownFor: -1,
-        reactionList: null,
-        maxReactions: 0
-      };
-    } else if (nextProps.topic != prevState.topic) {
-      nextState = {
-        topic: nextProps.topic,
-        docPreview: null,
-        imagePreview: null,
-        imagePostview: null,
-        videoPreview: null,
-        videoPostview: null,
-        rtcPanel: null,
-        minimizedCallPanel: false,
-        typingIndicator: false,
-        scrollPosition: 0,
-        fetchingMessages: false,
-        showGoToLastButton: false,
-        contentToEdit: null,
-        dragging: false,
-        selectedPin: 0,
-        reactionPickerShownFor: -1
-      };
-      if (nextProps.forwardMessage) {
-        nextState.reply = {
-          content: nextProps.forwardMessage.preview,
-          seq: null
-        };
-      } else {
-        nextState.reply = null;
-      }
-      const topic = nextProps.tinode.getTopic(nextProps.topic);
-      if (topic) {
-        nextState.deleted = topic._deleted;
-        const subs = [];
-        if (nextProps.connected) {
-          topic.subscribers(sub => {
-            if (sub.online && sub.user != nextProps.myUserId) {
-              subs.push(sub);
-            }
-          });
-        }
-        Object.assign(nextState, {
-          onlineSubs: subs
-        });
-        if (topic.isSelfType()) {
-          Object.assign(nextState, {
-            title: nextProps.intl.formatMessage(messages.self_topic_name),
-            avatar: true
-          });
-        } else if (topic.public) {
-          Object.assign(nextState, {
-            title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(topic.public.photo)
-          });
-        } else {
-          Object.assign(nextState, {
-            title: '',
-            avatar: null
-          });
-        }
-        const peer = topic.p2pPeerDesc();
-        if (peer) {
-          Object.assign(nextState, {
-            peerMessagingDisabled: isPeerRestricted(peer.acs)
-          });
-        } else if (prevState.peerMessagingDisabled) {
-          Object.assign(nextState, {
-            peerMessagingDisabled: false
-          });
-        }
-        Object.assign(nextState, {
-          minSeqId: topic.minMsgSeq(),
-          maxSeqId: topic.maxMsgSeq(),
-          latestClearId: topic.maxClearId(),
-          channel: topic.isChannelType(),
-          pins: (topic.aux('pins') || []).slice(),
-          pinsLoaded: false
-        });
-        if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
-          nextState.rtcPanel = nextProps.callTopic;
-        }
-        nextState.reactionList = topic.reactions();
-        nextState.maxReactions = topic.maxReactions();
-      } else {
-        Object.assign(nextState, {
-          minSeqId: -1,
-          maxSeqId: -1,
-          latestClearId: -1,
-          onlineSubs: [],
-          title: '',
-          avatar: null,
-          peerMessagingDisabled: false,
-          channel: false,
-          pins: [],
-          pinsLoaded: false
-        });
-      }
-    } else {
-      if (nextProps.callTopic == prevState.topic && !prevState.rtcPanel && shouldPresentCallPanel(nextProps.callState)) {
-        nextState.rtcPanel = nextProps.callTopic;
-      }
-    }
-    if (nextProps.acs) {
-      if (nextProps.acs.isWriter() != prevState.isWriter) {
-        nextState.isWriter = !prevState.isWriter;
-      }
-      if (nextProps.acs.isReader() != prevState.isReader) {
-        nextState.isReader = !prevState.isReader;
-      }
-      if (nextProps.acs.isAdmin() != prevState.isAdmin) {
-        nextState.isAdmin = !prevState.isAdmin;
-      }
-      if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
-        nextState.readingBlocked = !prevState.readingBlocked;
-      }
-      if (nextProps.acs.isSharer() != prevState.isSharer) {
-        nextState.isSharer = !prevState.isSharer;
-      }
-    } else {
-      if (prevState.isWriter) {
-        nextState.isWriter = false;
-      }
-      if (prevState.isReader) {
-        nextState.isReader = false;
-      }
-      if (prevState.isAdmin) {
-        nextState.isAdmin = false;
-      }
-      if (!prevState.readingBlocked) {
-        prevState.readingBlocked = true;
-      }
-      if (prevState.isSharer) {
-        nextState.isSharer = false;
-      }
-    }
-    if (isUnconfirmed(nextProps.acs) == !prevState.unconformed) {
-      nextState.unconfirmed = !prevState.unconformed;
-    }
-    if (!nextProps.connected && prevState.onlineSubs && prevState.onlineSubs.length > 0) {
-      nextState.onlineSubs = [];
-    }
-    return nextState;
-  }
-  subscribe(topic) {
-    if (topic.isSubscribed() || !this.props.ready) {
-      return;
-    }
-    const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withAux();
-    if (this.state.isReader || newTopic) {
-      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE);
-      if (this.state.isReader) {
-        getQuery = getQuery.withLaterDel();
-      }
-      this.setState({
-        fetchingMessages: true
-      });
-    }
-    const setQuery = newTopic ? this.props.newTopicParams : undefined;
-    topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
-      if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__["default"].setUrlTopic('', ctrl.params.topic));
-        return;
-      }
-      if (this.state.topic != ctrl.topic) {
-        this.setState({
-          topic: ctrl.topic
-        });
-      }
-      if (this.state.deleted) {
-        this.setState({
-          deleted: false
-        });
-      }
-      this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-      let discard = [];
-      topic.queuedMessages(pub => {
-        if (pub._sending) {
-          return;
-        }
-        if (pub._fatal || pub.head && pub.head.webrtc) {
-          discard.push(pub.seq);
-          return;
-        }
-        if (topic.isSubscribed()) {
-          this.retrySend(pub);
-        }
-      });
-      if (discard.length > 0) {
-        topic.delMessagesList(discard, true);
-      }
-    }).catch(err => {
-      console.error("Failed subscription to", this.state.topic, err);
-      this.props.onError(err.message, 'err');
-      const blankState = MessagesView.getDerivedStateFromProps({}, {});
-      blankState.title = this.props.intl.formatMessage(messages.not_found);
-      this.setState(blankState);
-    });
-  }
-  leave(oldTopicName) {
-    if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
-      return;
-    }
-    const oldTopic = this.props.tinode.getTopic(oldTopicName);
-    if (oldTopic && oldTopic.isSubscribed()) {
-      oldTopic.leave(false).catch(_ => {}).finally(_ => {
-        this.setState({
-          fetchingMessages: false
-        });
-        oldTopic.onData = undefined;
-        oldTopic.onAllMessagesReceived = undefined;
-        oldTopic.onInfo = undefined;
-        oldTopic.onMetaDesc = undefined;
-        oldTopic.onSubsUpdated = undefined;
-        oldTopic.onPres = undefined;
-        oldTopic.onAuxUpdated = undefined;
-      });
-    }
-  }
-  handleScrollReference(node) {
-    if (node) {
-      node.addEventListener('scroll', this.handleScrollEvent);
-      this.messagesScroller = node;
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
-    }
-  }
-  handleScrollEvent(event) {
-    const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
-    this.setState({
-      scrollPosition: pos,
-      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST && pos < this.state.scrollPosition
-    });
-    if (this.state.fetchingMessages || this.processingScrollEvent) {
-      return;
-    }
-    if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
-      const topic = this.props.tinode.getTopic(this.state.topic);
-      if (topic && topic.isSubscribed()) {
-        this.processingScrollEvent = true;
-        const {
-          min,
-          max
-        } = this.getVisibleMessageRange(event.target.getBoundingClientRect());
-        const gaps = topic.msgHasMoreMessages(min, max, false);
-        if (gaps.length > 0) {
-          this.setState({
-            fetchingMessages: true
-          }, _ => {
-            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE, gaps, min, max).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
-              fetchingMessages: false
-            }));
-          });
-        }
-      }
-    }
-    this.processingScrollEvent = false;
-  }
-  mountComponentEvents(componentRef) {
-    if (componentRef) {
-      componentRef.addEventListener('dragstart', this.handleDragStart);
-      componentRef.addEventListener('dragenter', this.handleDragIn);
-      componentRef.addEventListener('dragleave', this.handleDragOut);
-      componentRef.addEventListener('dragover', this.handleDrag);
-      componentRef.addEventListener('drop', this.handleDrop);
-      this.componentRef = componentRef;
-    }
-  }
-  goToLatestMessage() {
-    this.setState({
-      scrollPosition: 0
-    });
-    if (this.messagesScroller) {
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.messagesScroller.offsetHeight;
-    }
-  }
-  handleDescChange(desc) {
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isSelfTopicName(this.props.topic)) {
-      this.setState({
-        title: this.props.intl.formatMessage(messages.self_topic_name),
-        avatar: true
-      });
-    } else if (desc.public) {
-      this.setState({
-        title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(desc.public.photo)
-      });
-    } else {
-      this.setState({
-        title: '',
-        avatar: null
-      });
-    }
-    if (desc.acs) {
-      this.setState({
-        isWriter: desc.acs.isWriter(),
-        isReader: desc.acs.isReader(),
-        isAdmin: desc.acs.isAdmin(),
-        readingBlocked: !desc.acs.isReader('given'),
-        unconfirmed: isUnconfirmed(desc.acs)
-      });
-    }
-  }
-  postReadNotification(seq) {
-    if (!this.props.applicationVisible || !this.state.topic) {
-      return;
-    }
-    if (!this.readNotificationTimer) {
-      this.readNotificationTimer = setInterval(_ => {
-        const topic = this.props.tinode.getTopic(this.state.topic);
-        if (topic) {
-          topic.markReactionsSeen();
-        }
-        if (this.readNotificationQueue.length == 0) {
-          clearInterval(this.readNotificationTimer);
-          this.readNotificationTimer = null;
-          return;
-        }
-        let seq = -1;
-        while (this.readNotificationQueue.length > 0) {
-          const n = this.readNotificationQueue[0];
-          if (n.topicName != this.state.topic) {
-            this.readNotificationQueue.shift();
-            continue;
-          }
-          const now = new Date();
-          if (n.sendAt <= now) {
-            this.readNotificationQueue.shift();
-            if (n.seq == 0 || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isServerAssignedSeq(n.seq)) {
-              seq = Math.max(seq, n.seq);
-            }
-          } else {
-            break;
-          }
-        }
-        if (seq >= 0) {
-          try {
-            topic.noteRead(seq);
-          } catch (err) {
-            console.error("Failed to send read notification", err);
-          }
-        }
-      }, NOTIFICATION_EXEC_INTERVAL);
-    }
-    const now = new Date();
-    this.readNotificationQueue.push({
-      topicName: this.state.topic,
-      seq: seq,
-      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_18__.READ_DELAY)
-    });
-  }
-  clearNotificationQueue() {
-    this.readNotificationQueue = [];
-    if (this.readNotificationTimer) {
-      clearInterval(this.readNotificationTimer);
-      this.readNotificationTimer = null;
-    }
-  }
-  handleSubsUpdated() {
-    if (this.state.topic) {
-      const subs = [];
-      const topic = this.props.tinode.getTopic(this.state.topic);
-      topic.subscribers(sub => {
-        if (sub.online && sub.user != this.props.myUserId) {
-          subs.push(sub);
-        }
-      });
-      const newState = {
-        onlineSubs: subs,
-        subsVersion: this.state.subsVersion + 1
-      };
-      const peer = topic.p2pPeerDesc();
-      if (peer) {
-        Object.assign(newState, {
-          peerMessagingDisabled: isPeerRestricted(peer.acs)
-        });
-      } else if (this.state.peerMessagingDisabled) {
-        Object.assign(newState, {
-          peerMessagingDisabled: false
-        });
-      }
-      this.setState(newState);
-    }
-  }
-  handleMessageUpdate(msg) {
-    if (!this.state.topic) {
-      return;
-    }
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    if (!msg) {
-      this.setState({
-        latestClearId: topic.maxClearId()
-      });
-      return;
-    }
-    clearTimeout(this.keyPressTimer);
-    this.setState({
-      maxSeqId: topic.maxMsgSeq(),
-      minSeqId: topic.minMsgSeq(),
-      typingIndicator: false
-    }, _ => {
-      if (topic.isNewMessage(msg.seq)) {
-        if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
-          this.setState({
-            showGoToLastButton: true
-          });
-        } else {
-          this.goToLatestMessage();
-        }
-      } else {
-        if (this.messagesScroller) {
-          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
-        }
-      }
-    });
-    const status = topic.msgStatus(msg, true);
-    if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
-      this.postReadNotification(msg.seq);
-    }
-  }
-  handleReactUpdate(seqIds) {
-    if (!this.state.topic) {
-      return;
-    }
-    this.forceUpdate();
-  }
-  handleReact(seq, emo) {
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    topic.react(seq, emo);
-    this.setState({
-      reactionPickerShownFor: -1
-    });
-  }
-  handleToggleReactionPicker(seqId) {
-    this.setState({
-      reactionPickerShownFor: seqId == -1 || this.state.reactionPickerShownFor == seqId ? -1 : seqId
-    });
-  }
-  handleAllMessagesReceived(count) {
-    this.setState({
-      fetchingMessages: false
-    });
-    if (!count) {
-      const topic = this.props.tinode.getTopic(this.state.topic);
-      if (topic) {
-        this.postReadNotification(topic.seq);
-      }
-      return;
-    }
-    if (!this.state.pinsLoaded) {
-      const topic = this.props.tinode.getTopic(this.state.topic);
-      this.setState({
-        pinsLoaded: true
-      }, _ => {
-        topic.getPinnedMessages();
-      });
-    } else {
-      this.setState({
-        pinsLoaded: false
-      });
-    }
-  }
-  handleAuxUpdate(aux) {
-    const pins = (aux['pins'] || []).slice();
-    let selectedPin = this.state.selectedPin;
-    if (pins.length > this.state.pins.length) {
-      selectedPin = 0;
-    } else if (selectedPin >= pins.length) {
-      selectedPin = Math.max(0, pins.length - 1);
-    }
-    this.setState({
-      pins: pins,
-      selectedPin: selectedPin
-    });
-  }
-  handleInfoReceipt(info) {
-    switch (info.what) {
-      case 'kp':
-        {
-          clearTimeout(this.keyPressTimer);
-          this.keyPressTimer = setTimeout(_ => this.setState({
-            typingIndicator: false
-          }), _config_js__WEBPACK_IMPORTED_MODULE_18__.KEYPRESS_DELAY + 1000);
-          if (!this.state.typingIndicator) {
-            this.setState({
-              typingIndicator: true
-            });
-          }
-          break;
-        }
-      case 'read':
-      case 'recv':
-        this.forceUpdate();
-        break;
-      default:
-        console.info("Other change in topic: ", info.what);
-    }
-  }
-  handleExpandMedia(content) {
-    if (!content) {
-      return;
-    }
-    if (content.video) {
-      this.setState({
-        videoPostview: content
-      });
-    } else {
-      this.setState({
-        imagePostview: content
-      });
-    }
-  }
-  handleClosePreview() {
-    if (this.state.imagePreview && this.state.imagePreview.url) {
-      URL.revokeObjectURL(this.state.imagePreview.url);
-    }
-    if (this.state.videoPreview && this.state.videoPreview.url) {
-      URL.revokeObjectURL(this.state.videoPreview.url);
-    }
-    this.setState({
-      imagePostview: null,
-      imagePreview: null,
-      docPreview: null,
-      videoPreview: null,
-      videoPostview: null
-    });
-  }
-  handleFormResponse(action, text, data) {
-    if (action == 'pub') {
-      this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachJSON(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(text), data));
-    } else if (action == 'url') {
-      const url = new URL(data.ref);
-      const params = url.searchParams;
-      for (let key in data.resp) {
-        if (data.resp.hasOwnProperty(key)) {
-          params.set(key, data.resp[key]);
-        }
-      }
-      ['name', 'seq'].forEach(key => {
-        if (data[key]) {
-          params.set(key, data[key]);
-        }
-      });
-      params.set('uid', this.props.myUserId);
-      params.set('topic', this.state.topic);
-      url.search = params;
-      window.open(url, '_blank');
-    } else {
-      console.info("Unknown action in form", action);
-    }
-  }
-  handleContextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.showContextMenu({
-      topicName: this.state.topic,
-      y: e.pageY,
-      x: e.pageX
-    });
-  }
-  handleShowMessageContextMenu(params, messageSpecificMenuItems) {
-    if (params.userFrom == 'chan') {
-      params.userFrom = this.state.topic;
-      params.userName = this.state.title;
-    }
-    params.topicName = this.state.topic;
-    const menuItems = messageSpecificMenuItems || [];
-    const topic = this.props.tinode.getTopic(params.topicName);
-    if (topic) {
-      if (topic.isSelfType()) {
-        menuItems.push('message_delete_generic');
-      } else {
-        if (!topic.isChannelType()) {
-          menuItems.push('message_delete');
-        }
-        const acs = topic.getAccessMode();
-        if (acs && acs.isDeleter()) {
-          let canDelete = acs.isOwner();
-          if (!canDelete) {
-            const maxDelAge = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MSG_DELETE_AGE, 0) | 0;
-            canDelete = maxDelAge == 0 || (maxDelAge > 0 && params.timestamp ? params.timestamp.getTime() > new Date().getTime() - maxDelAge * 1000 : false);
-          }
-          if (canDelete) {
-            menuItems.push('message_delete_hard');
-          }
-        }
-      }
-    }
-    this.props.showContextMenu(params, menuItems);
-  }
-  handleNewChatAcceptance(action) {
-    this.props.onNewChat(this.state.topic, action);
-  }
-  handleEnablePeer(e) {
-    e.preventDefault();
-    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_18__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
-  }
-  sendKeyPress(audio) {
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    if (topic.isSubscribed()) {
-      if (audio) {
-        topic.noteRecording(true);
-      } else {
-        topic.noteKeyPress();
-      }
-    }
-  }
-  sendMessage(msg, uploadCompletionPromise, uploader) {
-    let head;
-    if (this.props.forwardMessage) {
-      msg = this.props.forwardMessage.msg;
-      head = this.props.forwardMessage.head;
-      this.handleCancelReply();
-    } else if (this.state.reply) {
-      if (this.state.reply.editing) {
-        if (msg == this.state.contentToEdit) {
-          this.handleCancelReply();
-          return;
-        }
-        head = {
-          replace: ':' + this.state.reply.seq
-        };
-      } else if (this.state.reply.content) {
-        head = {
-          reply: '' + this.state.reply.seq
-        };
-        if (typeof msg == 'string') {
-          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(msg);
-        }
-        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.sanitizeEntities(this.state.reply.content), msg);
-      }
-      this.handleCancelReply();
-    }
-    this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
-  }
-  retrySend(pub) {
-    this.props.sendMessage(pub.content, undefined, undefined, pub.head).then(_ => {
-      const topic = this.props.tinode.getTopic(this.state.topic);
-      topic.delMessagesList([pub.seq], true);
-    });
-  }
-  sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    const jsonMimeConverter = fileType => fileType === _config_js__WEBPACK_IMPORTED_MODULE_18__.DRAFTY_FR_MIME_TYPE_LEGACY ? 'application/octet-stream' : fileType;
-    if (file.size > maxInbandAttachmentSize) {
-      const uploader = this.props.tinode.getLargeFileHelper();
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-      const uploadCompletionPromise = uploader.upload(file);
-      const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
-        mime: jsonMimeConverter(file.type),
-        filename: file.name,
-        size: file.size,
-        urlPromise: uploadCompletionPromise
-      });
-      this.sendMessage(msg, uploadCompletionPromise, uploader);
-    } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
-        mime: jsonMimeConverter(b64.mime),
-        data: b64.bits,
-        filename: b64.name,
-        size: file.size
-      }))).catch(err => this.props.onError(err.message, 'err'));
-    }
-  }
-  handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
-    if (file.size > maxExternAttachmentSize) {
-      this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.bytesToHumanSize)(file.size),
-        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.bytesToHumanSize)(maxExternAttachmentSize)
-      }), 'err');
-    } else {
-      this.setState({
-        docPreview: {
-          file: file,
-          name: file.name,
-          size: file.size,
-          type: file.type
-        }
-      });
-    }
-  }
-  handleCallHangup(topic, seq) {
-    this.props.onVideoCallClosed();
-    this.setState({
-      rtcPanel: null
-    });
-    this.props.onCallHangup(topic, seq);
-  }
-  handleCallPanelToggle() {
-    this.setState({
-      minimizedCallPanel: !this.state.minimizedCallPanel
-    });
-  }
-  sendImageAttachment(caption, blob) {
-    const mime = this.state.imagePreview.mime;
-    const width = this.state.imagePreview.width;
-    const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.filename;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    if (blob.size > maxInbandAttachmentSize) {
-      const uploader = this.props.tinode.getLargeFileHelper();
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-      const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_18__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob)).then(b64 => {
-        let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
-          mime: mime,
-          _tempPreview: b64.bits,
-          bits: b64.bits,
-          width: width,
-          height: height,
-          filename: fname,
-          size: blob.size,
-          urlPromise: uploadCompletionPromise
-        });
-        if (caption) {
-          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
-          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
-        }
-        this.sendMessage(msg, uploadCompletionPromise, uploader);
-      }).catch(err => this.props.onError(err, 'err'));
-      return;
-    }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(blob).then(b64 => {
-      let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
-        mime: b64.mime,
-        bits: b64.bits,
-        width: width,
-        height: height,
-        filename: fname,
-        size: blob.size
-      });
-      if (caption) {
-        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
-        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
-      }
-      this.sendMessage(msg);
-    });
-  }
-  sendVideoAttachment(caption, videoBlob, previewBlob, params) {
-    const width = params.width;
-    const height = params.height;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    const uploads = [];
-    let uploader;
-    if (videoBlob.size + previewBlob.size > maxInbandAttachmentSize) {
-      uploader = this.props.tinode.getLargeFileHelper();
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-      uploads[0] = videoBlob.size > maxInbandAttachmentSize * 0.675 ? uploader.upload(videoBlob) : null;
-      uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
-    }
-    if (uploads.length == 0) {
-      Promise.all([(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(previewBlob)]).then(b64s => {
-        const [v64, i64] = b64s;
-        let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
-          mime: v64.mime,
-          bits: v64.bits,
-          preview: i64.bits,
-          premime: i64.mime,
-          width: width,
-          height: height,
-          duration: params.duration,
-          filename: params.name,
-          size: videoBlob.size
-        });
-        if (caption) {
-          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
-          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
-        }
-        this.sendMessage(msg);
-      });
-      return;
-    }
-    const uploadCompletionPromise = Promise.all(uploads);
-    const b64conv = [];
-    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(videoBlob);
-    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob));
-    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_18__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob));
-    Promise.all(b64conv).then(b64s => {
-      const [video, img, preview] = b64s;
-      let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
-        mime: params.mime,
-        bits: video ? video.bits : null,
-        _tempPreview: preview.bits,
-        preview: img ? img.bits : preview.bits,
-        premime: img ? img.mime : preview.mime,
-        width: width,
-        height: height,
-        duration: params.duration,
-        filename: params.name,
-        size: videoBlob.size,
-        urlPromise: uploadCompletionPromise
-      });
-      if (caption) {
-        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
-        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
-      }
-      this.sendMessage(msg, uploadCompletionPromise, uploader);
-    }).catch(err => this.props.onError(err.message, 'err'));
-  }
-  handleAttachImageOrVideo(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
-    if (file.type.startsWith('video/')) {
-      this.setState({
-        videoPreview: {
-          url: URL.createObjectURL(file),
-          blob: file,
-          filename: file.name,
-          size: file.size,
-          mime: file.type
-        }
-      });
-      return;
-    }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
-      this.setState({
-        imagePreview: {
-          url: URL.createObjectURL(scaled.blob),
-          blob: scaled.blob,
-          filename: scaled.name,
-          width: scaled.width,
-          height: scaled.height,
-          size: scaled.blob.size,
-          mime: scaled.mime
-        }
-      });
-    }).catch(err => {
-      this.props.onError(err.message, 'err');
-    });
-  }
-  handleFileDrop(files) {
-    if (!files || files.length == 0) {
-      return;
-    }
-    const file = files[0];
-    if (file.type && file.type.startsWith('image/')) {
-      this.handleAttachImageOrVideo(file);
-    } else {
-      this.handleAttachFile(file);
-    }
-  }
-  sendAudioAttachment(url, preview, duration) {
-    fetch(url).then(result => result.blob()).then(blob => {
-      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
-      if (blob.size > maxInbandAttachmentSize) {
-        const uploader = this.props.tinode.getLargeFileHelper();
-        if (!uploader) {
-          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-          return;
-        }
-        const uploadCompletionPromise = uploader.upload(blob);
-        const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
-          mime: blob.type,
-          size: blob.size,
-          duration: duration,
-          preview: preview,
-          urlPromise: uploadCompletionPromise
-        });
-        this.sendMessage(msg, uploadCompletionPromise, uploader);
-      } else {
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(blob).then(b64 => {
-          this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
-            mime: b64.mime,
-            bits: b64.bits,
-            size: blob.size,
-            duration: duration,
-            preview: preview
-          }));
-        });
-      }
-    }).catch(err => {
-      this.props.onError(err.message, 'err');
-    });
-    ;
-  }
-  handleCancelUpload(seq, uploader) {
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    const found = topic.findMessage(seq);
-    if (found) {
-      found._cancelled = true;
-    }
-    uploader.cancel();
-  }
-  handlePickReply(seq, content, senderId, senderName) {
-    if (!seq || !content) {
-      this.setState({
-        reply: null
-      });
-      return;
-    }
-    content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_18__.QUOTED_REPLY_LENGTH);
-    } else {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
-    }
-    this.setState({
-      reply: {
-        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(senderName, senderId, content),
-        seq: seq
-      }
-    });
-    this.props.onCancelForwardMessage();
-  }
-  handleEditMessage(seq, content) {
-    if (!seq || !content) {
-      this.setState({
-        reply: null
-      });
-      return;
-    }
-    content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
-    const editable = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.toMarkdown(content);
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_18__.EDIT_PREVIEW_LENGTH);
-    } else {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
-    }
-    this.setState({
-      reply: {
-        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(this.props.intl.formatMessage(messages.editing_message), null, content),
-        seq: seq,
-        editing: true
-      },
-      contentToEdit: editable
-    });
-    this.props.onCancelForwardMessage();
-  }
-  handleCancelReply() {
-    this.setState({
-      reply: null,
-      contentToEdit: null
-    });
-    this.props.onCancelForwardMessage();
-  }
-  handleQuoteClick(replyToSeq) {
-    const ref = this.getOrCreateMessageRef(replyToSeq);
-    if (ref && ref.current) {
-      ref.current.scrollIntoView({
-        block: "center",
-        behavior: "smooth"
-      });
-      ref.current.classList.add('flash');
-      setTimeout(_ => {
-        ref.current.classList.remove('flash');
-      }, 1000);
-    } else {
-      console.error("Unresolved message ref", replyToSeq);
-    }
-  }
-  handleUnpinMessage(seq) {
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    topic.pinMessage(seq, false);
-  }
-  isDragEnabled() {
-    return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
-  }
-  handleDragStart(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.clearData();
-  }
-  handleDragIn(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.dragCounter++;
-    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      this.setState({
-        dragging: true
-      });
-    }
-  }
-  handleDragOut(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.dragCounter--;
-    if (this.dragCounter <= 0) {
-      this.setState({
-        dragging: false
-      });
-    }
-  }
-  handleDrag(e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-  handleDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({
-      dragging: false
-    });
-    if (this.isDragEnabled() && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      this.handleFileDrop(e.dataTransfer.files);
-      this.dragCounter = 0;
-    }
-  }
-  render() {
-    const {
-      formatMessage
-    } = this.props.intl;
-    const overlay = this.state.rtcPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      topic: this.state.topic,
-      seq: this.props.callSeq,
-      callState: this.props.callState,
-      callAudioOnly: this.props.callAudioOnly,
-      tinode: this.props.tinode,
-      title: this.state.title,
-      avatar: this.state.avatar || true,
-      minimized: this.state.minimizedCallPanel,
-      onError: this.props.onError,
-      onHangup: this.handleCallHangup,
-      onToggleMinimize: this.handleCallPanelToggle,
-      onInvite: this.props.onCallInvite,
-      onSendOffer: this.props.onCallSendOffer,
-      onIceCandidate: this.props.onCallIceCandidate,
-      onSendAnswer: this.props.onCallSendAnswer
-    }) : null;
-    let component;
-    if (!this.state.topic) {
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
-        serverVersion: this.props.serverVersion,
-        serverAddress: this.props.serverAddress
-      });
-    } else {
-      let component2;
-      if (this.state.imagePreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          content: this.state.imagePreview,
-          tinode: this.props.tinode,
-          reply: this.state.reply,
-          onCancelReply: this.handleCancelReply,
-          onClose: this.handleClosePreview,
-          onSendMessage: this.sendImageAttachment
-        });
-      } else if (this.state.videoPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__["default"], {
-          content: this.state.videoPreview,
-          tinode: this.props.tinode,
-          reply: this.state.reply,
-          onError: this.props.onError,
-          onCancelReply: this.handleCancelReply,
-          onClose: this.handleClosePreview,
-          onSendMessage: this.sendVideoAttachment
-        });
-      } else if (this.state.imagePostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          content: this.state.imagePostview,
-          onClose: this.handleClosePreview
-        });
-      } else if (this.state.videoPostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__["default"], {
-          content: this.state.videoPostview,
-          tinode: this.props.tinode,
-          onError: this.props.onError,
-          onClose: this.handleClosePreview
-        });
-      } else if (this.state.docPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-          content: this.state.docPreview,
-          tinode: this.props.tinode,
-          reply: this.state.reply,
-          onCancelReply: this.handleCancelReply,
-          onClose: this.handleClosePreview,
-          onSendMessage: this.sendFileAttachment
-        });
-      } else {
-        const topic = this.props.tinode.getTopic(this.state.topic);
-        const isChannel = topic.isChannelType() || topic.chan;
-        const groupTopic = topic.isGroupType() && !isChannel;
-        const icon_badges = [];
-        if (topic.trusted) {
-          if (topic.trusted.verified) {
-            icon_badges.push({
-              icon: 'verified',
-              color: 'badge-inv'
-            });
-          }
-          if (topic.trusted.staff) {
-            icon_badges.push({
-              icon: 'staff',
-              color: 'badge-inv'
-            });
-          }
-          if (topic.trusted.danger) {
-            icon_badges.push({
-              icon: 'dangerous',
-              color: 'badge-inv'
-            });
-          }
-        }
-        const pinnedMessages = [];
-        this.state.pins.forEach(seq => pinnedMessages.push(topic.latestMsgVersion(seq) || topic.findMessage(seq)));
-        const messageNodes = [];
-        let previousFrom = null;
-        let prevDate = null;
-        let chatBoxClass = null;
-        topic.messages((msg, prev, next, i) => {
-          let nextFrom = next ? next.from || 'chan' : null;
-          let sequence = 'single';
-          let thisFrom = msg.from || 'chan';
-          if (thisFrom == previousFrom) {
-            if (thisFrom == nextFrom) {
-              sequence = 'middle';
-            } else {
-              sequence = 'last';
-            }
-          } else if (thisFrom == nextFrom) {
-            sequence = 'first';
-          }
-          previousFrom = thisFrom;
-          const isReply = !(thisFrom == this.props.myUserId);
-          const deliveryStatus = topic.msgStatus(msg, true);
-          let userFrom = thisFrom,
-            userName,
-            userAvatar;
-          const user = topic.userDesc(thisFrom);
-          if (user && user.public) {
-            userName = user.public.fn;
-            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(user.public.photo);
-          }
-          chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
-          const ref = this.getOrCreateMessageRef(msg.seq);
-          let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
-          if (!replyToSeq || isNaN(replyToSeq)) {
-            replyToSeq = null;
-          }
-          if (msg.hi) {
-            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-              deleted: true,
-              key: msg.seq
-            }));
-          } else {
-            const thisDate = new Date(msg.ts);
-            if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
-              messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.relativeDateFormat)(msg.ts),
-                locale: this.props.intl.locale,
-                key: 'date-' + msg.seq
-              }));
-              prevDate = thisDate;
-            }
-            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-              tinode: this.props.tinode,
-              topic: this.state.topic,
-              content: msg.content,
-              mimeType: msg.head && msg.head.mime,
-              replyToSeq: replyToSeq,
-              edited: msg.head && !msg.head.webrtc && msg.head.replace,
-              timestamp: msg.ts,
-              response: isReply,
-              seq: msg.seq,
-              isGroup: groupTopic,
-              isChan: this.state.channel,
-              userFrom: userFrom,
-              userName: userName,
-              userAvatar: userAvatar,
-              sequence: sequence,
-              received: deliveryStatus,
-              uploader: msg._uploader,
-              userIsWriter: this.state.isWriter,
-              userIsAdmin: this.state.isAdmin,
-              showPicker: this.state.reactionPickerShownFor == msg.seq,
-              pinned: this.state.pins.includes(msg.seq),
-              viewportWidth: this.props.viewportWidth,
-              reactions: topic.msgReactions(msg.seq),
-              reactionList: this.state.reactionList,
-              maxReactions: this.state.maxReactions,
-              showContextMenu: this.handleShowMessageContextMenu,
-              onExpandMedia: this.handleExpandMedia,
-              onFormResponse: this.handleFormResponse,
-              onCancelUpload: this.handleCancelUpload,
-              pickReply: this.handlePickReply,
-              editMessage: this.handleEditMessage,
-              onQuoteClick: this.handleQuoteClick,
-              onAcceptCall: this.props.onAcceptCall,
-              onError: this.props.onError,
-              onReact: this.handleReact,
-              onToggleReactionPicker: this.handleToggleReactionPicker,
-              myUserId: this.props.myUserId,
-              parentRef: this.messagesScroller,
-              ref: ref,
-              key: msg.seq
-            }));
-          }
-        });
-        let lastSeen = null;
-        if (isChannel) {
-          if (topic.subcnt) {
-            lastSeen = formatMessage(messages.subscriber_count, {
-              count: topic.subcnt
-            });
-          }
-        } else {
-          const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-          if (cont) {
-            if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(cont.topic)) {
-              if (cont.online) {
-                lastSeen = formatMessage(messages.online_now);
-              } else if (cont.seen) {
-                lastSeen = formatMessage(messages.last_seen, {
-                  timestamp: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.shortDateFormat)(cont.seen.when, this.props.intl.locale)
-                });
-              }
-            } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isGroupTopicName(cont.topic)) {
-              if (topic.subcnt) {
-                lastSeen = formatMessage(messages.member_count, {
-                  count: topic.subcnt
-                });
-              }
-            }
-          }
-        }
-        const avatar = this.state.avatar || true;
-        const online = this.state.deleted || topic.isSelfType() ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
-        const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
-        const darkModeClass = this.props.colorSchema == 'dark' ? 'dark' : '';
-        let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-container",
-          className: darkModeClass
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-          id: "go-to-latest",
-          className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
-          onClick: this.goToLatestMessage
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon"
-        }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-panel",
-          ref: this.handleScrollReference
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-          id: "scroller",
-          className: chatBoxClass
-        }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "write-only-background"
-        }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "write-only-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "messages_not_readable",
-          defaultMessage: [{
-            "type": 0,
-            "value": "no access to messages"
-          }]
-        })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "peer-messaging-disabled-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon secondary"
-        }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "peers_messaging_disabled",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Peer's messaging is disabled."
-          }]
-        }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          onClick: this.handleEnablePeer
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "enable_peers_messaging",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Enable"
-          }]
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
-          onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
-          tinode: this.props.tinode,
-          topicName: this.state.topic,
-          noInput: !!this.props.forwardMessage,
-          disabled: !this.state.isWriter || this.state.deleted,
-          reply: this.state.reply,
-          initMessage: this.state.contentToEdit,
-          sendOnEnter: this.props.sendOnEnter,
-          onKeyPress: this.sendKeyPress,
-          onRecordingProgress: this.sendKeyPress,
-          onSendMessage: this.sendMessage,
-          onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
-          onAttachImage: this.props.forwardMessage ? null : this.handleAttachImageOrVideo,
-          onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
-          onError: this.props.onError,
-          onQuoteClick: this.handleQuoteClick,
-          onCancelReply: this.handleCancelReply
-        }));
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-caption-panel",
-          className: "caption-panel"
-        }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          id: "hide-message-view",
-          onClick: e => {
-            e.preventDefault();
-            this.leave(this.state.topic);
-            this.props.onHideMessagesView();
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon"
-        }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-          tinode: this.props.tinode,
-          avatar: avatar,
-          topic: this.state.topic,
-          title: this.state.title,
-          deleted: this.state.deleted
-        }), !isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-          className: online
-        }) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-title-group"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-title",
-          className: titleClass
-        }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "unnamed_topic",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Unnamed"
-          }]
-        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          badges: icon_badges
-        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-last-seen"
-        }, lastSeen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          style: {
-            marginLeft: 'auto'
-          }
-        }), !this.props.displayMobile && this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
-          tinode: this.props.tinode,
-          pins: this.state.pins,
-          messages: pinnedMessages,
-          selected: this.state.selectedPin,
-          isAdmin: this.state.isAdmin,
-          setSelected: index => this.setState({
-            selectedPin: index
-          }),
-          onSelected: this.handleQuoteClick,
-          onCancel: this.handleUnpinMessage
-        }) : null, groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-          tinode: this.props.tinode,
-          subscribers: this.state.onlineSubs
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          onClick: this.handleContextClick
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
-          tinode: this.props.tinode,
-          pins: this.state.pins,
-          messages: pinnedMessages,
-          selected: this.state.selectedPin,
-          isAdmin: this.state.isAdmin,
-          setSelected: index => this.setState({
-            selectedPin: index
-          }),
-          onSelected: this.handleQuoteClick,
-          onCancel: this.handleUnpinMessage
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          level: this.props.errorLevel,
-          text: this.props.errorText,
-          onClearError: this.props.onError
-        })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
-          show: this.state.fetchingMessages
-        }), messagesComponent, this.state.dragging && this.isDragEnabled() ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: "drag-n-drop"
-        }, formatMessage(messages.drag_file)) : null);
-      }
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        id: "topic-view",
-        ref: this.mountComponentEvents
-      }, component2, overlay);
-    }
-    return component;
-  }
-}
-;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(MessagesView));
-
-
-/***/ }),
-
 /***/ "./src/views/new-topic-view.jsx":
 /*!**************************************!*\
   !*** ./src/views/new-topic-view.jsx ***!
@@ -11450,9 +9577,12 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
 class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
+    const urlParams = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].parseUrlHash(window.location.hash).params;
+    const initialTab = urlParams['tab'] || 'find';
+    const initialQuery = initialTab == 'find' ? urlParams['q'] || null : null;
     this.state = {
-      tabSelected: 'find',
-      searchQuery: null
+      tabSelected: initialTab,
+      searchQuery: initialQuery
     };
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
@@ -11495,12 +9625,12 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   handleSearchResultSelected(topicName) {
     if (this.state.tabSelected == 'find') {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParams(window.location.hash, ['tab', 'q']));
       this.props.onCreateTopic(topicName);
     }
   }
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParams(window.location.hash, ['tab', 'q']));
     this.props.onCreateTopic(undefined, {
       public: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(name, dataUrl, null, description),
       private: priv,
@@ -11508,7 +9638,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, isChannel);
   }
   handleGroupByID(topicName) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParams(window.location.hash, ['tab', 'q']));
     this.props.onCreateTopic(topicName);
   }
   render() {
@@ -11569,6 +9699,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       placeholder: search_placeholder,
+      initialQuery: this.state.searchQuery || '',
       onSearchContacts: this.handleSearchContacts
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
@@ -11761,16 +9892,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-7e28c7"), __webpack_require__.e("src_views_account-settings-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx")));
+const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_views_account-settings-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx")));
 
-const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-7e28c7"), __webpack_require__.e("src_views_create-account-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx")));
+const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_views_create-account-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx")));
 
 
 const AccSecurityView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_acc-security-view_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx")));
 
 
 
-const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-7e28c7"), __webpack_require__.e("src_views_password-reset-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx")));
+const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_views_password-reset-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx")));
 
 
 const WallpapersView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_wallpapers_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./wallpapers.jsx */ "./src/views/wallpapers.jsx")));
@@ -12052,6 +10183,9 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         }]
       }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(WallpapersView, {
+      wallpaper: this.props.wallpaper,
+      wallpaperSize: this.props.wallpaperSize,
+      wallpaperBlur: this.props.wallpaperBlur,
       colorSchema: this.props.colorSchema !== 'auto' ? this.props.colorSchema : this.props.systemColorSchema,
       onWallpaperSelected: this.props.onWallpaperSelected
     })) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
@@ -12133,17 +10267,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
 /* harmony import */ var _widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/forward-dialog.jsx */ "./src/widgets/forward-dialog.jsx");
 /* harmony import */ var _widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/call-incoming.jsx */ "./src/widgets/call-incoming.jsx");
-/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
-/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../version.js */ "./src/version.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
-/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../version.js */ "./src/version.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -12155,7 +10288,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const PhoneCountrySelector = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_phone-country-selector_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-country-selector.jsx */ "./src/widgets/phone-country-selector.jsx")));
 const InfoView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_info-view_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./info-view.jsx */ "./src/views/info-view.jsx")));
-
+const MessagesView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_messages-view_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./messages-view.jsx */ "./src/views/messages-view.jsx")));
 
 
 
@@ -12267,6 +10400,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
+    this.handleEscapeKey = this.handleEscapeKey.bind(this);
     this.handleColorSchemeChange = this.handleColorSchemeChange.bind(this);
     this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
@@ -12324,6 +10458,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
     this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
     this.handleReportTopic = this.handleReportTopic.bind(this);
+    this.handleShareTheCard = this.handleShareTheCard.bind(this);
     this.handleShowContextMenu = this.handleShowContextMenu.bind(this);
     this.defaultTopicContextMenu = this.defaultTopicContextMenu.bind(this);
     this.handleHideContextMenu = this.handleHideContextMenu.bind(this);
@@ -12353,10 +10488,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.callTimeoutTimer = null;
   }
   getBlankState() {
-    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('settings') || {};
-    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in');
+    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('settings') || {};
+    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
     if (!settings.wallpaper) {
-      const wallpaper = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.defaultWallpaper)();
+      const wallpaper = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.defaultWallpaper)();
       settings.wallpaper = wallpaper.name || '';
       settings.wallpaperSize = wallpaper.size || 0;
       settings.wallpaperBlur = 0;
@@ -12366,21 +10501,21 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       ready: false,
       autoLogin: false,
       transport: settings.transport || null,
-      serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.detectServerAddress)(),
-      secureConnection: settings.secureConnection === undefined ? (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)() : settings.secureConnection,
+      serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.detectServerAddress)(),
+      secureConnection: settings.secureConnection === undefined ? (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() : settings.secureConnection,
       serverVersion: "no connection",
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
-      colorSchema: settings.colorSchema || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME,
+      colorSchema: settings.colorSchema || _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME,
       systemColorSchema: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
       wallpaper: settings.wallpaper,
       wallpaperSize: settings.wallpaperSize,
       wallpaperBlur: 0,
-      textSize: settings.textSize || _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_TEXT_SIZE,
+      textSize: settings.textSize || _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_TEXT_SIZE,
       sendOnEnter: settings.sendOnEnter || 'plain',
       desktopAlerts: persist && !!settings.desktopAlerts,
-      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('firebase-token') : null,
+      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
+      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('firebase-token') : null,
       applicationVisible: !document.hidden,
       errorText: '',
       errorLevel: null,
@@ -12401,11 +10536,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       topicSelectedAcs: null,
       newTopicParams: null,
       loginDisabled: false,
-      displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__.MEDIA_BREAKPOINT,
+      displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__.MEDIA_BREAKPOINT,
       infoPanel: undefined,
       mobilePanel: 'sidepanel',
       callTopic: undefined,
-      callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE,
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_NONE,
       callAudioOnly: undefined,
       callShouldStart: false,
       contextMenuVisible: false,
@@ -12440,6 +10575,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.addEventListener('hashchange', this.handleHashRoute);
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.handleColorSchemeChange);
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
+    document.addEventListener('keydown', this.handleEscapeKey);
     document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
     this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur, this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
@@ -12452,17 +10588,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.lastWakeUpCheck = new Date().getTime();
     this.wakeUpTicker = setInterval(_ => {
       const now = new Date().getTime();
-      if (now - this.lastWakeUpCheck > _config_js__WEBPACK_IMPORTED_MODULE_11__.WAKE_UP_TIMEOUT) {
+      if (now - this.lastWakeUpCheck > _config_js__WEBPACK_IMPORTED_MODULE_10__.WAKE_UP_TIMEOUT) {
         this.handleOnlineOn();
       }
       this.lastWakeUpCheck = now;
-    }, _config_js__WEBPACK_IMPORTED_MODULE_11__.WAKE_UP_TICK);
+    }, _config_js__WEBPACK_IMPORTED_MODULE_10__.WAKE_UP_TICK);
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
     });
     new Promise((resolve, reject) => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)(), this.state.transport, this.props.intl.locale, this.state.persist, resolve);
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)(), this.state.transport, this.props.intl.locale, this.state.persist, resolve);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -12473,7 +10609,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.initFCMessaging().catch(_ => {});
       }
       this.resetContactList();
-      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('auth-token') : undefined;
+      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('auth-token') : undefined;
       if (token) {
         this.setState({
           autoLogin: true
@@ -12484,13 +10620,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           this.handleError(err.message, 'err');
         });
       }
-      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
+      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         this.setState({
           requestedTopic: parsedNav.path[1]
         });
-        const path = parsedNav.params && parsedNav.params.cred_done ? _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].addUrlParam('', 'cred_done', parsedNav.params.cred_done) : '';
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(path);
+        const path = parsedNav.params && parsedNav.params.cred_done ? _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].addUrlParam('', 'cred_done', parsedNav.params.cred_done) : '';
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(path);
       } else {
         this.handleHashRoute();
       }
@@ -12503,19 +10639,20 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.removeEventListener('offline', this.handleOnlineOff);
     window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', this.handleColorSchemeChange);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+    document.removeEventListener('keydown', this.handleEscapeKey);
     clearInterval(this.wakeUpTicker);
   }
   static tnSetup(serverAddress, secureConnection, transport, locale, persistentCache, onSetupCompleted) {
     const tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode({
-      appName: _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME,
+      appName: _config_js__WEBPACK_IMPORTED_MODULE_10__.APP_NAME,
       host: serverAddress,
-      apiKey: _config_js__WEBPACK_IMPORTED_MODULE_11__.API_KEY,
+      apiKey: _config_js__WEBPACK_IMPORTED_MODULE_10__.API_KEY,
       transport: transport,
       secure: secureConnection,
       persist: persistentCache
     }, onSetupCompleted);
     tinode.setHumanLanguage(locale);
-    tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__.LOGGING_ENABLED, true);
+    tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_10__.LOGGING_ENABLED, true);
     return tinode;
   }
   handlePushMessage(payload) {
@@ -12532,12 +10669,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         firebaseToken: null
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
         desktopAlerts: false
       });
     };
     try {
-      this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME));
+      this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_10__.APP_NAME));
       return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
         return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
           this.checkForAppUpdate(reg);
@@ -12546,15 +10683,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }).then(reg => {
         (reg.active || reg.installing).postMessage(JSON.stringify({
           locale: locale,
-          version: _version_js__WEBPACK_IMPORTED_MODULE_13__.PACKAGE_VERSION
+          version: _version_js__WEBPACK_IMPORTED_MODULE_12__.PACKAGE_VERSION
         }));
         return TinodeWeb.requestFCMToken(this.fcm, reg);
       }).then(token => {
-        const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in');
+        const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
         if (token != this.state.firebaseToken) {
           this.tinode.setDeviceToken(token);
           if (persist) {
-            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('firebase-token', token);
+            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('firebase-token', token);
           }
         }
         this.setState({
@@ -12562,7 +10699,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           desktopAlerts: true
         });
         if (persist) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
             desktopAlerts: true
           });
         }
@@ -12607,7 +10744,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
   handleResize() {
-    const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__.MEDIA_BREAKPOINT;
+    const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__.MEDIA_BREAKPOINT;
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
@@ -12616,6 +10753,24 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         displayMobile: mobile
       });
+    }
+  }
+  handleEscapeKey(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+      this.setState({
+        topicSelected: null,
+        errorText: '',
+        errorLevel: null,
+        mobilePanel: 'sidepanel',
+        topicSelectedOnline: false,
+        topicSelectedAcs: null,
+        infoPanel: undefined,
+        forwardMessage: null,
+        contextMenuVisible: false,
+        forwardDialogVisible: false,
+        alertVisible: false
+      });
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', null));
     }
   }
   checkForAppUpdate(reg) {
@@ -12644,7 +10799,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
   }
   handleHashRoute() {
-    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
+    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
     const newState = {
       infoPanel: hash.params.info,
       newTopicTabSelected: hash.params.tab
@@ -12748,14 +10903,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handlePersistenceChange(persist) {
     if (persist) {
       this.tinode.initStorage().then(_ => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('keep-logged-in', true);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', true);
         this.setState({
           persist: true
         });
       });
     } else {
       this.tinode.clearStorage().then(_ => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('keep-logged-in', false);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', false);
         this.setState({
           persist: false
         });
@@ -12802,7 +10957,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.tinode.reconnect();
         return;
       }
-      const fmtTime = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.secondsToTime)(count) : count;
+      const fmtTime = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.secondsToTime)(count) : count;
       this.handleError(formatMessage(messages.reconnect_countdown, {
         seconds: fmtTime
       }), 'warn', _ => {
@@ -12827,12 +10982,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   doLogin(login, password, tmpToken, cred) {
     if (this.tinode.isAuthenticated()) {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       return;
     }
     let token = tmpToken || (this.tinode.getAuthToken() || {}).token;
     if (!(login && password) && !token) {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       this.setState({
         loginDisabled: false
       });
@@ -12877,22 +11032,22 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         if (token) {
           this.handleLogout();
         }
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       }
     });
   }
   static navigateToCredentialsView(params) {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
     parsed.params['token'] = params.token;
     parsed.params['code'] = params.code;
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].composeUrlHash(parsed.path, parsed.params));
   }
   handleLoginSuccessful() {
     this.handleError();
-    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in')) {
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('auth-token', this.tinode.getAuthToken());
+    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('auth-token', this.tinode.getAuthToken());
     }
     const goToTopic = this.state.requestedTopic;
     const me = this.tinode.getMeTopic();
@@ -12912,17 +11067,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
       localStorage.removeItem('auth-token');
       this.handleError(err.message, 'err');
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
     }).finally(_ => {
       this.setState({
         loadSpinnerVisible: false
       });
     });
-    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'contacts');
+    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'contacts');
     if (goToTopic) {
-      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(urlHash, goToTopic);
+      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(urlHash, goToTopic);
     }
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(urlHash);
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(urlHash);
   }
   tnMeMetaDesc(desc) {
     if (!desc) {
@@ -12931,7 +11086,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (desc.public) {
       this.setState({
         sidePanelTitle: desc.public.fn,
-        sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(desc.public.photo)
+        sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageUrl)(desc.public.photo)
       });
     }
     if (desc.trusted) {
@@ -13096,7 +11251,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName),
           forwardMessage: null
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', topicName));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', topicName));
       }
     } else {
       this.setState({
@@ -13109,14 +11264,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         infoPanel: undefined,
         forwardMessage: null
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', null));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', null));
     }
   }
   handleHideMessagesView() {
     this.setState({
       mobilePanel: 'sidepanel'
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, null));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, null));
   }
   handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
@@ -13200,7 +11355,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleNewAccount() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'register'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'register'));
   }
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
     this.handleError();
@@ -13246,7 +11401,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       colorSchema: schema
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
       colorSchema: schema
     });
     document.documentElement.style.colorScheme = schema == 'auto' ? 'light dark' : schema;
@@ -13266,7 +11421,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleSelectWallpapers() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'wallpapers'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'wallpapers'));
   }
   applyWallpaperSettings(wallpaper, size, blur, effectiveSchema) {
     document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
@@ -13279,7 +11434,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleWallpaperSelected(wallpaper, size, blur) {
     this.handleError();
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
       wallpaper: wallpaper,
       wallpaperSize: size,
       wallpaperBlur: blur
@@ -13295,7 +11450,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       textSize: size | 0
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
       textSize: size
     });
     document.documentElement.style.setProperty('--message-text-size', `${size}pt`);
@@ -13304,7 +11459,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       sendOnEnter: option
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
       sendOnEnter: option
     });
   }
@@ -13315,7 +11470,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleSettings() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
   }
   handleGlobalSettings(settings) {
     const serverAddress = settings.serverAddress || this.state.serverAddress;
@@ -13326,7 +11481,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    this.tinode = TinodeWeb.tnSetup(serverAddress, secureConnection, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(serverAddress, secureConnection, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -13337,18 +11492,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       transport: transport,
       secureConnection: secureConnection
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('settings', {
       serverAddress: serverAddress,
       transport: transport,
       secureConnection: secureConnection
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, ''));
   }
   handleShowArchive() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
   }
   handleShowBlocked() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
   toggleFCMToken(enabled) {
     if (enabled) {
@@ -13361,8 +11516,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.setState({
           desktopAlerts: true
         });
-        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in')) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
             desktopAlerts: true
           });
         }
@@ -13371,7 +11526,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.error("Unable to delete token.", err);
       }).finally(_ => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
           desktopAlerts: false
         });
         localStorage.removeItem('firebase-token');
@@ -13386,7 +11541,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         desktopAlerts: false,
         firebaseToken: null
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
         desktopAlerts: false
       });
     }
@@ -13395,7 +11550,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       messageSounds: enabled
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
       messageSoundsOff: !enabled
     });
   }
@@ -13419,7 +11574,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
   handleSidepanelCancel() {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
     let path = '';
     if (['security', 'support', 'general', 'notif', 'acc_general'].includes(parsed.path[0])) {
       path = 'edit';
@@ -13440,17 +11595,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       delete parsed.params.scheme;
       delete parsed.params.token;
     }
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].composeUrlHash(parsed.path, parsed.params));
     this.setState({
       errorText: '',
       errorLevel: null
     });
   }
   basicNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, hash));
   }
   infoNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlInfoPanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlInfoPanel(window.location.hash, hash));
   }
   handleStartTopicRequest(topicName, newTopicParams, isChannel) {
     if (topicName && this.tinode.isTopicCached(topicName)) {
@@ -13460,11 +11615,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const params = {};
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName)) {
       params.sub = {
-        mode: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
+        mode: _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_P2P_ACCESS_MODE
       };
       params.desc = {
         defacs: {
-          auth: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
+          auth: _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_P2P_ACCESS_MODE
         }
       };
     } else {
@@ -13490,7 +11645,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     let nextState = {};
     if (this.state.callShouldStart) {
       nextState = {
-        callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS,
+        callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_IN_PROGRESS,
         callShouldStart: false
       };
     }
@@ -13498,7 +11653,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       nextState.topicSelected = newName;
     }
     this.setState(nextState, _ => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', newName));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', newName));
     });
   }
   handleTopicUpdateRequest(topicName, pub, priv, defacs) {
@@ -13571,15 +11726,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleLogout() {
-    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.updateFavicon)(0);
+    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.updateFavicon)(0);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
     if (this.state.firebaseToken) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
     }
-    document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME == 'auto' ? 'light dark' : _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_COLOR_SCHEME;
-    document.documentElement.style.setProperty('--message-text-size', `${_config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_TEXT_SIZE}pt`);
+    document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME == 'auto' ? 'light dark' : _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME;
+    document.documentElement.style.setProperty('--message-text-size', `${_config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_TEXT_SIZE}pt`);
     clearInterval(this.reconnectCountdown);
     let cleared;
     if (this.tinode) {
@@ -13591,13 +11746,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     this.setState(this.getBlankState());
     cleared.then(_ => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in'), _ => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'), _ => {
         this.tinode.onConnect = this.handleConnected;
         this.tinode.onDisconnect = this.handleDisconnect;
         this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
         this.tinode.onInfoMessage = this.handleInfoMessage;
         this.tinode.onDataMessage = this.handleDataMessage;
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       });
     });
   }
@@ -13612,7 +11767,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
     topic.delTopic(true).then(_ => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -13630,7 +11785,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
     topic.leave(true).then(_ => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -13641,7 +11796,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
     topic.updateMode(null, '-JP').then(_ => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => this.handleError(err.message, 'err'));
   }
   handleReportTopic(topicName) {
@@ -13651,7 +11806,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     this.tinode.report('report', topicName);
     topic.updateMode(null, '-JP').then(_ => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => this.handleError(err.message, 'err'));
   }
   handleShowContextMenu(params, menuItems) {
@@ -13670,9 +11825,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (this.state.sidePanelSelected == 'newtpk') {
       this.handleSidepanelCancel();
     }
-    const header = '➦ ' + params.userName;
+    const header = params.userName ? '➦ ' + params.userName : '';
     const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.forwardedContent(params.content);
-    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, true);
+    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_10__.FORWARDED_PREVIEW_LENGTH, true);
     const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.mention(header, params.userFrom)), content);
     const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.quote(header, params.userFrom, preview);
     const head = {
@@ -13684,6 +11839,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         head: head,
         msg: msg,
         preview: msgPreview
+      }
+    });
+  }
+  handleShareTheCard(card) {
+    this.setState({
+      forwardDialogVisible: true,
+      forwardMessage: {
+        content: card,
+        type: card.contentType
       }
     });
   }
@@ -13770,7 +11934,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
   handleShowInfoView() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].addUrlParam(window.location.hash, 'info', 'info'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].addUrlParam(window.location.hash, 'info', 'info'));
     this.setState({
       infoPanel: 'info'
     });
@@ -13801,7 +11965,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           meth: cred,
           resp: code
         }
-      }).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'contacts'))).catch(err => this.handleError(err.message, 'err'));
+      }).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'contacts'))).catch(err => this.handleError(err.message, 'err'));
     } else {
       this.setState({
         credMethod: cred,
@@ -13820,7 +11984,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
   handleResetPassword(newPassword, tempAuth) {
-    const secret = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.base64ReEncode)(tempAuth.secret);
+    const secret = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.base64ReEncode)(tempAuth.secret);
     if (!secret || !tempAuth.scheme) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
@@ -13829,7 +11993,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         secret: secret
       })).then(_ => {
         this.handleError(this.props.intl.formatMessage(messages.password_reset_success), 'info');
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
@@ -13857,22 +12021,22 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
-      callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_OUTGOING_INITATED,
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_OUTGOING_INITATED,
       callAudioOnly: false
     });
   }
   handleStartAudioCall() {
     this.setState({
       callTopic: this.state.topicSelected,
-      callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_OUTGOING_INITATED,
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_OUTGOING_INITATED,
       callAudioOnly: true
     });
   }
   handleCallInvite(callTopic, callSeq, callState, audioOnly) {
     switch (callState) {
-      case _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_OUTGOING_INITATED:
+      case _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_OUTGOING_INITATED:
         const head = {
-          webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_HEAD_STARTED,
+          webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_HEAD_STARTED,
           aonly: !!audioOnly
         };
         return this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(audioOnly), undefined, undefined, head).then(ctrl => {
@@ -13885,7 +12049,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           });
           return ctrl;
         });
-      case _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS:
+      case _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_IN_PROGRESS:
         const topic = this.tinode.getTopic(callTopic);
         if (!topic) {
           return;
@@ -13935,7 +12099,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     this.setState({
       callTopic: undefined,
-      callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE,
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_NONE,
       callAudioOnly: undefined
     });
   }
@@ -13947,7 +12111,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (topic.isSubscribed()) {
       this.handleTopicSelected(setCallTopic ? topicName : this.state.callTopic);
       const upd = {
-        callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS
+        callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_IN_PROGRESS
       };
       if (setCallTopic) {
         upd.callTopic = topicName;
@@ -13969,7 +12133,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
           this.setState({
             callTopic: null,
-            callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE,
+            callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_NONE,
             callSeq: null,
             callAudioOnly: undefined
           });
@@ -13977,7 +12141,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }
         if (info.topic == this.state.callTopic) {
           this.setState({
-            callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS
+            callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_IN_PROGRESS
           });
         }
         break;
@@ -13987,16 +12151,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleDataMessage(data) {
-    if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_HEAD_STARTED && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(data.topic)) {
+    if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_HEAD_STARTED && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(data.topic)) {
       const topic = this.tinode.getTopic(data.topic);
       if (topic) {
         const msg = topic.latestMsgVersion(data.seq) || data;
-        if (msg.head && msg.head.webrtc && msg.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_HEAD_STARTED) {
+        if (msg.head && msg.head.webrtc && msg.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_HEAD_STARTED) {
           if (data.from != this.state.myUserId) {
-            if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE) {
+            if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_NONE) {
               this.setState({
                 callTopic: data.topic,
-                callState: _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_INCOMING_RECEIVED,
+                callState: _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_INCOMING_RECEIVED,
                 callSeq: data.seq,
                 callAudioOnly: !!msg.head.aonly
               });
@@ -14040,7 +12204,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       onTopicSelected: this.handleStartTopicRequest
-    }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.tinode,
       topic: this.state.callTopic,
       seq: this.state.callSeq,
@@ -14064,7 +12228,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.state.alertParams.onConfirm();
       } : null,
       confirm: this.state.alertParams.confirm
-    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -14097,6 +12261,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       reqCredMethod: this.state.reqCredMethod,
       textSize: this.state.textSize,
       colorSchema: this.state.colorSchema,
+      wallpaper: this.state.wallpaper,
+      wallpaperSize: this.state.wallpaperSize,
+      wallpaperBlur: this.state.wallpaperBlur,
       systemColorSchema: this.state.systemColorSchema,
       sendOnEnter: this.state.sendOnEnter,
       onGlobalSettings: this.handleGlobalSettings,
@@ -14137,7 +12304,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       showContextMenu: this.handleShowContextMenu
-    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'topic-view' && !this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'topic-view' && !this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(MessagesView, {
       tinode: this.tinode,
       connected: this.state.connected,
       ready: this.state.ready,
@@ -14180,7 +12355,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onNewChat: this.handleNewChatInvitation,
       sendMessage: this.handleSendMessage,
       onVideoCallClosed: this.handleCallClose
-    }) : null, this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+    })) : null, this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
       fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "loading_note",
         defaultMessage: [{
@@ -14210,7 +12385,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onLeaveTopic: this.handleLeaveUnsubRequest,
       onBlockTopic: this.handleBlockTopicRequest,
       onReportTopic: this.handleReportTopic,
-      onAddMember: this.handleManageGroupMembers,
+      onShareTheCard: this.handleShareTheCard,
       onTopicTagsUpdateRequest: this.handleTagsUpdateRequest,
       onTopicUnArchive: this.handleUnarchive,
       onInitFind: this.tnInitFind,
@@ -14503,119 +12678,6 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
         "value": "OK"
       }]
     })) : null)));
-  }
-}
-;
-
-/***/ }),
-
-/***/ "./src/widgets/attachment.jsx":
-/*!************************************!*\
-  !*** ./src/widgets/attachment.jsx ***!
-  \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ Attachment; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
-
-
-
-
-class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      downloader: null,
-      progress: 0
-    };
-    this.downloadFile = this.downloadFile.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-  }
-  downloadFile(url, filename, mimetype) {
-    if (!url) {
-      this.props.onError("Invalid download URL '" + url + "'");
-      return;
-    }
-    const downloader = this.props.tinode.getLargeFileHelper();
-    this.setState({
-      downloader: downloader
-    });
-    downloader.download(url, filename, mimetype, loaded => this.setState({
-      progress: loaded / this.props.size
-    }), err => this.props.onError(err, 'err')).then(_ => this.setState({
-      downloader: null,
-      progress: 0
-    })).catch(err => {
-      if (err) {
-        this.props.onError("Error downloading file: " + err.message, 'err');
-      }
-      this.setState({
-        downloader: null,
-        progress: 0
-      });
-    });
-  }
-  handleCancel() {
-    if (this.props.uploading) {
-      this.props.onCancelUpload();
-    } else if (this.state.downloader) {
-      this.state.downloader.cancel();
-    }
-  }
-  render() {
-    let filename = this.props.filename || 'file_attachment';
-    if (filename.length > 36) {
-      filename = filename.substr(0, 16) + '...' + filename.substr(-16);
-    }
-    let size = this.props.size > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "small gray"
-    }, "(", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.size), ")") : null;
-    let url, helperFunc;
-    if (!this.props.uploading && !this.state.downloader && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.isUrlRelative)(this.props.downloadUrl)) {
-      url = '#';
-      helperFunc = e => {
-        e.preventDefault();
-        this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
-      };
-    } else {
-      url = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.sanitizeUrl)(this.props.downloadUrl);
-      helperFunc = null;
-    }
-    const downloadWidget = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "save_attachment",
-      defaultMessage: [{
-        "type": 0,
-        "value": "save"
-      }]
-    }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "attachment"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon big gray thin"
-    }, "draft")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, filename, " ", size), this.props.uploading || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      progress: this.props.uploading ? this.props.progress : this.state.progress,
-      onCancel: this.handleCancel
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, url ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: url,
-      download: this.props.filename,
-      onClick: helperFunc
-    }, downloadWidget) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "light-gray"
-    }, downloadWidget))));
   }
 }
 ;
@@ -15011,7 +13073,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: true,
       topic: this.props.uid,
       title: this.props.title
@@ -15264,7 +13326,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: this.state.avatar || true,
       topic: this.props.topic,
       title: this.state.fullName
@@ -15393,664 +13455,6 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
 
 /***/ }),
 
-/***/ "./src/widgets/call-panel.jsx":
-/*!************************************!*\
-  !*** ./src/widgets/call-panel.jsx ***!
-  \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-
-
-
-
-
-
-const RING_SOUND = new Audio('audio/call-out.m4a');
-RING_SOUND.loop = true;
-const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
-CALL_ENDED_SOUND.loop = true;
-const DIALING_SOUND = new Audio('audio/dialing.m4a');
-const VIDEO_MUTED_EVENT = 'video:muted';
-const VIDEO_UNMUTED_EVENT = 'video:unmuted';
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  already_in_call: {
-    id: "already_in_call",
-    defaultMessage: [{
-      "type": 0,
-      "value": "You already in an ongoing call!"
-    }]
-  }
-});
-class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      localStream: undefined,
-      remoteStream: undefined,
-      pc: undefined,
-      dataChannel: undefined,
-      previousOnInfo: undefined,
-      waitingForPeer: false,
-      callInitialSetupComplete: false,
-      audioOnly: props.callAudioOnly,
-      videoToggleInProgress: false,
-      remoteVideoLive: false
-    };
-    this.localStreamConstraints = {
-      audio: true,
-      video: !props.callAudioOnly
-    };
-    this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED;
-    this.containerRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.remoteIceCandidatesCache = [];
-    this.onInfo = this.onInfo.bind(this);
-    this.start = this.start.bind(this);
-    this.stop = this.stop.bind(this);
-    this.createPeerConnection = this.createPeerConnection.bind(this);
-    this.canSendOffer = this.canSendOffer.bind(this);
-    this.drainRemoteIceCandidatesCache = this.drainRemoteIceCandidatesCache.bind(this);
-    this.handleNegotiationNeededEvent = this.handleNegotiationNeededEvent.bind(this);
-    this.handleICECandidateEvent = this.handleICECandidateEvent.bind(this);
-    this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this);
-    this.handleICEConnectionStateChangeEvent = this.handleICEConnectionStateChangeEvent.bind(this);
-    this.handleSignalingStateChangeEvent = this.handleSignalingStateChangeEvent.bind(this);
-    this.handleICEGatheringStateChangeEvent = this.handleICEGatheringStateChangeEvent.bind(this);
-    this.handleIceCandidateErrorEvent = this.handleIceCandidateErrorEvent.bind(this);
-    this.handleTrackEvent = this.handleTrackEvent.bind(this);
-    this.handleVideoOfferMsg = this.handleVideoOfferMsg.bind(this);
-    this.handleVideoAnswerMsg = this.handleVideoAnswerMsg.bind(this);
-    this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this);
-    this.reportError = this.reportError.bind(this);
-    this.handleGetUserMediaError = this.handleGetUserMediaError.bind(this);
-    this.stopTracks = this.stopTracks.bind(this);
-    this.disconnectMedia = this.disconnectMedia.bind(this);
-    this.handleCloseClick = this.handleCloseClick.bind(this);
-    this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
-    this.handleToggleMicClick = this.handleToggleMicClick.bind(this);
-    this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
-    this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
-    this.muteVideo = this.muteVideo.bind(this);
-    this.unmuteVideo = this.unmuteVideo.bind(this);
-    this.emptyVideoTrack = this.emptyVideoTrack.bind(this);
-    this.handleDataChannelEvent = this.handleDataChannelEvent.bind(this);
-    this.handleDataChannelError = this.handleDataChannelError.bind(this);
-    this.handleDataChannelMessage = this.handleDataChannelMessage.bind(this);
-    this.handleDataChannelOpen = this.handleDataChannelOpen.bind(this);
-    this.handleDataChannelClose = this.handleDataChannelClose.bind(this);
-    this.bounds = {};
-    this.dragStart = event => {
-      if (!event.target.classList.contains('draggable')) {
-        return;
-      }
-      if (window.matchMedia('(width<=640px)')) {
-        return;
-      }
-      if (this.props.minimized && this.containerRef) {
-        event.stopPropagation();
-        this.containerRef.current.setPointerCapture(event.pointerId);
-        this.containerRef.current.style.cursor = 'grabbing';
-        this.bounds.left = this.containerRef.current.offsetLeft;
-        this.bounds.top = this.containerRef.current.offsetTop;
-        this.bounds.width = this.containerRef.current.offsetWidth;
-        this.bounds.height = this.containerRef.current.offsetHeight;
-        const parent = this.containerRef.current.offsetParent;
-        this.bounds.maxX = parent.offsetWidth;
-        this.bounds.maxY = parent.offsetHeight;
-      }
-    };
-    this.drag = event => {
-      event.stopPropagation();
-      const el = this.containerRef.current;
-      if (this.props.minimized && this.containerRef && el.hasPointerCapture(event.pointerId)) {
-        this.bounds.left = Math.min(Math.max(this.bounds.left + event.movementX, 0), this.bounds.maxX - this.bounds.width);
-        this.bounds.top = Math.min(Math.max(this.bounds.top + event.movementY, 0), this.bounds.maxY - this.bounds.height);
-        el.style.left = `${this.bounds.left}px`;
-        el.style.top = `${this.bounds.top}px`;
-      }
-    };
-    this.dragEnd = event => {
-      event.stopPropagation();
-      if (this.props.minimized && this.containerRef) {
-        this.containerRef.current.releasePointerCapture(event.pointerId);
-        this.containerRef.current.style.cursor = 'grab';
-      }
-    };
-  }
-  componentDidMount() {
-    const topic = this.props.tinode.getTopic(this.props.topic);
-    this.previousOnInfo = topic.onInfo;
-    topic.onInfo = this.onInfo;
-    if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
-      this.start();
-    }
-    if (this.containerRef) {
-      this.containerRef.current.addEventListener('pointerdown', this.dragStart);
-      this.containerRef.current.addEventListener('pointermove', this.drag);
-      this.containerRef.current.addEventListener('pointerup', this.dragEnd);
-    }
-  }
-  componentWillUnmount() {
-    const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onInfo = this.previousOnInfo;
-    this.stop();
-    if (this.containerRef) {
-      this.containerRef.current.removeEventListener('pointerdown', this.dragStart);
-      this.containerRef.current.removeEventListener('pointermove', this.drag);
-      this.containerRef.current.removeEventListener('pointerup', this.dragEnd);
-    }
-  }
-  handleVideoCallAccepted(info) {
-    RING_SOUND.pause();
-    const pc = this.createPeerConnection(true);
-    const stream = this.state.localStream;
-    stream.getTracks().forEach(track => {
-      pc.addTrack(track, stream);
-      if (track.kind == 'video' && this.state.audioOnly) {
-        track.enabled = false;
-        track.stop();
-        stream.removeTrack(track);
-      }
-    });
-  }
-  onInfo(info) {
-    if (info.what != 'call') {
-      return;
-    }
-    switch (info.event) {
-      case 'accept':
-        this.handleVideoCallAccepted(info);
-        break;
-      case 'answer':
-        this.handleVideoAnswerMsg(info);
-        break;
-      case 'ice-candidate':
-        this.handleNewICECandidateMsg(info);
-        break;
-      case 'hang-up':
-        this.handleRemoteHangup(info);
-        break;
-      case 'offer':
-        this.handleVideoOfferMsg(info);
-        break;
-      case 'ringing':
-        RING_SOUND.play().catch(_ => {});
-        break;
-      default:
-        console.warn("Unknown call event", info.event);
-        break;
-    }
-  }
-  emptyVideoTrack() {
-    const width = 640;
-    const height = 480;
-    const canvas = Object.assign(document.createElement("canvas"), {
-      width,
-      height
-    });
-    canvas.getContext('2d').fillRect(0, 0, width, height);
-    const stream = canvas.captureStream(0);
-    return Object.assign(stream.getVideoTracks()[0], {
-      enabled: false
-    });
-  }
-  start() {
-    if (this.state.localStream) {
-      this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
-      return;
-    }
-    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
-      this.props.onInvite(this.props.topic, this.props.seq, _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS, this.props.callAudioOnly);
-      return;
-    }
-    navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
-      if (!this.localStreamConstraints.video) {
-        stream.addTrack(this.emptyVideoTrack());
-      }
-      this.setState({
-        localStream: stream,
-        waitingForPeer: true
-      });
-      this.localRef.current.srcObject = stream;
-      DIALING_SOUND.play();
-      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState, this.props.callAudioOnly);
-    }).catch(this.handleGetUserMediaError);
-  }
-  stop() {
-    CALL_ENDED_SOUND.pause();
-    CALL_ENDED_SOUND.currentTime = 0;
-    RING_SOUND.pause();
-    RING_SOUND.currentTime = 0;
-    this.stopTracks(this.state.localStream);
-    this.stopTracks(this.state.remoteStream);
-    this.disconnectMedia(this.localRef.current);
-    this.disconnectMedia(this.remoteRef.current);
-    if (this.state.pc) {
-      this.state.pc.ontrack = null;
-      this.state.pc.onremovetrack = null;
-      this.state.pc.onremovestream = null;
-      this.state.pc.onicecandidate = null;
-      this.state.pc.oniceconnectionstatechange = null;
-      this.state.pc.onsignalingstatechange = null;
-      this.state.pc.onicegatheringstatechange = null;
-      this.state.pc.onnegotiationneeded = null;
-      this.state.pc.onicecandidateerror = null;
-      this.state.pc.ondatachannel = null;
-      if (this.state.dataChannel && (this.state.dataChannel.readyState == 'open' || this.state.dataChannel.readyState == 'connecting')) {
-        this.state.dataChannel.close();
-      }
-      this.state.pc.close();
-    }
-    this.setState({
-      pc: null,
-      waitingForPeer: false
-    });
-  }
-  disconnectMedia(el) {
-    if (!el) {
-      return;
-    }
-    el.srcObject = null;
-    el.src = '';
-  }
-  stopTracks(stream) {
-    if (!stream) {
-      return;
-    }
-    let tracks = stream.getTracks();
-    if (tracks) {
-      tracks.forEach(track => {
-        track.stop();
-        track.enabled = false;
-      });
-    }
-  }
-  handleDataChannelError(error) {
-    console.error('data channel error', error);
-  }
-  handleDataChannelMessage(event) {
-    switch (event.data) {
-      case VIDEO_MUTED_EVENT:
-        this.setState({
-          remoteVideoLive: false
-        }, _ => {
-          this.remoteRef.current.srcObject = this.state.remoteStream;
-        });
-        break;
-      case VIDEO_UNMUTED_EVENT:
-        this.setState({
-          remoteVideoLive: true
-        }, _ => {
-          this.remoteRef.current.srcObject = this.state.remoteStream;
-        });
-        break;
-      default:
-        break;
-    }
-  }
-  handleDataChannelOpen(event) {
-    if (!this.state.audioOnly) {
-      event.target.send(VIDEO_UNMUTED_EVENT);
-    }
-  }
-  handleDataChannelClose(event) {
-    console.log('close data channel:', event);
-  }
-  handleDataChannelEvent(event) {
-    console.log('data channel event:', event);
-    const channel = event.channel;
-    channel.onerror = this.handleDataChannelError;
-    channel.onmessage = this.handleDataChannelMessage;
-    channel.onopen = this.handleDataChannelOpen;
-    channel.onclose = this.handleDataChannelClose;
-    this.setState({
-      dataChannel: channel
-    });
-  }
-  createPeerConnection(withDataChannel) {
-    const iceServers = this.props.tinode.getServerParam('iceServers', null);
-    const pc = iceServers ? new RTCPeerConnection({
-      iceServers: iceServers
-    }) : new RTCPeerConnection();
-    pc.onicecandidate = this.handleICECandidateEvent;
-    pc.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
-    pc.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent;
-    pc.onsignalingstatechange = this.handleSignalingStateChangeEvent;
-    pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
-    pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
-    pc.ontrack = this.handleTrackEvent;
-    pc.ondatachannel = this.handleDataChannelEvent;
-    let stateUpdate = {
-      pc: pc,
-      waitingForPeer: false
-    };
-    if (withDataChannel) {
-      const channel = pc.createDataChannel("events", {
-        ordered: true
-      });
-      channel.onerror = this.handleDataChannelError;
-      channel.onmessage = this.handleDataChannelMessage;
-      channel.onopen = this.handleDataChannelOpen;
-      channel.onclose = this.handleDataChannelClose;
-      stateUpdate.dataChannel = channel;
-    }
-    this.setState(stateUpdate);
-    return pc;
-  }
-  handleVideoAnswerMsg(info) {
-    const desc = new RTCSessionDescription(info.payload);
-    this.state.pc.setRemoteDescription(desc).then(_ => {
-      this.setState({
-        callInitialSetupComplete: true
-      }, _ => this.drainRemoteIceCandidatesCache());
-    }).catch(err => this.reportError(err));
-  }
-  reportError(err) {
-    this.props.onError(err.message, 'err');
-  }
-  canSendOffer() {
-    return this.isOutgoingCall || this.state.callInitialSetupComplete;
-  }
-  handleNegotiationNeededEvent(event) {
-    const pc = event.target;
-    if (!this.canSendOffer()) {
-      return;
-    }
-    pc.createOffer().then(offer => {
-      return pc.setLocalDescription(offer);
-    }).then(_ => {
-      this.props.onSendOffer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
-    }).catch(err => this.reportError(err));
-  }
-  handleIceCandidateErrorEvent(event) {
-    console.warn("ICE candidate error:", event);
-  }
-  handleICECandidateEvent(event) {
-    if (event.candidate) {
-      this.props.onIceCandidate(this.props.topic, this.props.seq, event.candidate.toJSON());
-    }
-  }
-  handleNewICECandidateMsg(info) {
-    const candidate = new RTCIceCandidate(info.payload);
-    if (this.state.callInitialSetupComplete) {
-      this.state.pc.addIceCandidate(candidate).catch(err => {
-        if (candidate.candidate) {
-          this.reportError(err);
-        }
-        console.warn("Error adding new ice candidate", candidate, err);
-      });
-    } else {
-      this.remoteIceCandidatesCache.push(candidate);
-    }
-  }
-  drainRemoteIceCandidatesCache() {
-    this.remoteIceCandidatesCache.forEach(candidate => {
-      this.state.pc.addIceCandidate(candidate).catch(err => {
-        if (candidate.candidate) {
-          this.reportError(err);
-        }
-        console.warn("Error adding cached ice candidate", candidate, err);
-      });
-    });
-    this.remoteIceCandidatesCache = [];
-  }
-  handleICEConnectionStateChangeEvent(event) {
-    switch (event.target.iceConnectionState) {
-      case 'closed':
-      case 'failed':
-        this.handleCloseClick();
-        break;
-    }
-  }
-  handleSignalingStateChangeEvent(event) {
-    if (event.target.signalingState == 'closed') {
-      this.handleCloseClick();
-    }
-  }
-  handleICEGatheringStateChangeEvent(event) {}
-  handleTrackEvent(event) {
-    this.remoteRef.current.srcObject = event.streams[0];
-    this.setState({
-      remoteStream: event.streams[0]
-    });
-  }
-  handleGetUserMediaError(e) {
-    console.error("Error opening camera and/or microphone", e);
-    switch (e.name) {
-      case 'NotFoundError':
-        this.reportError(e);
-        break;
-      case 'SecurityError':
-      case 'PermissionDeniedError':
-        break;
-      default:
-        this.reportError(e);
-        break;
-    }
-    this.handleCloseClick();
-  }
-  handleVideoOfferMsg(info) {
-    let localStream = null;
-    const pc = this.state.pc ? this.state.pc : this.createPeerConnection(false);
-    const desc = new RTCSessionDescription(info.payload);
-    pc.setRemoteDescription(desc).then(_ => {
-      return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
-    }).then(stream => {
-      let dummyVideo;
-      if (!this.localStreamConstraints.video) {
-        dummyVideo = this.emptyVideoTrack();
-        stream.addTrack(dummyVideo);
-      }
-      localStream = stream;
-      this.localRef.current.srcObject = stream;
-      this.setState({
-        localStream: stream
-      });
-      localStream.getTracks().forEach(track => {
-        pc.addTrack(track, localStream);
-      });
-      if (dummyVideo) {
-        dummyVideo.enabled = false;
-        dummyVideo.stop();
-        stream.removeTrack(dummyVideo);
-      }
-    }).then(_ => {
-      return pc.createAnswer();
-    }).then(answer => {
-      return pc.setLocalDescription(answer);
-    }).then(_ => {
-      this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
-      this.setState({
-        callInitialSetupComplete: true
-      }, _ => this.drainRemoteIceCandidatesCache());
-    }).catch(this.handleGetUserMediaError);
-  }
-  handleRemoteHangup() {
-    if (!this.state.waitingForPeer) {
-      this.handleCloseClick();
-    } else {
-      this.setState({
-        waitingForPeer: false
-      });
-      RING_SOUND.pause();
-      RING_SOUND.currentTime = 0;
-      CALL_ENDED_SOUND.loop = true;
-      CALL_ENDED_SOUND.play().catch(_ => {});
-      setTimeout(_ => {
-        this.handleCloseClick();
-      }, 2000);
-    }
-  }
-  handleCloseClick() {
-    this.stop();
-    this.props.onHangup(this.props.topic, this.props.seq);
-  }
-  muteVideo() {
-    if (!this.state.pc || !this.state.dataChannel) {
-      return;
-    }
-    const stream = this.state.localStream;
-    const t = stream.getVideoTracks()[0];
-    t.enabled = false;
-    t.stop();
-    stream.removeTrack(t);
-    this.state.dataChannel.send(VIDEO_MUTED_EVENT);
-    this.setState({
-      videoToggleInProgress: false
-    });
-  }
-  unmuteVideo() {
-    if (!this.state.pc || !this.state.dataChannel) {
-      return;
-    }
-    navigator.mediaDevices.getUserMedia({
-      video: true
-    }).then(stream => {
-      this.localRef.current.srcObject = null;
-      const sender = this.state.pc.getSenders().find(s => s.track.kind == 'video');
-      const track = stream.getVideoTracks()[0];
-      stream.removeTrack(track);
-      this.state.localStream.addTrack(track);
-      return sender.replaceTrack(track);
-    }).then(_ => {
-      this.localRef.current.srcObject = this.state.localStream;
-      this.state.dataChannel.send(VIDEO_UNMUTED_EVENT);
-    }).catch(err => this.handleGetUserMediaError(err)).finally(_ => {
-      this.setState({
-        videoToggleInProgress: false
-      });
-    });
-  }
-  handleToggleCameraClick() {
-    if (this.state.videoToggleInProgress) {
-      return;
-    }
-    const tracks = this.state.localStream.getVideoTracks();
-    this.setState({
-      videoToggleInProgress: true
-    }, _ => {
-      if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
-        this.muteVideo();
-      } else {
-        this.unmuteVideo();
-      }
-      this.setState({
-        audioOnly: !this.state.audioOnly
-      });
-    });
-  }
-  handleToggleMicClick() {
-    const stream = this.state.localStream;
-    const t = stream.getAudioTracks()[0];
-    t.enabled = !t.enabled;
-    this.forceUpdate();
-  }
-  render() {
-    const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
-    const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
-    const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
-    const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
-    const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
-    const peerTitle = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.truncateString)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
-    const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
-    let remoteActive = false;
-    if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
-      const rstream = this.remoteRef.current.srcObject;
-      if (rstream.getVideoTracks().length > 0) {
-        const t = rstream.getVideoTracks()[0];
-        remoteActive = t.enabled && t.readyState == 'live';
-      }
-    }
-    const minimizedClass = this.props.minimized ? 'minimized' : null;
-    const fullScreen = this.props.minimized ? 'fullscreen' : 'fullscreen_exit';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "video-container",
-      className: minimizedClass,
-      ref: this.containerRef
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "video-container-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-party self",
-      disabled: this.state.audioOnly || this.props.minimized
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      ref: this.localRef,
-      autoPlay: true,
-      muted: true,
-      playsInline: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name inactive"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "calls_you_label",
-      defaultMessage: [{
-        "type": 0,
-        "value": "You"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-party peer",
-      disabled: !remoteActive
-    }, remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      ref: this.remoteRef,
-      autoPlay: true,
-      playsInline: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name inactive"
-    }, peerTitle)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("audio", {
-      ref: this.remoteRef,
-      autoPlay: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `caller-card${pulseAnimation} draggable`
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
-      avatar: this.props.avatar,
-      topic: this.props.topic,
-      title: this.props.title
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name"
-    }, peerTitle))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "full-screen",
-      onClick: this.props.onToggleMinimize
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, fullScreen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "controls",
-      className: minimizedClass
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "danger",
-      onClick: this.handleCloseClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.handleToggleCameraClick,
-      disabled: disabled
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.handleToggleMicClick,
-      disabled: disabled
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, audioIcon))));
-  }
-}
-;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CallPanel));
-
-/***/ }),
-
 /***/ "./src/widgets/call-status.jsx":
 /*!*************************************!*\
   !*** ./src/widgets/call-status.jsx ***!
@@ -16140,301 +13544,6 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   }
 }
 ;
-
-/***/ }),
-
-/***/ "./src/widgets/chat-message.jsx":
-/*!**************************************!*\
-  !*** ./src/widgets/chat-message.jsx ***!
-  \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reaction-strip.jsx */ "./src/widgets/reaction-strip.jsx");
-/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./reaction-picker.jsx */ "./src/widgets/reaction-picker.jsx");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-
-
-
-
-
-
-
-
-
-
-class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      progress: 0
-    };
-    if (props.uploader) {
-      props.uploader.onProgress = this.handleProgress.bind(this);
-    }
-    this.handleExpandImage = this.handleExpandImage.bind(this);
-    this.handlePlayVideo = this.handlePlayVideo.bind(this);
-    this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
-    this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleCancelUpload = this.handleCancelUpload.bind(this);
-    this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.handleTogglePicker = this.handleTogglePicker.bind(this);
-    this.handleReactionSelected = this.handleReactionSelected.bind(this);
-    this.formatterContext = {
-      formatMessage: props.intl.formatMessage.bind(props.intl),
-      viewportWidth: props.viewportWidth,
-      authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
-      onImagePreview: this.handleExpandImage,
-      onVideoPreview: this.handlePlayVideo,
-      onFormButtonClick: this.handleFormButtonClick,
-      onQuoteClick: this.handleQuoteClick
-    };
-  }
-  handleExpandImage(e) {
-    e.preventDefault();
-    this.props.onExpandMedia({
-      url: e.target.src,
-      filename: e.target.dataset.name,
-      width: e.target.dataset.width,
-      height: e.target.dataset.height,
-      size: e.target.dataset.size,
-      type: e.target.dataset.mime
-    });
-  }
-  handlePlayVideo(e) {
-    e.preventDefault();
-    this.props.onExpandMedia({
-      video: true,
-      url: e.target.dataset.src,
-      preview: e.target.src,
-      filename: e.target.dataset.name,
-      width: e.target.dataset.width,
-      height: e.target.dataset.height,
-      duration: e.target.dataset.duration,
-      size: e.target.dataset.size,
-      type: e.target.dataset.mime
-    });
-  }
-  handleFormButtonClick(e) {
-    e.preventDefault();
-    const data = {
-      seq: this.props.seq
-    };
-    data.resp = {};
-    if (e.target.dataset.name) {
-      data.resp[e.target.dataset.name] = e.target.dataset.val ? e.target.dataset.val : e.target.dataset.val === undefined ? 1 : '' + e.target.dataset.val;
-    }
-    if (e.target.dataset.act == 'url') {
-      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
-    }
-    const text = e.target.dataset.title || 'unknown';
-    this.props.onFormResponse(e.target.dataset.act, text, data);
-  }
-  handleContextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const menuItems = [];
-    if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
-      menuItems.push('menu_item_send_retry');
-    }
-    if (this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FATAL) {
-      if (this.props.userIsWriter) {
-        menuItems.push('menu_item_reply');
-        if (!this.props.response) {
-          let immutable = false;
-          tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
-            immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
-            return immutable;
-          });
-          if (!immutable) {
-            tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.styles(this.props.content, tp => {
-              immutable = ['QQ'].includes(tp);
-              return immutable;
-            });
-          }
-          if (!immutable) {
-            menuItems.push('menu_item_edit');
-          }
-        }
-      }
-      if (this.props.userIsAdmin) {
-        menuItems.push(this.props.pinned ? 'menu_item_unpin' : 'menu_item_pin');
-      }
-    }
-    menuItems.push('menu_item_forward');
-    this.props.showContextMenu({
-      seq: this.props.seq,
-      replace: this.props.edited ? parseInt(this.props.edited.split(':')[1]) : 0,
-      content: this.props.content,
-      userFrom: this.props.userFrom,
-      userName: this.props.userName,
-      y: e.pageY,
-      x: e.pageX,
-      pickReply: this.props.pickReply,
-      editMessage: this.props.editMessage,
-      timestamp: this.props.timestamp
-    }, menuItems);
-  }
-  handleProgress(ratio) {
-    this.setState({
-      progress: ratio
-    });
-  }
-  handleCancelUpload() {
-    this.props.onCancelUpload(this.props.seq, this.props.uploader);
-  }
-  handleQuoteClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const replyToSeq = this.props.replyToSeq;
-    if (replyToSeq) {
-      this.props.onQuoteClick(replyToSeq);
-    }
-  }
-  handleTogglePicker(e) {
-    e.preventDefault();
-    if (this.props.showPicker) {
-      this.props.onToggleReactionPicker(-1);
-      return;
-    }
-    const parentRect = this.props.parentRef.getBoundingClientRect();
-    const buttonRect = e.target.getBoundingClientRect();
-    this.setState({
-      pickerAnchor: {
-        viewX: buttonRect.left + buttonRect.width / 2 - parentRect.left,
-        viewY: buttonRect.top + buttonRect.height / 2 - parentRect.top,
-        offsetX: e.target.offsetLeft,
-        offsetY: e.target.offsetTop
-      },
-      parentBounds: {
-        width: parentRect.right - parentRect.left,
-        height: parentRect.bottom - parentRect.top
-      }
-    });
-    this.props.onToggleReactionPicker(this.props.seq);
-  }
-  handleReactionSelected(e, emo) {
-    this.props.onReact(this.props.seq, emo);
-  }
-  render() {
-    const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
-    const bubbleClass = this.props.sequence == 'single' || this.props.sequence == 'last' ? 'bubble tip' : 'bubble';
-    const avatar = this.props.userAvatar || true;
-    let textSizeClass = 'message-content';
-    const fullDisplay = this.props.isGroup && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
-    let content = this.props.content;
-    const attachments = [];
-    if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
-        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(att.mime)) {
-          return;
-        }
-        attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          tinode: this.props.tinode,
-          downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getDownloadUrl(att),
-          filename: att.name,
-          uploading: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(att),
-          mimetype: att.mime,
-          size: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getEntitySize(att),
-          progress: this.state.progress,
-          onCancelUpload: this.handleCancelUpload,
-          onError: this.props.onError,
-          key: i
-        }));
-      }, this);
-      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.fullFormatter, this.formatterContext);
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
-    } else if (typeof content == 'string') {
-      if (new RegExp('^\\p{RGI_Emoji}{1,5}$', 'v').test(content || '')) {
-        textSizeClass += ' emoji-' + (content || '').match(/(?:👨🏻‍❤️‍💋‍👨🏻|👨🏻‍❤️‍💋‍👨🏼|👨🏻‍❤️‍💋‍👨🏽|👨🏻‍❤️‍💋‍👨🏾|👨🏻‍❤️‍💋‍👨🏿|👨🏼‍❤️‍💋‍👨🏻|👨🏼‍❤️‍💋‍👨🏼|👨🏼‍❤️‍💋‍👨🏽|👨🏼‍❤️‍💋‍👨🏾|👨🏼‍❤️‍💋‍👨🏿|👨🏽‍❤️‍💋‍👨🏻|👨🏽‍❤️‍💋‍👨🏼|👨🏽‍❤️‍💋‍👨🏽|👨🏽‍❤️‍💋‍👨🏾|👨🏽‍❤️‍💋‍👨🏿|👨🏾‍❤️‍💋‍👨🏻|👨🏾‍❤️‍💋‍👨🏼|👨🏾‍❤️‍💋‍👨🏽|👨🏾‍❤️‍💋‍👨🏾|👨🏾‍❤️‍💋‍👨🏿|👨🏿‍❤️‍💋‍👨🏻|👨🏿‍❤️‍💋‍👨🏼|👨🏿‍❤️‍💋‍👨🏽|👨🏿‍❤️‍💋‍👨🏾|👨🏿‍❤️‍💋‍👨🏿|👩🏻‍❤️‍💋‍👨🏻|👩🏻‍❤️‍💋‍👨🏼|👩🏻‍❤️‍💋‍👨🏽|👩🏻‍❤️‍💋‍👨🏾|👩🏻‍❤️‍💋‍👨🏿|👩🏻‍❤️‍💋‍👩🏻|👩🏻‍❤️‍💋‍👩🏼|👩🏻‍❤️‍💋‍👩🏽|👩🏻‍❤️‍💋‍👩🏾|👩🏻‍❤️‍💋‍👩🏿|👩🏼‍❤️‍💋‍👨🏻|👩🏼‍❤️‍💋‍👨🏼|👩🏼‍❤️‍💋‍👨🏽|👩🏼‍❤️‍💋‍👨🏾|👩🏼‍❤️‍💋‍👨🏿|👩🏼‍❤️‍💋‍👩🏻|👩🏼‍❤️‍💋‍👩🏼|👩🏼‍❤️‍💋‍👩🏽|👩🏼‍❤️‍💋‍👩🏾|👩🏼‍❤️‍💋‍👩🏿|👩🏽‍❤️‍💋‍👨🏻|👩🏽‍❤️‍💋‍👨🏼|👩🏽‍❤️‍💋‍👨🏽|👩🏽‍❤️‍💋‍👨🏾|👩🏽‍❤️‍💋‍👨🏿|👩🏽‍❤️‍💋‍👩🏻|👩🏽‍❤️‍💋‍👩🏼|👩🏽‍❤️‍💋‍👩🏽|👩🏽‍❤️‍💋‍👩🏾|👩🏽‍❤️‍💋‍👩🏿|👩🏾‍❤️‍💋‍👨🏻|👩🏾‍❤️‍💋‍👨🏼|👩🏾‍❤️‍💋‍👨🏽|👩🏾‍❤️‍💋‍👨🏾|👩🏾‍❤️‍💋‍👨🏿|👩🏾‍❤️‍💋‍👩🏻|👩🏾‍❤️‍💋‍👩🏼|👩🏾‍❤️‍💋‍👩🏽|👩🏾‍❤️‍💋‍👩🏾|👩🏾‍❤️‍💋‍👩🏿|👩🏿‍❤️‍💋‍👨🏻|👩🏿‍❤️‍💋‍👨🏼|👩🏿‍❤️‍💋‍👨🏽|👩🏿‍❤️‍💋‍👨🏾|👩🏿‍❤️‍💋‍👨🏿|👩🏿‍❤️‍💋‍👩🏻|👩🏿‍❤️‍💋‍👩🏼|👩🏿‍❤️‍💋‍👩🏽|👩🏿‍❤️‍💋‍👩🏾|👩🏿‍❤️‍💋‍👩🏿|🧑🏻‍❤️‍💋‍🧑🏼|🧑🏻‍❤️‍💋‍🧑🏽|🧑🏻‍❤️‍💋‍🧑🏾|🧑🏻‍❤️‍💋‍🧑🏿|🧑🏼‍❤️‍💋‍🧑🏻|🧑🏼‍❤️‍💋‍🧑🏽|🧑🏼‍❤️‍💋‍🧑🏾|🧑🏼‍❤️‍💋‍🧑🏿|🧑🏽‍❤️‍💋‍🧑🏻|🧑🏽‍❤️‍💋‍🧑🏼|🧑🏽‍❤️‍💋‍🧑🏾|🧑🏽‍❤️‍💋‍🧑🏿|🧑🏾‍❤️‍💋‍🧑🏻|🧑🏾‍❤️‍💋‍🧑🏼|🧑🏾‍❤️‍💋‍🧑🏽|🧑🏾‍❤️‍💋‍🧑🏿|🧑🏿‍❤️‍💋‍🧑🏻|🧑🏿‍❤️‍💋‍🧑🏼|🧑🏿‍❤️‍💋‍🧑🏽|🧑🏿‍❤️‍💋‍🧑🏾|🏴󠁧󠁢󠁥󠁮󠁧󠁿|🏴󠁧󠁢󠁳󠁣󠁴󠁿|🏴󠁧󠁢󠁷󠁬󠁳󠁿|👨🏻‍❤️‍👨🏻|👨🏻‍❤️‍👨🏼|👨🏻‍❤️‍👨🏽|👨🏻‍❤️‍👨🏾|👨🏻‍❤️‍👨🏿|👨🏻‍🐰‍👨🏼|👨🏻‍🐰‍👨🏽|👨🏻‍🐰‍👨🏾|👨🏻‍🐰‍👨🏿|👨🏻‍🤝‍👨🏼|👨🏻‍🤝‍👨🏽|👨🏻‍🤝‍👨🏾|👨🏻‍🤝‍👨🏿|👨🏻‍🫯‍👨🏼|👨🏻‍🫯‍👨🏽|👨🏻‍🫯‍👨🏾|👨🏻‍🫯‍👨🏿|👨🏼‍❤️‍👨🏻|👨🏼‍❤️‍👨🏼|👨🏼‍❤️‍👨🏽|👨🏼‍❤️‍👨🏾|👨🏼‍❤️‍👨🏿|👨🏼‍🐰‍👨🏻|👨🏼‍🐰‍👨🏽|👨🏼‍🐰‍👨🏾|👨🏼‍🐰‍👨🏿|👨🏼‍🤝‍👨🏻|👨🏼‍🤝‍👨🏽|👨🏼‍🤝‍👨🏾|👨🏼‍🤝‍👨🏿|👨🏼‍🫯‍👨🏻|👨🏼‍🫯‍👨🏽|👨🏼‍🫯‍👨🏾|👨🏼‍🫯‍👨🏿|👨🏽‍❤️‍👨🏻|👨🏽‍❤️‍👨🏼|👨🏽‍❤️‍👨🏽|👨🏽‍❤️‍👨🏾|👨🏽‍❤️‍👨🏿|👨🏽‍🐰‍👨🏻|👨🏽‍🐰‍👨🏼|👨🏽‍🐰‍👨🏾|👨🏽‍🐰‍👨🏿|👨🏽‍🤝‍👨🏻|👨🏽‍🤝‍👨🏼|👨🏽‍🤝‍👨🏾|👨🏽‍🤝‍👨🏿|👨🏽‍🫯‍👨🏻|👨🏽‍🫯‍👨🏼|👨🏽‍🫯‍👨🏾|👨🏽‍🫯‍👨🏿|👨🏾‍❤️‍👨🏻|👨🏾‍❤️‍👨🏼|👨🏾‍❤️‍👨🏽|👨🏾‍❤️‍👨🏾|👨🏾‍❤️‍👨🏿|👨🏾‍🐰‍👨🏻|👨🏾‍🐰‍👨🏼|👨🏾‍🐰‍👨🏽|👨🏾‍🐰‍👨🏿|👨🏾‍🤝‍👨🏻|👨🏾‍🤝‍👨🏼|👨🏾‍🤝‍👨🏽|👨🏾‍🤝‍👨🏿|👨🏾‍🫯‍👨🏻|👨🏾‍🫯‍👨🏼|👨🏾‍🫯‍👨🏽|👨🏾‍🫯‍👨🏿|👨🏿‍❤️‍👨🏻|👨🏿‍❤️‍👨🏼|👨🏿‍❤️‍👨🏽|👨🏿‍❤️‍👨🏾|👨🏿‍❤️‍👨🏿|👨🏿‍🐰‍👨🏻|👨🏿‍🐰‍👨🏼|👨🏿‍🐰‍👨🏽|👨🏿‍🐰‍👨🏾|👨🏿‍🤝‍👨🏻|👨🏿‍🤝‍👨🏼|👨🏿‍🤝‍👨🏽|👨🏿‍🤝‍👨🏾|👨🏿‍🫯‍👨🏻|👨🏿‍🫯‍👨🏼|👨🏿‍🫯‍👨🏽|👨🏿‍🫯‍👨🏾|👩🏻‍❤️‍👨🏻|👩🏻‍❤️‍👨🏼|👩🏻‍❤️‍👨🏽|👩🏻‍❤️‍👨🏾|👩🏻‍❤️‍👨🏿|👩🏻‍❤️‍👩🏻|👩🏻‍❤️‍👩🏼|👩🏻‍❤️‍👩🏽|👩🏻‍❤️‍👩🏾|👩🏻‍❤️‍👩🏿|👩🏻‍🐰‍👩🏼|👩🏻‍🐰‍👩🏽|👩🏻‍🐰‍👩🏾|👩🏻‍🐰‍👩🏿|👩🏻‍🤝‍👨🏼|👩🏻‍🤝‍👨🏽|👩🏻‍🤝‍👨🏾|👩🏻‍🤝‍👨🏿|👩🏻‍🤝‍👩🏼|👩🏻‍🤝‍👩🏽|👩🏻‍🤝‍👩🏾|👩🏻‍🤝‍👩🏿|👩🏻‍🫯‍👩🏼|👩🏻‍🫯‍👩🏽|👩🏻‍🫯‍👩🏾|👩🏻‍🫯‍👩🏿|👩🏼‍❤️‍👨🏻|👩🏼‍❤️‍👨🏼|👩🏼‍❤️‍👨🏽|👩🏼‍❤️‍👨🏾|👩🏼‍❤️‍👨🏿|👩🏼‍❤️‍👩🏻|👩🏼‍❤️‍👩🏼|👩🏼‍❤️‍👩🏽|👩🏼‍❤️‍👩🏾|👩🏼‍❤️‍👩🏿|👩🏼‍🐰‍👩🏻|👩🏼‍🐰‍👩🏽|👩🏼‍🐰‍👩🏾|👩🏼‍🐰‍👩🏿|👩🏼‍🤝‍👨🏻|👩🏼‍🤝‍👨🏽|👩🏼‍🤝‍👨🏾|👩🏼‍🤝‍👨🏿|👩🏼‍🤝‍👩🏻|👩🏼‍🤝‍👩🏽|👩🏼‍🤝‍👩🏾|👩🏼‍🤝‍👩🏿|👩🏼‍🫯‍👩🏻|👩🏼‍🫯‍👩🏽|👩🏼‍🫯‍👩🏾|👩🏼‍🫯‍👩🏿|👩🏽‍❤️‍👨🏻|👩🏽‍❤️‍👨🏼|👩🏽‍❤️‍👨🏽|👩🏽‍❤️‍👨🏾|👩🏽‍❤️‍👨🏿|👩🏽‍❤️‍👩🏻|👩🏽‍❤️‍👩🏼|👩🏽‍❤️‍👩🏽|👩🏽‍❤️‍👩🏾|👩🏽‍❤️‍👩🏿|👩🏽‍🐰‍👩🏻|👩🏽‍🐰‍👩🏼|👩🏽‍🐰‍👩🏾|👩🏽‍🐰‍👩🏿|👩🏽‍🤝‍👨🏻|👩🏽‍🤝‍👨🏼|👩🏽‍🤝‍👨🏾|👩🏽‍🤝‍👨🏿|👩🏽‍🤝‍👩🏻|👩🏽‍🤝‍👩🏼|👩🏽‍🤝‍👩🏾|👩🏽‍🤝‍👩🏿|👩🏽‍🫯‍👩🏻|👩🏽‍🫯‍👩🏼|👩🏽‍🫯‍👩🏾|👩🏽‍🫯‍👩🏿|👩🏾‍❤️‍👨🏻|👩🏾‍❤️‍👨🏼|👩🏾‍❤️‍👨🏽|👩🏾‍❤️‍👨🏾|👩🏾‍❤️‍👨🏿|👩🏾‍❤️‍👩🏻|👩🏾‍❤️‍👩🏼|👩🏾‍❤️‍👩🏽|👩🏾‍❤️‍👩🏾|👩🏾‍❤️‍👩🏿|👩🏾‍🐰‍👩🏻|👩🏾‍🐰‍👩🏼|👩🏾‍🐰‍👩🏽|👩🏾‍🐰‍👩🏿|👩🏾‍🤝‍👨🏻|👩🏾‍🤝‍👨🏼|👩🏾‍🤝‍👨🏽|👩🏾‍🤝‍👨🏿|👩🏾‍🤝‍👩🏻|👩🏾‍🤝‍👩🏼|👩🏾‍🤝‍👩🏽|👩🏾‍🤝‍👩🏿|👩🏾‍🫯‍👩🏻|👩🏾‍🫯‍👩🏼|👩🏾‍🫯‍👩🏽|👩🏾‍🫯‍👩🏿|👩🏿‍❤️‍👨🏻|👩🏿‍❤️‍👨🏼|👩🏿‍❤️‍👨🏽|👩🏿‍❤️‍👨🏾|👩🏿‍❤️‍👨🏿|👩🏿‍❤️‍👩🏻|👩🏿‍❤️‍👩🏼|👩🏿‍❤️‍👩🏽|👩🏿‍❤️‍👩🏾|👩🏿‍❤️‍👩🏿|👩🏿‍🐰‍👩🏻|👩🏿‍🐰‍👩🏼|👩🏿‍🐰‍👩🏽|👩🏿‍🐰‍👩🏾|👩🏿‍🤝‍👨🏻|👩🏿‍🤝‍👨🏼|👩🏿‍🤝‍👨🏽|👩🏿‍🤝‍👨🏾|👩🏿‍🤝‍👩🏻|👩🏿‍🤝‍👩🏼|👩🏿‍🤝‍👩🏽|👩🏿‍🤝‍👩🏾|👩🏿‍🫯‍👩🏻|👩🏿‍🫯‍👩🏼|👩🏿‍🫯‍👩🏽|👩🏿‍🫯‍👩🏾|🧑🏻‍❤️‍🧑🏼|🧑🏻‍❤️‍🧑🏽|🧑🏻‍❤️‍🧑🏾|🧑🏻‍❤️‍🧑🏿|🧑🏻‍🐰‍🧑🏼|🧑🏻‍🐰‍🧑🏽|🧑🏻‍🐰‍🧑🏾|🧑🏻‍🐰‍🧑🏿|🧑🏻‍🤝‍🧑🏻|🧑🏻‍🤝‍🧑🏼|🧑🏻‍🤝‍🧑🏽|🧑🏻‍🤝‍🧑🏾|🧑🏻‍🤝‍🧑🏿|🧑🏻‍🫯‍🧑🏼|🧑🏻‍🫯‍🧑🏽|🧑🏻‍🫯‍🧑🏾|🧑🏻‍🫯‍🧑🏿|🧑🏼‍❤️‍🧑🏻|🧑🏼‍❤️‍🧑🏽|🧑🏼‍❤️‍🧑🏾|🧑🏼‍❤️‍🧑🏿|🧑🏼‍🐰‍🧑🏻|🧑🏼‍🐰‍🧑🏽|🧑🏼‍🐰‍🧑🏾|🧑🏼‍🐰‍🧑🏿|🧑🏼‍🤝‍🧑🏻|🧑🏼‍🤝‍🧑🏼|🧑🏼‍🤝‍🧑🏽|🧑🏼‍🤝‍🧑🏾|🧑🏼‍🤝‍🧑🏿|🧑🏼‍🫯‍🧑🏻|🧑🏼‍🫯‍🧑🏽|🧑🏼‍🫯‍🧑🏾|🧑🏼‍🫯‍🧑🏿|🧑🏽‍❤️‍🧑🏻|🧑🏽‍❤️‍🧑🏼|🧑🏽‍❤️‍🧑🏾|🧑🏽‍❤️‍🧑🏿|🧑🏽‍🐰‍🧑🏻|🧑🏽‍🐰‍🧑🏼|🧑🏽‍🐰‍🧑🏾|🧑🏽‍🐰‍🧑🏿|🧑🏽‍🤝‍🧑🏻|🧑🏽‍🤝‍🧑🏼|🧑🏽‍🤝‍🧑🏽|🧑🏽‍🤝‍🧑🏾|🧑🏽‍🤝‍🧑🏿|🧑🏽‍🫯‍🧑🏻|🧑🏽‍🫯‍🧑🏼|🧑🏽‍🫯‍🧑🏾|🧑🏽‍🫯‍🧑🏿|🧑🏾‍❤️‍🧑🏻|🧑🏾‍❤️‍🧑🏼|🧑🏾‍❤️‍🧑🏽|🧑🏾‍❤️‍🧑🏿|🧑🏾‍🐰‍🧑🏻|🧑🏾‍🐰‍🧑🏼|🧑🏾‍🐰‍🧑🏽|🧑🏾‍🐰‍🧑🏿|🧑🏾‍🤝‍🧑🏻|🧑🏾‍🤝‍🧑🏼|🧑🏾‍🤝‍🧑🏽|🧑🏾‍🤝‍🧑🏾|🧑🏾‍🤝‍🧑🏿|🧑🏾‍🫯‍🧑🏻|🧑🏾‍🫯‍🧑🏼|🧑🏾‍🫯‍🧑🏽|🧑🏾‍🫯‍🧑🏿|🧑🏿‍❤️‍🧑🏻|🧑🏿‍❤️‍🧑🏼|🧑🏿‍❤️‍🧑🏽|🧑🏿‍❤️‍🧑🏾|🧑🏿‍🐰‍🧑🏻|🧑🏿‍🐰‍🧑🏼|🧑🏿‍🐰‍🧑🏽|🧑🏿‍🐰‍🧑🏾|🧑🏿‍🤝‍🧑🏻|🧑🏿‍🤝‍🧑🏼|🧑🏿‍🤝‍🧑🏽|🧑🏿‍🤝‍🧑🏾|🧑🏿‍🤝‍🧑🏿|🧑🏿‍🫯‍🧑🏻|🧑🏿‍🫯‍🧑🏼|🧑🏿‍🫯‍🧑🏽|🧑🏿‍🫯‍🧑🏾|👨‍❤️‍💋‍👨|👨‍👨‍👦‍👦|👨‍👨‍👧‍👦|👨‍👨‍👧‍👧|👨‍👩‍👦‍👦|👨‍👩‍👧‍👦|👨‍👩‍👧‍👧|👩‍❤️‍💋‍👨|👩‍❤️‍💋‍👩|👩‍👩‍👦‍👦|👩‍👩‍👧‍👦|👩‍👩‍👧‍👧|🧑‍🧑‍🧒‍🧒|🏃🏻‍♀️‍➡️|🏃🏻‍♂️‍➡️|🏃🏼‍♀️‍➡️|🏃🏼‍♂️‍➡️|🏃🏽‍♀️‍➡️|🏃🏽‍♂️‍➡️|🏃🏾‍♀️‍➡️|🏃🏾‍♂️‍➡️|🏃🏿‍♀️‍➡️|🏃🏿‍♂️‍➡️|👨🏻‍🦯‍➡️|👨🏻‍🦼‍➡️|👨🏻‍🦽‍➡️|👨🏼‍🦯‍➡️|👨🏼‍🦼‍➡️|👨🏼‍🦽‍➡️|👨🏽‍🦯‍➡️|👨🏽‍🦼‍➡️|👨🏽‍🦽‍➡️|👨🏾‍🦯‍➡️|👨🏾‍🦼‍➡️|👨🏾‍🦽‍➡️|👨🏿‍🦯‍➡️|👨🏿‍🦼‍➡️|👨🏿‍🦽‍➡️|👩🏻‍🦯‍➡️|👩🏻‍🦼‍➡️|👩🏻‍🦽‍➡️|👩🏼‍🦯‍➡️|👩🏼‍🦼‍➡️|👩🏼‍🦽‍➡️|👩🏽‍🦯‍➡️|👩🏽‍🦼‍➡️|👩🏽‍🦽‍➡️|👩🏾‍🦯‍➡️|👩🏾‍🦼‍➡️|👩🏾‍🦽‍➡️|👩🏿‍🦯‍➡️|👩🏿‍🦼‍➡️|👩🏿‍🦽‍➡️|🚶🏻‍♀️‍➡️|🚶🏻‍♂️‍➡️|🚶🏼‍♀️‍➡️|🚶🏼‍♂️‍➡️|🚶🏽‍♀️‍➡️|🚶🏽‍♂️‍➡️|🚶🏾‍♀️‍➡️|🚶🏾‍♂️‍➡️|🚶🏿‍♀️‍➡️|🚶🏿‍♂️‍➡️|🧎🏻‍♀️‍➡️|🧎🏻‍♂️‍➡️|🧎🏼‍♀️‍➡️|🧎🏼‍♂️‍➡️|🧎🏽‍♀️‍➡️|🧎🏽‍♂️‍➡️|🧎🏾‍♀️‍➡️|🧎🏾‍♂️‍➡️|🧎🏿‍♀️‍➡️|🧎🏿‍♂️‍➡️|🧑🏻‍🦯‍➡️|🧑🏻‍🦼‍➡️|🧑🏻‍🦽‍➡️|🧑🏼‍🦯‍➡️|🧑🏼‍🦼‍➡️|🧑🏼‍🦽‍➡️|🧑🏽‍🦯‍➡️|🧑🏽‍🦼‍➡️|🧑🏽‍🦽‍➡️|🧑🏾‍🦯‍➡️|🧑🏾‍🦼‍➡️|🧑🏾‍🦽‍➡️|🧑🏿‍🦯‍➡️|🧑🏿‍🦼‍➡️|🧑🏿‍🦽‍➡️|🫱🏻‍🫲🏼|🫱🏻‍🫲🏽|🫱🏻‍🫲🏾|🫱🏻‍🫲🏿|🫱🏼‍🫲🏻|🫱🏼‍🫲🏽|🫱🏼‍🫲🏾|🫱🏼‍🫲🏿|🫱🏽‍🫲🏻|🫱🏽‍🫲🏼|🫱🏽‍🫲🏾|🫱🏽‍🫲🏿|🫱🏾‍🫲🏻|🫱🏾‍🫲🏼|🫱🏾‍🫲🏽|🫱🏾‍🫲🏿|🫱🏿‍🫲🏻|🫱🏿‍🫲🏼|🫱🏿‍🫲🏽|🫱🏿‍🫲🏾|🏃‍♀️‍➡️|🏃‍♂️‍➡️|👨‍❤️‍👨|👨‍👦‍👦|👨‍👧‍👦|👨‍👧‍👧|👨‍👨‍👦|👨‍👨‍👧|👨‍👩‍👦|👨‍👩‍👧|👨‍🦯‍➡️|👨‍🦼‍➡️|👨‍🦽‍➡️|👩‍❤️‍👨|👩‍❤️‍👩|👩‍👦‍👦|👩‍👧‍👦|👩‍👧‍👧|👩‍👩‍👦|👩‍👩‍👧|👩‍🦯‍➡️|👩‍🦼‍➡️|👩‍🦽‍➡️|🚶‍♀️‍➡️|🚶‍♂️‍➡️|🧎‍♀️‍➡️|🧎‍♂️‍➡️|🧑‍🤝‍🧑|🧑‍🦯‍➡️|🧑‍🦼‍➡️|🧑‍🦽‍➡️|🧑‍🧑‍🧒|🧑‍🧒‍🧒|🏃🏻‍♀️|🏃🏻‍♂️|🏃🏻‍➡️|🏃🏼‍♀️|🏃🏼‍♂️|🏃🏼‍➡️|🏃🏽‍♀️|🏃🏽‍♂️|🏃🏽‍➡️|🏃🏾‍♀️|🏃🏾‍♂️|🏃🏾‍➡️|🏃🏿‍♀️|🏃🏿‍♂️|🏃🏿‍➡️|🏄🏻‍♀️|🏄🏻‍♂️|🏄🏼‍♀️|🏄🏼‍♂️|🏄🏽‍♀️|🏄🏽‍♂️|🏄🏾‍♀️|🏄🏾‍♂️|🏄🏿‍♀️|🏄🏿‍♂️|🏊🏻‍♀️|🏊🏻‍♂️|🏊🏼‍♀️|🏊🏼‍♂️|🏊🏽‍♀️|🏊🏽‍♂️|🏊🏾‍♀️|🏊🏾‍♂️|🏊🏿‍♀️|🏊🏿‍♂️|🏋🏻‍♀️|🏋🏻‍♂️|🏋🏼‍♀️|🏋🏼‍♂️|🏋🏽‍♀️|🏋🏽‍♂️|🏋🏾‍♀️|🏋🏾‍♂️|🏋🏿‍♀️|🏋🏿‍♂️|🏌🏻‍♀️|🏌🏻‍♂️|🏌🏼‍♀️|🏌🏼‍♂️|🏌🏽‍♀️|🏌🏽‍♂️|🏌🏾‍♀️|🏌🏾‍♂️|🏌🏿‍♀️|🏌🏿‍♂️|👁️‍🗨️|👨🏻‍⚕️|👨🏻‍⚖️|👨🏻‍✈️|👨🏻‍🌾|👨🏻‍🍳|👨🏻‍🍼|👨🏻‍🎓|👨🏻‍🎤|👨🏻‍🎨|👨🏻‍🏫|👨🏻‍🏭|👨🏻‍💻|👨🏻‍💼|👨🏻‍🔧|👨🏻‍🔬|👨🏻‍🚀|👨🏻‍🚒|👨🏻‍🦯|👨🏻‍🦰|👨🏻‍🦱|👨🏻‍🦲|👨🏻‍🦳|👨🏻‍🦼|👨🏻‍🦽|👨🏼‍⚕️|👨🏼‍⚖️|👨🏼‍✈️|👨🏼‍🌾|👨🏼‍🍳|👨🏼‍🍼|👨🏼‍🎓|👨🏼‍🎤|👨🏼‍🎨|👨🏼‍🏫|👨🏼‍🏭|👨🏼‍💻|👨🏼‍💼|👨🏼‍🔧|👨🏼‍🔬|👨🏼‍🚀|👨🏼‍🚒|👨🏼‍🦯|👨🏼‍🦰|👨🏼‍🦱|👨🏼‍🦲|👨🏼‍🦳|👨🏼‍🦼|👨🏼‍🦽|👨🏽‍⚕️|👨🏽‍⚖️|👨🏽‍✈️|👨🏽‍🌾|👨🏽‍🍳|👨🏽‍🍼|👨🏽‍🎓|👨🏽‍🎤|👨🏽‍🎨|👨🏽‍🏫|👨🏽‍🏭|👨🏽‍💻|👨🏽‍💼|👨🏽‍🔧|👨🏽‍🔬|👨🏽‍🚀|👨🏽‍🚒|👨🏽‍🦯|👨🏽‍🦰|👨🏽‍🦱|👨🏽‍🦲|👨🏽‍🦳|👨🏽‍🦼|👨🏽‍🦽|👨🏾‍⚕️|👨🏾‍⚖️|👨🏾‍✈️|👨🏾‍🌾|👨🏾‍🍳|👨🏾‍🍼|👨🏾‍🎓|👨🏾‍🎤|👨🏾‍🎨|👨🏾‍🏫|👨🏾‍🏭|👨🏾‍💻|👨🏾‍💼|👨🏾‍🔧|👨🏾‍🔬|👨🏾‍🚀|👨🏾‍🚒|👨🏾‍🦯|👨🏾‍🦰|👨🏾‍🦱|👨🏾‍🦲|👨🏾‍🦳|👨🏾‍🦼|👨🏾‍🦽|👨🏿‍⚕️|👨🏿‍⚖️|👨🏿‍✈️|👨🏿‍🌾|👨🏿‍🍳|👨🏿‍🍼|👨🏿‍🎓|👨🏿‍🎤|👨🏿‍🎨|👨🏿‍🏫|👨🏿‍🏭|👨🏿‍💻|👨🏿‍💼|👨🏿‍🔧|👨🏿‍🔬|👨🏿‍🚀|👨🏿‍🚒|👨🏿‍🦯|👨🏿‍🦰|👨🏿‍🦱|👨🏿‍🦲|👨🏿‍🦳|👨🏿‍🦼|👨🏿‍🦽|👩🏻‍⚕️|👩🏻‍⚖️|👩🏻‍✈️|👩🏻‍🌾|👩🏻‍🍳|👩🏻‍🍼|👩🏻‍🎓|👩🏻‍🎤|👩🏻‍🎨|👩🏻‍🏫|👩🏻‍🏭|👩🏻‍💻|👩🏻‍💼|👩🏻‍🔧|👩🏻‍🔬|👩🏻‍🚀|👩🏻‍🚒|👩🏻‍🦯|👩🏻‍🦰|👩🏻‍🦱|👩🏻‍🦲|👩🏻‍🦳|👩🏻‍🦼|👩🏻‍🦽|👩🏼‍⚕️|👩🏼‍⚖️|👩🏼‍✈️|👩🏼‍🌾|👩🏼‍🍳|👩🏼‍🍼|👩🏼‍🎓|👩🏼‍🎤|👩🏼‍🎨|👩🏼‍🏫|👩🏼‍🏭|👩🏼‍💻|👩🏼‍💼|👩🏼‍🔧|👩🏼‍🔬|👩🏼‍🚀|👩🏼‍🚒|👩🏼‍🦯|👩🏼‍🦰|👩🏼‍🦱|👩🏼‍🦲|👩🏼‍🦳|👩🏼‍🦼|👩🏼‍🦽|👩🏽‍⚕️|👩🏽‍⚖️|👩🏽‍✈️|👩🏽‍🌾|👩🏽‍🍳|👩🏽‍🍼|👩🏽‍🎓|👩🏽‍🎤|👩🏽‍🎨|👩🏽‍🏫|👩🏽‍🏭|👩🏽‍💻|👩🏽‍💼|👩🏽‍🔧|👩🏽‍🔬|👩🏽‍🚀|👩🏽‍🚒|👩🏽‍🦯|👩🏽‍🦰|👩🏽‍🦱|👩🏽‍🦲|👩🏽‍🦳|👩🏽‍🦼|👩🏽‍🦽|👩🏾‍⚕️|👩🏾‍⚖️|👩🏾‍✈️|👩🏾‍🌾|👩🏾‍🍳|👩🏾‍🍼|👩🏾‍🎓|👩🏾‍🎤|👩🏾‍🎨|👩🏾‍🏫|👩🏾‍🏭|👩🏾‍💻|👩🏾‍💼|👩🏾‍🔧|👩🏾‍🔬|👩🏾‍🚀|👩🏾‍🚒|👩🏾‍🦯|👩🏾‍🦰|👩🏾‍🦱|👩🏾‍🦲|👩🏾‍🦳|👩🏾‍🦼|👩🏾‍🦽|👩🏿‍⚕️|👩🏿‍⚖️|👩🏿‍✈️|👩🏿‍🌾|👩🏿‍🍳|👩🏿‍🍼|👩🏿‍🎓|👩🏿‍🎤|👩🏿‍🎨|👩🏿‍🏫|👩🏿‍🏭|👩🏿‍💻|👩🏿‍💼|👩🏿‍🔧|👩🏿‍🔬|👩🏿‍🚀|👩🏿‍🚒|👩🏿‍🦯|👩🏿‍🦰|👩🏿‍🦱|👩🏿‍🦲|👩🏿‍🦳|👩🏿‍🦼|👩🏿‍🦽|👮🏻‍♀️|👮🏻‍♂️|👮🏼‍♀️|👮🏼‍♂️|👮🏽‍♀️|👮🏽‍♂️|👮🏾‍♀️|👮🏾‍♂️|👮🏿‍♀️|👮🏿‍♂️|👯🏻‍♀️|👯🏻‍♂️|👯🏼‍♀️|👯🏼‍♂️|👯🏽‍♀️|👯🏽‍♂️|👯🏾‍♀️|👯🏾‍♂️|👯🏿‍♀️|👯🏿‍♂️|👰🏻‍♀️|👰🏻‍♂️|👰🏼‍♀️|👰🏼‍♂️|👰🏽‍♀️|👰🏽‍♂️|👰🏾‍♀️|👰🏾‍♂️|👰🏿‍♀️|👰🏿‍♂️|👱🏻‍♀️|👱🏻‍♂️|👱🏼‍♀️|👱🏼‍♂️|👱🏽‍♀️|👱🏽‍♂️|👱🏾‍♀️|👱🏾‍♂️|👱🏿‍♀️|👱🏿‍♂️|👳🏻‍♀️|👳🏻‍♂️|👳🏼‍♀️|👳🏼‍♂️|👳🏽‍♀️|👳🏽‍♂️|👳🏾‍♀️|👳🏾‍♂️|👳🏿‍♀️|👳🏿‍♂️|👷🏻‍♀️|👷🏻‍♂️|👷🏼‍♀️|👷🏼‍♂️|👷🏽‍♀️|👷🏽‍♂️|👷🏾‍♀️|👷🏾‍♂️|👷🏿‍♀️|👷🏿‍♂️|💁🏻‍♀️|💁🏻‍♂️|💁🏼‍♀️|💁🏼‍♂️|💁🏽‍♀️|💁🏽‍♂️|💁🏾‍♀️|💁🏾‍♂️|💁🏿‍♀️|💁🏿‍♂️|💂🏻‍♀️|💂🏻‍♂️|💂🏼‍♀️|💂🏼‍♂️|💂🏽‍♀️|💂🏽‍♂️|💂🏾‍♀️|💂🏾‍♂️|💂🏿‍♀️|💂🏿‍♂️|💆🏻‍♀️|💆🏻‍♂️|💆🏼‍♀️|💆🏼‍♂️|💆🏽‍♀️|💆🏽‍♂️|💆🏾‍♀️|💆🏾‍♂️|💆🏿‍♀️|💆🏿‍♂️|💇🏻‍♀️|💇🏻‍♂️|💇🏼‍♀️|💇🏼‍♂️|💇🏽‍♀️|💇🏽‍♂️|💇🏾‍♀️|💇🏾‍♂️|💇🏿‍♀️|💇🏿‍♂️|🕵🏻‍♀️|🕵🏻‍♂️|🕵🏼‍♀️|🕵🏼‍♂️|🕵🏽‍♀️|🕵🏽‍♂️|🕵🏾‍♀️|🕵🏾‍♂️|🕵🏿‍♀️|🕵🏿‍♂️|🙅🏻‍♀️|🙅🏻‍♂️|🙅🏼‍♀️|🙅🏼‍♂️|🙅🏽‍♀️|🙅🏽‍♂️|🙅🏾‍♀️|🙅🏾‍♂️|🙅🏿‍♀️|🙅🏿‍♂️|🙆🏻‍♀️|🙆🏻‍♂️|🙆🏼‍♀️|🙆🏼‍♂️|🙆🏽‍♀️|🙆🏽‍♂️|🙆🏾‍♀️|🙆🏾‍♂️|🙆🏿‍♀️|🙆🏿‍♂️|🙇🏻‍♀️|🙇🏻‍♂️|🙇🏼‍♀️|🙇🏼‍♂️|🙇🏽‍♀️|🙇🏽‍♂️|🙇🏾‍♀️|🙇🏾‍♂️|🙇🏿‍♀️|🙇🏿‍♂️|🙋🏻‍♀️|🙋🏻‍♂️|🙋🏼‍♀️|🙋🏼‍♂️|🙋🏽‍♀️|🙋🏽‍♂️|🙋🏾‍♀️|🙋🏾‍♂️|🙋🏿‍♀️|🙋🏿‍♂️|🙍🏻‍♀️|🙍🏻‍♂️|🙍🏼‍♀️|🙍🏼‍♂️|🙍🏽‍♀️|🙍🏽‍♂️|🙍🏾‍♀️|🙍🏾‍♂️|🙍🏿‍♀️|🙍🏿‍♂️|🙎🏻‍♀️|🙎🏻‍♂️|🙎🏼‍♀️|🙎🏼‍♂️|🙎🏽‍♀️|🙎🏽‍♂️|🙎🏾‍♀️|🙎🏾‍♂️|🙎🏿‍♀️|🙎🏿‍♂️|🚣🏻‍♀️|🚣🏻‍♂️|🚣🏼‍♀️|🚣🏼‍♂️|🚣🏽‍♀️|🚣🏽‍♂️|🚣🏾‍♀️|🚣🏾‍♂️|🚣🏿‍♀️|🚣🏿‍♂️|🚴🏻‍♀️|🚴🏻‍♂️|🚴🏼‍♀️|🚴🏼‍♂️|🚴🏽‍♀️|🚴🏽‍♂️|🚴🏾‍♀️|🚴🏾‍♂️|🚴🏿‍♀️|🚴🏿‍♂️|🚵🏻‍♀️|🚵🏻‍♂️|🚵🏼‍♀️|🚵🏼‍♂️|🚵🏽‍♀️|🚵🏽‍♂️|🚵🏾‍♀️|🚵🏾‍♂️|🚵🏿‍♀️|🚵🏿‍♂️|🚶🏻‍♀️|🚶🏻‍♂️|🚶🏻‍➡️|🚶🏼‍♀️|🚶🏼‍♂️|🚶🏼‍➡️|🚶🏽‍♀️|🚶🏽‍♂️|🚶🏽‍➡️|🚶🏾‍♀️|🚶🏾‍♂️|🚶🏾‍➡️|🚶🏿‍♀️|🚶🏿‍♂️|🚶🏿‍➡️|🤦🏻‍♀️|🤦🏻‍♂️|🤦🏼‍♀️|🤦🏼‍♂️|🤦🏽‍♀️|🤦🏽‍♂️|🤦🏾‍♀️|🤦🏾‍♂️|🤦🏿‍♀️|🤦🏿‍♂️|🤵🏻‍♀️|🤵🏻‍♂️|🤵🏼‍♀️|🤵🏼‍♂️|🤵🏽‍♀️|🤵🏽‍♂️|🤵🏾‍♀️|🤵🏾‍♂️|🤵🏿‍♀️|🤵🏿‍♂️|🤷🏻‍♀️|🤷🏻‍♂️|🤷🏼‍♀️|🤷🏼‍♂️|🤷🏽‍♀️|🤷🏽‍♂️|🤷🏾‍♀️|🤷🏾‍♂️|🤷🏿‍♀️|🤷🏿‍♂️|🤸🏻‍♀️|🤸🏻‍♂️|🤸🏼‍♀️|🤸🏼‍♂️|🤸🏽‍♀️|🤸🏽‍♂️|🤸🏾‍♀️|🤸🏾‍♂️|🤸🏿‍♀️|🤸🏿‍♂️|🤹🏻‍♀️|🤹🏻‍♂️|🤹🏼‍♀️|🤹🏼‍♂️|🤹🏽‍♀️|🤹🏽‍♂️|🤹🏾‍♀️|🤹🏾‍♂️|🤹🏿‍♀️|🤹🏿‍♂️|🤼🏻‍♀️|🤼🏻‍♂️|🤼🏼‍♀️|🤼🏼‍♂️|🤼🏽‍♀️|🤼🏽‍♂️|🤼🏾‍♀️|🤼🏾‍♂️|🤼🏿‍♀️|🤼🏿‍♂️|🤽🏻‍♀️|🤽🏻‍♂️|🤽🏼‍♀️|🤽🏼‍♂️|🤽🏽‍♀️|🤽🏽‍♂️|🤽🏾‍♀️|🤽🏾‍♂️|🤽🏿‍♀️|🤽🏿‍♂️|🤾🏻‍♀️|🤾🏻‍♂️|🤾🏼‍♀️|🤾🏼‍♂️|🤾🏽‍♀️|🤾🏽‍♂️|🤾🏾‍♀️|🤾🏾‍♂️|🤾🏿‍♀️|🤾🏿‍♂️|🦸🏻‍♀️|🦸🏻‍♂️|🦸🏼‍♀️|🦸🏼‍♂️|🦸🏽‍♀️|🦸🏽‍♂️|🦸🏾‍♀️|🦸🏾‍♂️|🦸🏿‍♀️|🦸🏿‍♂️|🦹🏻‍♀️|🦹🏻‍♂️|🦹🏼‍♀️|🦹🏼‍♂️|🦹🏽‍♀️|🦹🏽‍♂️|🦹🏾‍♀️|🦹🏾‍♂️|🦹🏿‍♀️|🦹🏿‍♂️|🧍🏻‍♀️|🧍🏻‍♂️|🧍🏼‍♀️|🧍🏼‍♂️|🧍🏽‍♀️|🧍🏽‍♂️|🧍🏾‍♀️|🧍🏾‍♂️|🧍🏿‍♀️|🧍🏿‍♂️|🧎🏻‍♀️|🧎🏻‍♂️|🧎🏻‍➡️|🧎🏼‍♀️|🧎🏼‍♂️|🧎🏼‍➡️|🧎🏽‍♀️|🧎🏽‍♂️|🧎🏽‍➡️|🧎🏾‍♀️|🧎🏾‍♂️|🧎🏾‍➡️|🧎🏿‍♀️|🧎🏿‍♂️|🧎🏿‍➡️|🧏🏻‍♀️|🧏🏻‍♂️|🧏🏼‍♀️|🧏🏼‍♂️|🧏🏽‍♀️|🧏🏽‍♂️|🧏🏾‍♀️|🧏🏾‍♂️|🧏🏿‍♀️|🧏🏿‍♂️|🧑🏻‍⚕️|🧑🏻‍⚖️|🧑🏻‍✈️|🧑🏻‍🌾|🧑🏻‍🍳|🧑🏻‍🍼|🧑🏻‍🎄|🧑🏻‍🎓|🧑🏻‍🎤|🧑🏻‍🎨|🧑🏻‍🏫|🧑🏻‍🏭|🧑🏻‍💻|🧑🏻‍💼|🧑🏻‍🔧|🧑🏻‍🔬|🧑🏻‍🚀|🧑🏻‍🚒|🧑🏻‍🦯|🧑🏻‍🦰|🧑🏻‍🦱|🧑🏻‍🦲|🧑🏻‍🦳|🧑🏻‍🦼|🧑🏻‍🦽|🧑🏻‍🩰|🧑🏼‍⚕️|🧑🏼‍⚖️|🧑🏼‍✈️|🧑🏼‍🌾|🧑🏼‍🍳|🧑🏼‍🍼|🧑🏼‍🎄|🧑🏼‍🎓|🧑🏼‍🎤|🧑🏼‍🎨|🧑🏼‍🏫|🧑🏼‍🏭|🧑🏼‍💻|🧑🏼‍💼|🧑🏼‍🔧|🧑🏼‍🔬|🧑🏼‍🚀|🧑🏼‍🚒|🧑🏼‍🦯|🧑🏼‍🦰|🧑🏼‍🦱|🧑🏼‍🦲|🧑🏼‍🦳|🧑🏼‍🦼|🧑🏼‍🦽|🧑🏼‍🩰|🧑🏽‍⚕️|🧑🏽‍⚖️|🧑🏽‍✈️|🧑🏽‍🌾|🧑🏽‍🍳|🧑🏽‍🍼|🧑🏽‍🎄|🧑🏽‍🎓|🧑🏽‍🎤|🧑🏽‍🎨|🧑🏽‍🏫|🧑🏽‍🏭|🧑🏽‍💻|🧑🏽‍💼|🧑🏽‍🔧|🧑🏽‍🔬|🧑🏽‍🚀|🧑🏽‍🚒|🧑🏽‍🦯|🧑🏽‍🦰|🧑🏽‍🦱|🧑🏽‍🦲|🧑🏽‍🦳|🧑🏽‍🦼|🧑🏽‍🦽|🧑🏽‍🩰|🧑🏾‍⚕️|🧑🏾‍⚖️|🧑🏾‍✈️|🧑🏾‍🌾|🧑🏾‍🍳|🧑🏾‍🍼|🧑🏾‍🎄|🧑🏾‍🎓|🧑🏾‍🎤|🧑🏾‍🎨|🧑🏾‍🏫|🧑🏾‍🏭|🧑🏾‍💻|🧑🏾‍💼|🧑🏾‍🔧|🧑🏾‍🔬|🧑🏾‍🚀|🧑🏾‍🚒|🧑🏾‍🦯|🧑🏾‍🦰|🧑🏾‍🦱|🧑🏾‍🦲|🧑🏾‍🦳|🧑🏾‍🦼|🧑🏾‍🦽|🧑🏾‍🩰|🧑🏿‍⚕️|🧑🏿‍⚖️|🧑🏿‍✈️|🧑🏿‍🌾|🧑🏿‍🍳|🧑🏿‍🍼|🧑🏿‍🎄|🧑🏿‍🎓|🧑🏿‍🎤|🧑🏿‍🎨|🧑🏿‍🏫|🧑🏿‍🏭|🧑🏿‍💻|🧑🏿‍💼|🧑🏿‍🔧|🧑🏿‍🔬|🧑🏿‍🚀|🧑🏿‍🚒|🧑🏿‍🦯|🧑🏿‍🦰|🧑🏿‍🦱|🧑🏿‍🦲|🧑🏿‍🦳|🧑🏿‍🦼|🧑🏿‍🦽|🧑🏿‍🩰|🧔🏻‍♀️|🧔🏻‍♂️|🧔🏼‍♀️|🧔🏼‍♂️|🧔🏽‍♀️|🧔🏽‍♂️|🧔🏾‍♀️|🧔🏾‍♂️|🧔🏿‍♀️|🧔🏿‍♂️|🧖🏻‍♀️|🧖🏻‍♂️|🧖🏼‍♀️|🧖🏼‍♂️|🧖🏽‍♀️|🧖🏽‍♂️|🧖🏾‍♀️|🧖🏾‍♂️|🧖🏿‍♀️|🧖🏿‍♂️|🧗🏻‍♀️|🧗🏻‍♂️|🧗🏼‍♀️|🧗🏼‍♂️|🧗🏽‍♀️|🧗🏽‍♂️|🧗🏾‍♀️|🧗🏾‍♂️|🧗🏿‍♀️|🧗🏿‍♂️|🧘🏻‍♀️|🧘🏻‍♂️|🧘🏼‍♀️|🧘🏼‍♂️|🧘🏽‍♀️|🧘🏽‍♂️|🧘🏾‍♀️|🧘🏾‍♂️|🧘🏿‍♀️|🧘🏿‍♂️|🧙🏻‍♀️|🧙🏻‍♂️|🧙🏼‍♀️|🧙🏼‍♂️|🧙🏽‍♀️|🧙🏽‍♂️|🧙🏾‍♀️|🧙🏾‍♂️|🧙🏿‍♀️|🧙🏿‍♂️|🧚🏻‍♀️|🧚🏻‍♂️|🧚🏼‍♀️|🧚🏼‍♂️|🧚🏽‍♀️|🧚🏽‍♂️|🧚🏾‍♀️|🧚🏾‍♂️|🧚🏿‍♀️|🧚🏿‍♂️|🧛🏻‍♀️|🧛🏻‍♂️|🧛🏼‍♀️|🧛🏼‍♂️|🧛🏽‍♀️|🧛🏽‍♂️|🧛🏾‍♀️|🧛🏾‍♂️|🧛🏿‍♀️|🧛🏿‍♂️|🧜🏻‍♀️|🧜🏻‍♂️|🧜🏼‍♀️|🧜🏼‍♂️|🧜🏽‍♀️|🧜🏽‍♂️|🧜🏾‍♀️|🧜🏾‍♂️|🧜🏿‍♀️|🧜🏿‍♂️|🧝🏻‍♀️|🧝🏻‍♂️|🧝🏼‍♀️|🧝🏼‍♂️|🧝🏽‍♀️|🧝🏽‍♂️|🧝🏾‍♀️|🧝🏾‍♂️|🧝🏿‍♀️|🧝🏿‍♂️|⛹🏻‍♀️|⛹🏻‍♂️|⛹🏼‍♀️|⛹🏼‍♂️|⛹🏽‍♀️|⛹🏽‍♂️|⛹🏾‍♀️|⛹🏾‍♂️|⛹🏿‍♀️|⛹🏿‍♂️|🏋️‍♀️|🏋️‍♂️|🏌️‍♀️|🏌️‍♂️|🏳️‍⚧️|🏳️‍🌈|🕵️‍♀️|🕵️‍♂️|😶‍🌫️|⛓️‍💥|⛹️‍♀️|⛹️‍♂️|❤️‍🔥|❤️‍🩹|🍄‍🟫|🍋‍🟩|🏃‍♀️|🏃‍♂️|🏃‍➡️|🏄‍♀️|🏄‍♂️|🏊‍♀️|🏊‍♂️|🏴‍☠️|🐕‍🦺|🐦‍🔥|🐻‍❄️|👨‍⚕️|👨‍⚖️|👨‍✈️|👨‍🌾|👨‍🍳|👨‍🍼|👨‍🎓|👨‍🎤|👨‍🎨|👨‍🏫|👨‍🏭|👨‍👦|👨‍👧|👨‍💻|👨‍💼|👨‍🔧|👨‍🔬|👨‍🚀|👨‍🚒|👨‍🦯|👨‍🦰|👨‍🦱|👨‍🦲|👨‍🦳|👨‍🦼|👨‍🦽|👩‍⚕️|👩‍⚖️|👩‍✈️|👩‍🌾|👩‍🍳|👩‍🍼|👩‍🎓|👩‍🎤|👩‍🎨|👩‍🏫|👩‍🏭|👩‍👦|👩‍👧|👩‍💻|👩‍💼|👩‍🔧|👩‍🔬|👩‍🚀|👩‍🚒|👩‍🦯|👩‍🦰|👩‍🦱|👩‍🦲|👩‍🦳|👩‍🦼|👩‍🦽|👮‍♀️|👮‍♂️|👯‍♀️|👯‍♂️|👰‍♀️|👰‍♂️|👱‍♀️|👱‍♂️|👳‍♀️|👳‍♂️|👷‍♀️|👷‍♂️|💁‍♀️|💁‍♂️|💂‍♀️|💂‍♂️|💆‍♀️|💆‍♂️|💇‍♀️|💇‍♂️|😮‍💨|😵‍💫|🙂‍↔️|🙂‍↕️|🙅‍♀️|🙅‍♂️|🙆‍♀️|🙆‍♂️|🙇‍♀️|🙇‍♂️|🙋‍♀️|🙋‍♂️|🙍‍♀️|🙍‍♂️|🙎‍♀️|🙎‍♂️|🚣‍♀️|🚣‍♂️|🚴‍♀️|🚴‍♂️|🚵‍♀️|🚵‍♂️|🚶‍♀️|🚶‍♂️|🚶‍➡️|🤦‍♀️|🤦‍♂️|🤵‍♀️|🤵‍♂️|🤷‍♀️|🤷‍♂️|🤸‍♀️|🤸‍♂️|🤹‍♀️|🤹‍♂️|🤼‍♀️|🤼‍♂️|🤽‍♀️|🤽‍♂️|🤾‍♀️|🤾‍♂️|🦸‍♀️|🦸‍♂️|🦹‍♀️|🦹‍♂️|🧍‍♀️|🧍‍♂️|🧎‍♀️|🧎‍♂️|🧎‍➡️|🧏‍♀️|🧏‍♂️|🧑‍⚕️|🧑‍⚖️|🧑‍✈️|🧑‍🌾|🧑‍🍳|🧑‍🍼|🧑‍🎄|🧑‍🎓|🧑‍🎤|🧑‍🎨|🧑‍🏫|🧑‍🏭|🧑‍💻|🧑‍💼|🧑‍🔧|🧑‍🔬|🧑‍🚀|🧑‍🚒|🧑‍🦯|🧑‍🦰|🧑‍🦱|🧑‍🦲|🧑‍🦳|🧑‍🦼|🧑‍🦽|🧑‍🧒|🧑‍🩰|🧔‍♀️|🧔‍♂️|🧖‍♀️|🧖‍♂️|🧗‍♀️|🧗‍♂️|🧘‍♀️|🧘‍♂️|🧙‍♀️|🧙‍♂️|🧚‍♀️|🧚‍♂️|🧛‍♀️|🧛‍♂️|🧜‍♀️|🧜‍♂️|🧝‍♀️|🧝‍♂️|🧞‍♀️|🧞‍♂️|🧟‍♀️|🧟‍♂️|\*️⃣|🇦🇨|🇦🇩|🇦🇪|🇦🇫|🇦🇬|🇦🇮|🇦🇱|🇦🇲|🇦🇴|🇦🇶|🇦🇷|🇦🇸|🇦🇹|🇦🇺|🇦🇼|🇦🇽|🇦🇿|🇧🇦|🇧🇧|🇧🇩|🇧🇪|🇧🇫|🇧🇬|🇧🇭|🇧🇮|🇧🇯|🇧🇱|🇧🇲|🇧🇳|🇧🇴|🇧🇶|🇧🇷|🇧🇸|🇧🇹|🇧🇻|🇧🇼|🇧🇾|🇧🇿|🇨🇦|🇨🇨|🇨🇩|🇨🇫|🇨🇬|🇨🇭|🇨🇮|🇨🇰|🇨🇱|🇨🇲|🇨🇳|🇨🇴|🇨🇵|🇨🇶|🇨🇷|🇨🇺|🇨🇻|🇨🇼|🇨🇽|🇨🇾|🇨🇿|🇩🇪|🇩🇬|🇩🇯|🇩🇰|🇩🇲|🇩🇴|🇩🇿|🇪🇦|🇪🇨|🇪🇪|🇪🇬|🇪🇭|🇪🇷|🇪🇸|🇪🇹|🇪🇺|🇫🇮|🇫🇯|🇫🇰|🇫🇲|🇫🇴|🇫🇷|🇬🇦|🇬🇧|🇬🇩|🇬🇪|🇬🇫|🇬🇬|🇬🇭|🇬🇮|🇬🇱|🇬🇲|🇬🇳|🇬🇵|🇬🇶|🇬🇷|🇬🇸|🇬🇹|🇬🇺|🇬🇼|🇬🇾|🇭🇰|🇭🇲|🇭🇳|🇭🇷|🇭🇹|🇭🇺|🇮🇨|🇮🇩|🇮🇪|🇮🇱|🇮🇲|🇮🇳|🇮🇴|🇮🇶|🇮🇷|🇮🇸|🇮🇹|🇯🇪|🇯🇲|🇯🇴|🇯🇵|🇰🇪|🇰🇬|🇰🇭|🇰🇮|🇰🇲|🇰🇳|🇰🇵|🇰🇷|🇰🇼|🇰🇾|🇰🇿|🇱🇦|🇱🇧|🇱🇨|🇱🇮|🇱🇰|🇱🇷|🇱🇸|🇱🇹|🇱🇺|🇱🇻|🇱🇾|🇲🇦|🇲🇨|🇲🇩|🇲🇪|🇲🇫|🇲🇬|🇲🇭|🇲🇰|🇲🇱|🇲🇲|🇲🇳|🇲🇴|🇲🇵|🇲🇶|🇲🇷|🇲🇸|🇲🇹|🇲🇺|🇲🇻|🇲🇼|🇲🇽|🇲🇾|🇲🇿|🇳🇦|🇳🇨|🇳🇪|🇳🇫|🇳🇬|🇳🇮|🇳🇱|🇳🇴|🇳🇵|🇳🇷|🇳🇺|🇳🇿|🇴🇲|🇵🇦|🇵🇪|🇵🇫|🇵🇬|🇵🇭|🇵🇰|🇵🇱|🇵🇲|🇵🇳|🇵🇷|🇵🇸|🇵🇹|🇵🇼|🇵🇾|🇶🇦|🇷🇪|🇷🇴|🇷🇸|🇷🇺|🇷🇼|🇸🇦|🇸🇧|🇸🇨|🇸🇩|🇸🇪|🇸🇬|🇸🇭|🇸🇮|🇸🇯|🇸🇰|🇸🇱|🇸🇲|🇸🇳|🇸🇴|🇸🇷|🇸🇸|🇸🇹|🇸🇻|🇸🇽|🇸🇾|🇸🇿|🇹🇦|🇹🇨|🇹🇩|🇹🇫|🇹🇬|🇹🇭|🇹🇯|🇹🇰|🇹🇱|🇹🇲|🇹🇳|🇹🇴|🇹🇷|🇹🇹|🇹🇻|🇹🇼|🇹🇿|🇺🇦|🇺🇬|🇺🇲|🇺🇳|🇺🇸|🇺🇾|🇺🇿|🇻🇦|🇻🇨|🇻🇪|🇻🇬|🇻🇮|🇻🇳|🇻🇺|🇼🇫|🇼🇸|🇽🇰|🇾🇪|🇾🇹|🇿🇦|🇿🇲|🇿🇼|🎅🏻|🎅🏼|🎅🏽|🎅🏾|🎅🏿|🏂🏻|🏂🏼|🏂🏽|🏂🏾|🏂🏿|🏃🏻|🏃🏼|🏃🏽|🏃🏾|🏃🏿|🏄🏻|🏄🏼|🏄🏽|🏄🏾|🏄🏿|🏇🏻|🏇🏼|🏇🏽|🏇🏾|🏇🏿|🏊🏻|🏊🏼|🏊🏽|🏊🏾|🏊🏿|🏋🏻|🏋🏼|🏋🏽|🏋🏾|🏋🏿|🏌🏻|🏌🏼|🏌🏽|🏌🏾|🏌🏿|🐈‍⬛|🐦‍⬛|👂🏻|👂🏼|👂🏽|👂🏾|👂🏿|👃🏻|👃🏼|👃🏽|👃🏾|👃🏿|👆🏻|👆🏼|👆🏽|👆🏾|👆🏿|👇🏻|👇🏼|👇🏽|👇🏾|👇🏿|👈🏻|👈🏼|👈🏽|👈🏾|👈🏿|👉🏻|👉🏼|👉🏽|👉🏾|👉🏿|👊🏻|👊🏼|👊🏽|👊🏾|👊🏿|👋🏻|👋🏼|👋🏽|👋🏾|👋🏿|👌🏻|👌🏼|👌🏽|👌🏾|👌🏿|👍🏻|👍🏼|👍🏽|👍🏾|👍🏿|👎🏻|👎🏼|👎🏽|👎🏾|👎🏿|👏🏻|👏🏼|👏🏽|👏🏾|👏🏿|👐🏻|👐🏼|👐🏽|👐🏾|👐🏿|👦🏻|👦🏼|👦🏽|👦🏾|👦🏿|👧🏻|👧🏼|👧🏽|👧🏾|👧🏿|👨🏻|👨🏼|👨🏽|👨🏾|👨🏿|👩🏻|👩🏼|👩🏽|👩🏾|👩🏿|👫🏻|👫🏼|👫🏽|👫🏾|👫🏿|👬🏻|👬🏼|👬🏽|👬🏾|👬🏿|👭🏻|👭🏼|👭🏽|👭🏾|👭🏿|👮🏻|👮🏼|👮🏽|👮🏾|👮🏿|👯🏻|👯🏼|👯🏽|👯🏾|👯🏿|👰🏻|👰🏼|👰🏽|👰🏾|👰🏿|👱🏻|👱🏼|👱🏽|👱🏾|👱🏿|👲🏻|👲🏼|👲🏽|👲🏾|👲🏿|👳🏻|👳🏼|👳🏽|👳🏾|👳🏿|👴🏻|👴🏼|👴🏽|👴🏾|👴🏿|👵🏻|👵🏼|👵🏽|👵🏾|👵🏿|👶🏻|👶🏼|👶🏽|👶🏾|👶🏿|👷🏻|👷🏼|👷🏽|👷🏾|👷🏿|👸🏻|👸🏼|👸🏽|👸🏾|👸🏿|👼🏻|👼🏼|👼🏽|👼🏾|👼🏿|💁🏻|💁🏼|💁🏽|💁🏾|💁🏿|💂🏻|💂🏼|💂🏽|💂🏾|💂🏿|💃🏻|💃🏼|💃🏽|💃🏾|💃🏿|💅🏻|💅🏼|💅🏽|💅🏾|💅🏿|💆🏻|💆🏼|💆🏽|💆🏾|💆🏿|💇🏻|💇🏼|💇🏽|💇🏾|💇🏿|💏🏻|💏🏼|💏🏽|💏🏾|💏🏿|💑🏻|💑🏼|💑🏽|💑🏾|💑🏿|💪🏻|💪🏼|💪🏽|💪🏾|💪🏿|🕴🏻|🕴🏼|🕴🏽|🕴🏾|🕴🏿|🕵🏻|🕵🏼|🕵🏽|🕵🏾|🕵🏿|🕺🏻|🕺🏼|🕺🏽|🕺🏾|🕺🏿|🖐🏻|🖐🏼|🖐🏽|🖐🏾|🖐🏿|🖕🏻|🖕🏼|🖕🏽|🖕🏾|🖕🏿|🖖🏻|🖖🏼|🖖🏽|🖖🏾|🖖🏿|🙅🏻|🙅🏼|🙅🏽|🙅🏾|🙅🏿|🙆🏻|🙆🏼|🙆🏽|🙆🏾|🙆🏿|🙇🏻|🙇🏼|🙇🏽|🙇🏾|🙇🏿|🙋🏻|🙋🏼|🙋🏽|🙋🏾|🙋🏿|🙌🏻|🙌🏼|🙌🏽|🙌🏾|🙌🏿|🙍🏻|🙍🏼|🙍🏽|🙍🏾|🙍🏿|🙎🏻|🙎🏼|🙎🏽|🙎🏾|🙎🏿|🙏🏻|🙏🏼|🙏🏽|🙏🏾|🙏🏿|🚣🏻|🚣🏼|🚣🏽|🚣🏾|🚣🏿|🚴🏻|🚴🏼|🚴🏽|🚴🏾|🚴🏿|🚵🏻|🚵🏼|🚵🏽|🚵🏾|🚵🏿|🚶🏻|🚶🏼|🚶🏽|🚶🏾|🚶🏿|🛀🏻|🛀🏼|🛀🏽|🛀🏾|🛀🏿|🛌🏻|🛌🏼|🛌🏽|🛌🏾|🛌🏿|🤌🏻|🤌🏼|🤌🏽|🤌🏾|🤌🏿|🤏🏻|🤏🏼|🤏🏽|🤏🏾|🤏🏿|🤘🏻|🤘🏼|🤘🏽|🤘🏾|🤘🏿|🤙🏻|🤙🏼|🤙🏽|🤙🏾|🤙🏿|🤚🏻|🤚🏼|🤚🏽|🤚🏾|🤚🏿|🤛🏻|🤛🏼|🤛🏽|🤛🏾|🤛🏿|🤜🏻|🤜🏼|🤜🏽|🤜🏾|🤜🏿|🤝🏻|🤝🏼|🤝🏽|🤝🏾|🤝🏿|🤞🏻|🤞🏼|🤞🏽|🤞🏾|🤞🏿|🤟🏻|🤟🏼|🤟🏽|🤟🏾|🤟🏿|🤦🏻|🤦🏼|🤦🏽|🤦🏾|🤦🏿|🤰🏻|🤰🏼|🤰🏽|🤰🏾|🤰🏿|🤱🏻|🤱🏼|🤱🏽|🤱🏾|🤱🏿|🤲🏻|🤲🏼|🤲🏽|🤲🏾|🤲🏿|🤳🏻|🤳🏼|🤳🏽|🤳🏾|🤳🏿|🤴🏻|🤴🏼|🤴🏽|🤴🏾|🤴🏿|🤵🏻|🤵🏼|🤵🏽|🤵🏾|🤵🏿|🤶🏻|🤶🏼|🤶🏽|🤶🏾|🤶🏿|🤷🏻|🤷🏼|🤷🏽|🤷🏾|🤷🏿|🤸🏻|🤸🏼|🤸🏽|🤸🏾|🤸🏿|🤹🏻|🤹🏼|🤹🏽|🤹🏾|🤹🏿|🤼🏻|🤼🏼|🤼🏽|🤼🏾|🤼🏿|🤽🏻|🤽🏼|🤽🏽|🤽🏾|🤽🏿|🤾🏻|🤾🏼|🤾🏽|🤾🏾|🤾🏿|🥷🏻|🥷🏼|🥷🏽|🥷🏾|🥷🏿|🦵🏻|🦵🏼|🦵🏽|🦵🏾|🦵🏿|🦶🏻|🦶🏼|🦶🏽|🦶🏾|🦶🏿|🦸🏻|🦸🏼|🦸🏽|🦸🏾|🦸🏿|🦹🏻|🦹🏼|🦹🏽|🦹🏾|🦹🏿|🦻🏻|🦻🏼|🦻🏽|🦻🏾|🦻🏿|🧍🏻|🧍🏼|🧍🏽|🧍🏾|🧍🏿|🧎🏻|🧎🏼|🧎🏽|🧎🏾|🧎🏿|🧏🏻|🧏🏼|🧏🏽|🧏🏾|🧏🏿|🧑🏻|🧑🏼|🧑🏽|🧑🏾|🧑🏿|🧒🏻|🧒🏼|🧒🏽|🧒🏾|🧒🏿|🧓🏻|🧓🏼|🧓🏽|🧓🏾|🧓🏿|🧔🏻|🧔🏼|🧔🏽|🧔🏾|🧔🏿|🧕🏻|🧕🏼|🧕🏽|🧕🏾|🧕🏿|🧖🏻|🧖🏼|🧖🏽|🧖🏾|🧖🏿|🧗🏻|🧗🏼|🧗🏽|🧗🏾|🧗🏿|🧘🏻|🧘🏼|🧘🏽|🧘🏾|🧘🏿|🧙🏻|🧙🏼|🧙🏽|🧙🏾|🧙🏿|🧚🏻|🧚🏼|🧚🏽|🧚🏾|🧚🏿|🧛🏻|🧛🏼|🧛🏽|🧛🏾|🧛🏿|🧜🏻|🧜🏼|🧜🏽|🧜🏾|🧜🏿|🧝🏻|🧝🏼|🧝🏽|🧝🏾|🧝🏿|🫃🏻|🫃🏼|🫃🏽|🫃🏾|🫃🏿|🫄🏻|🫄🏼|🫄🏽|🫄🏾|🫄🏿|🫅🏻|🫅🏼|🫅🏽|🫅🏾|🫅🏿|🫰🏻|🫰🏼|🫰🏽|🫰🏾|🫰🏿|🫱🏻|🫱🏼|🫱🏽|🫱🏾|🫱🏿|🫲🏻|🫲🏼|🫲🏽|🫲🏾|🫲🏿|🫳🏻|🫳🏼|🫳🏽|🫳🏾|🫳🏿|🫴🏻|🫴🏼|🫴🏽|🫴🏾|🫴🏿|🫵🏻|🫵🏼|🫵🏽|🫵🏾|🫵🏿|🫶🏻|🫶🏼|🫶🏽|🫶🏾|🫶🏿|🫷🏻|🫷🏼|🫷🏽|🫷🏾|🫷🏿|🫸🏻|🫸🏼|🫸🏽|🫸🏾|🫸🏿|#️⃣|0️⃣|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|☝🏻|☝🏼|☝🏽|☝🏾|☝🏿|⛹🏻|⛹🏼|⛹🏽|⛹🏾|⛹🏿|✊🏻|✊🏼|✊🏽|✊🏾|✊🏿|✋🏻|✋🏼|✋🏽|✋🏾|✋🏿|✌🏻|✌🏼|✌🏽|✌🏾|✌🏿|✍🏻|✍🏼|✍🏽|✍🏾|✍🏿|🅰️|🅱️|🅾️|🅿️|🈂️|🈷️|🌡️|🌤️|🌥️|🌦️|🌧️|🌨️|🌩️|🌪️|🌫️|🌬️|🌶️|🍽️|🎖️|🎗️|🎙️|🎚️|🎛️|🎞️|🎟️|🏋️|🏌️|🏍️|🏎️|🏔️|🏕️|🏖️|🏗️|🏘️|🏙️|🏚️|🏛️|🏜️|🏝️|🏞️|🏟️|🏳️|🏵️|🏷️|🐿️|👁️|📽️|🕉️|🕊️|🕯️|🕰️|🕳️|🕴️|🕵️|🕶️|🕷️|🕸️|🕹️|🖇️|🖊️|🖋️|🖌️|🖍️|🖐️|🖥️|🖨️|🖱️|🖲️|🖼️|🗂️|🗃️|🗄️|🗑️|🗒️|🗓️|🗜️|🗝️|🗞️|🗡️|🗣️|🗨️|🗯️|🗳️|🗺️|🛋️|🛍️|🛎️|🛏️|🛠️|🛡️|🛢️|🛣️|🛤️|🛥️|🛩️|🛰️|🛳️|©️|®️|‼️|⁉️|™️|ℹ️|↔️|↕️|↖️|↗️|↘️|↙️|↩️|↪️|⌨️|⏏️|⏭️|⏮️|⏯️|⏱️|⏲️|⏸️|⏹️|⏺️|Ⓜ️|▪️|▫️|▶️|◀️|◻️|◼️|☀️|☁️|☂️|☃️|☄️|☎️|☑️|☘️|☝️|☠️|☢️|☣️|☦️|☪️|☮️|☯️|☸️|☹️|☺️|♀️|♂️|♟️|♠️|♣️|♥️|♦️|♨️|♻️|♾️|⚒️|⚔️|⚕️|⚖️|⚗️|⚙️|⚛️|⚜️|⚠️|⚧️|⚰️|⚱️|⛈️|⛏️|⛑️|⛓️|⛩️|⛰️|⛱️|⛴️|⛷️|⛸️|⛹️|✂️|✈️|✉️|✌️|✍️|✏️|✒️|✔️|✖️|✝️|✡️|✳️|✴️|❄️|❇️|❣️|❤️|➡️|⤴️|⤵️|⬅️|⬆️|⬇️|〰️|〽️|㊗️|㊙️|[\u231A\u231B\u23E9-\u23EC\u23F0\u23F3\u25FD\u25FE\u2614\u2615\u2648-\u2653\u267F\u2693\u26A1\u26AA\u26AB\u26BD\u26BE\u26C4\u26C5\u26CE\u26D4\u26EA\u26F2\u26F3\u26F5\u26FA\u26FD\u2705\u270A\u270B\u2728\u274C\u274E\u2753-\u2755\u2757\u2795-\u2797\u27B0\u27BF\u2B1B\u2B1C\u2B50\u2B55\u{1F004}\u{1F0CF}\u{1F18E}\u{1F191}-\u{1F19A}\u{1F201}\u{1F21A}\u{1F22F}\u{1F232}-\u{1F236}\u{1F238}-\u{1F23A}\u{1F250}\u{1F251}\u{1F300}-\u{1F320}\u{1F32D}-\u{1F335}\u{1F337}-\u{1F37C}\u{1F37E}-\u{1F393}\u{1F3A0}-\u{1F3CA}\u{1F3CF}-\u{1F3D3}\u{1F3E0}-\u{1F3F0}\u{1F3F4}\u{1F3F8}-\u{1F43E}\u{1F440}\u{1F442}-\u{1F4FC}\u{1F4FF}-\u{1F53D}\u{1F54B}-\u{1F54E}\u{1F550}-\u{1F567}\u{1F57A}\u{1F595}\u{1F596}\u{1F5A4}\u{1F5FB}-\u{1F64F}\u{1F680}-\u{1F6C5}\u{1F6CC}\u{1F6D0}-\u{1F6D2}\u{1F6D5}-\u{1F6D8}\u{1F6DC}-\u{1F6DF}\u{1F6EB}\u{1F6EC}\u{1F6F4}-\u{1F6FC}\u{1F7E0}-\u{1F7EB}\u{1F7F0}\u{1F90C}-\u{1F93A}\u{1F93C}-\u{1F945}\u{1F947}-\u{1F9FF}\u{1FA70}-\u{1FA7C}\u{1FA80}-\u{1FA8A}\u{1FA8E}-\u{1FAC6}\u{1FAC8}\u{1FACD}-\u{1FADC}\u{1FADF}-\u{1FAEA}\u{1FAEF}-\u{1FAF8}])/ug).length;
-      }
-    } else {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon gray"
-      }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "gray"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "invalid_content",
-        defaultMessage: [{
-          "type": 0,
-          "value": "invalid content"
-        }]
-      })));
-    }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      ref: this.props.innerRef,
-      className: sideClass
-    }, this.props.isGroup && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      tinode: this.props.tinode,
-      topic: this.props.userFrom,
-      title: this.props.userName,
-      avatar: avatar
-    }) : null) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: bubbleClass
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "content-meta"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: textSizeClass
-    }, content, attachments), this.props.reactionList && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      reactions: this.props.reactions,
-      reactionList: this.props.reactionList,
-      maxReactions: this.props.maxReactions,
-      myUserId: this.props.myUserId,
-      pickerShown: this.props.showPicker,
-      onTogglePicker: this.handleTogglePicker,
-      onReactionSelected: this.handleReactionSelected
-    }), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      edited: this.props.edited,
-      timestamp: this.props.timestamp,
-      received: this.props.received
-    }) : null), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleContextClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more"))) : null), this.props.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      reactions: this.props.reactions,
-      reactionList: this.props.reactionList,
-      maxReactions: this.props.maxReactions,
-      myUserId: this.props.myUserId,
-      leftBubble: this.props.response,
-      anchor: this.state.pickerAnchor,
-      viewportBounds: this.state.parentBounds,
-      onSelect: emo => this.handleReactionSelected(null, emo),
-      onClose: () => this.props.onToggleReactionPicker(-1),
-      dataTestPrefix: "reaction-picker"
-    }) : null, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "author"
-    }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "user_not_found",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Not found"
-      }]
-    }))) : null));
-  }
-}
-;
-const IntlChatMessage = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(BaseChatMessage);
-const ChatMessage = react__WEBPACK_IMPORTED_MODULE_0___default().forwardRef((props, ref) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(IntlChatMessage, _extends({
-  innerRef: ref
-}, props)));
-/* harmony default export */ __webpack_exports__["default"] = (ChatMessage);
 
 /***/ }),
 
@@ -16686,7 +13795,7 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: this.props.avatar || true,
       topic: this.props.topic,
       title: this.props.title
@@ -17123,7 +14232,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: avatar,
       title: this.props.title,
       topic: this.props.item,
@@ -18004,111 +15113,6 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
 /***/ }),
 
-/***/ "./src/widgets/doc-preview.jsx":
-/*!*************************************!*\
-  !*** ./src/widgets/doc-preview.jsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ DocPreview; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-
-
-
-
-function iconFromMime(mime) {
-  const mimeToIcon = {
-    default: 'draft',
-    image: 'image',
-    text: 'description',
-    video: 'theaters'
-  };
-  return mimeToIcon[mime] || mimeToIcon[(mime || '').split('/')[0]] || mimeToIcon['default'];
-}
-class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.handleSendDoc = this.handleSendDoc.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-  handleKeyDown(e) {
-    e.preventDefault();
-    if (e.key === 'Escape') {
-      this.props.onClose();
-    }
-  }
-  handleSendDoc(caption) {
-    this.props.onClose();
-    this.props.onSendMessage(this.props.content.file);
-  }
-  render() {
-    if (!this.props.content) {
-      return null;
-    }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.name), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onClose();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "doc-card"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_file_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "File name:"
-      }]
-    })), " ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.shortenFileName)(this.props.content.name, 24) || '-'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_content_type",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Content type:"
-      }]
-    })), " ", this.props.content.type || 'application/octet-stream'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_size",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Size:"
-      }]
-    })), " ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      noInput: true,
-      tinode: this.props.tinode,
-      reply: this.props.reply,
-      onCancelReply: this.props.onCancelReply,
-      onSendMessage: this.handleSendDoc,
-      onError: this.props.onError
-    }));
-  }
-}
-;
-
-/***/ }),
-
 /***/ "./src/widgets/error-panel.jsx":
 /*!*************************************!*\
   !*** ./src/widgets/error-panel.jsx ***!
@@ -18340,75 +15344,6 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
 /***/ }),
 
-/***/ "./src/widgets/group-subs.jsx":
-/*!************************************!*\
-  !*** ./src/widgets/group-subs.jsx ***!
-  \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ GroupSubs; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-
-
-
-
-
-class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const usersOnline = [];
-    const totalCount = (this.props.subscribers || []).length;
-    const countToShow = Math.min(_config_js__WEBPACK_IMPORTED_MODULE_2__.MAX_ONLINE_IN_TOPIC, totalCount);
-    (this.props.subscribers || []).some(sub => {
-      usersOnline.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "avatar-box",
-        key: sub.user
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        tinode: this.props.tinode,
-        topic: sub.user,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
-        title: sub.public ? sub.public.fn : null
-      })));
-      return usersOnline.length == countToShow;
-    });
-    if (usersOnline.length == 0) {
-      return null;
-    }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "topic-users"
-    }, usersOnline, " ", totalCount > countToShow ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "more_online_members",
-      defaultMessage: [{
-        "type": 0,
-        "value": "+"
-      }, {
-        "type": 1,
-        "value": "overflow"
-      }, {
-        "type": 0,
-        "value": " more"
-      }],
-      values: {
-        overflow: totalCount - countToShow
-      }
-    })) : null);
-  }
-}
-;
-
-/***/ }),
-
 /***/ "./src/widgets/host-selector.jsx":
 /*!***************************************!*\
   !*** ./src/widgets/host-selector.jsx ***!
@@ -18481,158 +15416,6 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     }, hostOptions));
   }
 }
-
-/***/ }),
-
-/***/ "./src/widgets/image-preview.jsx":
-/*!***************************************!*\
-  !*** ./src/widgets/image-preview.jsx ***!
-  \***************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ ImagePreview; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
-
-
-
-
-
-
-class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      width: 0,
-      height: 0
-    };
-    this.handleSendImage = this.handleSendImage.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-  handleKeyDown(e) {
-    if (this.props.onSendMessage) {
-      return;
-    }
-    e.preventDefault();
-    if (e.key === 'Escape') {
-      this.props.onClose();
-    }
-  }
-  assignWidth(node) {
-    if (node && !this.state.width) {
-      const bounds = node.getBoundingClientRect();
-      this.setState({
-        width: bounds.width | 0,
-        height: bounds.height | 0
-      });
-    }
-  }
-  handleSendImage(caption) {
-    this.props.onClose();
-    this.props.onSendMessage(caption, this.props.content.blob);
-  }
-  render() {
-    if (!this.props.content) {
-      return null;
-    }
-    const dim = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.fitImageSize)(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
-    const size = dim ? {
-      width: dim.dstWidth + 'px',
-      height: dim.dstHeight + 'px'
-    } : this.props.content.width > this.props.content.height ? {
-      width: '100%'
-    } : {
-      height: '100%'
-    };
-    size.maxWidth = '100%';
-    size.maxHeight = '100%';
-    const maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE / 1.5 | 0) - 2, 12);
-    const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.filename, maxlength) || '-';
-    const width = this.props.content.width || '-';
-    const height = this.props.content.height || '-';
-    const download_url = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.urlAsAttachment)(this.props.content.url);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-caption-panel"
-    }, this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: download_url,
-      download: this.props.content.filename
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "download_action",
-      defaultMessage: [{
-        "type": 0,
-        "value": "download"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onClose();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-container",
-      ref: node => this.assignWidth(node)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.props.content.url,
-      style: size,
-      className: "image-preview",
-      alt: this.props.content.filename
-    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      messagePrompt: "add_image_caption",
-      acceptBlank: true,
-      tinode: this.props.tinode,
-      reply: this.props.reply,
-      onCancelReply: this.props.onCancelReply,
-      onSendMessage: this.handleSendImage,
-      onError: this.props.onError
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_file_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "File name:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.filename
-    }, fname))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_content_type",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Content type:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_size",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Size:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.bytesToHumanSize)(this.props.content.size)))));
-  }
-}
-;
 
 /***/ }),
 
@@ -18856,84 +15639,6 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
 
 /***/ }),
 
-/***/ "./src/widgets/invitation.jsx":
-/*!************************************!*\
-  !*** ./src/widgets/invitation.jsx ***!
-  \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ Invitation; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-
-
-class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.handleButtonAction = this.handleButtonAction.bind(this);
-  }
-  handleButtonAction(evt, data) {
-    evt.preventDefault();
-    this.props.onAction(data);
-  }
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "accept-invite-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation",
-      defaultMessage: [{
-        "type": 0,
-        "value": "You are invited to start a new chat. What would you like to do?"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: event => {
-        this.handleButtonAction(event, "accept");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation_accept",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Accept"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: event => {
-        this.handleButtonAction(event, "delete");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation_ignore",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Ignore"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: event => {
-        this.handleButtonAction(event, "block");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation_block",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Block"
-      }]
-    }))));
-  }
-}
-;
-
-/***/ }),
-
 /***/ "./src/widgets/lazy-image.jsx":
 /*!************************************!*\
   !*** ./src/widgets/lazy-image.jsx ***!
@@ -19053,7 +15758,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         }
       }
     } else if (this.props.avatar) {
-      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
+      const url = this.props.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
         className: className,
@@ -19198,46 +15903,6 @@ class MenuStart extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "m-icon"
     }, "settings")));
-  }
-}
-;
-
-/***/ }),
-
-/***/ "./src/widgets/meta-message.jsx":
-/*!**************************************!*\
-  !*** ./src/widgets/meta-message.jsx ***!
-  \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ MetaMessage; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    let content = null;
-    let bubbleClass = 'bubble';
-    if (this.props.date) {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.date);
-      bubbleClass += ' date';
-    }
-    if (!content) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, null);
-    }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: "meta"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: bubbleClass
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "message-content"
-    }, content)));
   }
 }
 ;
@@ -19637,561 +16302,6 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
 
 /***/ }),
 
-/***/ "./src/widgets/pinned-messages.jsx":
-/*!*****************************************!*\
-  !*** ./src/widgets/pinned-messages.jsx ***!
-  \*****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-
-
-
-
-
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  message_not_found: {
-    id: "message_not_found",
-    defaultMessage: [{
-      "type": 0,
-      "value": "message not found"
-    }]
-  },
-  message_deleted: {
-    id: "message_deleted",
-    defaultMessage: [{
-      "type": 0,
-      "value": "message deleted"
-    }]
-  }
-});
-class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.touchX = null;
-    this.touchY = null;
-    this.touchSurface = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.getSelectedIndex = this.getSelectedIndex.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleSelected = this.handleSelected.bind(this);
-    this.handleMoveNext = this.handleMoveNext.bind(this);
-    this.handleMovePrev = this.handleMovePrev.bind(this);
-    this.handleTouchEventStart = this.handleTouchEventStart.bind(this);
-    this.handleTouchEventEnd = this.handleTouchEventEnd.bind(this);
-    this.handleTouchCancel = this.handleTouchCancel.bind(this);
-  }
-  componentDidMount() {
-    this.touchSurface.current.addEventListener('touchstart', this.handleTouchEventStart, {
-      passive: true
-    });
-    this.touchSurface.current.addEventListener('touchend', this.handleTouchEventEnd, {
-      passive: true
-    });
-    this.touchSurface.current.addEventListener('touchcancel', this.handleTouchCancel, {
-      passive: true
-    });
-  }
-  componentWillUnmount() {
-    this.touchSurface.current.removeEventListener('touchstart', this.handleTouchEventStart);
-    this.touchSurface.current.removeEventListener('touchend', this.handleTouchEventEnd);
-    this.touchSurface.current.removeEventListener('touchcancel', this.handleTouchCancel);
-  }
-  getSelectedIndex() {
-    const list = this.props.pins || [];
-    return list.length - this.props.selected - 1;
-  }
-  handleCancel(e) {
-    e.preventDefault();
-    this.props.onCancel(this.props.pins[this.getSelectedIndex()]);
-  }
-  handleSelected(e) {
-    e.preventDefault();
-    this.props.onSelected(this.props.pins[this.getSelectedIndex()]);
-  }
-  handleMoveNext(e, isTouch) {
-    isTouch || e.preventDefault();
-    e.stopPropagation();
-    const idx = Math.max(this.props.selected - 1, 0);
-    if (idx != this.props.selected) {
-      this.props.setSelected(idx);
-    }
-  }
-  handleMovePrev(e, isTouch) {
-    isTouch || e.preventDefault();
-    e.stopPropagation();
-    const idx = Math.min(this.props.selected + 1, (this.props.pins || []).length - 1);
-    if (idx != this.props.selected) {
-      this.props.setSelected(idx);
-    }
-  }
-  handleTouchEventStart(e) {
-    if (e.touches.length == 1) {
-      this.touchX = e.touches[0].clientX;
-      this.touchY = e.touches[0].clientY;
-    }
-  }
-  handleTouchEventEnd(e) {
-    if (this.touchX === null || e.changedTouches.length != 1) {
-      this.touchX = null;
-      return;
-    }
-    const dX = this.touchX - e.changedTouches[0].clientX;
-    const dY = this.touchY - e.changedTouches[0].clientY;
-    this.touchX = null;
-    if (Math.abs(dX) > Math.abs(dY) || Math.abs(dY) < _config_js__WEBPACK_IMPORTED_MODULE_4__.MIN_SWIPE_DISTANCE) {
-      return;
-    }
-    if (dY > 0) {
-      this.handleMovePrev(e, true);
-    } else {
-      this.handleMoveNext(e, true);
-    }
-  }
-  handleTouchCancel() {
-    this.touchX = null;
-  }
-  render() {
-    const selected = this.getSelectedIndex();
-    let messageShown = (this.props.messages || [])[selected];
-    messageShown = messageShown ? messageShown._deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "gray"
-    }, this.props.intl.formatMessage(messages.message_deleted)) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(messageShown.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__.previewFormatter, {
-      formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "gray"
-    }, this.props.intl.formatMessage(messages.message_not_found));
-    const dots = [];
-    this.props.pins.forEach(seq => {
-      const cn = dots.length == selected ? 'adot' : 'dot';
-      dots.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: seq,
-        className: cn
-      }));
-    });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "pinned-wrapper",
-      ref: this.touchSurface
-    }, this.props.isAdmin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cancel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "push_pin")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "pinned-scroll"
-    }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "pinned",
-      onClick: this.handleSelected
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, messageShown)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "pinned-menu"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger upper"
-    }, selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleMovePrev
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_less")) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger lower"
-    }, this.props.selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleMoveNext
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more")) : null)));
-  }
-}
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PinnedMessages));
-
-/***/ }),
-
-/***/ "./src/widgets/reaction-picker.jsx":
-/*!*****************************************!*\
-  !*** ./src/widgets/reaction-picker.jsx ***!
-  \*****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/utils */ "./src/lib/utils.js");
-/* harmony import */ var _count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./count-badge.jsx */ "./src/widgets/count-badge.jsx");
-
-
-
-const REACTIONS_COLLAPSED_COUNT = 6;
-const MAX_EMOJIS = 40;
-const DISPLAY_PREFERENCE = 'top';
-const PANEL_MARGIN = 8;
-const TIP_SIZE = 7;
-const BUTTON_SIZE = 14;
-const TIP_STOP = 12;
-const BUBBLE_MARGIN_LEFT = 23;
-class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      position: {
-        marginLeft: '0',
-        marginTop: '0'
-      },
-      tipLeft: '12px',
-      placeAbove: 'top',
-      expanded: false
-    };
-    this.rootRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.emojiRefs = [];
-    this.handleOutsideClick = this.handleOutsideClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.selectEmoji = this.selectEmoji.bind(this);
-    this.updatePosition = this.updatePosition.bind(this);
-  }
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleOutsideClick);
-    document.addEventListener('keydown', this.handleKeyDown);
-    setTimeout(() => {
-      if (this.emojiRefs[0]) this.emojiRefs[0].focus();
-    }, 0);
-    this.updatePosition();
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.anchor !== this.props.anchor || prevProps.viewportBounds !== this.props.viewportBounds || prevState.expanded !== this.state.expanded) {
-      setTimeout(() => this.updatePosition(), 0);
-    }
-  }
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleOutsideClick);
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-  handleOutsideClick(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    if (this.rootRef.current && !this.rootRef.current.contains(e.target)) {
-      this.props.onClose();
-    }
-  }
-  handleKeyDown(e) {
-    if (e.key === 'Escape') {
-      this.props.onClose();
-      return;
-    }
-    const active = document.activeElement;
-    const idx = this.emojiRefs.findIndex(el => el === active);
-    if (e.key === 'ArrowRight') {
-      if (idx == -1) {
-        this.emojiRefs[0] && this.emojiRefs[0].focus();
-      } else {
-        const next = (idx + 1) % this.emojiRefs.length;
-        this.emojiRefs[next] && this.emojiRefs[next].focus();
-      }
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft') {
-      if (idx == -1) {
-        const last = this.emojiRefs.length - 1;
-        this.emojiRefs[last] && this.emojiRefs[last].focus();
-      } else {
-        const prev = (idx - 1 + this.emojiRefs.length) % this.emojiRefs.length;
-        this.emojiRefs[prev] && this.emojiRefs[prev].focus();
-      }
-      e.preventDefault();
-    } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
-      const emojis = this.props.reactionList || [];
-      const emo = emojis[idx];
-      this.selectEmoji(emo);
-      e.preventDefault();
-    }
-  }
-  selectEmoji(emo) {
-    this.props.onSelect(emo);
-    this.props.onClose();
-  }
-  updatePosition() {
-    if (!this.rootRef.current) {
-      return;
-    }
-    const panelRect = this.rootRef.current.getBoundingClientRect();
-    const hSize = panelRect.width;
-    const vSize = panelRect.height;
-    const spaceLeft = this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
-    const spaceRight = this.props.viewportBounds.width - this.props.anchor.viewX - hSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
-    const spaceTop = this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE - BUTTON_SIZE / 2;
-    const spaceBottom = this.props.viewportBounds.height - this.props.anchor.viewY - vSize - PANEL_MARGIN * 2 - TIP_SIZE / 2;
-    const bubbleMargin = this.props.leftBubble ? 0 : BUBBLE_MARGIN_LEFT;
-    let preferred = DISPLAY_PREFERENCE;
-    let space = spaceTop;
-    if (space < 0 && space < spaceBottom) {
-      preferred = 'bottom';
-      space = spaceBottom;
-    }
-    if (space < 0 && space < spaceLeft) {
-      preferred = 'left';
-      space = spaceLeft;
-    }
-    if (space < 0 && space < spaceRight) {
-      preferred = 'right';
-      space = spaceRight;
-    }
-    let marginTop, marginLeft;
-    if (preferred == 'top' || preferred == 'bottom') {
-      if (hSize > this.props.viewportBounds.width) {
-        marginLeft = (this.props.viewportBounds.width - hSize) / 2;
-      } else {
-        if (spaceRight > spaceLeft) {
-          const availableLeft = this.props.anchor.viewX - this.props.anchor.offsetX - PANEL_MARGIN;
-          const preferredX = this.props.anchor.offsetX - hSize * 0.33;
-          marginLeft = Math.max(-availableLeft, preferredX);
-        } else {
-          const availableRight = this.props.viewportBounds.width - this.props.anchor.viewX - PANEL_MARGIN - BUTTON_SIZE / 2;
-          const offsetX = this.props.anchor.offsetX - hSize * 0.67;
-          marginLeft = offsetX + Math.min(0, bubbleMargin + availableRight - hSize * 0.33);
-        }
-      }
-      this.setState({
-        tipLeft: Math.max(TIP_STOP, Math.min(hSize - TIP_STOP - TIP_SIZE * 2, this.props.anchor.offsetX - marginLeft + bubbleMargin)) + 'px'
-      });
-      if (preferred == 'top') {
-        marginTop = this.props.anchor.offsetY - vSize - TIP_SIZE - PANEL_MARGIN;
-      } else {
-        marginTop = this.props.anchor.offsetY + TIP_SIZE + PANEL_MARGIN + BUTTON_SIZE;
-      }
-      marginTop = marginTop + 'px';
-      marginLeft = marginLeft + 'px';
-    } else {
-      if (preferred == 'left') {
-        marginLeft = this.props.anchor.offsetX - hSize - TIP_SIZE - PANEL_MARGIN + bubbleMargin;
-      } else {
-        marginLeft = this.props.anchor.offsetX + PANEL_MARGIN + TIP_SIZE + BUTTON_SIZE;
-      }
-      if (vSize > this.props.viewportBounds.height) {
-        marginTop = (this.props.viewportBounds.height - vSize) / 2 - this.props.anchor.viewY;
-      } else {
-        const above = this.props.viewportBounds.height / 2 > this.props.anchor.viewY;
-        if (above) {
-          marginTop = -this.props.anchor.viewY + this.props.anchor.offsetY + PANEL_MARGIN + BUTTON_SIZE / 2;
-        } else {
-          marginTop = spaceBottom - PANEL_MARGIN + this.props.anchor.offsetY + BUTTON_SIZE / 2;
-        }
-      }
-      this.setState({
-        tipTop: Math.max(TIP_STOP, Math.min(vSize - TIP_STOP - TIP_SIZE * 2, this.props.anchor.offsetY - marginTop)) + 'px'
-      });
-      marginTop = marginTop + 'px';
-      marginLeft = marginLeft + 'px';
-    }
-    this.setState({
-      placeAbove: preferred
-    });
-    let newPos = {
-      marginLeft: marginLeft,
-      marginTop: marginTop
-    };
-    if (!(0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.objectEqual)(this.state.position, newPos)) {
-      this.setState({
-        position: newPos
-      });
-    }
-  }
-  render() {
-    const prefix = this.props.dataTestPrefix || 'reaction-picker';
-    const style = {
-      ...this.state.position
-    };
-    if (this.state.placeAbove == 'top' || this.state.placeAbove == 'bottom') {
-      style['--tip-left'] = this.state.tipLeft;
-      style['--tip-top'] = 'unset';
-    } else {
-      style['--tip-left'] = 'unset';
-      style['--tip-top'] = this.state.tipTop;
-    }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      ref: this.rootRef,
-      className: `reaction-picker ${this.state.placeAbove}${this.state.expanded ? ' expanded' : ''} `,
-      role: "dialog",
-      "aria-label": "emoji picker",
-      style: style
-    }, (this.props.reactionList || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => {
-      const applied = (this.props.reactions || []).find(r => r.val == emo);
-      const count = applied && applied.count > 1 ? applied.count | 0 : false;
-      const mine = applied && applied.users.includes(this.props.myUserId);
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: emo,
-        ref: el => this.emojiRefs[i] = el,
-        className: `reaction-picker-btn${mine ? ' mine' : applied ? ' applied' : ''}`,
-        "data-testid": `${prefix}-${emo}`,
-        onClick: () => {
-          this.selectEmoji(emo);
-        },
-        onKeyDown: e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.selectEmoji(emo);
-          }
-        },
-        role: "button",
-        tabIndex: 0,
-        "aria-label": `react ${emo}`
-      }, emo, count && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        rect: true,
-        count: count,
-        size: "medium",
-        style: {
-          position: 'absolute',
-          right: '-2px',
-          bottom: '-2px'
-        }
-      }));
-    }), !this.state.expanded && (this.props.reactionList || []).length > REACTIONS_COLLAPSED_COUNT && react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "divider"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reaction-picker-btn",
-      role: "button",
-      "data-testid": "reaction-expand",
-      onClick: () => this.setState({
-        expanded: true
-      }, () => this.updatePosition())
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more"))));
-  }
-}
-/* harmony default export */ __webpack_exports__["default"] = (ReactionPicker);
-
-/***/ }),
-
-/***/ "./src/widgets/reaction-strip.jsx":
-/*!****************************************!*\
-  !*** ./src/widgets/reaction-strip.jsx ***!
-  \****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
-
-
-class ReactionStrip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  render() {
-    const more = this.props.reactions.length - this.props.maxReactions;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reactions"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      style: {
-        opacity: 0,
-        userSelect: 'none',
-        width: '0.01rem'
-      }
-    }, "0"), this.props.reactions.slice(0, this.props.maxReactions).map(r => {
-      const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: r.val,
-        "data-testid": `reaction-${r.val}`,
-        className: 'reaction' + (you ? ' active' : ''),
-        onClick: e => this.props.onReactionSelected(e, r.val)
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "emoji"
-      }, r.val), r.count > 1 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "count"
-      }, (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.shortenCount)(r.count)));
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `reaction-add${this.props.pickerShown || more > 0 ? ' active' : ''}`,
-      "data-testid": "reaction-add",
-      onMouseDown: e => {
-        e.stopPropagation();
-      },
-      onClick: this.props.onTogglePicker
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, more > 0 ? 'more_horiz' : 'thumb_up_off_alt')));
-  }
-}
-/* harmony default export */ __webpack_exports__["default"] = (ReactionStrip);
-
-/***/ }),
-
-/***/ "./src/widgets/received-marker.jsx":
-/*!*****************************************!*\
-  !*** ./src/widgets/received-marker.jsx ***!
-  \*****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
-
-
-
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  message_sending: {
-    id: "message_sending",
-    defaultMessage: [{
-      "type": 0,
-      "value": "sending..."
-    }]
-  },
-  message_sending_failed: {
-    id: "message_sending_failed",
-    defaultMessage: [{
-      "type": 0,
-      "value": "failed"
-    }]
-  },
-  message_edited_marker: {
-    id: "message_edited_marker",
-    defaultMessage: [{
-      "type": 0,
-      "value": ", edited"
-    }]
-  }
-});
-class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  render() {
-    const {
-      formatMessage
-    } = this.props.intl;
-    let timestamp;
-    if (this.props.received <= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENDING) {
-      timestamp = formatMessage(messages.message_sending);
-    } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED || this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FATAL) {
-      timestamp = formatMessage(messages.message_sending_failed);
-    } else {
-      timestamp = this.props.timestamp.toLocaleTimeString(this.props.intl.locale, {
-        timeStyle: 'short'
-      });
-    }
-    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.deliveryMarker)(this.props.received);
-    const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: 'm-icon small ' + icon.color
-    }, icon.name) : null;
-    const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "timestamp"
-    }, timestamp, edited, '\u00a0', marker);
-  }
-}
-;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ReceivedMarker));
-
-/***/ }),
-
 /***/ "./src/widgets/search-contacts.jsx":
 /*!*****************************************!*\
   !*** ./src/widgets/search-contacts.jsx ***!
@@ -20213,7 +16323,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     super(props);
     this.state = {
       edited: false,
-      search: ''
+      search: this.props.initialQuery || ''
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -20256,7 +16366,8 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     if (e.key === 'Enter') {
       this.handleSearch(e);
     } else if (e.key === 'Escape') {
-      this.handleClear();
+      e.stopPropagation();
+      this.handleClear(e);
     }
   }
   render() {
@@ -20286,378 +16397,6 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
 }
 ;
-
-/***/ }),
-
-/***/ "./src/widgets/send-message.jsx":
-/*!**************************************!*\
-  !*** ./src/widgets/send-message.jsx ***!
-  \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-
-
-
-const AudioRecorder = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_webm-duration-fix_lib_index_js"), __webpack_require__.e("src_widgets_audio-recorder_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx")));
-
-
-
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  messaging_disabled: {
-    id: "messaging_disabled_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Messaging disabled"
-    }]
-  },
-  type_new_message: {
-    id: "new_message_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "New message"
-    }]
-  },
-  add_image_caption: {
-    id: "image_caption_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Image caption"
-    }]
-  },
-  file_attachment_too_large: {
-    id: "file_attachment_too_large",
-    defaultMessage: [{
-      "type": 0,
-      "value": "The file size "
-    }, {
-      "type": 1,
-      "value": "size"
-    }, {
-      "type": 0,
-      "value": " exceeds the "
-    }, {
-      "type": 1,
-      "value": "limit"
-    }, {
-      "type": 0,
-      "value": " limit."
-    }]
-  },
-  cannot_initiate_upload: {
-    id: "cannot_initiate_file_upload",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Cannot initiate file upload."
-    }]
-  },
-  icon_title_record_voice: {
-    id: "icon_title_record_voice",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Record voice message"
-    }]
-  },
-  icon_title_attach_file: {
-    id: "icon_title_attach_file",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Attach file"
-    }]
-  },
-  icon_title_add_image: {
-    id: "icon_title_add_image",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Add image"
-    }]
-  },
-  icon_title_send: {
-    id: "icon_title_send",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Send message"
-    }]
-  }
-});
-class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      quote: null,
-      message: '',
-      audioRec: false,
-      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
-    };
-    this.keypressTimestamp = 0;
-    this.handlePasteEvent = this.handlePasteEvent.bind(this);
-    this.handleAttachImage = this.handleAttachImage.bind(this);
-    this.handleAttachFile = this.handleAttachFile.bind(this);
-    this.handleAttachAudio = this.handleAttachAudio.bind(this);
-    this.handleSend = this.handleSend.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleMessageTyping = this.handleMessageTyping.bind(this);
-    this.handleDropAttach = this.handleDropAttach.bind(this);
-    this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.formatReply = this.formatReply.bind(this);
-  }
-  componentDidMount() {
-    if (this.messageEditArea) {
-      this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
-      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
-        this.messageEditArea.focus();
-      }
-    }
-    this.setState({
-      quote: this.formatReply()
-    });
-  }
-  componentWillUnmount() {
-    if (this.messageEditArea) {
-      this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
-    }
-  }
-  componentDidUpdate(prevProps) {
-    if (this.messageEditArea) {
-      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
-        this.messageEditArea.focus();
-      }
-      this.messageEditArea.style.height = '0px';
-      this.messageEditArea.style.height = this.messageEditArea.scrollHeight + 'px';
-    }
-    if (prevProps.topicName != this.props.topicName) {
-      this.setState({
-        message: this.props.initMessage || '',
-        audioRec: false,
-        quote: null
-      });
-    } else if (prevProps.initMessage != this.props.initMessage) {
-      const msg = this.props.initMessage || '';
-      this.setState({
-        message: msg
-      }, _ => {
-        this.messageEditArea.scrollTop = this.messageEditArea.scrollHeight;
-        this.messageEditArea.setSelectionRange(msg.length, msg.length);
-      });
-    }
-    if (prevProps.reply != this.props.reply) {
-      this.setState({
-        quote: this.formatReply()
-      });
-    }
-  }
-  formatReply() {
-    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
-      formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-    }) : null;
-  }
-  handlePasteEvent(e) {
-    if (this.props.disabled) {
-      return;
-    }
-    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.filePasted)(e, file => {
-      this.props.onAttachImage(file);
-    }, file => {
-      this.props.onAttachFile(file);
-    }, this.props.onError)) {
-      e.preventDefault();
-    }
-  }
-  handleAttachImage(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      this.props.onAttachImage(e.target.files[0]);
-    }
-    e.target.value = '';
-  }
-  handleAttachFile(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      this.props.onAttachFile(e.target.files[0]);
-    }
-    e.target.value = '';
-  }
-  handleDropAttach(files) {
-    if (files && files.length > 0) {
-      this.props.onAttachFile(files[0]);
-    }
-  }
-  handleAttachAudio(url, preview, duration) {
-    this.setState({
-      audioRec: false
-    });
-    this.props.onAttachAudio(url, preview, duration);
-  }
-  handleSend(e) {
-    e.preventDefault();
-    const message = this.state.message.trim();
-    if (message || this.props.acceptBlank || this.props.noInput) {
-      this.props.onSendMessage(message);
-      this.setState({
-        message: ''
-      });
-    }
-  }
-  handleKeyPress(e) {
-    if (this.state.audioRec) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    if (e.key === 'Enter') {
-      if (this.props.sendOnEnter == 'plain') {
-        if (!e.shiftKey) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.handleSend(e);
-        }
-      } else {
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.handleSend(e);
-        }
-      }
-    }
-  }
-  handleMessageTyping(e) {
-    this.setState({
-      message: e.target.value
-    });
-    if (this.props.onKeyPress) {
-      const now = new Date().getTime();
-      if (now - this.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY) {
-        this.props.onKeyPress();
-        this.keypressTimestamp = now;
-      }
-    }
-  }
-  handleQuoteClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (this.props.reply && this.props.onQuoteClick) {
-      const replyToSeq = this.props.reply.seq;
-      this.props.onQuoteClick(replyToSeq);
-    }
-  }
-  render() {
-    const {
-      formatMessage
-    } = this.props.intl;
-    const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-    const sendIcon = this.props.reply && this.props.reply.editing ? 'check_circle' : 'send';
-    const quote = this.state.quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "reply-quote-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cancel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onCancelReply();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), this.state.quote) : null;
-    const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "send-message-wrapper"
-    }, !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "send-message-panel"
-    }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile && !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.attachImage.click();
-      },
-      title: formatMessage(messages.icon_title_add_image)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon secondary"
-    }, "photo")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.attachFile.click();
-      },
-      title: formatMessage(messages.icon_title_attach_file)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon secondary"
-    }, "attach_file"))) : null, this.props.noInput ? quote || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr thin"
-    }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AudioRecorder, {
-      onRecordingProgress: _ => this.props.onKeyPress(true),
-      onDeleted: _ => this.setState({
-        audioRec: false
-      }),
-      onFinished: this.handleAttachAudio
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-      id: "send-message-input",
-      placeholder: prompt,
-      value: this.state.message,
-      onChange: this.handleMessageTyping,
-      onKeyDown: this.handleKeyPress,
-      ref: ref => {
-        this.messageEditArea = ref;
-      }
-    }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleSend,
-      title: formatMessage(messages.icon_title_send)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon fill"
-    }, sendIcon)) : !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.setState({
-          audioRec: true
-        });
-      },
-      title: formatMessage(messages.icon_title_record_voice)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon fill"
-    }, "mic")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "file",
-      ref: ref => {
-        this.attachFile = ref;
-      },
-      onChange: this.handleAttachFile,
-      style: {
-        display: 'none'
-      }
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "file",
-      ref: ref => {
-        this.attachImage = ref;
-      },
-      accept: "image/*, video/*",
-      onChange: this.handleAttachImage,
-      style: {
-        display: 'none'
-      }
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "writing-disabled"
-    }, prompt)));
-  }
-}
-;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(SendMessage));
 
 /***/ }),
 
@@ -20710,7 +16449,7 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       id: "self-avatar",
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
+      authorizeURL: this.props.tinode.authorizeURL,
       avatar: avatar,
       topic: this.props.myUserId,
       title: this.props.title
@@ -20941,6 +16680,131 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   }
 }
 ;
+
+/***/ }),
+
+/***/ "./src/widgets/the-card-mini.jsx":
+/*!***************************************!*\
+  !*** ./src/widgets/the-card-mini.jsx ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+
+
+
+
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  unknown_name: {
+    id: "unknown_name",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Unknown"
+    }]
+  }
+});
+class TheCardMini extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.handleDownload = this.handleDownload.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
+  }
+  handleDownload(e) {
+    e.preventDefault();
+    try {
+      const vcard = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.exportVCard(this.props.content);
+      const blob = new Blob([vcard], {
+        type: 'text/vcard'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = (this.props.content.fn || 'contact') + '.vcf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error("Failed to download vcard", err);
+      if (this.props.onError) {
+        this.props.onError("Failed to download vcard", 'err');
+      }
+    }
+  }
+  handleMessage(e) {}
+  render() {
+    const card = this.props.content;
+    if (!card) {
+      return null;
+    }
+    const uid = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFirstTinodeID(card);
+    const contacts = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getEmails(card).concat(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhones(card));
+    const org = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getOrg(card);
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-card"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-body"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      authorizeURL: this.props.authorizeURL,
+      topic: uid || 'usr123XXX',
+      avatar: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhotoUrl(card) || true,
+      title: card.fn
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "name-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "name"
+    }, card.fn || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, messages.unknown_name)), org && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "org"
+    }, org))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-actions"
+    }, uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      className: "flat-button",
+      "data-val": uid,
+      onClick: this.props.onChatClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "chat_now",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Chat"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "divider"
+    })) : contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      className: "flat-button",
+      "data-val": contacts.join(','),
+      onClick: this.props.onFindClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "find_user",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Find"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "divider"
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      className: "flat-button",
+      onClick: this.handleDownload
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "save_action",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Save"
+      }]
+    }))));
+  }
+}
+;
+/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(TheCardMini));
 
 /***/ }),
 
@@ -21400,144 +17264,6 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
 }
 ;
-
-/***/ }),
-
-/***/ "./src/widgets/video-preview.jsx":
-/*!***************************************!*\
-  !*** ./src/widgets/video-preview.jsx ***!
-  \***************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-
-
-
-
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  unrecognized_video_format: {
-    id: "unrecognized_video_format",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Format of this video is not recognized"
-    }]
-  }
-});
-class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.handleSendVideo = this.handleSendVideo.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-  handleKeyDown(e) {
-    if (this.props.onSendMessage) {
-      return;
-    }
-    e.preventDefault();
-    if (e.key === 'Escape') {
-      this.props.onClose();
-    }
-  }
-  handleSendVideo(caption) {
-    this.props.onClose();
-    const params = {
-      width: this.videoRef.current.videoWidth,
-      height: this.videoRef.current.videoHeight,
-      duration: this.videoRef.current.duration * 1000 | 0,
-      mime: this.props.content.mime,
-      name: this.props.content.filename
-    };
-    if (params.width == 0 || params.height == 0) {
-      this.props.onError(this.props.intl.formatMessage(messages.unrecognized_video_format), 'err');
-      return;
-    }
-    const canvas = document.createElement('canvas');
-    canvas.width = params.width;
-    canvas.height = params.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(this.videoRef.current, 0, 0, canvas.width, canvas.height);
-    ctx.canvas.toBlob(preview => this.props.onSendMessage(caption, this.props.content.blob, preview, params), 'image/jpeg', 0.75);
-  }
-  render() {
-    if (!this.props.content) {
-      return null;
-    }
-    const width = this.props.content.width || '-';
-    const height = this.props.content.height || '-';
-    const controlist = this.props.onSendMessage ? 'nodownload' : '';
-    const autoPlay = !this.props.onSendMessage;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onClose();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      className: "image-preview",
-      controls: true,
-      controlsList: controlist,
-      disablePictureInPicture: true,
-      ref: this.videoRef,
-      autoPlay: autoPlay,
-      src: this.props.tinode.authorizeURL(this.props.content.url),
-      poster: this.props.content.preview,
-      alt: this.props.content.filename
-    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      messagePrompt: "add_image_caption",
-      acceptBlank: true,
-      tinode: this.props.tinode,
-      reply: this.props.reply,
-      onCancelReply: this.props.onCancelReply,
-      onSendMessage: this.handleSendVideo,
-      onError: this.props.onError
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_file_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "File name:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.filename
-    }, this.props.content.filename))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_content_type",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Content type:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_size",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Size:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))));
-  }
-}
-;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(VideoPreview));
 
 /***/ }),
 

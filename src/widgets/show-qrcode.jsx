@@ -23,6 +23,7 @@ export default class ShowQRCode extends React.PureComponent {
       <div className="panel-form-column">
         <br />
         <div className="qr-code" ref={this.qrCodeRef} />
+        <div><tt>{this.props.uri}</tt></div>
         <div className="dialog-buttons">
           <button className="outline" onClick={this.props.onCancel}>
             <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />

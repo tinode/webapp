@@ -1218,7 +1218,7 @@
   "label_description": {
     "translation": "Описание",
     "defaultMessage": "Description",
-    "description": "Label for editing topic description",
+    "description": "Label for description of user or topic",
     "missing": false,
     "obsolete": false
   },
@@ -1976,5 +1976,68 @@
     "description": "Description of max reactions per message",
     "missing": true,
     "obsolete": false
+  },
+  "unknown_name": {
+    "translation": "",
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing",
+    "missing": true,
+    "obsolete": false
+  },
+  "save_action": {
+    "translation": "",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": true,
+    "obsolete": false
+  },
+  "cannot_parse_vcard": {
+    "translation": "",
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed",
+    "missing": true,
+    "obsolete": false
+  },
+  "chat_now": {
+    "translation": "",
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card",
+    "missing": true,
+    "obsolete": false
+  },
+  "find_user": {
+    "translation": "",
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_contact_card": {
+    "translation": "",
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_full_name": {
+    "translation": "",
+    "defaultMessage": "Full name",
+    "description": "Label for full name",
+    "missing": true,
+    "obsolete": true
+  },
+  "label_organization": {
+    "translation": "",
+    "defaultMessage": "Organization",
+    "description": "Label for organization",
+    "missing": true,
+    "obsolete": true
   }
 }

@@ -28,9 +28,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_topic_reactions_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/topic-reactions.jsx */ "./src/widgets/topic-reactions.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 
 
 
@@ -207,6 +205,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
     this.handleShowQRCode = this.handleShowQRCode.bind(this);
     this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this);
+    this.handleShare = this.handleShare.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
@@ -289,11 +288,11 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       sharer: acs && acs.isSharer(),
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
-      fullName: isSelf ? props.intl.formatMessage(messages.self_topic_name) : (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.truncateString)(topic.public && topic.public.fn, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_TITLE_LENGTH),
-      description: isSelf ? props.intl.formatMessage(messages.self_topic_comment) : (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.truncateString)(topic.public && topic.public.note, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_TOPIC_DESCRIPTION_LENGTH),
+      fullName: isSelf ? props.intl.formatMessage(messages.self_topic_name) : (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.truncateString)(topic.public && topic.public.fn, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_TITLE_LENGTH),
+      description: isSelf ? props.intl.formatMessage(messages.self_topic_comment) : (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.truncateString)(topic.public && topic.public.note, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
-      private: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.truncateString)(topic.private && topic.private.comment, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_TITLE_LENGTH),
+      private: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.truncateString)(topic.private && topic.private.comment, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_TITLE_LENGTH),
       archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
@@ -339,7 +338,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     this.setState({
       avatar: img
     });
-    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_17__.theCard)(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR), null);
+    this.props.onTopicDescUpdate(this.props.topic, new tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR), null);
   }
   handleMuted(ignored, checked) {
     this.setState({
@@ -466,6 +465,12 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         });
       }, _config_js__WEBPACK_IMPORTED_MODULE_15__.TOAST_DURATION);
     });
+  }
+  handleShare(e) {
+    e.preventDefault();
+    const card = new tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard(this.state.fullName, this.state.avatar, null, this.state.description);
+    tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.setTinodeID(card, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.topic);
+    this.props.onShareTheCard(card);
   }
   handleShowAddMembers(e) {
     e.preventDefault();
@@ -709,7 +714,12 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       onClick: this.handleShowQRCode
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "m-icon"
-    }, "qr_code")), "\xA0")), alias ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "qr_code")), "\xA0 \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleShare
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "share")), "\xA0")), alias ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -1425,7 +1435,7 @@ class ShowQRCode extends (react__WEBPACK_IMPORTED_MODULE_1___default().PureCompo
     }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       className: "qr-code",
       ref: this.qrCodeRef
-    }), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("tt", null, this.props.uri)), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
       className: "outline",

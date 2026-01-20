@@ -363,7 +363,7 @@ class TopicDescEdit extends React.Component {
           <div className="group">
             <div><label className="small">
               <FormattedMessage id="label_description" defaultMessage="Description"
-                description="Label for editing topic description" />
+                description="Label for description of user or topic" />
             </label></div>
             <div>
               <FormattedMessage id="description_editing_placeholder"

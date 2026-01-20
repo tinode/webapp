@@ -161,7 +161,7 @@ export default class NewTopicGroup extends React.PureComponent {
           <div className="group">
             <label className="small" htmlFor="new-topic-desc">
               <FormattedMessage id="label_description" defaultMessage="Description"
-                description="Label for editing topic description" />
+                description="Label for description of user or topic" />
             </label>
             <FormattedMessage id="description_editing_placeholder" defaultMessage="Description (optional)"
               description="Placeholder for editing topic description">{

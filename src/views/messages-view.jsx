@@ -1,17 +1,17 @@
 // Panel with a chat.
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import { Drafty, Tinode } from 'tinode-sdk';
+import { Drafty, Tinode, TheCard } from 'tinode-sdk';
 
-import CallPanel from '../widgets/call-panel.jsx';
+const CallPanel = React.lazy(_ => import('../widgets/call-panel.jsx'));
 import ChatMessage from '../widgets/chat-message.jsx';
 import ContactBadges from '../widgets/contact-badges.jsx';
-import DocPreview from '../widgets/doc-preview.jsx';
+const DocPreview = React.lazy(_ => import('../widgets/doc-preview.jsx'));
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
-import ImagePreview from '../widgets/image-preview.jsx';
+const ImagePreview = React.lazy(_ => import('../widgets/image-preview.jsx'));
 import Invitation from '../widgets/invitation.jsx';
 import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
@@ -19,13 +19,14 @@ import LogoView from './logo-view.jsx';
 import MetaMessage from '../widgets/meta-message.jsx';
 import PinnedMessages from '../widgets/pinned-messages.jsx';
 import SendMessage from '../widgets/send-message.jsx';
-import VideoPreview from '../widgets/video-preview.jsx';
+const TheCardPreview = React.lazy(_ => import('../widgets/the-card-preview.jsx'));
+const VideoPreview = React.lazy(_ => import('../widgets/video-preview.jsx'));
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, IMMEDIATE_P2P_SUBSCRIPTION,
   DRAFTY_FR_MIME_TYPE_LEGACY, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM,
   MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
-import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+import { blobToBase64, fileToBase64, imageScaled, importVCard, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, relativeDateFormat, shortDateFormat } from '../lib/strformat.js';
 
@@ -104,6 +105,11 @@ const messages = defineMessages({
       'other {{count, number} members}}',
     description: 'Count of group topic members'
   },
+  cannot_parse_vcard: {
+    id: 'cannot_parse_vcard',
+    defaultMessage: 'Cannot parse vCard file.',
+    description: 'Error message when vCard file cannot be parsed'
+  }
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -144,6 +150,7 @@ class MessagesView extends React.Component {
     this.sendVideoAttachment = this.sendVideoAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
+    this.sendTheCardAttachment = this.sendTheCardAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -390,11 +397,21 @@ class MessagesView extends React.Component {
       };
 
       if (nextProps.forwardMessage) {
-        // We are forwarding a message. Show preview.
-        nextState.reply = {
-          content: nextProps.forwardMessage.preview,
-          seq: null
-        };
+        if (nextProps.forwardMessage.content) {
+          const content = nextProps.forwardMessage.content;
+          const size = content?.length || (content?.size || 0);
+          nextState.docPreview = {
+            object: content,
+            type: nextProps.forwardMessage.type,
+            size: size
+          };
+        } else {
+          // We are forwarding a message. Show preview.
+          nextState.reply = {
+            content: nextProps.forwardMessage.preview,
+            seq: null
+          };
+        }
       } else {
         nextState.reply = null;
       }
@@ -937,7 +954,14 @@ class MessagesView extends React.Component {
     if (this.state.videoPreview && this.state.videoPreview.url) {
       URL.revokeObjectURL(this.state.videoPreview.url);
     }
-    this.setState({ imagePostview: null, imagePreview: null, docPreview: null, videoPreview: null, videoPostview: null});
+    this.setState({
+      imagePostview: null,
+      imagePreview: null,
+      docPreview: null,
+      videoPreview: null,
+      videoPostview: null,
+    });
+    this.props.onCancelForwardMessage();
   }
 
   handleFormResponse(action, text, data) {
@@ -1037,7 +1061,7 @@ class MessagesView extends React.Component {
   // sendMessage sends the message with an optional subscription to topic first.
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
-    if (this.props.forwardMessage) {
+    if (!msg && this.props.forwardMessage) {
       // We are forwarding a message.
       msg = this.props.forwardMessage.msg;
       head = this.props.forwardMessage.head;
@@ -1075,13 +1099,22 @@ class MessagesView extends React.Component {
       });
   }
 
-  // Send attachment as Drafty message:
+  // sendFileAttachment sends the file as Drafty message:
   // - if file is too large, upload it and send a s link.
   // - if file is small enough, just send it in-band.
   sendFileAttachment(file) {
     // Server-provided limit reduced for base64 encoding and overhead.
     const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
+
+    if (TheCard.isFileSupported(file.type, file.name) || file.type == TheCard.contentType) {
+      // This is a vCard file, try to convert and send as TheCard.
+      if (this.sendTheCardAttachment(file, maxInbandAttachmentSize)) {
+        // Successfully sent as TheCard.
+        return;
+      }
+      // Sending as TheCard failed, fall through to sending as generic file attachment.
+    }
 
     // If the attachment is a JSON file, then use 'application/octet-stream' instead of 'application/json'.
     // This is a temporary workaround for the collision with the 'application/json' MIME type of form responses.
@@ -1115,6 +1148,29 @@ class MessagesView extends React.Component {
         })))
         .catch(err => this.props.onError(err.message, 'err'));
     }
+  }
+
+  // Convert attached vCard to TheCard and send.
+  sendTheCardAttachment(file, maxInbandAttachmentSize) {
+    if (file.size > maxInbandAttachmentSize) {
+      // Cannot convert to TheCard, send as a generic file attachment instead.
+      return false;
+    }
+
+    if (file.type == TheCard.contentType) {
+      // Already TheCard, no need to convert.
+      this.sendMessage(Drafty.appendTheCard(null, file.object));
+      return true;
+    }
+
+    importVCard(file)
+      .then(card => {
+        this.sendMessage(Drafty.appendTheCard(null, card));
+      })
+      .catch(err => {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_parse_vcard, {error: err.message}), 'err');
+      });
+    return true;
   }
 
   // handleAttachFile method is called when [Attach file] button is clicked: launch attachment preview.
@@ -1523,85 +1579,109 @@ class MessagesView extends React.Component {
 
     // P2P call is an overlay, not a separate component because it cannot be
     // re-mounted between full screen/minimized.
-    const overlay = this.state.rtcPanel ? (
-        <CallPanel
-          topic={this.state.topic}
-          seq={this.props.callSeq}
-          callState={this.props.callState}
-          callAudioOnly={this.props.callAudioOnly}
-          tinode={this.props.tinode}
-          title={this.state.title}
-          avatar={this.state.avatar || true}
-          minimized={this.state.minimizedCallPanel}
-
-          onError={this.props.onError}
-          onHangup={this.handleCallHangup}
-          onToggleMinimize={this.handleCallPanelToggle}
-          onInvite={this.props.onCallInvite}
-          onSendOffer={this.props.onCallSendOffer}
-          onIceCandidate={this.props.onCallIceCandidate}
-          onSendAnswer={this.props.onCallSendAnswer} />
-      ) : null;
+    const overlay = this.state.rtcPanel &&
+        <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+          <CallPanel
+            topic={this.state.topic}
+            seq={this.props.callSeq}
+            callState={this.props.callState}
+            callAudioOnly={this.props.callAudioOnly}
+            tinode={this.props.tinode}
+            title={this.state.title}
+            avatar={this.state.avatar || true}
+            minimized={this.state.minimizedCallPanel}
+            onError={this.props.onError}
+            onHangup={this.handleCallHangup}
+            onToggleMinimize={this.handleCallPanelToggle}
+            onInvite={this.props.onCallInvite}
+            onSendOffer={this.props.onCallSendOffer}
+            onIceCandidate={this.props.onCallIceCandidate}
+            onSendAnswer={this.props.onCallSendAnswer} />
+        </Suspense>;
 
     let component;
     if (!this.state.topic) {
-      component = (
-        <LogoView
+      component = <LogoView
           serverVersion={this.props.serverVersion}
-          serverAddress={this.props.serverAddress} />
-      );
+          serverAddress={this.props.serverAddress} />;
+
     } else {
       let component2;
       if (this.state.imagePreview) {
         // Preview image before sending.
         component2 = (
-          <ImagePreview
-            content={this.state.imagePreview}
-            tinode={this.props.tinode}
-            reply={this.state.reply}
-            onCancelReply={this.handleCancelReply}
-            onClose={this.handleClosePreview}
-            onSendMessage={this.sendImageAttachment} />
+          <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+            <ImagePreview
+              content={this.state.imagePreview}
+              tinode={this.props.tinode}
+              reply={this.state.reply}
+              onCancelReply={this.handleCancelReply}
+              onClose={this.handleClosePreview}
+              onSendMessage={this.sendImageAttachment} />
+          </Suspense>
         );
       } else if (this.state.videoPreview) {
           // Preview video.
-        component2 = (
-          <VideoPreview
-            content={this.state.videoPreview}
-            tinode={this.props.tinode}
-            reply={this.state.reply}
-            onError={this.props.onError}
-            onCancelReply={this.handleCancelReply}
-            onClose={this.handleClosePreview}
-            onSendMessage={this.sendVideoAttachment} />
-        );
+        component2 = <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+            <VideoPreview
+              content={this.state.videoPreview}
+              tinode={this.props.tinode}
+              reply={this.state.reply}
+              onError={this.props.onError}
+              onCancelReply={this.handleCancelReply}
+              onClose={this.handleClosePreview}
+              onSendMessage={this.sendVideoAttachment} />
+          </Suspense>;
+
       } else if (this.state.imagePostview) {
         // Expand received image.
-        component2 = (
-          <ImagePreview
-            content={this.state.imagePostview}
-            onClose={this.handleClosePreview} />
-        );
+        component2 = <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+            <ImagePreview
+              content={this.state.imagePostview}
+              onClose={this.handleClosePreview} />
+          </Suspense>;
+
       } else if (this.state.videoPostview) {
         // Play received video.
-        component2 = (
-          <VideoPreview
-            content={this.state.videoPostview}
-            tinode={this.props.tinode}
-            onError={this.props.onError}
-            onClose={this.handleClosePreview} />
-        );
+        component2 = <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+            <VideoPreview
+              content={this.state.videoPostview}
+              tinode={this.props.tinode}
+              onError={this.props.onError}
+              onClose={this.handleClosePreview} />
+          </Suspense>;
+
       } else if (this.state.docPreview) {
         // Preview attachment before sending.
-        component2 = (
-          <DocPreview
-            content={this.state.docPreview}
-            tinode={this.props.tinode}
-            reply={this.state.reply}
-            onCancelReply={this.handleCancelReply}
-            onClose={this.handleClosePreview}
-            onSendMessage={this.sendFileAttachment} />
-        );
+        if (TheCard.isFileSupported(this.state.docPreview.type, this.state.docPreview.name) ||
+            this.state.docPreview.type == TheCard.contentType) {
+          component2 = <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+            description="Message shown when component is loading"/></div>}>
+            <TheCardPreview
+              content={this.state.docPreview}
+              tinode={this.props.tinode}
+              reply={this.state.reply}
+              onCancelReply={this.handleCancelReply}
+              onClose={this.handleClosePreview}
+              onSendMessage={this.sendFileAttachment} />
+          </Suspense>;
+        } else {
+          component2 = <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+              description="Message shown when component is loading"/></div>}>
+              <DocPreview
+                content={this.state.docPreview}
+                tinode={this.props.tinode}
+                reply={this.state.reply}
+                onCancelReply={this.handleCancelReply}
+                onClose={this.handleClosePreview}
+                onSendMessage={this.sendFileAttachment} />
+            </Suspense>;
+        }
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType() || topic.chan;
@@ -1820,7 +1900,7 @@ class MessagesView extends React.Component {
                 null}
               <div className="avatar-box">
                 <LetterTile
-                  tinode={this.props.tinode}
+                  authorizeURL={this.props.tinode.authorizeURL}
                   avatar={avatar}
                   topic={this.state.topic}
                   title={this.state.title}

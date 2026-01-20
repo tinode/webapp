@@ -17,7 +17,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../img/bkg/index.json */ "./img/bkg/index.json");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../img/bkg/index.json */ "./img/bkg/index.json");
+
 
 
 
@@ -26,16 +28,19 @@ __webpack_require__.r(__webpack_exports__);
 class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    const type = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.wallpaperTypeFromUrl)(this.props.wallpaper);
+    const name = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.wallpaperNameFromUrl)(this.props.wallpaper);
     this.state = {
-      tab: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type,
-      selectedType: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type,
-      wallpaper: _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__[_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type][_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.index].name,
-      blur: 0
+      tab: type || _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type,
+      selectedType: type || _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type,
+      wallpaper: name || _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__[_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type][_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.index].name,
+      blur: this.props.wallpaperBlur | 0
     };
     this.blurValues = [0, 1, 2, 4, 8, 16];
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleWallpaperSelected = this.handleWallpaperSelected.bind(this);
     this.handleBlurChanged = this.handleBlurChanged.bind(this);
+    this.hasChanged = this.hasChanged.bind(this);
   }
   handleTabClick(e) {
     e.preventDefault();
@@ -47,6 +52,9 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   handleWallpaperSelected(e) {
     let index, type, blur;
     if (!e) {
+      if (!this.hasChanged()) {
+        return;
+      }
       type = _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type;
       index = _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.index;
       blur = 0;
@@ -56,8 +64,8 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       index = e.currentTarget.dataset.id;
       blur = type == 'patt' ? 0 : this.state.blur;
     }
-    const fname = _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__[type][index].name;
-    const size = type == 'patt' ? _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__[type][index].size : 0;
+    const fname = _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__[type][index].name;
+    const size = type == 'patt' ? _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__[type][index].size : 0;
     this.setState({
       tab: type,
       wallpaper: fname,
@@ -76,16 +84,19 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       this.props.onWallpaperSelected(`../${_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path}${this.state.wallpaper}`, 0, this.blurValues[blur]);
     }
   }
+  hasChanged() {
+    return this.state.selectedType != _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type || this.state.wallpaper != _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__[_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type][_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.index].name || this.state.blur != 0;
+  }
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row clean-clickable"
+      className: `panel-form-row${this.hasChanged() ? ' clean-clickable' : ''}`
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      className: "flat-button",
+      className: `flat-button${this.hasChanged() ? '' : ' disabled'}`,
       onClick: () => this.handleWallpaperSelected(null)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
+      className: "material-icons"
     }, "undo"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_restore",
       defaultMessage: [{
@@ -123,7 +134,7 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "scrollable-panel"
     }, this.state.tab === 'patt' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "image-grid"
-    }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__.patt.map((img, idx) => {
+    }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__.patt.map((img, idx) => {
       const selected = this.state.wallpaper === img.name ? ' selected' : '';
       const dark = this.props.colorSchema == 'dark' ? 'inverted' : null;
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -165,7 +176,7 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       onChange: this.handleBlurChanged
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "image-grid"
-    }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_4__.img.map((img, idx) => {
+    }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__.img.map((img, idx) => {
       const selected = this.state.wallpaper === img.name ? ' selected' : '';
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: idx,

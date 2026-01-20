@@ -1225,7 +1225,7 @@
   "label_description": {
     "translation": "Description",
     "defaultMessage": "Description",
-    "description": "Label for editing topic description",
+    "description": "Label for description of user or topic",
     "missing": false,
     "obsolete": false
   },
@@ -1962,5 +1962,68 @@
     "description": "Description of max reactions per message",
     "missing": false,
     "obsolete": false
+  },
+  "unknown_name": {
+    "translation": "Unknown",
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_action": {
+    "translation": "Save",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_parse_vcard": {
+    "translation": "Cannot parse vCard file.",
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_now": {
+    "translation": "Chat",
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "find_user": {
+    "translation": "Find",
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contact_card": {
+    "translation": "Contact Card",
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Contacts",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_full_name": {
+    "translation": "Full name",
+    "defaultMessage": "Full name",
+    "description": "Label for full name",
+    "missing": false,
+    "obsolete": true
+  },
+  "label_organization": {
+    "translation": "Organization",
+    "defaultMessage": "Organization",
+    "description": "Label for organization",
+    "missing": false,
+    "obsolete": true
   }
 }

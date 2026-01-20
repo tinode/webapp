@@ -3,17 +3,20 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import HashNavigation from '../lib/navigation.js';
 import { WALLPAPER_DEFAULTS } from '../config.js';
+import { wallpaperNameFromUrl, wallpaperTypeFromUrl } from '../lib/utils.js';
 import imageIndex from '../../img/bkg/index.json';
 
 export default class WallpapersView extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    const type = wallpaperTypeFromUrl(this.props.wallpaper);
+    const name = wallpaperNameFromUrl(this.props.wallpaper);
     this.state = {
-      tab: WALLPAPER_DEFAULTS.type, // currently selected tab: 'patt' | 'img'
-      selectedType: WALLPAPER_DEFAULTS.type, // type of the selected wallpaper.
-      wallpaper: imageIndex[WALLPAPER_DEFAULTS.type][WALLPAPER_DEFAULTS.index].name,
-      blur: 0,
+      tab: type || WALLPAPER_DEFAULTS.type, // currently selected tab: 'patt' | 'img'
+      selectedType: type || WALLPAPER_DEFAULTS.type, // type of the selected wallpaper.
+      wallpaper: name || imageIndex[WALLPAPER_DEFAULTS.type][WALLPAPER_DEFAULTS.index].name,
+      blur: this.props.wallpaperBlur | 0,
     };
 
     this.blurValues = [0, 1, 2, 4, 8, 16];
@@ -21,6 +24,7 @@ export default class WallpapersView extends React.PureComponent {
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleWallpaperSelected = this.handleWallpaperSelected.bind(this);
     this.handleBlurChanged = this.handleBlurChanged.bind(this);
+    this.hasChanged = this.hasChanged.bind(this);
   }
 
   handleTabClick(e) {
@@ -32,6 +36,10 @@ export default class WallpapersView extends React.PureComponent {
   handleWallpaperSelected(e) {
     let index, type, blur
     if (!e) {
+      if (!this.hasChanged()) {
+        return;
+      }
+
       // Restore default.
       type = WALLPAPER_DEFAULTS.type;
       index = WALLPAPER_DEFAULTS.index;
@@ -58,12 +66,19 @@ export default class WallpapersView extends React.PureComponent {
     }
   }
 
+  hasChanged() {
+    return this.state.selectedType != WALLPAPER_DEFAULTS.type ||
+      this.state.wallpaper != imageIndex[WALLPAPER_DEFAULTS.type][WALLPAPER_DEFAULTS.index].name ||
+      this.state.blur != 0;
+  }
+
   render() {
     return (
       <div className="flex-column">
-        <div className="panel-form-row clean-clickable">
-          <a className="flat-button" onClick={() => this.handleWallpaperSelected(null)}>
-            <i className="m-icon">undo</i>&nbsp;
+        <div className={`panel-form-row${this.hasChanged() ? ' clean-clickable' : ''}`}>
+          <a className={`flat-button${this.hasChanged() ? '' : ' disabled'}`}
+            onClick={() => this.handleWallpaperSelected(null)}>
+            <i className="material-icons">undo</i>&nbsp;
             <FormattedMessage id="button_restore" defaultMessage="Restore default" description="Reset setting to default"/>
           </a>
         </div>

@@ -15,7 +15,7 @@ import CallIncoming from '../widgets/call-incoming.jsx';
 const PhoneCountrySelector = React.lazy(_ => import('../widgets/phone-country-selector.jsx'));
 
 const InfoView = React.lazy(_ => import('./info-view.jsx'));
-import MessagesView from './messages-view.jsx';
+const MessagesView = React.lazy(_ => import('./messages-view.jsx'));
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_COLOR_SCHEME, DEFAULT_P2P_ACCESS_MODE, DEFAULT_TEXT_SIZE, FORWARDED_PREVIEW_LENGTH,
@@ -108,6 +108,7 @@ class TinodeWeb extends React.Component {
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
+    this.handleEscapeKey = this.handleEscapeKey.bind(this);
     this.handleColorSchemeChange = this.handleColorSchemeChange.bind(this);
     this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
@@ -165,6 +166,7 @@ class TinodeWeb extends React.Component {
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
     this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
     this.handleReportTopic = this.handleReportTopic.bind(this);
+    this.handleShareTheCard = this.handleShareTheCard.bind(this);
     this.handleShowContextMenu = this.handleShowContextMenu.bind(this);
     this.defaultTopicContextMenu = this.defaultTopicContextMenu.bind(this);
     this.handleHideContextMenu = this.handleHideContextMenu.bind(this);
@@ -319,6 +321,9 @@ class TinodeWeb extends React.Component {
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
+    // Listen for Escape key to clear selections.
+    document.addEventListener('keydown', this.handleEscapeKey);
+
     document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
 
@@ -407,6 +412,7 @@ class TinodeWeb extends React.Component {
     window.removeEventListener('offline', this.handleOnlineOff);
     window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', this.handleColorSchemeChange);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+    document.removeEventListener('keydown', this.handleEscapeKey);
 
     clearInterval(this.wakeUpTicker);
   }
@@ -513,6 +519,27 @@ class TinodeWeb extends React.Component {
     });
     if (this.state.displayMobile != mobile) {
       this.setState({displayMobile: mobile});
+    }
+  }
+
+  handleEscapeKey(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+      // Clear selections and navigate to base state
+      this.setState({
+        topicSelected: null,
+        errorText: '',
+        errorLevel: null,
+        mobilePanel: 'sidepanel',
+        topicSelectedOnline: false,
+        topicSelectedAcs: null,
+        infoPanel: undefined,
+        forwardMessage: null,
+        contextMenuVisible: false,
+        forwardDialogVisible: false,
+        alertVisible: false
+      });
+      // Navigate to contacts or login view
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic('', null));
     }
   }
 
@@ -1125,7 +1152,6 @@ class TinodeWeb extends React.Component {
   //  - head - head dictionary to be attached to the message
   handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    /* TODO: check if return is required */
     return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 
@@ -1705,7 +1731,7 @@ class TinodeWeb extends React.Component {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
-    const header = '➦ ' + params.userName;
+    const header = params.userName ? '➦ ' + params.userName : '';
     const content = typeof params.content == 'string' ? Drafty.init(params.content) : Drafty.forwardedContent(params.content);
     const preview = Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
     const msg = Drafty.append(Drafty.appendLineBreak(Drafty.mention(header, params.userFrom)), content);
@@ -1717,6 +1743,16 @@ class TinodeWeb extends React.Component {
     this.setState({
       forwardDialogVisible: true,
       forwardMessage: { head: head, msg: msg, preview: msgPreview }
+    });
+  }
+
+  handleShareTheCard(card) {
+    this.setState({
+      forwardDialogVisible: true,
+      forwardMessage: {
+        content: card,
+        type: card.contentType,
+      }
     });
   }
 
@@ -2181,6 +2217,9 @@ class TinodeWeb extends React.Component {
             reqCredMethod={this.state.reqCredMethod}
             textSize={this.state.textSize}
             colorSchema={this.state.colorSchema}
+            wallpaper={this.state.wallpaper}
+            wallpaperSize={this.state.wallpaperSize}
+            wallpaperBlur={this.state.wallpaperBlur}
             systemColorSchema={this.state.systemColorSchema}
             sendOnEnter={this.state.sendOnEnter}
 
@@ -2227,56 +2266,59 @@ class TinodeWeb extends React.Component {
           : null}
 
         {!this.state.displayMobile || (this.state.mobilePanel == 'topic-view' && !this.state.infoPanel) ?
-          <MessagesView
-            tinode={this.tinode}
-            connected={this.state.connected}
-            ready={this.state.ready}
-            online={this.state.topicSelectedOnline}
-            acs={this.state.topicSelectedAcs}
-            displayMobile={this.state.displayMobile}
-            viewportWidth={this.state.viewportWidth}
-            viewportHeight={this.state.viewportHeight}
-            topic={this.state.topicSelected}
-            myUserId={this.state.myUserId}
-            // User public.fn.
-            myUserName={this.state.sidePanelTitle}
-            serverVersion={this.state.serverVersion}
-            serverAddress={this.state.serverAddress}
-            applicationVisible={this.state.applicationVisible}
-            colorSchema={colorSchema}
-            sendOnEnter={this.state.sendOnEnter}
-            wallpaper={this.state.wallpaper}
+          <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+        description="Message shown when component is loading"/></div>}>
+            <MessagesView
+              tinode={this.tinode}
+              connected={this.state.connected}
+              ready={this.state.ready}
+              online={this.state.topicSelectedOnline}
+              acs={this.state.topicSelectedAcs}
+              displayMobile={this.state.displayMobile}
+              viewportWidth={this.state.viewportWidth}
+              viewportHeight={this.state.viewportHeight}
+              topic={this.state.topicSelected}
+              myUserId={this.state.myUserId}
+              // User public.fn.
+              myUserName={this.state.sidePanelTitle}
+              serverVersion={this.state.serverVersion}
+              serverAddress={this.state.serverAddress}
+              applicationVisible={this.state.applicationVisible}
+              colorSchema={colorSchema}
+              sendOnEnter={this.state.sendOnEnter}
+              wallpaper={this.state.wallpaper}
 
-            forwardMessage={this.state.forwardMessage}
-            onCancelForwardMessage={this.handleHideForwardDialog}
+              forwardMessage={this.state.forwardMessage}
+              onCancelForwardMessage={this.handleHideForwardDialog}
 
-            callTopic={this.state.callTopic}
-            callSeq={this.state.callSeq}
-            callState={this.state.callState}
-            callAudioOnly={this.state.callAudioOnly}
-            onCallHangup={this.handleCallHangup}
-            onAcceptCall={this.handleCallAccept}
+              callTopic={this.state.callTopic}
+              callSeq={this.state.callSeq}
+              callState={this.state.callState}
+              callAudioOnly={this.state.callAudioOnly}
+              onCallHangup={this.handleCallHangup}
+              onAcceptCall={this.handleCallAccept}
 
-            onCallInvite={this.handleCallInvite}
-            onCallSendOffer={this.handleCallSendOffer}
-            onCallIceCandidate={this.handleCallIceCandidate}
-            onCallSendAnswer={this.handleCallSendAnswer}
+              onCallInvite={this.handleCallInvite}
+              onCallSendOffer={this.handleCallSendOffer}
+              onCallIceCandidate={this.handleCallIceCandidate}
+              onCallSendAnswer={this.handleCallSendAnswer}
 
-            errorText={this.state.errorText}
-            errorLevel={this.state.errorLevel}
-            errorAction={this.state.errorAction}
-            errorActionText={this.state.errorActionText}
+              errorText={this.state.errorText}
+              errorLevel={this.state.errorLevel}
+              errorAction={this.state.errorAction}
+              errorActionText={this.state.errorActionText}
 
-            newTopicParams={this.state.newTopicParams}
+              newTopicParams={this.state.newTopicParams}
 
-            onHideMessagesView={this.handleHideMessagesView}
-            onError={this.handleError}
-            onNewTopicCreated={this.handleNewTopicCreated}
-            showContextMenu={this.handleShowContextMenu}
-            onChangePermissions={this.handleChangePermissions}
-            onNewChat={this.handleNewChatInvitation}
-            sendMessage={this.handleSendMessage}
-            onVideoCallClosed={this.handleCallClose} />
+              onHideMessagesView={this.handleHideMessagesView}
+              onError={this.handleError}
+              onNewTopicCreated={this.handleNewTopicCreated}
+              showContextMenu={this.handleShowContextMenu}
+              onChangePermissions={this.handleChangePermissions}
+              onNewChat={this.handleNewChatInvitation}
+              sendMessage={this.handleSendMessage}
+              onVideoCallClosed={this.handleCallClose} />
+            </Suspense>
           : null}
 
         {this.state.infoPanel ?
@@ -2306,7 +2348,7 @@ class TinodeWeb extends React.Component {
               onLeaveTopic={this.handleLeaveUnsubRequest}
               onBlockTopic={this.handleBlockTopicRequest}
               onReportTopic={this.handleReportTopic}
-              onAddMember={this.handleManageGroupMembers}
+              onShareTheCard={this.handleShareTheCard}
               onTopicTagsUpdateRequest={this.handleTagsUpdateRequest}
               onTopicUnArchive={this.handleUnarchive}
               onInitFind={this.tnInitFind}

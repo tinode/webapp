@@ -183,6 +183,10 @@
     "defaultMessage": "Cannot initiate file upload.",
     "description": "Generic error messagewhen attachment fails"
   },
+  "cannot_parse_vcard": {
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed"
+  },
   "change_email": {
     "defaultMessage": "Change email",
     "description": "Prompt to change current email"
@@ -214,6 +218,10 @@
   "chat_invitation_ignore": {
     "defaultMessage": "Ignore",
     "description": "Action [Ignore] for chat invitation."
+  },
+  "chat_now": {
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card"
   },
   "clear_messages_warning": {
     "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
@@ -335,6 +343,10 @@
     "defaultMessage": "The file size {size} exceeds the {limit} limit.",
     "description": "Error message when attachment is too large"
   },
+  "find_user": {
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card"
+  },
   "forgot_password_link": {
     "defaultMessage": "Forgot password?",
     "description": "Link to Reset password form"
@@ -434,6 +446,14 @@
     "defaultMessage": "Theme:",
     "description": "Label for selecting color scheme (dark, light) in Settings"
   },
+  "label_contact_card": {
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview"
+  },
+  "label_contacts": {
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information"
+  },
   "label_content_type": {
     "defaultMessage": "Content type:",
     "description": "Label for file content type (mime)"
@@ -444,7 +464,7 @@
   },
   "label_description": {
     "defaultMessage": "Description",
-    "description": "Label for editing topic description"
+    "description": "Label for description of user or topic"
   },
   "label_file_name": {
     "defaultMessage": "File name:",
@@ -912,6 +932,10 @@
     "defaultMessage": "Requested",
     "description": "Title for permissions"
   },
+  "save_action": {
+    "defaultMessage": "Save",
+    "description": "Label for Save button"
+  },
   "save_attachment": {
     "defaultMessage": "save",
     "description": "Call to save an attachment"
@@ -1087,6 +1111,10 @@
   "topic_name_editing_placeholder": {
     "defaultMessage": "Freeform name of the group",
     "description": "Prompt for entering topic name"
+  },
+  "unknown_name": {
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing"
   },
   "unnamed_topic": {
     "defaultMessage": "Unnamed",

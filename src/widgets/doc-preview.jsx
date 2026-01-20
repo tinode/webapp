@@ -46,7 +46,7 @@ export default class DocPreview extends React.PureComponent {
     }
     return (
       <div id="image-preview">
-        <div id="image-preview-caption-panel">
+        <div id="preview-caption-panel">
           <span>{this.props.content.name}</span>
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="m-icon gray">close</i></a>
         </div>

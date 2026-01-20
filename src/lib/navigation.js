@@ -55,6 +55,17 @@ export default class HashNavigation {
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
 
+  static removeUrlParams(hash, keys) {
+    if (!Array.isArray(keys)) {
+      keys = [keys];
+    }
+    const parsed = HashNavigation.parseUrlHash(hash);
+    for (const key of keys) {
+      delete parsed.params[key];
+    }
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
+  }
+
   static setUrlSidePanel(hash, sidepanel) {
     const parsed = HashNavigation.parseUrlHash(hash);
     parsed.path[0] = sidepanel;

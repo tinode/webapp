@@ -122,7 +122,7 @@ export default class CallIncoming extends React.Component {
           <div className="caller-card incoming pulse">
             <div className="avatar-box">
               <LetterTile
-                tinode={this.props.tinode}
+                authorizeURL={this.props.tinode.authorizeURL}
                 avatar={this.state.avatar || true}
                 topic={this.props.topic}
                 title={this.state.fullName} />

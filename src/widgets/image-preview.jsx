@@ -77,7 +77,7 @@ export default class ImagePreview extends React.PureComponent {
 
     return (
       <div id="image-preview">
-        <div id="image-preview-caption-panel">
+        <div id="preview-caption-panel">
           {this.props.onSendMessage ?
             <span>{fname}</span>
             :

@@ -122,7 +122,7 @@ class Contact extends React.Component {
       <li className={bgColor} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
-            tinode={this.props.tinode}
+            authorizeURL={this.props.tinode.authorizeURL}
             avatar={avatar}
             title={this.props.title}
             topic={this.props.item}

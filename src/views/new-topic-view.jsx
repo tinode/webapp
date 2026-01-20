@@ -34,9 +34,13 @@ class NewTopicView extends React.Component {
   constructor(props) {
     super(props);
 
+    const urlParams = HashNavigation.parseUrlHash(window.location.hash).params;
+    const initialTab = urlParams['tab'] || 'find';
+    const initialQuery = initialTab == 'find' ? (urlParams['q'] || null) : null;
+
     this.state = {
-      tabSelected: 'find',
-      searchQuery: null
+      tabSelected: initialTab,
+      searchQuery: initialQuery
     };
 
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -83,19 +87,19 @@ class NewTopicView extends React.Component {
 
   handleSearchResultSelected(topicName) {
     if (this.state.tabSelected == 'find') {
-      HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
+      HashNavigation.navigateTo(HashNavigation.removeUrlParams(window.location.hash, ['tab', 'q']));
       this.props.onCreateTopic(topicName);
     }
   }
 
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
-    HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
+    HashNavigation.navigateTo(HashNavigation.removeUrlParams(window.location.hash, ['tab', 'q']));
     this.props.onCreateTopic(undefined,
       {public: theCard(name, dataUrl, null, description), private: priv, tags: tags}, isChannel);
   }
 
   handleGroupByID(topicName) {
-    HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
+    HashNavigation.navigateTo(HashNavigation.removeUrlParams(window.location.hash, ['tab', 'q']));
     this.props.onCreateTopic(topicName);
   }
 
@@ -131,26 +135,29 @@ class NewTopicView extends React.Component {
             tinode={this.props.tinode}
             onSubmit={this.handleNewGroupSubmit}
             onError={this.props.onError} /> :
-          this.state.tabSelected === 'byid' ?
-            <NewTopicById
-              myURI={Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.getCurrentUserID()}
-              onSubmit={this.handleGroupByID}
-              onError={this.props.onError} /> :
-            <div className="flex-column">
-              <SearchContacts
-                placeholder={search_placeholder}
-                onSearchContacts={this.handleSearchContacts} />
-              <ContactList
-                tinode={this.props.tinode}
-                contacts={this.props.searchResults}
-                myUserId={this.props.myUserId}
-                emptyListMessage={no_contacts_placeholder}
-                showSelfTopic={!this.state.searchQuery}
-                showOnline={false}
-                showUnread={false}
-                showContextMenu={false}
-                onTopicSelected={this.handleSearchResultSelected} />
-            </div>}
+
+        this.state.tabSelected === 'byid' ?
+          <NewTopicById
+            myURI={Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.getCurrentUserID()}
+            onSubmit={this.handleGroupByID}
+            onError={this.props.onError} /> :
+
+          <div className="flex-column">
+            <SearchContacts
+              placeholder={search_placeholder}
+              initialQuery={this.state.searchQuery || ''}
+              onSearchContacts={this.handleSearchContacts} />
+            <ContactList
+              tinode={this.props.tinode}
+              contacts={this.props.searchResults}
+              myUserId={this.props.myUserId}
+              emptyListMessage={no_contacts_placeholder}
+              showSelfTopic={!this.state.searchQuery}
+              showOnline={false}
+              showUnread={false}
+              showContextMenu={false}
+              onTopicSelected={this.handleSearchResultSelected} />
+          </div>}
       </div>
     );
   }
