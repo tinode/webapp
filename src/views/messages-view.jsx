@@ -391,9 +391,12 @@ class MessagesView extends React.Component {
 
       if (nextProps.forwardMessage) {
         if (nextProps.forwardMessage.content) {
+          const content = nextProps.forwardMessage.content;
+          const size = content?.length || (content?.size || 0);
           nextState.docPreview = {
-            object: nextProps.forwardMessage.content,
-            type: nextProps.forwardMessage.type
+            object: content,
+            type: nextProps.forwardMessage.type,
+            size: size
           };
         } else {
           // We are forwarding a message. Show preview.
@@ -1022,7 +1025,7 @@ class MessagesView extends React.Component {
   // sendMessage sends the message with an optional subscription to topic first.
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
-    if (this.props.forwardMessage) {
+    if (!msg && this.props.forwardMessage) {
       // We are forwarding a message.
       msg = this.props.forwardMessage.msg;
       head = this.props.forwardMessage.head;
@@ -1068,7 +1071,7 @@ class MessagesView extends React.Component {
     const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
-    if (TheCard.isFileSupported(file.type, file.name)) {
+    if (TheCard.isFileSupported(file.type, file.name) || file.type == TheCard.contentType) {
       // This is a vCard file, try to convert and send as TheCard.
       if (this.sendTheCardAttachment(file, maxInbandAttachmentSize)) {
         // Successfully sent as TheCard.
@@ -1116,6 +1119,12 @@ class MessagesView extends React.Component {
     if (file.size > maxInbandAttachmentSize) {
       // Cannot convert to TheCard, send as a generic file attachment instead.
       return false;
+    }
+
+    if (file.type == TheCard.contentType) {
+      // Already TheCard, no need to convert.
+      this.sendMessage(Drafty.appendTheCard(null, file.object));
+      return true;
     }
 
     importVCard(file)

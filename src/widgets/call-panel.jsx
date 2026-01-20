@@ -346,11 +346,11 @@ class CallPanel extends React.PureComponent {
   }
 
   handleDataChannelClose(event) {
-    console.log('close data channel:', event);
+    console.info('close data channel:', event);
   }
 
   handleDataChannelEvent(event) {
-    console.log('data channel event:', event);
+    console.info('data channel event:', event);
     const channel = event.channel;
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;

@@ -2346,6 +2346,7 @@ Drafty.appendTheCard = function (content, theCardData) {
     tp: 'TC',
     data: theCardData
   });
+  console.log('Appended TheCard entity:', content);
   return content;
 };
 Drafty.UNSAFE_toHTML = function (doc) {
@@ -3990,6 +3991,9 @@ class TheCard {
   get contentType() {
     return THE_CARD_MIME_TYPE;
   }
+  get size() {
+    return JSON.stringify(this).length;
+  }
 }
 TheCard.contentType = THE_CARD_MIME_TYPE;
 TheCard.setFn = function (card, fn) {
@@ -4669,6 +4673,7 @@ class Topic {
     pub._sending = true;
     pub._failed = false;
     let attachments = null;
+    console.log("Publishing message", pub);
     if (_drafty_js__WEBPACK_IMPORTED_MODULE_4___default().hasEntities(pub.content)) {
       attachments = [];
       _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().entities(pub.content, data => {
@@ -7134,6 +7139,7 @@ class Tinode {
     }
     pkt.pub.noecho = noEcho;
     pkt.pub.content = content;
+    console.log("Tinode.createMessage", pkt.pub);
     return pkt.pub;
   }
   publish(topicName, content, noEcho) {
@@ -7420,6 +7426,7 @@ Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
 Tinode.REQ_CRED_VALIDATORS = 'reqCred';
 Tinode.MSG_DELETE_AGE = 'msgDelAge';
 Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
+Tinode.URI_TOPIC_ALIAS_PREFIX = 'tinode:alias/';
 Tinode.TAG_ALIAS = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_ALIAS;
 Tinode.TAG_EMAIL = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_EMAIL;
 Tinode.TAG_PHONE = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_PHONE;

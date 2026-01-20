@@ -71,20 +71,24 @@ class TheCardMini extends React.PureComponent {
           </div>
         </div>
         <div className="contact-actions">
-          {uid &&
-            <a className="flat-button" data-val={uid} onClick={this.props.onChatClick}>
-              <FormattedMessage id="chat_now" defaultMessage="Chat"
-                description="Label for message button in contact card" />
-            </a>
+          {uid ?
+            <>
+              <a className="flat-button" data-val={uid} onClick={this.props.onChatClick}>
+                <FormattedMessage id="chat_now" defaultMessage="Chat"
+                  description="Label for message button in contact card" />
+              </a>
+              <div className="divider"></div>
+            </>
+            : contacts.length > 0 ?
+            <>
+              <a className="flat-button" data-val={contacts.join(',')} onClick={this.props.onFindClick}>
+                <FormattedMessage id="find_user" defaultMessage="Find"
+                  description="Label for search button in contact card" />
+              </a>
+              <div className="divider"></div>
+            </>
+            : null
           }
-          {uid && <div className="divider"></div>}
-          {contacts.length > 0 &&
-            <a className="flat-button" data-val={contacts.join(',')} onClick={this.props.onChatClick}>
-              <FormattedMessage id="find_user" defaultMessage="Find"
-                description="Label for search button in contact card" />
-            </a>
-          }
-          {contacts.length > 0 && <div className="divider"></div>}
           <a className="flat-button" onClick={this.handleDownload}>
             <FormattedMessage id="save_action" defaultMessage="Save" description="Label for Save button" />
           </a>

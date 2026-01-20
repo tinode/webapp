@@ -575,9 +575,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       };
       if (nextProps.forwardMessage) {
         if (nextProps.forwardMessage.content) {
+          const content = nextProps.forwardMessage.content;
+          const size = content?.length || content?.size || 0;
           nextState.docPreview = {
-            object: nextProps.forwardMessage.content,
-            type: nextProps.forwardMessage.type
+            object: content,
+            type: nextProps.forwardMessage.type,
+            size: size
           };
         } else {
           nextState.reply = {
@@ -1144,7 +1147,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
-    if (this.props.forwardMessage) {
+    if (!msg && this.props.forwardMessage) {
       msg = this.props.forwardMessage.msg;
       head = this.props.forwardMessage.head;
       this.handleCancelReply();
@@ -1178,7 +1181,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendFileAttachment(file) {
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.isFileSupported(file.type, file.name)) {
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.isFileSupported(file.type, file.name) || file.type == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.contentType) {
       if (this.sendTheCardAttachment(file, maxInbandAttachmentSize)) {
         return;
       }
@@ -1210,6 +1213,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   sendTheCardAttachment(file, maxInbandAttachmentSize) {
     if (file.size > maxInbandAttachmentSize) {
       return false;
+    }
+    if (file.type == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.contentType) {
+      console.log("TheCard attachment", file.object);
+      this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendTheCard(null, file.object));
+      return true;
     }
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.importVCard)(file).then(card => {
       this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendTheCard(null, card));
@@ -2128,7 +2136,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
 
 
 
@@ -2175,9 +2185,22 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         this.handleQuoteClick(e);
         break;
       case 'contact_chat':
+        e.preventDefault();
+        try {
+          const pathname = new URL(e.target.dataset.val)?.pathname;
+          const parts = pathname.split('/').filter(Boolean);
+          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].setUrlTopic('', parts.pop() || ''));
+        } catch (error) {
+          console.error("Invalid URL:", error);
+        }
+        break;
       case 'contact_find':
         e.preventDefault();
-        console.log('Contact click handling not implemented yet.', action, e.target.dataset);
+        let hashUrl = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].setUrlSidePanel(window.location.hash, 'newtpk');
+        hashUrl = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].addUrlParam(hashUrl, 'q', e.target.dataset.val);
+        hashUrl = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].addUrlParam(hashUrl, 'tab', 'find');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_8__["default"].navigateTo(hashUrl);
+        console.log('Finding contact(s):', hashUrl);
         break;
       default:
         console.log('Unhandled drafty action.', action, e.target.dataset);

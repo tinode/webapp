@@ -9533,9 +9533,12 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
 class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
+    const urlParams = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].parseUrlHash(window.location.hash).params;
+    const initialTab = urlParams['tab'] || 'find';
+    const initialQuery = initialTab == 'find' ? urlParams['q'] || null : null;
     this.state = {
-      tabSelected: 'find',
-      searchQuery: null
+      tabSelected: initialTab,
+      searchQuery: initialQuery
     };
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
@@ -9652,6 +9655,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       placeholder: search_placeholder,
+      initialQuery: this.state.searchQuery || '',
       onSearchContacts: this.handleSearchContacts
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
@@ -10332,6 +10336,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
+    this.handleEscapeKey = this.handleEscapeKey.bind(this);
     this.handleColorSchemeChange = this.handleColorSchemeChange.bind(this);
     this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
@@ -10506,6 +10511,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.addEventListener('hashchange', this.handleHashRoute);
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.handleColorSchemeChange);
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
+    document.addEventListener('keydown', this.handleEscapeKey);
     document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
     this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur, this.state.colorSchema == 'auto' ? this.state.systemColorSchema : this.state.colorSchema);
@@ -10569,6 +10575,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.removeEventListener('offline', this.handleOnlineOff);
     window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', this.handleColorSchemeChange);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+    document.removeEventListener('keydown', this.handleEscapeKey);
     clearInterval(this.wakeUpTicker);
   }
   static tnSetup(serverAddress, secureConnection, transport, locale, persistentCache, onSetupCompleted) {
@@ -10682,6 +10689,24 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         displayMobile: mobile
       });
+    }
+  }
+  handleEscapeKey(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+      this.setState({
+        topicSelected: null,
+        errorText: '',
+        errorLevel: null,
+        mobilePanel: 'sidepanel',
+        topicSelectedOnline: false,
+        topicSelectedAcs: null,
+        infoPanel: undefined,
+        forwardMessage: null,
+        contextMenuVisible: false,
+        forwardDialogVisible: false,
+        alertVisible: false
+      });
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', null));
     }
   }
   checkForAppUpdate(reg) {
@@ -11184,10 +11209,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
+    console.log("handleSendMessage", msg);
     return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
   sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
+    console.log("sendMessageToTopic", msg, head);
     msg._uploader = uploader;
     if (head) {
       msg.head = Object.assign(msg.head || {}, head);
@@ -16196,7 +16223,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     super(props);
     this.state = {
       edited: false,
-      search: ''
+      search: this.props.initialQuery || ''
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -16239,7 +16266,8 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     if (e.key === 'Enter') {
       this.handleSearch(e);
     } else if (e.key === 'Escape') {
-      this.handleClear();
+      e.stopPropagation();
+      this.handleClear(e);
     }
   }
   render() {
@@ -16639,7 +16667,7 @@ class TheCardMini extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "org"
     }, org))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-actions"
-    }, uid && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       className: "flat-button",
       "data-val": uid,
       onClick: this.props.onChatClick
@@ -16649,21 +16677,21 @@ class TheCardMini extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         "type": 0,
         "value": "Chat"
       }]
-    })), uid && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "divider"
-    }), contacts.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    })) : contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       className: "flat-button",
       "data-val": contacts.join(','),
-      onClick: this.props.onChatClick
+      onClick: this.props.onFindClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "find_user",
       defaultMessage: [{
         "type": 0,
         "value": "Find"
       }]
-    })), contacts.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "divider"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       className: "flat-button",
       onClick: this.handleDownload
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {

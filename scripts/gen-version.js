@@ -8,7 +8,7 @@ function writeVersion(fileName, useExport) {
     { flag: 'w' },
     (err) => {
       if (err) {
-          return console.log(err);
+          return console.error(err);
       }
     }
   );

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Drafty, Tinode } from 'tinode-sdk';
+import { Drafty, Tinode, TheCard } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -10,6 +10,7 @@ import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
 import { sanitizeUrl } from '../lib/utils.js';
+import HashNavigation from '../lib/navigation.js';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -55,13 +56,26 @@ class BaseChatMessage extends React.PureComponent {
         this.handleQuoteClick(e);
         break;
       case 'contact_chat':
+        e.preventDefault();
+        try {
+          // tinode:topic/usr123abc -> usr123abc
+          const pathname = new URL(e.target.dataset.val)?.pathname;
+          const parts = pathname.split('/').filter(Boolean);
+          HashNavigation.navigateTo(HashNavigation.setUrlTopic('', parts.pop() || ''));
+        } catch (error) {
+          console.error("Invalid URL:", error);
+        }
+        break;
       case 'contact_find':
         e.preventDefault();
-        console.log('Contact click handling not implemented yet.', action, e.target.dataset);
+        let hashUrl = HashNavigation.setUrlSidePanel(window.location.hash, 'newtpk');
+        hashUrl = HashNavigation.addUrlParam(hashUrl, 'q', e.target.dataset.val);
+        hashUrl = HashNavigation.addUrlParam(hashUrl, 'tab', 'find');
+        HashNavigation.navigateTo(hashUrl);
         break;
       default:
         // No special handling; let the browser deal with it.
-        console.log('Unhandled drafty action.', action, e.target.dataset);
+        console.info('Unhandled drafty action.', action, e.target.dataset);
         break;
     }
   }

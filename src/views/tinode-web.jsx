@@ -320,7 +320,7 @@ class TinodeWeb extends React.Component {
 
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
-    
+
     // Listen for Escape key to clear selections.
     document.addEventListener('keydown', this.handleEscapeKey);
 
@@ -1150,7 +1150,6 @@ class TinodeWeb extends React.Component {
   //  - head - head dictionary to be attached to the message
   handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    /* TODO: check if return is required */
     return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 

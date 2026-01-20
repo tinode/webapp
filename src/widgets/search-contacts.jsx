@@ -8,7 +8,7 @@ export default class SearchContacts extends React.PureComponent {
 
     this.state = {
       edited: false,
-      search: ''
+      search: this.props.initialQuery || ''
     };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -47,7 +47,8 @@ export default class SearchContacts extends React.PureComponent {
     if (e.key === 'Enter') {
       this.handleSearch(e);
     } else if (e.key === 'Escape') {
-      this.handleClear();
+      e.stopPropagation();
+      this.handleClear(e);
     }
   }
 
