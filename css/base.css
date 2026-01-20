@@ -1287,7 +1287,7 @@ input#host-name {
 
 /* Input with a search icon on the left */
 input.search {
-  text-indent: 1.4rem;
+  padding-left: 1.4rem;
 }
 i.search {
   position: absolute;
@@ -2108,7 +2108,7 @@ img.channel {
   font-size: 4.5rem;
 }
 
-.doc-card .avatar-box .material-icons {
+.doc-card .avatar-box .m-icon {
   line-height: 10rem;
 }
 

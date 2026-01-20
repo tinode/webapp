@@ -78,7 +78,7 @@ export default class WallpapersView extends React.PureComponent {
         <div className={`panel-form-row${this.hasChanged() ? ' clean-clickable' : ''}`}>
           <a className={`flat-button${this.hasChanged() ? '' : ' disabled'}`}
             onClick={() => this.handleWallpaperSelected(null)}>
-            <i className="material-icons">undo</i>&nbsp;
+            <i className="m-icon">undo</i>&nbsp;
             <FormattedMessage id="button_restore" defaultMessage="Restore default" description="Reset setting to default"/>
           </a>
         </div>

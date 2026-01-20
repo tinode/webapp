@@ -128,7 +128,7 @@ export default class TheCardPreview extends React.PureComponent {
           <span><FormattedMessage id="label_contact_card" defaultMessage="Contact Card"
             description="Label for contact card preview" /></span>
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}>
-            <i className="material-icons gray">close</i>
+            <i className="m-icon gray">close</i>
           </a>
         </div>
         <div id="image-preview-container">

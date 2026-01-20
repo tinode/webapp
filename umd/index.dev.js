@@ -8020,8 +8020,8 @@ function previewFormatter(style, data, values, key) {
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "tc",
-        className: "material-icons"
-      }, "contact_mail"), ' ', tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
+        className: "m-icon thin"
+      }, "id_card"), ' ', tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
       break;
     case 'VD':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -8795,7 +8795,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.26.0-alpha1";
+const PACKAGE_VERSION = "0.26.0-alpha2";
 
 /***/ }),
 

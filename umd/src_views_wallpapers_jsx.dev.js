@@ -96,7 +96,7 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: `flat-button${this.hasChanged() ? '' : ' disabled'}`,
       onClick: () => this.handleWallpaperSelected(null)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "m-icon"
     }, "undo"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_restore",
       defaultMessage: [{

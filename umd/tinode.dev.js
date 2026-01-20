@@ -386,7 +386,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EXPIRE_PROMISES_TIMEOUT: function() { return /* binding */ EXPIRE_PROMISES_TIMEOUT; },
 /* harmony export */   LIBRARY: function() { return /* binding */ LIBRARY; },
 /* harmony export */   LOCAL_SEQID: function() { return /* binding */ LOCAL_SEQID; },
+/* harmony export */   MAX_FILE_UPLOAD_SIZE: function() { return /* binding */ MAX_FILE_UPLOAD_SIZE; },
+/* harmony export */   MAX_MESSAGE_SIZE: function() { return /* binding */ MAX_MESSAGE_SIZE; },
 /* harmony export */   MAX_PINNED_COUNT: function() { return /* binding */ MAX_PINNED_COUNT; },
+/* harmony export */   MAX_REACTIONS: function() { return /* binding */ MAX_REACTIONS; },
+/* harmony export */   MAX_SUBSCRIBER_COUNT: function() { return /* binding */ MAX_SUBSCRIBER_COUNT; },
+/* harmony export */   MAX_TAG_COUNT: function() { return /* binding */ MAX_TAG_COUNT; },
+/* harmony export */   MAX_TAG_LENGTH: function() { return /* binding */ MAX_TAG_LENGTH; },
 /* harmony export */   MESSAGE_STATUS_FAILED: function() { return /* binding */ MESSAGE_STATUS_FAILED; },
 /* harmony export */   MESSAGE_STATUS_FATAL: function() { return /* binding */ MESSAGE_STATUS_FATAL; },
 /* harmony export */   MESSAGE_STATUS_NONE: function() { return /* binding */ MESSAGE_STATUS_NONE; },
@@ -396,8 +402,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MESSAGE_STATUS_SENDING: function() { return /* binding */ MESSAGE_STATUS_SENDING; },
 /* harmony export */   MESSAGE_STATUS_SENT: function() { return /* binding */ MESSAGE_STATUS_SENT; },
 /* harmony export */   MESSAGE_STATUS_TO_ME: function() { return /* binding */ MESSAGE_STATUS_TO_ME; },
+/* harmony export */   MIN_TAG_LENGTH: function() { return /* binding */ MIN_TAG_LENGTH; },
+/* harmony export */   MSG_DELETE_AGE: function() { return /* binding */ MSG_DELETE_AGE; },
 /* harmony export */   PROTOCOL_VERSION: function() { return /* binding */ PROTOCOL_VERSION; },
+/* harmony export */   REACTION_LIST: function() { return /* binding */ REACTION_LIST; },
 /* harmony export */   RECV_TIMEOUT: function() { return /* binding */ RECV_TIMEOUT; },
+/* harmony export */   REQ_CRED_VALIDATORS: function() { return /* binding */ REQ_CRED_VALIDATORS; },
 /* harmony export */   TAG_ALIAS: function() { return /* binding */ TAG_ALIAS; },
 /* harmony export */   TAG_EMAIL: function() { return /* binding */ TAG_EMAIL; },
 /* harmony export */   TAG_PHONE: function() { return /* binding */ TAG_PHONE; },
@@ -452,6 +462,16 @@ const TAG_PHONE = 'tel:';
 const BACKOFF_BASE = 2000;
 const BACKOFF_MAX_ITER = 10;
 const BACKOFF_JITTER = 0.3;
+const MAX_MESSAGE_SIZE = 'maxMessageSize';
+const MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
+const MIN_TAG_LENGTH = 'minTagLength';
+const MAX_TAG_LENGTH = 'maxTagLength';
+const MAX_TAG_COUNT = 'maxTagCount';
+const MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
+const REQ_CRED_VALIDATORS = 'reqCred';
+const MSG_DELETE_AGE = 'msgDelAge';
+const REACTION_LIST = 'reactions';
+const MAX_REACTIONS = 'maxReactions';
 
 /***/ }),
 
@@ -1119,15 +1139,40 @@ class DB {
       const req = trx.objectStore('message').get(IDBKeyRange.only([topicName, seq]));
       req.onsuccess = event => {
         const src = req.result || event.target.result;
-        if (!src || src._status == status) {
-          trx.commit();
-          return;
+        if (src && src._status != status) {
+          trx.objectStore('message').put(DB.#serializeMessage(src, {
+            topic: topicName,
+            seq: seq,
+            _status: status
+          }));
         }
-        trx.objectStore('message').put(DB.#serializeMessage(src, {
-          topic: topicName,
-          seq: seq,
-          _status: status
-        }));
+        trx.commit();
+      };
+    });
+  }
+  updMessageReact(topicName, seq, react) {
+    if (!this.isReady()) {
+      return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const trx = this.db.transaction(['message'], 'readwrite');
+      trx.onsuccess = event => {
+        resolve(event.target.result);
+      };
+      trx.onerror = event => {
+        this.#logger('PCache', 'updMessageReact', event.target.error);
+        reject(event.target.error);
+      };
+      const req = trx.objectStore('message').get(IDBKeyRange.only([topicName, seq]));
+      req.onsuccess = event => {
+        const src = req.result || event.target.result;
+        if (src && src.react !== react) {
+          trx.objectStore('message').put(DB.#serializeMessage(src, {
+            topic: topicName,
+            seq: seq,
+            react: react
+          }));
+        }
         trx.commit();
       };
     });
@@ -1329,7 +1374,7 @@ class DB {
       };
     });
   }
-  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted'];
+  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'mrrid', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted', '_mrrSeen'];
   static #deserializeTopic(topic, src) {
     DB.#topic_fields.forEach(f => {
       if (src.hasOwnProperty(f)) {
@@ -1377,7 +1422,7 @@ class DB {
     return res;
   }
   static #serializeMessage(dst, msg) {
-    const fields = ['topic', 'seq', 'ts', '_status', 'from', 'head', 'content'];
+    const fields = ['topic', 'seq', 'ts', '_status', 'from', 'head', 'content', 'react'];
     const res = dst || {};
     fields.forEach(f => {
       if (msg.hasOwnProperty(f)) {
@@ -1400,7 +1445,7 @@ class DB {
 /***/ (function(module) {
 
 /**
- * @copyright 2015-2024 Tinode LLC.
+ * @copyright 2015-2026 Tinode LLC.
  * @summary Minimally rich text representation and formatting for Tinode.
  * @license Apache 2.0
  *
@@ -1460,7 +1505,7 @@ const MAX_PREVIEW_DATA_SIZE = 64;
 const DRAFTY_MIME_TYPE = 'text/x-drafty';
 const DRAFTY_FR_MIME_TYPE = 'text/x-drafty-fr';
 const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json';
-const ALLOWED_ENT_FIELDS = ['act', 'height', 'duration', 'incoming', 'mime', 'name', 'premime', 'preref', 'preview', 'ref', 'size', 'state', 'url', 'val', 'width'];
+const ALLOWED_ENT_FIELDS = ['act', 'height', 'duration', 'fn', 'incoming', 'mime', 'name', 'premime', 'preref', 'preview', 'ref', 'size', 'state', 'url', 'val', 'width'];
 const segmenter = new Intl.Segmenter();
 const INLINE_STYLES = [{
   name: 'ST',
@@ -1595,6 +1640,11 @@ const FORMAT_TAGS = {
   ST: {
     html_tag: 'b',
     md_tag: '*',
+    isVoid: false
+  },
+  TC: {
+    html_tag: 'div',
+    md_tag: undefined,
     isVoid: false
   },
   VC: {
@@ -1767,6 +1817,17 @@ const DECORATORS = {
     close: _ => '</div>',
     props: data => {
       return data ? {} : null;
+    }
+  },
+  TC: {
+    open: _ => '<div>',
+    close: _ => '</div>',
+    props: data => {
+      if (!data) return {};
+      return {
+        'data-fn': data.fn,
+        'data-title': data.title
+      };
     }
   },
   VC: {
@@ -2314,6 +2375,24 @@ Drafty.appendLineBreak = function (content) {
   content.txt += ' ';
   return content;
 };
+Drafty.appendTheCard = function (content, theCardData) {
+  content = content || {
+    txt: ''
+  };
+  content.ent = content.ent || [];
+  content.fmt = content.fmt || [];
+  content.fmt.push({
+    at: stringToGraphemes(content.txt).length,
+    len: 1,
+    key: content.ent.length
+  });
+  content.txt += ' ';
+  content.ent.push({
+    tp: 'TC',
+    data: theCardData
+  });
+  return content;
+};
 Drafty.UNSAFE_toHTML = function (doc) {
   const tree = draftyToTree(doc);
   const htmlFormatter = function (type, data, values) {
@@ -2573,6 +2652,7 @@ Drafty.attrValue = function (style, data) {
 Drafty.getContentType = function () {
   return DRAFTY_MIME_TYPE;
 };
+Drafty.contentType = DRAFTY_MIME_TYPE;
 Drafty.isFormResponseType = function (mimeType) {
   return mimeType === DRAFTY_FR_MIME_TYPE || mimeType === DRAFTY_FR_MIME_TYPE_LEGACY;
 };
@@ -3649,7 +3729,7 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         case 'ua':
           cont.seen = {
             when: new Date(),
-            ua: pres.ua
+            ua: pres.val
           };
           break;
         case 'recv':
@@ -3673,6 +3753,14 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
           }
           break;
         case 'del':
+          break;
+        case 'react':
+          cont._processMetaReact(undefined, {
+            mrrid: pres.id2 | 0,
+            seq: pres.seq,
+            user: pres.actor,
+            val: pres.val
+          });
           break;
         default:
           this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
@@ -3930,6 +4018,545 @@ class MetaGetBuilder {
 
 /***/ }),
 
+/***/ "./src/the-card.js":
+/*!*************************!*\
+  !*** ./src/the-card.js ***!
+  \*************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ TheCard; }
+/* harmony export */ });
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
+
+
+
+const THE_CARD_MIME_TYPE = 'text/x-the-card';
+class TheCard {
+  constructor(fn, imageUrl, imageMimeType, note) {
+    Object.assign(this, theCard(fn, imageUrl, imageMimeType, note) || {});
+  }
+  merge(that) {
+    Object.assign(this, that);
+  }
+  get contentType() {
+    return THE_CARD_MIME_TYPE;
+  }
+  get size() {
+    return JSON.stringify(this).length;
+  }
+}
+TheCard.contentType = THE_CARD_MIME_TYPE;
+TheCard.setFn = function (card, fn) {
+  fn = fn && fn.trim();
+  card = card || {};
+  card.fn = fn || undefined;
+  return card;
+};
+TheCard.getFn = function (card) {
+  if (card && card.fn) {
+    return card.fn;
+  }
+  return null;
+};
+TheCard.setNote = function (card, note) {
+  note = note && note.trim();
+  card = card || {};
+  card.note = note ? note : _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR;
+  return card;
+};
+TheCard.setPhoto = function (card, imageUrl, imageMimeType) {
+  if (imageUrl) {
+    card = card || {};
+    let mimeType = imageMimeType;
+    const matches = /^data:(image\/[-a-z0-9+.]+)?(;base64)?,/i.exec(imageUrl);
+    if (matches) {
+      mimeType = matches[1];
+      card.photo = {
+        data: imageUrl.substring(imageUrl.indexOf(',') + 1),
+        ref: _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR
+      };
+    } else {
+      card.photo = {
+        data: _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR,
+        ref: imageUrl
+      };
+      if (!mimeType) {
+        const ext = /\.([a-z0-9]+)$/i.exec(imageUrl);
+        if (ext) {
+          const extLower = ext[1].toLowerCase();
+          const mimeMap = {
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'png': 'image/png',
+            'gif': 'image/gif',
+            'bmp': 'image/bmp',
+            'webp': 'image/webp',
+            'svg': 'image/svg+xml'
+          };
+          mimeType = mimeMap[extLower] || null;
+        }
+      }
+    }
+    card.photo.type = (mimeType || 'image/jpeg').substring('image/'.length);
+  } else {
+    card = card || {};
+    card.photo = _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR;
+  }
+  return card;
+};
+TheCard.getPhotoUrl = function (card) {
+  if (card && card.photo) {
+    if (card.photo.ref && card.photo.ref != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
+      return card.photo.ref;
+    } else if (card.photo.data && card.photo.data != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
+      return 'data:image/' + (card.photo.type || 'jpeg') + ';base64,' + card.photo.data;
+    }
+  }
+  return null;
+};
+TheCard.getOrg = function (card) {
+  if (card && card.org) {
+    return card.org.fn || null;
+  }
+  return null;
+};
+TheCard.setPhone = function (card, phone, type = 'voice') {
+  return addOrSetComm(card, 'tel', phone, type, true);
+};
+TheCard.setEmail = function (card, email, type = 'home') {
+  return addOrSetComm(card, 'email', email, type, true);
+};
+TheCard.setTinodeID = function (card, tinodeID, type = 'home') {
+  return addOrSetComm(card, 'tinode', tinodeID, type, true);
+};
+TheCard.addPhone = function (card, phone, type = 'voice') {
+  return addOrSetComm(card, 'tel', phone, type, false);
+};
+TheCard.addEmail = function (card, email, type = 'home') {
+  return addOrSetComm(card, 'email', email, type, false);
+};
+TheCard.addTinodeID = function (card, tinodeID, type = 'home') {
+  return addOrSetComm(card, 'tinode', tinodeID, type, false);
+};
+TheCard.clearPhone = function (card, phone, type) {
+  return clearComm(card, 'tel', phone, type);
+};
+TheCard.clearEmail = function (card, email, type) {
+  return clearComm(card, 'email', email, type);
+};
+TheCard.clearTinodeID = function (card, tinodeID, type) {
+  return clearComm(card, 'tinode', tinodeID, type);
+};
+TheCard.getComm = function (card, proto) {
+  if (card && Array.isArray(card.comm)) {
+    return card.comm.filter(c => c.proto == proto);
+  }
+  return [];
+};
+TheCard.getEmails = function (card) {
+  return TheCard.getComm(card, 'email').map(c => c.value);
+};
+TheCard.getPhones = function (card) {
+  return TheCard.getComm(card, 'tel').map(c => c.value);
+};
+TheCard.getFirstTinodeID = function (card) {
+  const comms = TheCard.getComm(card, 'tinode');
+  if (comms.length > 0) {
+    return comms[0].value;
+  }
+  return null;
+};
+TheCard.exportVCard = function (card) {
+  if (!card) {
+    return null;
+  }
+  let vcard = 'BEGIN:VCARD\r\nVERSION:3.0\r\n';
+  if (card.fn) {
+    vcard += `FN:${card.fn}\r\n`;
+  }
+  if (card.n) {
+    vcard += `N:${card.n.surname || ''};${card.n.given || ''};${card.n.additional || ''};${card.n.prefix || ''};${card.n.suffix || ''}\r\n`;
+  }
+  if (card.org) {
+    if (card.org.fn) {
+      vcard += `ORG:${card.org.fn}\r\n`;
+    }
+    if (card.org.title) {
+      vcard += `TITLE:${card.org.title}\r\n`;
+    }
+  }
+  if (card.note && card.note != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
+    vcard += `NOTE:${card.note}\r\n`;
+  }
+  if (card.bday && card.bday.m && card.bday.d) {
+    const year = card.bday.y ? String(card.bday.y).padStart(4, '0') : '--';
+    const month = String(card.bday.m).padStart(2, '0');
+    const day = String(card.bday.d).padStart(2, '0');
+    vcard += `BDAY:${year}-${month}-${day}\r\n`;
+  }
+  if (card.photo) {
+    if (card.photo.ref && card.photo.ref != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
+      vcard += `PHOTO;VALUE=URI:${card.photo.ref}\r\n`;
+    } else if (card.photo.data && card.photo.data != _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR) {
+      vcard += `PHOTO;TYPE=${card.photo.type.toUpperCase()};ENCODING=b:${card.photo.data}\r\n`;
+    }
+  }
+  if (Array.isArray(card.comm)) {
+    card.comm.forEach(comm => {
+      const types = comm.des.join(',').toUpperCase();
+      if (comm.proto === 'tel') {
+        vcard += `TEL;TYPE=${types}:${comm.value}\r\n`;
+      } else if (comm.proto === 'email') {
+        vcard += `EMAIL;TYPE=${types}:${comm.value}\r\n`;
+      } else if (comm.proto === 'tinode') {
+        vcard += `IMPP;TYPE=${types};tinode:${comm.value}\r\n`;
+      } else if (comm.proto === 'http') {
+        vcard += `URL;TYPE=${types}:${comm.value}\r\n`;
+      }
+    });
+  }
+  vcard += 'END:VCARD\r\n';
+  return vcard;
+};
+TheCard.importVCard = function (vcardStr) {
+  if (!vcardStr || typeof vcardStr !== 'string') {
+    return null;
+  }
+  const rawLines = vcardStr.split(/\r\n|\n/);
+  const lines = [];
+  let currentLine = '';
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i];
+    if (line.startsWith(' ') || line.startsWith('\t')) {
+      currentLine += line.substring(1);
+    } else if (currentLine.endsWith('=')) {
+      currentLine = currentLine.substring(0, currentLine.length - 1) + line;
+    } else {
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+      currentLine = line;
+    }
+  }
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+  let card = {};
+  const commMap = new Map();
+  const unescapeValue = val => {
+    return val.replace(/\\([,;\\n])/g, (match, char) => {
+      if (char === 'n') return '\n';
+      return char;
+    });
+  };
+  const decodeQuotedPrintable = val => {
+    const bytes = [];
+    let i = 0;
+    while (i < val.length) {
+      if (val[i] === '=' && i + 2 < val.length) {
+        const hex = val.substring(i + 1, i + 3);
+        if (/^[0-9A-F]{2}$/i.test(hex)) {
+          bytes.push(parseInt(hex, 16));
+          i += 3;
+        } else {
+          bytes.push(val.charCodeAt(i));
+          i++;
+        }
+      } else {
+        bytes.push(val.charCodeAt(i));
+        i++;
+      }
+    }
+    try {
+      const uint8Array = new Uint8Array(bytes);
+      return new TextDecoder('utf-8').decode(uint8Array);
+    } catch (e) {
+      return val.replace(/=([0-9A-F]{2})/gi, (match, hex) => {
+        return String.fromCharCode(parseInt(hex, 16));
+      });
+    }
+  };
+  lines.forEach(line => {
+    const [keyPart, ...valueParts] = line.split(':');
+    if (!keyPart || valueParts.length === 0) {
+      return;
+    }
+    const value = valueParts.join(':');
+    const keyParams = keyPart.split(';');
+    const key = keyParams[0].trim().toUpperCase();
+    const isQuotedPrintable = keyParams.some(param => param.trim().toUpperCase() === 'QUOTED-PRINTABLE' || param.trim().toUpperCase() === 'ENCODING=QUOTED-PRINTABLE');
+    if (key === 'FN') {
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      card.fn = unescapeValue(processedValue);
+    } else if (key === 'N') {
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      const parts = processedValue.split(';');
+      card.n = {
+        surname: parts[0] ? unescapeValue(parts[0]) : undefined,
+        given: parts[1] ? unescapeValue(parts[1]) : undefined,
+        additional: parts[2] ? unescapeValue(parts[2]) : undefined,
+        prefix: parts[3] ? unescapeValue(parts[3]) : undefined,
+        suffix: parts[4] ? unescapeValue(parts[4]) : undefined
+      };
+      Object.keys(card.n).forEach(key => card.n[key] === undefined && delete card.n[key]);
+      if (Object.keys(card.n).length === 0) {
+        delete card.n;
+      }
+    } else if (key === 'ORG') {
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      const parts = processedValue.split(';');
+      card.org = card.org || {};
+      card.org.fn = parts[0] ? unescapeValue(parts[0]) : undefined;
+      if (!card.org.fn) delete card.org.fn;
+    } else if (key === 'TITLE') {
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      card.org = card.org || {};
+      card.org.title = processedValue ? unescapeValue(processedValue) : undefined;
+      if (!card.org.title) delete card.org.title;
+    } else if (key === 'NOTE') {
+      let processedValue = value;
+      if (isQuotedPrintable) {
+        processedValue = decodeQuotedPrintable(processedValue);
+      }
+      card.note = unescapeValue(processedValue);
+    } else if (key === 'BDAY') {
+      let dateStr = value.split(/[T ]/)[0].trim();
+      let year = null;
+      let month = null;
+      let day = null;
+      const noHyphens = dateStr.replace(/-/g, '');
+      if (noHyphens.length === 6 && /^\d{6}$/.test(noHyphens)) {
+        const yy = parseInt(noHyphens.substring(0, 2), 10);
+        month = parseInt(noHyphens.substring(2, 4), 10);
+        day = parseInt(noHyphens.substring(4, 6), 10);
+        year = yy >= 35 ? 1900 + yy : 2000 + yy;
+      } else if (dateStr.startsWith('--') || dateStr.startsWith('----')) {
+        const cleaned = dateStr.replace(/^-+/, '');
+        if (cleaned.length === 4 && /^\d{4}$/.test(cleaned)) {
+          month = parseInt(cleaned.substring(0, 2), 10);
+          day = parseInt(cleaned.substring(2, 4), 10);
+        } else if (cleaned.includes('-')) {
+          const parts = cleaned.split('-');
+          if (parts.length >= 2) {
+            month = parseInt(parts[0], 10);
+            day = parseInt(parts[1], 10);
+          }
+        }
+      } else if (noHyphens.length === 8 && /^\d{8}$/.test(noHyphens)) {
+        year = parseInt(noHyphens.substring(0, 4), 10);
+        month = parseInt(noHyphens.substring(4, 6), 10);
+        day = parseInt(noHyphens.substring(6, 8), 10);
+      } else if (dateStr.includes('-')) {
+        const parts = dateStr.split('-');
+        if (parts[0] && parts[0] !== '' && !/^-+$/.test(parts[0])) {
+          year = parseInt(parts[0], 10);
+        }
+        if (parts.length >= 2) {
+          month = parseInt(parts[1], 10);
+        }
+        if (parts.length >= 3) {
+          day = parseInt(parts[2], 10);
+        }
+      }
+      const isValidMonth = month && month >= 1 && month <= 12;
+      const isValidDay = day && day >= 1 && day <= 31;
+      const isValidYear = !year || year >= 1800 && year <= 2200;
+      if (isValidMonth && isValidDay && isValidYear) {
+        card.bday = {
+          m: month,
+          d: day
+        };
+        if (year) {
+          card.bday.y = year;
+        }
+      }
+    } else if (key === 'PHOTO') {
+      const params = keyPart.split(';').slice(1);
+      let type = 'jpeg';
+      let encoding = null;
+      params.forEach(param => {
+        const [pKey, pValue] = param.split('=');
+        if (pKey && pKey.trim().toUpperCase() === 'TYPE') {
+          type = pValue ? pValue.trim().toLowerCase() : 'jpeg';
+        } else if (pKey && pKey.trim().toUpperCase() === 'ENCODING') {
+          encoding = pValue ? pValue.trim().toLowerCase() : null;
+        }
+      });
+      if (encoding === 'b') {
+        card.photo = {
+          type: type,
+          data: value,
+          ref: _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR
+        };
+      } else {
+        card.photo = {
+          type: type,
+          data: _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR,
+          ref: value
+        };
+      }
+    } else if (key === 'TEL') {
+      const typeParams = keyPart.split(';').filter(param => param.trim().toUpperCase().startsWith('TYPE='));
+      const types = typeParams.flatMap(param => {
+        const equalIndex = param.indexOf('=');
+        const valuesPart = param.substring(equalIndex + 1);
+        return valuesPart.split(',').map(t => {
+          const cleaned = t.trim().toLowerCase();
+          return cleaned.startsWith('type=') ? cleaned.substring(5) : cleaned;
+        });
+      }).filter(t => t !== 'internet');
+      const mapKey = `tel|${value}`;
+      if (!commMap.has(mapKey)) {
+        commMap.set(mapKey, new Set());
+      }
+      types.forEach(t => commMap.get(mapKey).add(t));
+    } else if (key === 'EMAIL') {
+      const typeParams = keyPart.split(';').filter(param => param.trim().toUpperCase().startsWith('TYPE='));
+      const types = typeParams.flatMap(param => {
+        const equalIndex = param.indexOf('=');
+        const valuesPart = param.substring(equalIndex + 1);
+        return valuesPart.split(',').map(t => {
+          const cleaned = t.trim().toLowerCase();
+          return cleaned.startsWith('type=') ? cleaned.substring(5) : cleaned;
+        });
+      }).filter(t => t !== 'internet');
+      const mapKey = `email|${value}`;
+      if (!commMap.has(mapKey)) {
+        commMap.set(mapKey, new Set());
+      }
+      types.forEach(t => commMap.get(mapKey).add(t));
+    } else if (key === 'IMPP') {
+      const typeParams = keyPart.split(';').filter(param => param.trim().toUpperCase().startsWith('TYPE='));
+      const types = typeParams.flatMap(param => {
+        const equalIndex = param.indexOf('=');
+        const valuesPart = param.substring(equalIndex + 1);
+        return valuesPart.split(',').map(t => {
+          const cleaned = t.trim().toLowerCase();
+          return cleaned.startsWith('type=') ? cleaned.substring(5) : cleaned;
+        });
+      }).filter(t => t !== 'internet');
+      const tinodeID = value.replace(/^tinode:/, '');
+      const mapKey = `tinode|${tinodeID}`;
+      if (!commMap.has(mapKey)) {
+        commMap.set(mapKey, new Set());
+      }
+      types.forEach(t => commMap.get(mapKey).add(t));
+    } else if (key === 'URL') {
+      const typeParams = keyPart.split(';').filter(param => param.trim().toUpperCase().startsWith('TYPE='));
+      const types = typeParams.flatMap(param => {
+        const equalIndex = param.indexOf('=');
+        const valuesPart = param.substring(equalIndex + 1);
+        return valuesPart.split(',').map(t => {
+          const cleaned = t.trim().toLowerCase();
+          return cleaned.startsWith('type=') ? cleaned.substring(5) : cleaned;
+        });
+      }).filter(t => t !== 'internet');
+      const mapKey = `http|${value}`;
+      if (!commMap.has(mapKey)) {
+        commMap.set(mapKey, new Set());
+      }
+      types.forEach(t => commMap.get(mapKey).add(t));
+    }
+  });
+  if (commMap.size > 0) {
+    card.comm = [];
+    commMap.forEach((types, key) => {
+      const [proto, value] = key.split('|', 2);
+      card.comm.push({
+        proto: proto,
+        des: Array.from(types),
+        value: value
+      });
+    });
+  }
+  return card;
+};
+TheCard.isFileSupported = function (type, name) {
+  return type == 'text/vcard' || (name || '').endsWith('.vcf') || (name || '').endsWith('.vcard');
+};
+function theCard(fn, imageUrl, imageMimeType, note) {
+  let card = null;
+  fn = fn && fn.trim();
+  note = note && note.trim();
+  if (fn) {
+    card = {
+      fn: fn
+    };
+  }
+  if (typeof note == 'string') {
+    card = card || {};
+    card.note = note ? note : _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR;
+  }
+  if (imageUrl) {
+    card = card || {};
+    let mimeType = imageMimeType;
+    const matches = /^data:(image\/[-a-z0-9+.]+)?(;base64)?,/i.exec(imageUrl);
+    if (matches) {
+      mimeType = matches[1];
+      card.photo = {
+        data: imageUrl.substring(imageUrl.indexOf(',') + 1),
+        ref: _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR
+      };
+    } else {
+      card.photo = {
+        data: _config_js__WEBPACK_IMPORTED_MODULE_0__.DEL_CHAR,
+        ref: imageUrl
+      };
+    }
+    card.photo.type = (mimeType || 'image/jpeg').substring('image/'.length);
+  }
+  return card;
+}
+function addOrSetComm(card, proto, value, type, setOnly) {
+  proto = proto && proto.trim();
+  value = value && value.trim();
+  if (proto && value) {
+    card = card || {};
+    card.comm = card.comm || [];
+    if (setOnly) {
+      card.comm = card.comm.filter(c => {
+        if (c.proto != proto) return true;
+        return !c.des.includes(type);
+      });
+    }
+    card.comm.push({
+      proto: proto,
+      des: [type],
+      value: value
+    });
+  }
+  return card;
+}
+function clearComm(card, proto, value, type) {
+  if (card && Array.isArray(card.comm)) {
+    card.comm = card.comm.filter(c => {
+      if (c.proto != proto) return true;
+      if (value && c.value != value) return true;
+      if (type) {
+        return !c.des.includes(type);
+      }
+      return false;
+    });
+  }
+  return card;
+}
+
+/***/ }),
+
 /***/ "./src/topic.js":
 /*!**********************!*\
   !*** ./src/topic.js ***!
@@ -3968,12 +4595,18 @@ class Topic {
     this.private = null;
     this.public = null;
     this.trusted = null;
+    this.seq = 0;
+    this.read = 0;
+    this.recv = 0;
+    this.clear = 0;
+    this.mrrid = 0;
     this._users = {};
     this._queuedSeqId = _config_js__WEBPACK_IMPORTED_MODULE_3__.LOCAL_SEQID;
     this._maxSeq = 0;
     this._minSeq = 0;
     this._noEarlierMsgs = false;
     this._maxDel = 0;
+    this._mrrSeen = 0;
     this._recvNotificationTimer = null;
     this._tags = [];
     this._credentials = [];
@@ -3998,6 +4631,7 @@ class Topic {
       this.onTagsUpdated = callbacks.onTagsUpdated;
       this.onCredsUpdated = callbacks.onCredsUpdated;
       this.onAuxUpdated = callbacks.onAuxUpdated;
+      this.onReact = callbacks.onReact;
       this.onDeleteTopic = callbacks.onDeleteTopic;
       this.onAllMessagesReceived = callbacks.onAllMessagesReceived;
     }
@@ -4287,6 +4921,10 @@ class Topic {
       if (params.aux) {
         this._processMetaAux(params.aux);
       }
+      if (params.react) {
+        params.react.mrrid = ctrl.params?.mrrid | 0;
+        this._processMetaReact(undefined, params.react);
+      }
       return ctrl;
     });
   }
@@ -4357,6 +4995,41 @@ class Topic {
   }
   pinnedTopicRank(topic) {
     return 0;
+  }
+  react(seq, emo) {
+    if (!seq || !emo) {
+      return Promise.reject(new Error("Invalid parameters"));
+    }
+    const curr = this.msgMyReaction(seq);
+    if (curr == emo) {
+      emo = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
+    }
+    this.setMeta({
+      react: {
+        seq: seq,
+        val: emo
+      }
+    });
+  }
+  reactions() {
+    const react = this.aux('react');
+    if (react) {
+      return react.vals;
+    }
+    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.REACTION_LIST);
+  }
+  maxReactions() {
+    const react = this.aux('react');
+    if (react) {
+      return react.max;
+    }
+    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_REACTIONS, 0);
+  }
+  markReactionsSeen() {
+    if (this._mrrSeen != this.mrrid) {
+      this._mrrSeen = this.mrrid;
+      this._tinode.getMeTopic()._refreshContact('react', this);
+    }
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -4490,7 +5163,7 @@ class Topic {
     if (!this._attached && !['ringing', 'hang-up'].includes(evt)) {
       return;
     }
-    return this._tinode.videoCall(this.name, seq, evt, payload);
+    this._tinode.videoCall(this.name, seq, evt, payload);
   }
   _updateMyReadRecv(what, seq, ts) {
     let oldVal,
@@ -4667,6 +5340,26 @@ class Topic {
   }
   msgRecvCount(seq) {
     return this.msgReceiptCount('recv', seq);
+  }
+  msgReactions(seq) {
+    const msg = this.findMessage(seq);
+    if (!msg) {
+      return [];
+    }
+    return msg.react || [];
+  }
+  msgMyReaction(seq) {
+    const reactions = this.msgReactions(seq);
+    const me = this._tinode.getCurrentUserID();
+    for (let i = 0; i < reactions.length; i++) {
+      if ((reactions[i].users || []).includes(me)) {
+        return reactions[i].val;
+      }
+    }
+    return null;
+  }
+  hasUnseenReactions() {
+    return this.mrrid > this._mrrSeen;
   }
   msgHasMoreMessages(min, max, newer) {
     const gaps = [];
@@ -4878,6 +5571,21 @@ class Topic {
       }
       data.content = _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().updateVideoCall(data.content, upd);
     }
+    if (data.react) {
+      let maxReact = 0;
+      data.react = (data.react || []).map(r => {
+        maxReact = Math.max(maxReact, r.mrrid);
+        return {
+          mrrid: r.mrrid,
+          val: r.val,
+          count: r.count | 0,
+          users: Array.isArray(r.users) ? r.users.slice() : []
+        };
+      });
+      if (this.mrrid < maxReact) {
+        this.mrrid = maxReact;
+      }
+    }
     if (!data._noForwarding) {
       this._messages.put(data);
       this._tinode._db.addMessage(data);
@@ -4917,6 +5625,9 @@ class Topic {
     if (meta.aux) {
       this._processMetaAux(meta.aux);
     }
+    if (meta.react) {
+      this._processMetaReact(meta.react);
+    }
     if (this.onMeta) {
       this.onMeta(meta);
     }
@@ -4946,6 +5657,14 @@ class Topic {
         break;
       case 'aux':
         this.getMeta(this.startMetaQuery().withAux().build());
+        break;
+      case 'react':
+        this._processMetaReact(undefined, {
+          mrrid: pres.id2 | 0,
+          seq: pres.seq | 0,
+          user: pres.act,
+          val: pres.val
+        });
         break;
       case 'acs':
         uid = pres.src || this._tinode.getCurrentUserID();
@@ -5085,6 +5804,106 @@ class Topic {
       this.onAuxUpdated(this._aux);
     }
   }
+  _handleReactionDiff(msg, delta) {
+    const reacts = [...(msg.react || [])];
+    const user = delta.users[0];
+    const found = user ? reacts.findIndex(r => r.users.includes(user)) : -1;
+    if (found >= 0) {
+      const existing = reacts[found];
+      if (delta.val == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR || existing.val == delta.val) {
+        existing.count--;
+        existing.mrrid = Math.max(existing.mrrid, delta.mrrid);
+        if (existing.count <= 0) {
+          reacts.splice(found, 1);
+        } else {
+          const userIdx = existing.users.indexOf(user);
+          existing.users.splice(userIdx, 1);
+        }
+      } else {
+        const userIdx = existing.users.indexOf(user);
+        existing.users.splice(userIdx, 1);
+        existing.count--;
+        if (existing.count <= 0) {
+          reacts.splice(found, 1);
+        }
+        const emoIndex = reacts.findIndex(r => r.val == delta.val);
+        if (emoIndex >= 0) {
+          reacts[emoIndex].users.push(user);
+          reacts[emoIndex].count++;
+          reacts[emoIndex].mrrid = Math.max(reacts[emoIndex].mrrid, delta.mrrid);
+        } else {
+          reacts.push({
+            mrrid: delta.mrrid,
+            users: [user],
+            count: 1,
+            val: delta.val
+          });
+        }
+      }
+    } else if (delta.val != _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
+      const emoIndex = reacts.findIndex(r => r.val == delta.val);
+      if (emoIndex >= 0) {
+        if (user) {
+          reacts[emoIndex].users.push(user);
+        }
+        reacts[emoIndex].count++;
+        reacts[emoIndex].mrrid = Math.max(reacts[emoIndex].mrrid, delta.mrrid);
+      } else {
+        reacts.push({
+          mrrid: delta.mrrid,
+          users: user ? [user] : [],
+          count: 1,
+          val: delta.val
+        });
+      }
+    }
+    return reacts;
+  }
+  _processMetaReact(reacts, oneReaction) {
+    if (!Array.isArray(reacts)) {
+      if (!oneReaction.seq || !oneReaction.val) {
+        this._tinode.logger("WARNING: invalid reaction");
+        return;
+      }
+      reacts = [{
+        _diff: true,
+        seq: oneReaction.seq,
+        data: [{
+          mrrid: oneReaction.mrrid,
+          val: oneReaction.val,
+          count: 1,
+          users: [oneReaction.user || this._tinode.getCurrentUserID()]
+        }]
+      }];
+    }
+    const seqIds = [];
+    reacts.forEach(mr => {
+      const msg = this.findMessage(mr.seq);
+      seqIds.push(mr.seq);
+      if (msg) {
+        let upd;
+        if (mr._diff) {
+          upd = this._handleReactionDiff(msg, mr.data[0]);
+        } else {
+          upd = (mr.data || []).map(r => ({
+            mrrid: r.mrrid,
+            val: r.val,
+            count: r.count | 0,
+            users: Array.isArray(r.users) ? r.users.slice() : []
+          }));
+        }
+        msg.react = upd;
+        const maxReact = upd.reduce((max, r) => Math.max(max, r.mrrid), 0);
+        if (this.mrrid < maxReact) {
+          this.mrrid = maxReact;
+        }
+        this._tinode._db.updMessageReact(this.name, mr.seq, msg.react);
+      }
+    });
+    if (this.onReact) {
+      this.onReact(seqIds);
+    }
+  }
   _processDelMessages(clear, delseq) {
     this._maxDel = Math.max(clear, this._maxDel);
     this.clear = Math.max(clear, this.clear);
@@ -5131,6 +5950,8 @@ class Topic {
     this.trusted = null;
     this._maxSeq = 0;
     this._minSeq = 0;
+    this._maxDel = 0;
+    this._maxReact = 0;
     this._attached = false;
     const me = this._tinode.getMeTopic();
     if (me) {
@@ -5449,7 +6270,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.1";
+const PACKAGE_VERSION = "0.26.0-alpha2";
 
 /***/ })
 
@@ -5549,6 +6370,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AccessMode: function() { return /* reexport safe */ _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]; },
 /* harmony export */   Drafty: function() { return /* reexport default from dynamic */ _drafty_js__WEBPACK_IMPORTED_MODULE_5___default.a; },
+/* harmony export */   TheCard: function() { return /* reexport safe */ _the_card_js__WEBPACK_IMPORTED_MODULE_11__["default"]; },
 /* harmony export */   Tinode: function() { return /* binding */ Tinode; }
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
@@ -5563,11 +6385,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
 /* harmony import */ var _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./fnd-topic.js */ "./src/fnd-topic.js");
 /* harmony import */ var _me_topic_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./me-topic.js */ "./src/me-topic.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _the_card_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./the-card.js */ "./src/the-card.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 /**
  * @module tinode-sdk
  *
- * @copyright 2015-2025 Tinode LLC.
+ * @copyright 2015-2026 Tinode LLC.
  * @summary Javascript bindings for Tinode.
  * @license Apache 2.0
  * @version 0.25
@@ -5608,6 +6431,8 @@ __webpack_require__.r(__webpack_exports__);
  * </script>
  * </body>
  */
+
+
 
 
 
@@ -5698,7 +6523,7 @@ function b64EncodeUnicode(str) {
 }
 function jsonBuildHelper(key, val) {
   if (val instanceof Date) {
-    val = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.rfc3339DateString)(val);
+    val = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.rfc3339DateString)(val);
   } else if (val instanceof _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
     val = val.jsonHelper();
   } else if (val === undefined || val === null || val === false || Array.isArray(val) && val.length == 0 || typeof val == 'object' && Object.keys(val).length == 0) {
@@ -5858,7 +6683,7 @@ class Tinode {
         });
       }).then(_ => {
         return this._db.mapUsers(data => {
-          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, data.public));
+          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.mergeObj)({}, data.public));
         });
       }).then(_ => {
         return Promise.all(prom);
@@ -5919,7 +6744,7 @@ class Tinode {
     if (id) {
       promise = this.#makePromise(id);
     }
-    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.simplify)(pkt);
+    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.simplify)(pkt);
     let msg = JSON.stringify(pkt);
     this.logger("out: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : msg));
     try {
@@ -5945,7 +6770,7 @@ class Tinode {
       }
       return;
     }
-    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_11__.jsonParseHelper);
+    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_12__.jsonParseHelper);
     if (!pkt) {
       this.logger("in: " + data);
       this.logger("ERROR: failed to parse data");
@@ -6206,13 +7031,13 @@ class Tinode {
       if (pub) {
         return {
           user: uid,
-          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, pub)
+          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.mergeObj)({}, pub)
         };
       }
       return undefined;
     };
     topic._cachePutUser = (uid, user) => {
-      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, user.public));
+      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.mergeObj)({}, user.public));
     };
     topic._cacheDelUser = uid => {
       this.#cacheDel('user', uid);
@@ -6391,7 +7216,7 @@ class Tinode {
     if (typeof url != 'string') {
       return url;
     }
-    if ((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(url)) {
+    if ((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.isUrlRelative)(url)) {
       const base = 'scheme://host/';
       const parsed = new URL(url, base);
       if (this._apiKey) {
@@ -6422,7 +7247,7 @@ class Tinode {
       pkt.acc.tmpsecret = params.secret;
       if (Array.isArray(params.attachments) && params.attachments.length > 0) {
         pkt.extra = {
-          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.isUrlRelative)(ref))
         };
       }
     }
@@ -6531,7 +7356,7 @@ class Tinode {
       }
       if (Array.isArray(setParams.attachments) && setParams.attachments.length > 0) {
         pkt.extra = {
-          attachments: setParams.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+          attachments: setParams.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.isUrlRelative)(ref))
         };
       }
       if (setParams.tags) {
@@ -6574,7 +7399,7 @@ class Tinode {
     };
     if (attachments) {
       msg.extra = {
-        attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+        attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.isUrlRelative)(ref))
       };
     }
     return this.#send(msg, pub.id);
@@ -6647,14 +7472,14 @@ class Tinode {
   }
   getMeta(topic, params) {
     const pkt = this.#initPacket('get', topic);
-    pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)(pkt.get, params);
+    pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.mergeObj)(pkt.get, params);
     return this.#send(pkt, pkt.get.id);
   }
   setMeta(topic, params) {
     const pkt = this.#initPacket('set', topic);
     const what = [];
     if (params) {
-      ['desc', 'sub', 'tags', 'cred', 'aux'].forEach(key => {
+      ['desc', 'sub', 'tags', 'cred', 'aux', 'react'].forEach(key => {
         if (params.hasOwnProperty(key)) {
           what.push(key);
           pkt.set[key] = params[key];
@@ -6662,7 +7487,7 @@ class Tinode {
       });
       if (Array.isArray(params.attachments) && params.attachments.length > 0) {
         pkt.extra = {
-          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
+          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.isUrlRelative)(ref))
         };
       }
     }
@@ -6727,7 +7552,16 @@ class Tinode {
     pkt.note.what = 'call';
     pkt.note.event = evt;
     pkt.note.payload = payload;
-    this.#send(pkt, pkt.note.id);
+    this.#send(pkt);
+  }
+  react(topicName, seq, emo) {
+    const pkt = this.#initPacket('note', topicName);
+    pkt.note.seq = seq;
+    pkt.note.what = 'react';
+    pkt.note.payload = {
+      emo
+    };
+    this.#send(pkt);
   }
   getTopic(topicName) {
     let topic = this.#cacheGet('topic', topicName);
@@ -6836,15 +7670,18 @@ Tinode.MESSAGE_STATUS_RECEIVED = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE
 Tinode.MESSAGE_STATUS_READ = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_READ;
 Tinode.MESSAGE_STATUS_TO_ME = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_TO_ME;
 Tinode.DEL_CHAR = _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR;
-Tinode.MAX_MESSAGE_SIZE = 'maxMessageSize';
-Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
-Tinode.MIN_TAG_LENGTH = 'minTagLength';
-Tinode.MAX_TAG_LENGTH = 'maxTagLength';
-Tinode.MAX_TAG_COUNT = 'maxTagCount';
-Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
-Tinode.REQ_CRED_VALIDATORS = 'reqCred';
-Tinode.MSG_DELETE_AGE = 'msgDelAge';
+Tinode.MAX_MESSAGE_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_MESSAGE_SIZE;
+Tinode.MAX_SUBSCRIBER_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_SUBSCRIBER_COUNT;
+Tinode.MIN_TAG_LENGTH = _config_js__WEBPACK_IMPORTED_MODULE_1__.MIN_TAG_LENGTH;
+Tinode.MAX_TAG_LENGTH = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_LENGTH;
+Tinode.MAX_TAG_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_COUNT;
+Tinode.MAX_FILE_UPLOAD_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_FILE_UPLOAD_SIZE;
+Tinode.REQ_CRED_VALIDATORS = _config_js__WEBPACK_IMPORTED_MODULE_1__.REQ_CRED_VALIDATORS;
+Tinode.MSG_DELETE_AGE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MSG_DELETE_AGE;
+Tinode.REACTION_LIST = _config_js__WEBPACK_IMPORTED_MODULE_1__.REACTION_LIST;
+Tinode.MAX_REACTIONS = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_REACTIONS;
 Tinode.URI_TOPIC_ID_PREFIX = 'tinode:topic/';
+Tinode.URI_TOPIC_ALIAS_PREFIX = 'tinode:alias/';
 Tinode.TAG_ALIAS = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_ALIAS;
 Tinode.TAG_EMAIL = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_EMAIL;
 Tinode.TAG_PHONE = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_PHONE;

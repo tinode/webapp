@@ -669,7 +669,7 @@ class InfoView extends React.Component {
                       <i className="m-icon">qr_code</i>
                     </a>&nbsp;
                     &nbsp;<a href="#" onClick={this.handleShare}>
-                      <i className="material-icons">share</i>
+                      <i className="m-icon">share</i>
                     </a>&nbsp;
                   </div>
                 </div>

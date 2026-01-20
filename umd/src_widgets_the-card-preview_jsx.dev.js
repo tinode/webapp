@@ -138,7 +138,7 @@ class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         this.props.onClose();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
+      className: "m-icon gray"
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

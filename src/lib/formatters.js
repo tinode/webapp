@@ -339,7 +339,7 @@ export function previewFormatter(style, data, values, key) {
     case 'TC':
       // TheCard
       el = React.Fragment;
-      values = [<i key="tc" className="material-icons">contact_mail</i>, ' ',
+      values = [<i key="tc" className="m-icon thin">id_card</i>, ' ',
         TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
       break;
     case 'VD':
