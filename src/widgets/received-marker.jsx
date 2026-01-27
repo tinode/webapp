@@ -42,7 +42,7 @@ class ReceivedMarker extends React.PureComponent {
     const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
 
     return (
-      <span className="timestamp">
+      <span className="timestamp" style={this.props.style}>
         {timestamp}{edited}{'\u00a0'}{marker}
       </span>
     );

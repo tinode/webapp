@@ -1468,6 +1468,7 @@ class TinodeWeb extends React.Component {
       delete parsed.params.code;
       delete parsed.params.method;
       delete parsed.params.tab;
+      delete parsed.params.q;
       delete parsed.params.scheme;
       delete parsed.params.token;
     }

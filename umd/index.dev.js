@@ -10022,10 +10022,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
 class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    this.handleNewTopic = this.handleNewTopic.bind(this);
-  }
-  handleNewTopic() {
-    this.props.onNavigate('newtpk');
   }
   render() {
     const {
@@ -10057,7 +10053,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       myUserId: this.props.myUserId,
       onSignUp: this.props.onSignUp,
       onSettings: this.props.onSettings,
-      onNewTopic: this.handleNewTopic,
+      onNewTopic: () => this.props.onNavigate('newtpk'),
       onCancel: onCancel
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       level: this.props.errorLevel,
@@ -11592,6 +11588,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       delete parsed.params.code;
       delete parsed.params.method;
       delete parsed.params.tab;
+      delete parsed.params.q;
       delete parsed.params.scheme;
       delete parsed.params.token;
     }

@@ -2440,7 +2440,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "content-meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: textSizeClass
-    }, content, attachments), this.props.reactionList && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, content, attachments), this.props.reactionList ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       reactions: this.props.reactions,
       reactionList: this.props.reactionList,
       maxReactions: this.props.maxReactions,
@@ -2448,10 +2448,17 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       pickerShown: this.props.showPicker,
       onTogglePicker: this.handleTogglePicker,
       onReactionSelected: this.handleReactionSelected
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      style: {
+        height: '0.25rem'
+      }
     }), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       edited: this.props.edited,
       timestamp: this.props.timestamp,
-      received: this.props.received
+      received: this.props.received,
+      style: {
+        marginBottom: this.props.reactionList ? 'unset' : '0.25rem'
+      }
     }) : null), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -3223,7 +3230,8 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, icon.name) : null;
     const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "timestamp"
+      className: "timestamp",
+      style: this.props.style
     }, timestamp, edited, '\u00a0', marker);
   }
 }

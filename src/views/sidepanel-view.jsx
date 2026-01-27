@@ -107,12 +107,6 @@ const messages = defineMessages({
 class SidepanelView extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    this.handleNewTopic = this.handleNewTopic.bind(this);
-  }
-
-  handleNewTopic() {
-    this.props.onNavigate('newtpk');
   }
 
   render() {
@@ -146,7 +140,7 @@ class SidepanelView extends React.PureComponent {
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
-          onNewTopic={this.handleNewTopic}
+          onNewTopic={() => this.props.onNavigate('newtpk')}
           onCancel={onCancel} />
 
         <ErrorPanel

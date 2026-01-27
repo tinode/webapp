@@ -306,7 +306,7 @@ class BaseChatMessage extends React.PureComponent {
                 {content}
                 {attachments}
               </div>
-              {this.props.reactionList &&
+              {this.props.reactionList ?
                 <ReactionStrip
                   reactions={this.props.reactions}
                   reactionList={this.props.reactionList}
@@ -315,12 +315,14 @@ class BaseChatMessage extends React.PureComponent {
                   pickerShown={this.props.showPicker}
                   onTogglePicker={this.handleTogglePicker}
                   onReactionSelected={this.handleReactionSelected} />
+                : <div style={{height: '0.25rem'}}></div>
               }
               {this.props.timestamp ?
                 <ReceivedMarker
                   edited={this.props.edited}
                   timestamp={this.props.timestamp}
-                  received={this.props.received} />
+                  received={this.props.received}
+                  style={{ marginBottom: this.props.reactionList ? 'unset' : '0.25rem' }} />
                 : null}
             </div>
             {this.props.showContextMenu ?
