@@ -13534,9 +13534,9 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "composed-material"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
+      className: "m-icon thin"
     }, "call"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon second"
+      className: "m-icon second thin"
     }, icon2)), " ", duration);
   }
 }
