@@ -1908,136 +1908,94 @@
     "obsolete": false
   },
   "button_reactions": {
-    "translation": "",
+    "translation": "반응",
     "defaultMessage": "Reactions",
     "description": "Navigation button for reactions panel.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "button_save": {
-    "translation": "",
+    "translation": "저장",
     "defaultMessage": "Save",
     "description": "Button [Save]",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_available_reactions": {
-    "translation": "",
+    "translation": "사용 가능한 반응",
     "defaultMessage": "Available reactions",
     "description": "Label for available reactions picker",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_reaction_settings": {
-    "translation": "",
+    "translation": "선택된 반응",
     "defaultMessage": "Selected reactions",
     "description": "Label for topic reaction settings",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "label_selected_reactions": {
-    "translation": "",
-    "defaultMessage": "Selected ({count}/{max})",
-    "description": "Label showing count of selected reactions",
-    "missing": true,
-    "obsolete": true
-  },
   "no_reactions_selected": {
-    "translation": "",
+    "translation": "선택된 반응 없음",
     "defaultMessage": "No reactions selected",
     "description": "Shown when no reactions are selected",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_reactions": {
-    "translation": "",
+    "translation": "반응",
     "defaultMessage": "Reactions",
     "description": "Title for reaction settings panel",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "reaction_settings_description": {
-    "translation": "",
-    "defaultMessage": "Select reactions for this topic.",
-    "description": "Description of reaction settings",
-    "missing": true,
-    "obsolete": true
-  },
   "label_max_reactions_per_message": {
-    "translation": "",
+    "translation": "메시지당 최대 반응 유형 수",
     "defaultMessage": "Maximum reaction types per message",
     "description": "Label for max reactions per message setting",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "max_reactions_per_message_description": {
-    "translation": "",
+    "translation": "단일 메시지에 추가할 수 있는 다양한 반응 유형의 수를 제한합니다.",
     "defaultMessage": "Limit how many different reaction types can be added to a single message.",
     "description": "Description of max reactions per message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unknown_name": {
-    "translation": "",
+    "translation": "알 수 없음",
     "defaultMessage": "Unknown",
     "description": "Name to show when the name is missing",
-    "missing": true,
-    "obsolete": false
-  },
-  "save_action": {
-    "translation": "",
-    "defaultMessage": "Save",
-    "description": "Label for Save button",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "cannot_parse_vcard": {
-    "translation": "",
+    "translation": "vCard 파일을 구문 분석할 수 없습니다.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "",
+    "translation": "채팅",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "",
+    "translation": "찾기",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_contact_card": {
-    "translation": "",
+    "translation": "연락처 카드",
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview",
-    "missing": true,
+    "missing": false,
     "obsolete": false
-  },
-  "label_contacts": {
-    "translation": "",
-    "defaultMessage": "Contacts",
-    "description": "Label for contact information",
-    "missing": true,
-    "obsolete": false
-  },
-  "label_full_name": {
-    "translation": "",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": true,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": true,
-    "obsolete": true
   }
 }

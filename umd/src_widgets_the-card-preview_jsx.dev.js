@@ -175,7 +175,7 @@ class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_contacts",
+      id: "label_user_contacts",
       defaultMessage: [{
         "type": 0,
         "value": "Contacts"

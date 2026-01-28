@@ -1908,136 +1908,94 @@
     "obsolete": false
   },
   "button_reactions": {
-    "translation": "",
+    "translation": "Reazioni",
     "defaultMessage": "Reactions",
     "description": "Navigation button for reactions panel.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "button_save": {
-    "translation": "",
+    "translation": "Salva",
     "defaultMessage": "Save",
     "description": "Button [Save]",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_available_reactions": {
-    "translation": "",
+    "translation": "Reazioni disponibili",
     "defaultMessage": "Available reactions",
     "description": "Label for available reactions picker",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_reaction_settings": {
-    "translation": "",
+    "translation": "Reazioni selezionate",
     "defaultMessage": "Selected reactions",
     "description": "Label for topic reaction settings",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "label_selected_reactions": {
-    "translation": "",
-    "defaultMessage": "Selected ({count}/{max})",
-    "description": "Label showing count of selected reactions",
-    "missing": true,
-    "obsolete": true
-  },
   "no_reactions_selected": {
-    "translation": "",
+    "translation": "Nessuna reazione selezionata",
     "defaultMessage": "No reactions selected",
     "description": "Shown when no reactions are selected",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_reactions": {
-    "translation": "",
+    "translation": "Reazioni",
     "defaultMessage": "Reactions",
     "description": "Title for reaction settings panel",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "reaction_settings_description": {
-    "translation": "",
-    "defaultMessage": "Select reactions for this topic.",
-    "description": "Description of reaction settings",
-    "missing": true,
-    "obsolete": true
-  },
   "label_max_reactions_per_message": {
-    "translation": "",
+    "translation": "Numero massimo di tipi di reazioni per messaggio",
     "defaultMessage": "Maximum reaction types per message",
     "description": "Label for max reactions per message setting",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "max_reactions_per_message_description": {
-    "translation": "",
+    "translation": "Limita quanti tipi di reazioni diversi possono essere aggiunti a un singolo messaggio.",
     "defaultMessage": "Limit how many different reaction types can be added to a single message.",
     "description": "Description of max reactions per message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unknown_name": {
-    "translation": "",
+    "translation": "Sconosciuto",
     "defaultMessage": "Unknown",
     "description": "Name to show when the name is missing",
-    "missing": true,
-    "obsolete": false
-  },
-  "save_action": {
-    "translation": "",
-    "defaultMessage": "Save",
-    "description": "Label for Save button",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "cannot_parse_vcard": {
-    "translation": "",
+    "translation": "Impossibile analizzare il file vCard.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "",
+    "translation": "Chat",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "",
+    "translation": "Trova",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_contact_card": {
-    "translation": "",
+    "translation": "Scheda contatto",
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview",
-    "missing": true,
+    "missing": false,
     "obsolete": false
-  },
-  "label_contacts": {
-    "translation": "",
-    "defaultMessage": "Contacts",
-    "description": "Label for contact information",
-    "missing": true,
-    "obsolete": false
-  },
-  "label_full_name": {
-    "translation": "",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": true,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": true,
-    "obsolete": true
   }
 }

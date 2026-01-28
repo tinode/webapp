@@ -1970,13 +1970,6 @@
     "missing": false,
     "obsolete": false
   },
-  "save_action": {
-    "translation": "Save",
-    "defaultMessage": "Save",
-    "description": "Label for Save button",
-    "missing": false,
-    "obsolete": false
-  },
   "cannot_parse_vcard": {
     "translation": "Cannot parse vCard file.",
     "defaultMessage": "Cannot parse vCard file.",
@@ -2004,26 +1997,5 @@
     "description": "Label for contact card preview",
     "missing": false,
     "obsolete": false
-  },
-  "label_contacts": {
-    "translation": "Contacts",
-    "defaultMessage": "Contacts",
-    "description": "Label for contact information",
-    "missing": false,
-    "obsolete": false
-  },
-  "label_full_name": {
-    "translation": "Full name",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": false,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "Organization",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": false,
-    "obsolete": true
   }
 }

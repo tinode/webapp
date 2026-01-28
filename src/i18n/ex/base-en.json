@@ -450,10 +450,6 @@
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview"
   },
-  "label_contacts": {
-    "defaultMessage": "Contacts",
-    "description": "Label for contact information"
-  },
   "label_content_type": {
     "defaultMessage": "Content type:",
     "description": "Label for file content type (mime)"
@@ -931,10 +927,6 @@
   "requested_permissions": {
     "defaultMessage": "Requested",
     "description": "Title for permissions"
-  },
-  "save_action": {
-    "defaultMessage": "Save",
-    "description": "Label for Save button"
   },
   "save_attachment": {
     "defaultMessage": "save",

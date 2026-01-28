@@ -163,8 +163,8 @@ export default class TheCardPreview extends React.PureComponent {
               {contacts.length > 0 ?
                 <div className="group">
                   <label className="small">
-                    <FormattedMessage id="label_contacts" defaultMessage="Contacts"
-                      description="Label for contact information" />
+                    <FormattedMessage id="label_user_contacts" defaultMessage="Contacts"
+                      description="Label for user contacts" />
                   </label>
                   {contacts}
                 </div>

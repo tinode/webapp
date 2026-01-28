@@ -16792,7 +16792,7 @@ class TheCardMini extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "flat-button",
       onClick: this.handleDownload
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "save_action",
+      id: "button_save",
       defaultMessage: [{
         "type": 0,
         "value": "Save"

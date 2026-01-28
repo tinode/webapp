@@ -90,7 +90,7 @@ class TheCardMini extends React.PureComponent {
             : null
           }
           <a className="flat-button" onClick={this.handleDownload}>
-            <FormattedMessage id="save_action" defaultMessage="Save" description="Label for Save button" />
+            <FormattedMessage id="button_save" defaultMessage="Save" description="Button [Save]" />
           </a>
         </div>
       </div>
