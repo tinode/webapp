@@ -80,7 +80,7 @@ class BaseChatMessage extends React.PureComponent {
       case 'contact_chat':
         e.preventDefault();
         try {
-          // tinode:topic/usr123abc -> usr123abc
+          // tinode:id/usr123abc -> usr123abc
           const pathname = new URL(e.target.dataset.val)?.pathname;
           const parts = pathname.split('/').filter(Boolean);
           HashNavigation.navigateTo(HashNavigation.setUrlTopic('', parts.pop() || ''));
