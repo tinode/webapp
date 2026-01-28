@@ -386,7 +386,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EXPIRE_PROMISES_TIMEOUT: function() { return /* binding */ EXPIRE_PROMISES_TIMEOUT; },
 /* harmony export */   LIBRARY: function() { return /* binding */ LIBRARY; },
 /* harmony export */   LOCAL_SEQID: function() { return /* binding */ LOCAL_SEQID; },
+/* harmony export */   MAX_FILE_UPLOAD_SIZE: function() { return /* binding */ MAX_FILE_UPLOAD_SIZE; },
+/* harmony export */   MAX_MESSAGE_SIZE: function() { return /* binding */ MAX_MESSAGE_SIZE; },
 /* harmony export */   MAX_PINNED_COUNT: function() { return /* binding */ MAX_PINNED_COUNT; },
+/* harmony export */   MAX_REACTIONS: function() { return /* binding */ MAX_REACTIONS; },
+/* harmony export */   MAX_SUBSCRIBER_COUNT: function() { return /* binding */ MAX_SUBSCRIBER_COUNT; },
+/* harmony export */   MAX_TAG_COUNT: function() { return /* binding */ MAX_TAG_COUNT; },
+/* harmony export */   MAX_TAG_LENGTH: function() { return /* binding */ MAX_TAG_LENGTH; },
 /* harmony export */   MESSAGE_STATUS_FAILED: function() { return /* binding */ MESSAGE_STATUS_FAILED; },
 /* harmony export */   MESSAGE_STATUS_FATAL: function() { return /* binding */ MESSAGE_STATUS_FATAL; },
 /* harmony export */   MESSAGE_STATUS_NONE: function() { return /* binding */ MESSAGE_STATUS_NONE; },
@@ -396,8 +402,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MESSAGE_STATUS_SENDING: function() { return /* binding */ MESSAGE_STATUS_SENDING; },
 /* harmony export */   MESSAGE_STATUS_SENT: function() { return /* binding */ MESSAGE_STATUS_SENT; },
 /* harmony export */   MESSAGE_STATUS_TO_ME: function() { return /* binding */ MESSAGE_STATUS_TO_ME; },
+/* harmony export */   MIN_TAG_LENGTH: function() { return /* binding */ MIN_TAG_LENGTH; },
+/* harmony export */   MSG_DELETE_AGE: function() { return /* binding */ MSG_DELETE_AGE; },
 /* harmony export */   PROTOCOL_VERSION: function() { return /* binding */ PROTOCOL_VERSION; },
+/* harmony export */   REACTION_LIST: function() { return /* binding */ REACTION_LIST; },
 /* harmony export */   RECV_TIMEOUT: function() { return /* binding */ RECV_TIMEOUT; },
+/* harmony export */   REQ_CRED_VALIDATORS: function() { return /* binding */ REQ_CRED_VALIDATORS; },
 /* harmony export */   TAG_ALIAS: function() { return /* binding */ TAG_ALIAS; },
 /* harmony export */   TAG_EMAIL: function() { return /* binding */ TAG_EMAIL; },
 /* harmony export */   TAG_PHONE: function() { return /* binding */ TAG_PHONE; },
@@ -452,6 +462,16 @@ const TAG_PHONE = 'tel:';
 const BACKOFF_BASE = 2000;
 const BACKOFF_MAX_ITER = 10;
 const BACKOFF_JITTER = 0.3;
+const MAX_MESSAGE_SIZE = 'maxMessageSize';
+const MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
+const MIN_TAG_LENGTH = 'minTagLength';
+const MAX_TAG_LENGTH = 'maxTagLength';
+const MAX_TAG_COUNT = 'maxTagCount';
+const MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
+const REQ_CRED_VALIDATORS = 'reqCred';
+const MSG_DELETE_AGE = 'msgDelAge';
+const REACTION_LIST = 'reactions';
+const MAX_REACTIONS = 'maxReactions';
 
 /***/ }),
 
@@ -1119,15 +1139,40 @@ class DB {
       const req = trx.objectStore('message').get(IDBKeyRange.only([topicName, seq]));
       req.onsuccess = event => {
         const src = req.result || event.target.result;
-        if (!src || src._status == status) {
-          trx.commit();
-          return;
+        if (src && src._status != status) {
+          trx.objectStore('message').put(DB.#serializeMessage(src, {
+            topic: topicName,
+            seq: seq,
+            _status: status
+          }));
         }
-        trx.objectStore('message').put(DB.#serializeMessage(src, {
-          topic: topicName,
-          seq: seq,
-          _status: status
-        }));
+        trx.commit();
+      };
+    });
+  }
+  updMessageReact(topicName, seq, react) {
+    if (!this.isReady()) {
+      return this.disabled ? Promise.resolve() : Promise.reject(new Error("not initialized"));
+    }
+    return new Promise((resolve, reject) => {
+      const trx = this.db.transaction(['message'], 'readwrite');
+      trx.onsuccess = event => {
+        resolve(event.target.result);
+      };
+      trx.onerror = event => {
+        this.#logger('PCache', 'updMessageReact', event.target.error);
+        reject(event.target.error);
+      };
+      const req = trx.objectStore('message').get(IDBKeyRange.only([topicName, seq]));
+      req.onsuccess = event => {
+        const src = req.result || event.target.result;
+        if (src && src.react !== react) {
+          trx.objectStore('message').put(DB.#serializeMessage(src, {
+            topic: topicName,
+            seq: seq,
+            react: react
+          }));
+        }
         trx.commit();
       };
     });
@@ -1329,7 +1374,7 @@ class DB {
       };
     });
   }
-  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted'];
+  static #topic_fields = ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'mrrid', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted', '_mrrSeen'];
   static #deserializeTopic(topic, src) {
     DB.#topic_fields.forEach(f => {
       if (src.hasOwnProperty(f)) {
@@ -1377,7 +1422,7 @@ class DB {
     return res;
   }
   static #serializeMessage(dst, msg) {
-    const fields = ['topic', 'seq', 'ts', '_status', 'from', 'head', 'content'];
+    const fields = ['topic', 'seq', 'ts', '_status', 'from', 'head', 'content', 'react'];
     const res = dst || {};
     fields.forEach(f => {
       if (msg.hasOwnProperty(f)) {
@@ -3684,7 +3729,7 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         case 'ua':
           cont.seen = {
             when: new Date(),
-            ua: pres.ua
+            ua: pres.val
           };
           break;
         case 'recv':
@@ -3708,6 +3753,14 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
           }
           break;
         case 'del':
+          break;
+        case 'react':
+          cont._processMetaReact(undefined, {
+            mrrid: pres.id2 | 0,
+            seq: pres.seq,
+            user: pres.actor,
+            val: pres.val
+          });
           break;
         default:
           this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
@@ -4541,12 +4594,18 @@ class Topic {
     this.private = null;
     this.public = null;
     this.trusted = null;
+    this.seq = 0;
+    this.read = 0;
+    this.recv = 0;
+    this.clear = 0;
+    this.mrrid = 0;
     this._users = {};
     this._queuedSeqId = _config_js__WEBPACK_IMPORTED_MODULE_3__.LOCAL_SEQID;
     this._maxSeq = 0;
     this._minSeq = 0;
     this._noEarlierMsgs = false;
     this._maxDel = 0;
+    this._mrrSeen = 0;
     this._recvNotificationTimer = null;
     this._tags = [];
     this._credentials = [];
@@ -4571,6 +4630,7 @@ class Topic {
       this.onTagsUpdated = callbacks.onTagsUpdated;
       this.onCredsUpdated = callbacks.onCredsUpdated;
       this.onAuxUpdated = callbacks.onAuxUpdated;
+      this.onReact = callbacks.onReact;
       this.onDeleteTopic = callbacks.onDeleteTopic;
       this.onAllMessagesReceived = callbacks.onAllMessagesReceived;
     }
@@ -4860,6 +4920,10 @@ class Topic {
       if (params.aux) {
         this._processMetaAux(params.aux);
       }
+      if (params.react) {
+        params.react.mrrid = ctrl.params?.mrrid | 0;
+        this._processMetaReact(undefined, params.react);
+      }
       return ctrl;
     });
   }
@@ -4930,6 +4994,41 @@ class Topic {
   }
   pinnedTopicRank(topic) {
     return 0;
+  }
+  react(seq, emo) {
+    if (!seq || !emo) {
+      return Promise.reject(new Error("Invalid parameters"));
+    }
+    const curr = this.msgMyReaction(seq);
+    if (curr == emo) {
+      emo = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
+    }
+    this.setMeta({
+      react: {
+        seq: seq,
+        val: emo
+      }
+    });
+  }
+  reactions() {
+    const react = this.aux('react');
+    if (react) {
+      return react.vals;
+    }
+    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.REACTION_LIST);
+  }
+  maxReactions() {
+    const react = this.aux('react');
+    if (react) {
+      return react.max;
+    }
+    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_REACTIONS, 0);
+  }
+  markReactionsSeen() {
+    if (this._mrrSeen != this.mrrid) {
+      this._mrrSeen = this.mrrid;
+      this._tinode.getMeTopic()._refreshContact('react', this);
+    }
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -5063,7 +5162,7 @@ class Topic {
     if (!this._attached && !['ringing', 'hang-up'].includes(evt)) {
       return;
     }
-    return this._tinode.videoCall(this.name, seq, evt, payload);
+    this._tinode.videoCall(this.name, seq, evt, payload);
   }
   _updateMyReadRecv(what, seq, ts) {
     let oldVal,
@@ -5240,6 +5339,26 @@ class Topic {
   }
   msgRecvCount(seq) {
     return this.msgReceiptCount('recv', seq);
+  }
+  msgReactions(seq) {
+    const msg = this.findMessage(seq);
+    if (!msg) {
+      return [];
+    }
+    return msg.react || [];
+  }
+  msgMyReaction(seq) {
+    const reactions = this.msgReactions(seq);
+    const me = this._tinode.getCurrentUserID();
+    for (let i = 0; i < reactions.length; i++) {
+      if ((reactions[i].users || []).includes(me)) {
+        return reactions[i].val;
+      }
+    }
+    return null;
+  }
+  hasUnseenReactions() {
+    return this.mrrid > this._mrrSeen;
   }
   msgHasMoreMessages(min, max, newer) {
     const gaps = [];
@@ -5451,6 +5570,21 @@ class Topic {
       }
       data.content = _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().updateVideoCall(data.content, upd);
     }
+    if (data.react) {
+      let maxReact = 0;
+      data.react = (data.react || []).map(r => {
+        maxReact = Math.max(maxReact, r.mrrid);
+        return {
+          mrrid: r.mrrid,
+          val: r.val,
+          count: r.count | 0,
+          users: Array.isArray(r.users) ? r.users.slice() : []
+        };
+      });
+      if (this.mrrid < maxReact) {
+        this.mrrid = maxReact;
+      }
+    }
     if (!data._noForwarding) {
       this._messages.put(data);
       this._tinode._db.addMessage(data);
@@ -5490,6 +5624,9 @@ class Topic {
     if (meta.aux) {
       this._processMetaAux(meta.aux);
     }
+    if (meta.react) {
+      this._processMetaReact(meta.react);
+    }
     if (this.onMeta) {
       this.onMeta(meta);
     }
@@ -5519,6 +5656,14 @@ class Topic {
         break;
       case 'aux':
         this.getMeta(this.startMetaQuery().withAux().build());
+        break;
+      case 'react':
+        this._processMetaReact(undefined, {
+          mrrid: pres.id2 | 0,
+          seq: pres.seq | 0,
+          user: pres.act,
+          val: pres.val
+        });
         break;
       case 'acs':
         uid = pres.src || this._tinode.getCurrentUserID();
@@ -5658,6 +5803,106 @@ class Topic {
       this.onAuxUpdated(this._aux);
     }
   }
+  _handleReactionDiff(msg, delta) {
+    const reacts = [...(msg.react || [])];
+    const user = delta.users[0];
+    const found = user ? reacts.findIndex(r => r.users.includes(user)) : -1;
+    if (found >= 0) {
+      const existing = reacts[found];
+      if (delta.val == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR || existing.val == delta.val) {
+        existing.count--;
+        existing.mrrid = Math.max(existing.mrrid, delta.mrrid);
+        if (existing.count <= 0) {
+          reacts.splice(found, 1);
+        } else {
+          const userIdx = existing.users.indexOf(user);
+          existing.users.splice(userIdx, 1);
+        }
+      } else {
+        const userIdx = existing.users.indexOf(user);
+        existing.users.splice(userIdx, 1);
+        existing.count--;
+        if (existing.count <= 0) {
+          reacts.splice(found, 1);
+        }
+        const emoIndex = reacts.findIndex(r => r.val == delta.val);
+        if (emoIndex >= 0) {
+          reacts[emoIndex].users.push(user);
+          reacts[emoIndex].count++;
+          reacts[emoIndex].mrrid = Math.max(reacts[emoIndex].mrrid, delta.mrrid);
+        } else {
+          reacts.push({
+            mrrid: delta.mrrid,
+            users: [user],
+            count: 1,
+            val: delta.val
+          });
+        }
+      }
+    } else if (delta.val != _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
+      const emoIndex = reacts.findIndex(r => r.val == delta.val);
+      if (emoIndex >= 0) {
+        if (user) {
+          reacts[emoIndex].users.push(user);
+        }
+        reacts[emoIndex].count++;
+        reacts[emoIndex].mrrid = Math.max(reacts[emoIndex].mrrid, delta.mrrid);
+      } else {
+        reacts.push({
+          mrrid: delta.mrrid,
+          users: user ? [user] : [],
+          count: 1,
+          val: delta.val
+        });
+      }
+    }
+    return reacts;
+  }
+  _processMetaReact(reacts, oneReaction) {
+    if (!Array.isArray(reacts)) {
+      if (!oneReaction.seq || !oneReaction.val) {
+        this._tinode.logger("WARNING: invalid reaction");
+        return;
+      }
+      reacts = [{
+        _diff: true,
+        seq: oneReaction.seq,
+        data: [{
+          mrrid: oneReaction.mrrid,
+          val: oneReaction.val,
+          count: 1,
+          users: [oneReaction.user || this._tinode.getCurrentUserID()]
+        }]
+      }];
+    }
+    const seqIds = [];
+    reacts.forEach(mr => {
+      const msg = this.findMessage(mr.seq);
+      seqIds.push(mr.seq);
+      if (msg) {
+        let upd;
+        if (mr._diff) {
+          upd = this._handleReactionDiff(msg, mr.data[0]);
+        } else {
+          upd = (mr.data || []).map(r => ({
+            mrrid: r.mrrid,
+            val: r.val,
+            count: r.count | 0,
+            users: Array.isArray(r.users) ? r.users.slice() : []
+          }));
+        }
+        msg.react = upd;
+        const maxReact = upd.reduce((max, r) => Math.max(max, r.mrrid), 0);
+        if (this.mrrid < maxReact) {
+          this.mrrid = maxReact;
+        }
+        this._tinode._db.updMessageReact(this.name, mr.seq, msg.react);
+      }
+    });
+    if (this.onReact) {
+      this.onReact(seqIds);
+    }
+  }
   _processDelMessages(clear, delseq) {
     this._maxDel = Math.max(clear, this._maxDel);
     this.clear = Math.max(clear, this.clear);
@@ -5704,6 +5949,8 @@ class Topic {
     this.trusted = null;
     this._maxSeq = 0;
     this._minSeq = 0;
+    this._maxDel = 0;
+    this._maxReact = 0;
     this._attached = false;
     const me = this._tinode.getMeTopic();
     if (me) {
@@ -6022,7 +6269,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.2";
+const PACKAGE_VERSION = "0.26.0-alpha3";
 
 /***/ })
 
@@ -7244,7 +7491,7 @@ class Tinode {
     const pkt = this.#initPacket('set', topic);
     const what = [];
     if (params) {
-      ['desc', 'sub', 'tags', 'cred', 'aux'].forEach(key => {
+      ['desc', 'sub', 'tags', 'cred', 'aux', 'react'].forEach(key => {
         if (params.hasOwnProperty(key)) {
           what.push(key);
           pkt.set[key] = params[key];
@@ -7317,7 +7564,16 @@ class Tinode {
     pkt.note.what = 'call';
     pkt.note.event = evt;
     pkt.note.payload = payload;
-    this.#send(pkt, pkt.note.id);
+    this.#send(pkt);
+  }
+  react(topicName, seq, emo) {
+    const pkt = this.#initPacket('note', topicName);
+    pkt.note.seq = seq;
+    pkt.note.what = 'react';
+    pkt.note.payload = {
+      emo
+    };
+    this.#send(pkt);
   }
   getTopic(topicName) {
     let topic = this.#cacheGet('topic', topicName);
@@ -7426,14 +7682,16 @@ Tinode.MESSAGE_STATUS_RECEIVED = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE
 Tinode.MESSAGE_STATUS_READ = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_READ;
 Tinode.MESSAGE_STATUS_TO_ME = _config_js__WEBPACK_IMPORTED_MODULE_1__.MESSAGE_STATUS_TO_ME;
 Tinode.DEL_CHAR = _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR;
-Tinode.MAX_MESSAGE_SIZE = 'maxMessageSize';
-Tinode.MAX_SUBSCRIBER_COUNT = 'maxSubscriberCount';
-Tinode.MIN_TAG_LENGTH = 'minTagLength';
-Tinode.MAX_TAG_LENGTH = 'maxTagLength';
-Tinode.MAX_TAG_COUNT = 'maxTagCount';
-Tinode.MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
-Tinode.REQ_CRED_VALIDATORS = 'reqCred';
-Tinode.MSG_DELETE_AGE = 'msgDelAge';
+Tinode.MAX_MESSAGE_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_MESSAGE_SIZE;
+Tinode.MAX_SUBSCRIBER_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_SUBSCRIBER_COUNT;
+Tinode.MIN_TAG_LENGTH = _config_js__WEBPACK_IMPORTED_MODULE_1__.MIN_TAG_LENGTH;
+Tinode.MAX_TAG_LENGTH = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_LENGTH;
+Tinode.MAX_TAG_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_COUNT;
+Tinode.MAX_FILE_UPLOAD_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_FILE_UPLOAD_SIZE;
+Tinode.REQ_CRED_VALIDATORS = _config_js__WEBPACK_IMPORTED_MODULE_1__.REQ_CRED_VALIDATORS;
+Tinode.MSG_DELETE_AGE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MSG_DELETE_AGE;
+Tinode.REACTION_LIST = _config_js__WEBPACK_IMPORTED_MODULE_1__.REACTION_LIST;
+Tinode.MAX_REACTIONS = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_REACTIONS;
 Tinode.URI_TOPIC_ID_PREFIX = 'tinode:///id/';
 Tinode.URI_TOPIC_ALIAS_PREFIX = 'tinode:///alias/';
 Tinode.TAG_ALIAS = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_ALIAS;
