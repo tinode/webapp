@@ -1606,7 +1606,13 @@ class TinodeWeb extends React.Component {
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
     if (this.state.firebaseToken) {
-      firebaseDelToken(this.fcm);
+      // Notify server to stop sending push notifications to this device.
+      this.tinode.setDeviceToken(null);
+      if (this.fcm) {
+        // Try to unregister from FCM. This may fail if the token is already
+        // invalid/expired, which is fine - we just proceed with logout.
+        firebaseDelToken(this.fcm).catch(_ => { /* ignore */ });
+      }
     }
 
     // Reset color scheme.

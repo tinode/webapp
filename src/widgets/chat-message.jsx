@@ -14,23 +14,6 @@ import { sanitizeUrl } from '../lib/utils.js';
 import ReactionPicker from './reaction-picker.jsx';
 import HashNavigation from '../lib/navigation.js';
 
-/*
-const testReactions = [
-  {val: '👍', count: 2, users: ['user1', 'user2']},
-  {val: '❤️', count: 1, users: ['user3']},
-  {val: '😂', count: 5, users: ['user4', 'user5', 'user6', 'user7', 'user8']},
-  {val: '🔥', count: 3, users: ['user9', 'user10', 'user11']},
-  {val: "🙏", count: 1, users: ['user1']},
-  {val: "✨", count: 2, users: ['user1', 'user2']},
-  {val: "😁", count: 1, users: ['user1']},
-  {val: "😍", count: 1, users: ['user1']},
-  {val: "😊", count: 4, users: ['user1', 'user2', 'user3', 'user4']},
-  {val: "🥰", count: 1, users: ['user1']},
-  {val: "😭", count: 2, users: ['user1', 'user2']},
-  {val: "🙄", count: 1, users: ['user1']}
-];
-*/
-
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -193,8 +176,11 @@ class BaseChatMessage extends React.PureComponent {
     }, menuItems);
   }
 
-  handleProgress(ratio) {
+  handleProgress(ratio, mimeType) {
     this.setState({progress: ratio});
+    if (this.props.onUploadProgress) {
+      this.props.onUploadProgress(this.props.seq, ratio, mimeType);
+    }
   }
 
   handleCancelUpload() {

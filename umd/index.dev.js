@@ -11728,7 +11728,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
     if (this.state.firebaseToken) {
-      (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
+      this.tinode.setDeviceToken(null);
+      if (this.fcm) {
+        (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(_ => {});
+      }
     }
     document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME == 'auto' ? 'light dark' : _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME;
     document.documentElement.style.setProperty('--message-text-size', `${_config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_TEXT_SIZE}pt`);

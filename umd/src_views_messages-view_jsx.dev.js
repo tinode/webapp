@@ -2338,10 +2338,13 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       timestamp: this.props.timestamp
     }, menuItems);
   }
-  handleProgress(ratio) {
+  handleProgress(ratio, mimeType) {
     this.setState({
       progress: ratio
     });
+    if (this.props.onUploadProgress) {
+      this.props.onUploadProgress(this.props.seq, ratio, mimeType);
+    }
   }
   handleCancelUpload() {
     this.props.onCancelUpload(this.props.seq, this.props.uploader);
