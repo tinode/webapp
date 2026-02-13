@@ -486,14 +486,14 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       selectedContact: uid
     });
   }
-  handleUpdateReactions(reactConfig) {
+  handleUpdateReactions(reactions) {
     const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
     topic.setMeta({
       aux: {
-        react: reactConfig
+        react: reactions
       }
     }).then(() => {
       this.props.onNavigate('info');
@@ -556,7 +556,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     const panelTitle = formatMessage((view == 'perm' ? messages['perm_' + args[0]] : messages[view]) || messages['info']);
     const topic = this.props.tinode.getTopic(this.state.topic);
     const alias = topic && topic.alias();
-    const reactions = this.props.tinode.getServerParam('reactions');
+    const reactions = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.REACTION_LIST);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "info-view"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -631,9 +631,9 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       uri: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.topic,
       onCancel: this.handleBackNavigate
     }) : view == 'reactions' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_reactions_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-      react: topic ? topic.aux('react') : null,
+      reactions: topic ? topic.aux('react') : null,
       availableReactions: reactions,
-      maxReactions: this.props.tinode.getServerParam('maxReactions'),
+      maxReactions: _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_REACTIONS,
       onUpdateReactions: this.handleUpdateReactions,
       onCancel: this.handleBackNavigate
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1472,22 +1472,14 @@ __webpack_require__.r(__webpack_exports__);
 class TopicReactions extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    const currentReactions = props.react && props.react.vals || [];
-    const currentMax = props.react && props.react.max || null;
+    const currentReactions = props.reactions || [];
     this.state = {
       selectedReactions: [...currentReactions],
-      maxPerMessage: currentMax
+      reactionStatus: props.reactionStatus || 'all'
     };
     this.handleReactionToggle = this.handleReactionToggle.bind(this);
-    this.handleMaxChange = this.handleMaxChange.bind(this);
+    this.handleReactionStatusChange = this.handleReactionStatusChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
-  }
-  handleMaxChange(e) {
-    const value = parseInt(e.target.value);
-    const sliderMax = this.state.selectedReactions.length || 1;
-    this.setState({
-      maxPerMessage: value >= sliderMax ? null : value
-    });
   }
   handleReactionToggle(emoji) {
     const selected = [...this.state.selectedReactions];
@@ -1505,18 +1497,13 @@ class TopicReactions extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       selectedReactions: selected
     });
   }
+  handleReactionStatusChange(e) {
+    this.setState({
+      reactionStatus: e.target.value
+    });
+  }
   handleSave() {
-    let reactConfig = null;
-    if (this.state.selectedReactions.length > 0 || this.state.maxPerMessage !== null) {
-      reactConfig = {};
-      if (this.state.selectedReactions.length > 0) {
-        reactConfig.vals = this.state.selectedReactions;
-      }
-      if (this.state.maxPerMessage !== null) {
-        reactConfig.max = this.state.maxPerMessage;
-      }
-    }
-    this.props.onUpdateReactions(reactConfig);
+    this.props.onUpdateReactions(this.state.selectedReactions.length > 0 ? this.state.selectedReactions : null);
   }
   render() {
     const {
@@ -1524,88 +1511,77 @@ class TopicReactions extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       maxReactions
     } = this.props;
     const {
-      selectedReactions,
-      maxPerMessage
+      selectedReactions
     } = this.state;
-    const originalVals = this.props.react && this.props.react.vals || [];
-    const originalMax = this.props.react && this.props.react.max || null;
-    const hasChanges = JSON.stringify(selectedReactions) !== JSON.stringify(originalVals) || maxPerMessage !== originalMax;
-    const sliderMax = selectedReactions.length || 1;
-    const sliderValue = maxPerMessage === null ? sliderMax : Math.min(maxPerMessage, sliderMax);
+    const originalVals = this.props.reactions || [];
+    const hasChanges = JSON.stringify(selectedReactions) != JSON.stringify(originalVals) || this.state.reactionStatus != this.props.reactionStatus;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "topic-reactions",
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small",
-      htmlFor: "max-per-message"
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+      className: "quoted"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "enable-all"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "enable-all",
+      name: "reactions-select",
+      value: "all",
+      checked: this.state.reactionStatus == 'all',
+      onChange: this.handleReactionStatusChange
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "enable-all"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_max_reactions_per_message",
+      id: "use_reactions_all",
       defaultMessage: [{
         "type": 0,
-        "value": "Maximum reaction types per message"
+        "value": "Use all reactions"
       }]
-    }), maxPerMessage !== null && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, ": ", maxPerMessage)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
-      className: "small"
+    }), "\xA0")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "disable"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "disable",
+      name: "reactions-select",
+      value: "disable",
+      checked: this.state.reactionStatus == 'disable',
+      onChange: this.handleReactionStatusChange
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "disable"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "max_reactions_per_message_description",
+      id: "disable_reactions",
       defaultMessage: [{
         "type": 0,
-        "value": "Limit how many different reaction types can be added to a single message."
+        "value": "Disable reactions"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "range",
-      id: "max-per-message",
-      min: "1",
-      max: sliderMax,
-      value: sliderValue,
-      onChange: this.handleMaxChange,
-      disabled: selectedReactions.length === 0
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
+    }), "\xA0")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: "use-selected"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "radio",
+      id: "use-selected",
+      name: "reactions-select",
+      value: "use-selected",
+      checked: this.state.reactionStatus == 'use-selected',
+      onChange: this.handleReactionStatusChange
+    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "use-selected"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_reaction_settings",
+      id: "use_reactions_selected",
       defaultMessage: [{
         "type": 0,
-        "value": "Selected reactions"
+        "value": "Use selected reactions:"
       }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
+    }), "\xA0")))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "selected-reactions-palette"
-    }, selectedReactions.length === 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "selected-reactions-empty"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "no_reactions_selected",
-      defaultMessage: [{
-        "type": 0,
-        "value": "No reactions selected"
-      }]
-    })) : selectedReactions.map(emoji => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      key: emoji,
-      onClick: () => this.handleReactionToggle(emoji),
-      className: "selected-reaction",
-      title: `Click to remove ${emoji}`
-    }, emoji)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_available_reactions",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Available reactions"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "available-reactions-grid"
     }, availableReactions && availableReactions.map(emoji => {
       const isSelected = selectedReactions.includes(emoji);
-      const isDisabled = !isSelected && selectedReactions.length >= maxReactions;
+      const isDisabled = this.state.reactionStatus != 'use-selected' || !isSelected && selectedReactions.length >= maxReactions;
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: emoji,
         onClick: () => !isDisabled && this.handleReactionToggle(emoji),

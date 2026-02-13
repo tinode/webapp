@@ -1926,21 +1926,21 @@
     "defaultMessage": "Available reactions",
     "description": "Label for available reactions picker",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "label_reaction_settings": {
     "translation": "Reacții selectate",
     "defaultMessage": "Selected reactions",
     "description": "Label for topic reaction settings",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "no_reactions_selected": {
     "translation": "Nicio reacție selectată",
     "defaultMessage": "No reactions selected",
     "description": "Shown when no reactions are selected",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "panel_title_reactions": {
     "translation": "Reacții",
@@ -1954,14 +1954,14 @@
     "defaultMessage": "Maximum reaction types per message",
     "description": "Label for max reactions per message setting",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "max_reactions_per_message_description": {
     "translation": "Limitați câte tipuri diferite de reacții pot fi adăugate la un singur mesaj.",
     "defaultMessage": "Limit how many different reaction types can be added to a single message.",
     "description": "Description of max reactions per message",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "unknown_name": {
     "translation": "Necunoscut",
@@ -1996,6 +1996,27 @@
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview",
     "missing": false,
+    "obsolete": false
+  },
+  "disable_reactions": {
+    "translation": "",
+    "defaultMessage": "Disable reactions",
+    "description": "Option for reactions use in topic",
+    "missing": true,
+    "obsolete": false
+  },
+  "use_reactions_all": {
+    "translation": "",
+    "defaultMessage": "Use all reactions",
+    "description": "Option for reactions use in topic",
+    "missing": true,
+    "obsolete": false
+  },
+  "use_reactions_selected": {
+    "translation": "",
+    "defaultMessage": "Use selected reactions:",
+    "description": "Option for reactions use in topic",
+    "missing": true,
     "obsolete": false
   }
 }

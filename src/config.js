@@ -160,3 +160,6 @@ export const DRAFTY_FR_MIME_TYPE_LEGACY = 'application/json'; // Remove in 2026.
 
 // Path to wallpaper images.
 export const WALLPAPER_DEFAULTS = {type: 'patt', index: 0, path:'img/bkg/'};
+
+// Maximum number of reactions to show in the reaction strip.
+export const MAX_REACTIONS = 5;

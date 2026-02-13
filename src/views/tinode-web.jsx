@@ -1790,7 +1790,7 @@ class TinodeWeb extends React.Component {
       }
     }
 
-    webrtc = writer && !!this.tinode.getServerParam('iceServers');
+    webrtc = writer && !!this.tinode.getServerParam(Tinode.ICE_SERVERS);
     p2p = Tinode.isP2PTopicName(topicName);
     self = Tinode.isSelfTopicName(topicName);
 

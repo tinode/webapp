@@ -2,30 +2,38 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { Tinode } from 'tinode-sdk';
+
 export default class TopicReactions extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    // Get current topic reactions or empty array
-    const currentReactions = (props.react && props.react.vals) || [];
-    // Get current max per message setting
-    const currentMax = (props.react && props.react.max) || null;
+    // Determine initial reaction status and selected reactions based on props.
+    // If reactions is null/undefined/empty array, it means "use all reactions".
+    // If it's an array with one DEL_CHAR element, it means "disable reactions".
+    // Otherwise, it's a list of selected reactions.
+    let currentReactions = props.reactions || [];
+    let reactionStatus;
+    if (currentReactions.length == 1 && currentReactions[0] == Tinode.DEL_CHAR) {
+      reactionStatus = 'disable';
+      currentReactions = [];
+    } else if (currentReactions.length == 0) {
+      reactionStatus = 'all';
+    } else {
+      reactionStatus = 'use-selected';
+    }
+
+    const availableReactions = props.availableReactions || [];
 
     this.state = {
       selectedReactions: [...currentReactions],
-      maxPerMessage: currentMax
+      reactionStatus: reactionStatus,
+      maxReactions: props.maxReactions || availableReactions.length,
     };
 
     this.handleReactionToggle = this.handleReactionToggle.bind(this);
-    this.handleMaxChange = this.handleMaxChange.bind(this);
+    this.handleReactionStatusChange = this.handleReactionStatusChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
-  }
-
-  handleMaxChange(e) {
-    const value = parseInt(e.target.value);
-    const sliderMax = this.state.selectedReactions.length || 1;
-    // If slider is at max position, treat as "use server default" (null)
-    this.setState({ maxPerMessage: value >= sliderMax ? null : value });
   }
 
   handleReactionToggle(emoji) {
@@ -48,103 +56,65 @@ export default class TopicReactions extends React.PureComponent {
     this.setState({ selectedReactions: selected });
   }
 
+  handleReactionStatusChange(e) {
+    this.setState({reactionStatus: e.target.value});
+  }
+
   handleSave() {
-    let reactConfig = null;
-    if (this.state.selectedReactions.length > 0 || this.state.maxPerMessage !== null) {
-      reactConfig = {};
-      if (this.state.selectedReactions.length > 0) {
-        reactConfig.vals = this.state.selectedReactions;
-      }
-      if (this.state.maxPerMessage !== null) {
-        reactConfig.max = this.state.maxPerMessage;
-      }
-    }
-    this.props.onUpdateReactions(reactConfig);
+    const reactions = this.state.reactionStatus == 'all' ? null :
+      this.state.reactionStatus == 'disable' ? [Tinode.DEL_CHAR] :
+      this.state.selectedReactions;
+
+    this.props.onUpdateReactions(reactions);
   }
 
   render() {
-    const { availableReactions, maxReactions } = this.props;
-    const { selectedReactions, maxPerMessage } = this.state;
-    const originalVals = (this.props.react && this.props.react.vals) || [];
-    const originalMax = (this.props.react && this.props.react.max) || null;
-    const hasChanges = JSON.stringify(selectedReactions) !== JSON.stringify(originalVals) ||
-      maxPerMessage !== originalMax;
-
-    // Max slider value is the count of selected reactions (can't exceed what's configured)
-    const sliderMax = selectedReactions.length || 1;
-    const sliderValue = maxPerMessage === null ? sliderMax : Math.min(maxPerMessage, sliderMax);
+    const { availableReactions } = this.props;
+    const { maxReactions, selectedReactions } = this.state;
+    const originalVals = this.props.reactions || [];
+    const hasChanges = JSON.stringify(selectedReactions) != JSON.stringify(originalVals) ||
+      this.state.reactionStatus != this.props.reactionStatus;
 
     return (
       <div id="topic-reactions" className="scrollable-panel">
         <div className="panel-form-column">
-          <div className="group">
-            <label className="small" htmlFor="max-per-message">
-              <FormattedMessage
-                id="label_max_reactions_per_message"
-                defaultMessage="Maximum reaction types per message"
-                description="Label for max reactions per message setting" />
-              {maxPerMessage !== null && <span>: {maxPerMessage}</span>}
-            </label>
-            <p className="small">
-              <FormattedMessage
-                id="max_reactions_per_message_description"
-                defaultMessage="Limit how many different reaction types can be added to a single message."
-                description="Description of max reactions per message" />
-            </p>
-            <input
-              type="range"
-              id="max-per-message"
-              min="1"
-              max={sliderMax}
-              value={sliderValue}
-              onChange={this.handleMaxChange}
-              disabled={selectedReactions.length === 0}
-            />
+          <div className="panel-form-row">
+            <ul className="quoted">
+              <li key="enable-all">
+                <input type="radio" id="enable-all" name="reactions-select" value="all"
+                  checked={this.state.reactionStatus == 'all'}
+                  onChange={this.handleReactionStatusChange} />&nbsp;
+                <label htmlFor="enable-all">
+                  <FormattedMessage id="use_reactions_all"
+                    defaultMessage="Use all reactions" description="Option for reactions use in topic"/>&nbsp;
+                </label>
+              </li>
+              <li key="disable">
+                <input type="radio" id="disable" name="reactions-select" value="disable"
+                  checked={this.state.reactionStatus == 'disable'}
+                  onChange={this.handleReactionStatusChange} />&nbsp;
+                <label htmlFor="disable">
+                  <FormattedMessage id="disable_reactions"
+                    defaultMessage="Disable reactions" description="Option for reactions use in topic"/>&nbsp;
+                </label>
+              </li>
+              <li key="use-selected">
+                <input type="radio" id="use-selected" name="reactions-select" value="use-selected"
+                  checked={this.state.reactionStatus == 'use-selected'}
+                  onChange={this.handleReactionStatusChange} />&nbsp;
+                <label htmlFor="use-selected">
+                  <FormattedMessage id="use_reactions_selected"
+                    defaultMessage="Use selected reactions:" description="Option for reactions use in topic"/>&nbsp;
+                </label>
+              </li>
+            </ul>
           </div>
-
-          <div className="group">
-            <label className="small">
-              <FormattedMessage
-                id="label_reaction_settings"
-                defaultMessage="Selected reactions"
-                description="Label for topic reaction settings" />
-            </label>
-          </div>
-
-          <div className="group">
-            <div className="selected-reactions-palette">
-              {selectedReactions.length === 0 ?
-                <span className="selected-reactions-empty">
-                  <FormattedMessage
-                    id="no_reactions_selected"
-                    defaultMessage="No reactions selected"
-                    description="Shown when no reactions are selected" />
-                </span>
-                :
-                selectedReactions.map(emoji => (
-                  <div
-                    key={emoji}
-                    onClick={() => this.handleReactionToggle(emoji)}
-                    className="selected-reaction"
-                    title={`Click to remove ${emoji}`}>
-                    {emoji}
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-
-          <div className="group">
-            <label className="small">
-              <FormattedMessage
-                id="label_available_reactions"
-                defaultMessage="Available reactions"
-                description="Label for available reactions picker" />
-            </label>
+          <div className="panel-form-row">
             <div className="available-reactions-grid">
               {availableReactions && availableReactions.map(emoji => {
                 const isSelected = selectedReactions.includes(emoji);
-                const isDisabled = !isSelected && selectedReactions.length >= maxReactions;
+                const isDisabled = this.state.reactionStatus != 'use-selected' ||
+                  (!isSelected && selectedReactions.length >= maxReactions);
 
                 return (
                   <div

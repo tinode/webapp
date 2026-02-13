@@ -384,12 +384,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DEL_CHAR: function() { return /* binding */ DEL_CHAR; },
 /* harmony export */   EXPIRE_PROMISES_PERIOD: function() { return /* binding */ EXPIRE_PROMISES_PERIOD; },
 /* harmony export */   EXPIRE_PROMISES_TIMEOUT: function() { return /* binding */ EXPIRE_PROMISES_TIMEOUT; },
+/* harmony export */   ICE_SERVERS: function() { return /* binding */ ICE_SERVERS; },
 /* harmony export */   LIBRARY: function() { return /* binding */ LIBRARY; },
 /* harmony export */   LOCAL_SEQID: function() { return /* binding */ LOCAL_SEQID; },
 /* harmony export */   MAX_FILE_UPLOAD_SIZE: function() { return /* binding */ MAX_FILE_UPLOAD_SIZE; },
 /* harmony export */   MAX_MESSAGE_SIZE: function() { return /* binding */ MAX_MESSAGE_SIZE; },
 /* harmony export */   MAX_PINNED_COUNT: function() { return /* binding */ MAX_PINNED_COUNT; },
-/* harmony export */   MAX_REACTIONS: function() { return /* binding */ MAX_REACTIONS; },
 /* harmony export */   MAX_SUBSCRIBER_COUNT: function() { return /* binding */ MAX_SUBSCRIBER_COUNT; },
 /* harmony export */   MAX_TAG_COUNT: function() { return /* binding */ MAX_TAG_COUNT; },
 /* harmony export */   MAX_TAG_LENGTH: function() { return /* binding */ MAX_TAG_LENGTH; },
@@ -470,8 +470,8 @@ const MAX_TAG_COUNT = 'maxTagCount';
 const MAX_FILE_UPLOAD_SIZE = 'maxFileUploadSize';
 const REQ_CRED_VALIDATORS = 'reqCred';
 const MSG_DELETE_AGE = 'msgDelAge';
+const ICE_SERVERS = 'iceServers';
 const REACTION_LIST = 'reactions';
-const MAX_REACTIONS = 'maxReactions';
 
 /***/ }),
 
@@ -3376,10 +3376,10 @@ class LargeFileHelper {
     xhr.upload.onprogress = e => {
       if (e.lengthComputable) {
         if (onProgress) {
-          onProgress(e.loaded / e.total);
+          onProgress(e.loaded / e.total, data.type || 'application/octet-stream');
         }
         if (this.onProgress) {
-          this.onProgress(e.loaded / e.total);
+          this.onProgress(e.loaded / e.total, data.type || 'application/octet-stream');
         }
       }
     };
@@ -5003,7 +5003,7 @@ class Topic {
     if (curr == emo) {
       emo = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
     }
-    this.setMeta({
+    return this.setMeta({
       react: {
         seq: seq,
         val: emo
@@ -5016,13 +5016,6 @@ class Topic {
       return react.vals;
     }
     return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.REACTION_LIST);
-  }
-  maxReactions() {
-    const react = this.aux('react');
-    if (react) {
-      return react.max;
-    }
-    return this._tinode.getServerParam(_config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_REACTIONS, 0);
   }
   markReactionsSeen() {
     if (this._mrrSeen != this.mrrid) {
@@ -5154,6 +5147,18 @@ class Topic {
   noteRecording(audioOnly) {
     if (this._attached) {
       this._tinode.noteKeyPress(this.name, audioOnly ? 'kpa' : 'kpv');
+    } else {
+      this._tinode.logger("INFO: Cannot send notification in inactive topic");
+    }
+  }
+  noteUpload(type) {
+    const types = {
+      'image': 'kpui',
+      'video': 'kpuv',
+      'file': 'kpu'
+    };
+    if (this._attached) {
+      this._tinode.noteKeyPress(this.name, types[type] || 'kpu');
     } else {
       this._tinode.logger("INFO: Cannot send notification in inactive topic");
     }
@@ -7690,8 +7695,8 @@ Tinode.MAX_TAG_COUNT = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_TAG_COUNT;
 Tinode.MAX_FILE_UPLOAD_SIZE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_FILE_UPLOAD_SIZE;
 Tinode.REQ_CRED_VALIDATORS = _config_js__WEBPACK_IMPORTED_MODULE_1__.REQ_CRED_VALIDATORS;
 Tinode.MSG_DELETE_AGE = _config_js__WEBPACK_IMPORTED_MODULE_1__.MSG_DELETE_AGE;
+Tinode.ICE_SERVERS = _config_js__WEBPACK_IMPORTED_MODULE_1__.ICE_SERVERS;
 Tinode.REACTION_LIST = _config_js__WEBPACK_IMPORTED_MODULE_1__.REACTION_LIST;
-Tinode.MAX_REACTIONS = _config_js__WEBPACK_IMPORTED_MODULE_1__.MAX_REACTIONS;
 Tinode.URI_TOPIC_ID_PREFIX = 'tinode:///id/';
 Tinode.URI_TOPIC_ALIAS_PREFIX = 'tinode:///alias/';
 Tinode.TAG_ALIAS = _config_js__WEBPACK_IMPORTED_MODULE_1__.TAG_ALIAS;

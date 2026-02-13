@@ -283,6 +283,10 @@
     "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description"
   },
+  "disable_reactions": {
+    "defaultMessage": "Disable reactions",
+    "description": "Option for reactions use in topic"
+  },
   "download_action": {
     "defaultMessage": "download",
     "description": "Call to action [download]"
@@ -430,10 +434,6 @@
     "defaultMessage": "Alias",
     "description": "Label for editing user or topic alias"
   },
-  "label_available_reactions": {
-    "defaultMessage": "Available reactions",
-    "description": "Label for available reactions picker"
-  },
   "label_blur_wallpaper": {
     "defaultMessage": "Blur:",
     "description": "Label adjusting blur amount"
@@ -478,10 +478,6 @@
     "defaultMessage": "Keyboard:",
     "description": "Label for send on enter settings"
   },
-  "label_max_reactions_per_message": {
-    "defaultMessage": "Maximum reaction types per message",
-    "description": "Label for max reactions per message setting"
-  },
   "label_member_count": {
     "defaultMessage": "Members:",
     "description": "Label for the count of group topic members"
@@ -521,10 +517,6 @@
   "label_push_notifications_disabled": {
     "defaultMessage": "Notification alerts (requires HTTPS):",
     "description": "Label for push notifications switch"
-  },
-  "label_reaction_settings": {
-    "defaultMessage": "Selected reactions",
-    "description": "Label for topic reaction settings"
   },
   "label_reset_password": {
     "defaultMessage": "Send a password reset email",
@@ -627,10 +619,6 @@
   "login_prompt": {
     "defaultMessage": "Login",
     "description": "Placeholer for username/login"
-  },
-  "max_reactions_per_message_description": {
-    "defaultMessage": "Limit how many different reaction types can be added to a single message.",
-    "description": "Description of max reactions per message"
   },
   "member_count": {
     "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
@@ -779,10 +767,6 @@
   "no_contacts": {
     "defaultMessage": "You have no contacts :-(",
     "description": "Shown in ContactsView when the user has no contacts"
-  },
-  "no_reactions_selected": {
-    "defaultMessage": "No reactions selected",
-    "description": "Shown when no reactions are selected"
   },
   "numeric_confirmation_code_prompt": {
     "defaultMessage": "Numbers only",
@@ -1131,6 +1115,14 @@
   "upload_finishing": {
     "defaultMessage": "finishing...",
     "description": "Notification that upload is finishing"
+  },
+  "use_reactions_all": {
+    "defaultMessage": "Use all reactions",
+    "description": "Option for reactions use in topic"
+  },
+  "use_reactions_selected": {
+    "defaultMessage": "Use selected reactions:",
+    "description": "Option for reactions use in topic"
   },
   "user_not_found": {
     "defaultMessage": "Not found",

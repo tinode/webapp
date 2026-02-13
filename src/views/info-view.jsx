@@ -18,7 +18,7 @@ import TopicSecurity from '../widgets/topic-security.jsx';
 import TopicReactions from '../widgets/topic-reactions.jsx';
 
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH,
-  NO_ACCESS_MODE, TOAST_DURATION } from '../config.js';
+  NO_ACCESS_MODE, TOAST_DURATION, MAX_REACTIONS } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { truncateString } from '../lib/strformat.js';
@@ -452,15 +452,15 @@ class InfoView extends React.Component {
     this.setState({selectedContact: uid});
   }
 
-  handleUpdateReactions(reactConfig) {
+  handleUpdateReactions(reactions) {
     const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
-    // Update aux with new reaction config
+    // Update aux with the new reactions list.
     topic.setMeta({
       aux: {
-        react: reactConfig
+        react: reactions || Tinode.DEL_CHAR,
       }
     }).then(() => {
       this.props.onNavigate('info');
@@ -525,7 +525,7 @@ class InfoView extends React.Component {
 
     const topic = this.props.tinode.getTopic(this.state.topic);
     const alias = topic && topic.alias();
-    const reactions = this.props.tinode.getServerParam('reactions');
+    const reactions = this.props.tinode.getServerParam(Tinode.REACTION_LIST);
 
     return (
       <div id="info-view">
@@ -612,9 +612,9 @@ class InfoView extends React.Component {
           :
         view == 'reactions' ?
           <TopicReactions
-            react={topic ? topic.aux('react') : null}
+            reactions={topic ? topic.aux('react') : null}
             availableReactions={reactions}
-            maxReactions={this.props.tinode.getServerParam('maxReactions')}
+            maxReactions={MAX_REACTIONS}
             onUpdateReactions={this.handleUpdateReactions}
             onCancel={this.handleBackNavigate} />
           :

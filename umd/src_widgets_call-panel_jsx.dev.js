@@ -326,7 +326,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     });
   }
   createPeerConnection(withDataChannel) {
-    const iceServers = this.props.tinode.getServerParam('iceServers', null);
+    const iceServers = this.props.tinode.getServerParam(Tinode.ICE_SERVERS, null);
     const pc = iceServers ? new RTCPeerConnection({
       iceServers: iceServers
     }) : new RTCPeerConnection();

@@ -360,7 +360,7 @@ class CallPanel extends React.PureComponent {
   }
 
   createPeerConnection(withDataChannel) {
-    const iceServers = this.props.tinode.getServerParam('iceServers', null);
+    const iceServers = this.props.tinode.getServerParam(Tinode.ICE_SERVERS, null);
     const pc = iceServers ? new RTCPeerConnection({iceServers: iceServers}) : new RTCPeerConnection();
 
     pc.onicecandidate = this.handleICECandidateEvent;

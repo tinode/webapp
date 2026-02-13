@@ -23,8 +23,9 @@ const TheCardPreview = React.lazy(_ => import('../widgets/the-card-preview.jsx')
 const VideoPreview = React.lazy(_ => import('../widgets/video-preview.jsx'));
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, IMMEDIATE_P2P_SUBSCRIPTION,
-  DRAFTY_FR_MIME_TYPE_LEGACY, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM,
-  MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
+  DRAFTY_FR_MIME_TYPE_LEGACY, KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM,
+  MAX_INBAND_ATTACHMENT_SIZE, MAX_REACTIONS, MESSAGES_PAGE, READ_DELAY, QUOTED_REPLY_LENGTH,
+  VIDEO_PREVIEW_DIM} from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, importVCard, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
@@ -475,7 +476,7 @@ class MessagesView extends React.Component {
         }
 
         nextState.reactionList = topic.reactions();
-        nextState.maxReactions = topic.maxReactions();
+        nextState.maxReactions = MAX_REACTIONS;
       } else {
         // Invalid topic.
         Object.assign(nextState, {
@@ -1175,7 +1176,7 @@ class MessagesView extends React.Component {
 
   // handleAttachFile method is called when [Attach file] button is clicked: launch attachment preview.
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam(Tinode.MAX_FILE_UPLOAD_SIZE, MAX_EXTERN_ATTACHMENT_SIZE);
 
     if (file.size > maxExternAttachmentSize) {
       // Too large.
@@ -1213,7 +1214,7 @@ class MessagesView extends React.Component {
     const fname = this.state.imagePreview.filename;
 
     // Server-provided limit reduced for base64 encoding and overhead.
-    const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
+    const maxInbandAttachmentSize = (this.props.tinode.getServerParam(Tinode.MAX_MESSAGE_SIZE,
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
     if (blob.size > maxInbandAttachmentSize) {
@@ -1277,7 +1278,7 @@ class MessagesView extends React.Component {
     const height = params.height;
 
     // Server-provided limit reduced for base64 encoding and overhead.
-    const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
+    const maxInbandAttachmentSize = (this.props.tinode.getServerParam(Tinode.MAX_MESSAGE_SIZE,
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
     const uploads = [];
@@ -1360,7 +1361,7 @@ class MessagesView extends React.Component {
 
   // handleAttachImageOrVideo method is called when [Attach image or video] button is clicked: launch image or video preview.
   handleAttachImageOrVideo(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam(Tinode.MAX_FILE_UPLOAD_SIZE, MAX_EXTERN_ATTACHMENT_SIZE);
 
     if (file.type.startsWith('video/')) {
       this.setState({videoPreview: {
@@ -1409,7 +1410,7 @@ class MessagesView extends React.Component {
       .then(result => result.blob())
       .then(blob => {
         // Server-provided limit reduced for base64 encoding and overhead.
-        const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+        const maxInbandAttachmentSize = this.props.tinode.getServerParam(Tinode.MAX_MESSAGE_SIZE, MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
         if (blob.size > maxInbandAttachmentSize) {
           // Too large to send inband - uploading out of band and sending as a link.
           const uploader = this.props.tinode.getLargeFileHelper();

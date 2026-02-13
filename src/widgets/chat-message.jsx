@@ -179,7 +179,7 @@ class BaseChatMessage extends React.PureComponent {
   handleProgress(ratio, mimeType) {
     this.setState({progress: ratio});
     if (this.props.onUploadProgress) {
-      this.props.onUploadProgress(this.props.seq, ratio, mimeType);
+      this.props.onUploadProgress(this.props.seq, ratio);
     }
   }
 

@@ -7261,6 +7261,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MAX_INBAND_ATTACHMENT_SIZE: function() { return /* binding */ MAX_INBAND_ATTACHMENT_SIZE; },
 /* harmony export */   MAX_ONLINE_IN_TOPIC: function() { return /* binding */ MAX_ONLINE_IN_TOPIC; },
 /* harmony export */   MAX_PEER_TITLE_LENGTH: function() { return /* binding */ MAX_PEER_TITLE_LENGTH; },
+/* harmony export */   MAX_REACTIONS: function() { return /* binding */ MAX_REACTIONS; },
 /* harmony export */   MAX_TAG_COUNT: function() { return /* binding */ MAX_TAG_COUNT; },
 /* harmony export */   MAX_TAG_LENGTH: function() { return /* binding */ MAX_TAG_LENGTH; },
 /* harmony export */   MAX_TITLE_LENGTH: function() { return /* binding */ MAX_TITLE_LENGTH; },
@@ -7348,6 +7349,7 @@ const WALLPAPER_DEFAULTS = {
   index: 0,
   path: 'img/bkg/'
 };
+const MAX_REACTIONS = 5;
 
 /***/ }),
 
@@ -11881,7 +11883,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         writer = acs.isWriter();
       }
     }
-    webrtc = writer && !!this.tinode.getServerParam('iceServers');
+    webrtc = writer && !!this.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.ICE_SERVERS);
     p2p = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName);
     self = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isSelfTopicName(topicName);
     return [subscribed ? {

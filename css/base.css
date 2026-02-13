@@ -1269,14 +1269,18 @@ table.permission-editor td.checkbox {
 }
 
 /* Application settings */
-#settings-form ul {
+.panel-form-column ul,
+.panel-form-row ul {
   list-style: none;
 }
 
-#settings-form li {
+.panel-form-column li,
+.panel-form-row li {
   vertical-align: middle;
 }
-#settings-form label {
+
+.panel-form-column label,
+.panel-form-row label {
   display: inline-block;
   padding-left: 0.5rem;
 }
@@ -2661,9 +2665,9 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   flex-wrap: wrap;
   overflow: clip;
   overflow-clip-margin: 0.25rem;
-  margin-bottom: -0.6rem;
+  margin-bottom: -0.2rem;
   margin-right: 0.25rem;
-  margin-top: 0.35rem;
+  margin-top: 0;
 }
 .reaction {
   position: relative;
@@ -2708,7 +2712,7 @@ Font from 3x to almost normal, from 1 to 5 emojis in a message */
   opacity: 0;
   margin-left: 0;
 }
-.reaction-add .m-icon{
+.reaction-add .m-icon {
   font-size: 1.1rem;
 }
 li:hover .reaction-add,
@@ -2851,9 +2855,8 @@ li:hover .reaction-add:hover,
 #topic-reactions .available-reactions-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
+  gap: 0.35rem;
+  padding: 0.35rem;
   justify-content: center;
 }
 
@@ -2872,7 +2875,6 @@ li:hover .reaction-add:hover,
 /* Selected state for available reaction */
 #topic-reactions .available-reaction.selected {
   background-color: var(--clr-background-off-white);
-  opacity: 0.3;
   border: 2px solid var(--clr-primary-accent);
 }
 
