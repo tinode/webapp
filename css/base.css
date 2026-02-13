@@ -299,6 +299,8 @@
 html, body {
   height: 100%;
   width: 100%;
+  height: 100dvh;
+  width: 100dvw;
   font-size: 10pt; /* 13.33 px/rem */
   color: var(--clr-text-primary);
   overflow: hidden;
