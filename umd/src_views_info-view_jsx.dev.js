@@ -493,7 +493,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }
     topic.setMeta({
       aux: {
-        react: reactions
+        react: reactions || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR
       }
     }).then(() => {
       this.props.onNavigate('info');
@@ -1467,15 +1467,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 class TopicReactions extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    const currentReactions = props.reactions || [];
+    let currentReactions = props.reactions || [];
+    let reactionStatus;
+    if (currentReactions.length == 1 && currentReactions[0] == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR) {
+      reactionStatus = 'disable';
+      currentReactions = [];
+    } else if (currentReactions.length == 0) {
+      reactionStatus = 'all';
+    } else {
+      reactionStatus = 'use-selected';
+    }
+    const availableReactions = props.availableReactions || [];
     this.state = {
       selectedReactions: [...currentReactions],
-      reactionStatus: props.reactionStatus || 'all'
+      reactionStatus: reactionStatus,
+      maxReactions: props.maxReactions || availableReactions.length
     };
     this.handleReactionToggle = this.handleReactionToggle.bind(this);
     this.handleReactionStatusChange = this.handleReactionStatusChange.bind(this);
@@ -1503,14 +1517,15 @@ class TopicReactions extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     });
   }
   handleSave() {
-    this.props.onUpdateReactions(this.state.selectedReactions.length > 0 ? this.state.selectedReactions : null);
+    const reactions = this.state.reactionStatus == 'all' ? null : this.state.reactionStatus == 'disable' ? [tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR] : this.state.selectedReactions;
+    this.props.onUpdateReactions(reactions);
   }
   render() {
     const {
-      availableReactions,
-      maxReactions
+      availableReactions
     } = this.props;
     const {
+      maxReactions,
       selectedReactions
     } = this.state;
     const originalVals = this.props.reactions || [];

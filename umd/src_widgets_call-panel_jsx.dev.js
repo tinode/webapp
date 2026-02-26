@@ -12,10 +12,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
 
 
 
@@ -57,7 +60,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       audio: true,
       video: !props.callAudioOnly
     };
-    this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED;
+    this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_OUTGOING_INITATED;
     this.containerRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
@@ -139,7 +142,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const topic = this.props.tinode.getTopic(this.props.topic);
     this.previousOnInfo = topic.onInfo;
     topic.onInfo = this.onInfo;
-    if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
+    if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
       this.start();
     }
     if (this.containerRef) {
@@ -217,8 +220,8 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
       return;
     }
-    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
-      this.props.onInvite(this.props.topic, this.props.seq, _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS, this.props.callAudioOnly);
+    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_IN_PROGRESS) {
+      this.props.onInvite(this.props.topic, this.props.seq, _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_IN_PROGRESS, this.props.callAudioOnly);
       return;
     }
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
@@ -326,7 +329,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     });
   }
   createPeerConnection(withDataChannel) {
-    const iceServers = this.props.tinode.getServerParam(Tinode.ICE_SERVERS, null);
+    const iceServers = this.props.tinode.getServerParam(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.ICE_SERVERS, null);
     const pc = iceServers ? new RTCPeerConnection({
       iceServers: iceServers
     }) : new RTCPeerConnection();
@@ -569,7 +572,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
-    const peerTitle = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.truncateString)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
+    const peerTitle = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__.truncateString)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
     let remoteActive = false;
     if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
@@ -619,7 +622,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: `caller-card${pulseAnimation} draggable`
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       authorizeURL: this.props.tinode.authorizeURL,
       avatar: this.props.avatar,
       topic: this.props.topic,

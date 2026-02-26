@@ -2,6 +2,8 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
+import { Tinode } from 'tinode-sdk';
+
 import LetterTile from './letter-tile.jsx';
 
 import { MAX_PEER_TITLE_LENGTH } from '../config.js';
