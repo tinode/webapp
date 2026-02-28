@@ -1506,6 +1506,9 @@ i.search {
   font-size: 2.4rem;
   line-height: 3rem;
 }
+.contact-box .avatar-box > .checkmark.m-icon {
+  line-height: unset;
+}
 .contact-box.small .avatar-box > .m-icon {
   font-size: 1.6rem;
   line-height: 2rem;
