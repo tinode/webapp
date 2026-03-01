@@ -156,7 +156,7 @@ class ContactList extends React.PureComponent {
         }
       }, this);
     }
-    /* dangerouslySetInnerHTML={{__html: this.props.emptyListMessage}} */
+
     return (
       <div className={this.props.noScroll ? null : "scrollable-panel"}>
         {contactsCount == 0 ?
