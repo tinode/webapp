@@ -25,7 +25,7 @@ const messages = defineMessages({
   }
 });
 
-class ContactList extends React.Component {
+class ContactList extends React.PureComponent {
   render() {
     const { formatMessage } = this.props.intl;
     const showCheckmark = Array.isArray(this.props.topicSelected);
@@ -53,6 +53,8 @@ class ContactList extends React.Component {
       contactsCount ++;
     }
     if (this.props.contacts && this.props.contacts.length > 0) {
+      // Used keys to prevent duplicates when the user comes both from the 'fnd' and the list of contacts.
+      const usedKeys = {};
       this.props.contacts.forEach(c => {
         if (c.action) {
           // Action item
@@ -65,6 +67,10 @@ class ContactList extends React.Component {
         } else {
           // Normal contact
           const key = this.props.showMode ? c.user : (c.topic || c.user);
+          if (usedKeys[key]) {
+            return;
+          }
+          usedKeys[key] = true;
           // If filter function is provided, filter out the items
           // which don't satisfy the condition.
           if (this.props.filterFunc && this.props.filter) {
@@ -150,12 +156,13 @@ class ContactList extends React.Component {
         }
       }, this);
     }
-
+    /* dangerouslySetInnerHTML={{__html: this.props.emptyListMessage}} */
     return (
       <div className={this.props.noScroll ? null : "scrollable-panel"}>
         {contactsCount == 0 ?
-          <div className="center-medium-text"
-            dangerouslySetInnerHTML={{__html: this.props.emptyListMessage}} />
+          <div className="center-medium-text" style={{whiteSpace: 'pre-line'}}>
+            {this.props.emptyListMessage}
+          </div>
           :
           null
         }

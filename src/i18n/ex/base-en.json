@@ -23,6 +23,10 @@
     "defaultMessage": "Report Conversation",
     "description": "Flat button [Report Group]"
   },
+  "add_members_prompt": {
+    "defaultMessage": "add members",
+    "description": "Placeholder in group members input field"
+  },
   "alias_already_taken": {
     "defaultMessage": "(already taken)",
     "description": "Error message for alias already taken"
@@ -236,7 +240,7 @@
     "description": "Name of the color schema"
   },
   "contacts_not_found": {
-    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats\\n¯∖_(ツ)_/¯",
     "description": "HTML message shown in ContactList when no contacts are found"
   },
   "contacts_not_found_short": {

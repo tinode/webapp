@@ -259,8 +259,8 @@
     "obsolete": false
   },
   "contacts_not_found": {
-    "translation": "您沒有任何對話<br />¯∖_(ツ)_/¯",
-    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "translation": "您沒有任何對話\n¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats\\n¯∖_(ツ)_/¯",
     "description": "HTML message shown in ContactList when no contacts are found",
     "missing": false,
     "obsolete": false
@@ -1969,5 +1969,12 @@
     "description": "Label for organization",
     "missing": true,
     "obsolete": true
+  },
+  "add_members_prompt": {
+    "translation": "新增成員",
+    "defaultMessage": "add members",
+    "description": "Placeholder in group members input field",
+    "missing": false,
+    "obsolete": false
   }
 }
