@@ -9364,13 +9364,7 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       id: "contacts_not_found",
       defaultMessage: [{
         "type": 0,
-        "value": "You have no chats"
-      }, {
-        "type": 0,
-        "value": "<br/>"
-      }, {
-        "type": 0,
-        "value": "¯∖_(ツ)_/¯"
+        "value": "You have no chats\\n¯∖_(ツ)_/¯"
       }]
     }, no_contacts => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
@@ -13641,7 +13635,6 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   static deriveStateFromProps(props) {
     return {
-      placeholder: props.chips ? '' : props.prompt,
       sortedChips: ChipInput.sortChips(props.chips, props.staticMembers),
       chipIndex: ChipInput.indexChips(props.chips)
     };
@@ -13748,7 +13741,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       className: className
     }, chips, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "text",
-      placeholder: this.state.placeholder,
+      placeholder: this.props.prompt,
       onChange: this.handleTextInput,
       onFocus: this.handleFocusGained,
       onBlur: this.handleFocusLost,
@@ -13939,7 +13932,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const {
       formatMessage
@@ -13964,6 +13957,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       contactsCount++;
     }
     if (this.props.contacts && this.props.contacts.length > 0) {
+      const usedKeys = {};
       this.props.contacts.forEach(c => {
         if (c.action) {
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -13975,6 +13969,10 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           }));
         } else {
           const key = this.props.showMode ? c.user : c.topic || c.user;
+          if (usedKeys[key]) {
+            return;
+          }
+          usedKeys[key] = true;
           if (this.props.filterFunc && this.props.filter) {
             const filterOn = [key];
             if (c.private && c.private.comment) {
@@ -14061,10 +14059,10 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       className: this.props.noScroll ? null : "scrollable-panel"
     }, contactsCount == 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "center-medium-text",
-      dangerouslySetInnerHTML: {
-        __html: this.props.emptyListMessage
+      style: {
+        whiteSpace: 'pre-line'
       }
-    }) : null, contactNodes.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+    }, this.props.emptyListMessage) : null, contactNodes.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "contact-box"
     }, contactNodes) : null);
   }
@@ -15858,7 +15856,7 @@ class MenuContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "m-icon"
-    }, "chat")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "chat_add_on")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();

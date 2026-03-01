@@ -15,6 +15,11 @@ const messages = defineMessages({
     id: 'contacts_not_found_short',
     defaultMessage: "No contacts match ''{query}''",
     description: 'Shown in ContactsView when search returned no results'
+  },
+  add_members_prompt: {
+    id: 'add_members_prompt',
+    defaultMessage: 'add members',
+    description: 'Placeholder in group members input field'
   }
 });
 
@@ -166,7 +171,7 @@ class GroupManager extends React.Component {
             tinode={this.props.tinode}
             chips={this.state.members}
             staticMembers={this.state.staticMembers}
-            prompt="add members"
+            prompt={this.props.intl.formatMessage(messages.add_members_prompt)}
             filterFunc={this.handleContactFilter}
             onChipRemoved={this.handleMemberRemoved} />
         </div>

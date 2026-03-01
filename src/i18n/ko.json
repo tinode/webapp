@@ -259,8 +259,8 @@
     "obsolete": false
   },
   "contacts_not_found": {
-    "translation": "채팅이없습니다<br/>¯∖_(ツ)_/¯",
-    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "translation": "채팅이없습니다\n¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats\\n¯∖_(ツ)_/¯",
     "description": "HTML message shown in ContactList when no contacts are found",
     "missing": false,
     "obsolete": false
@@ -2017,6 +2017,20 @@
     "defaultMessage": "Use selected reactions:",
     "description": "Option for reactions use in topic",
     "missing": true,
+    "obsolete": false
+  },
+  "label_organization": {
+    "translation": "",
+    "defaultMessage": "Organization",
+    "description": "Label for organization",
+    "missing": true,
+    "obsolete": true
+  },
+  "add_members_prompt": {
+    "translation": "멤버 추가",
+    "defaultMessage": "add members",
+    "description": "Placeholder in group members input field",
+    "missing": false,
     "obsolete": false
   }
 }

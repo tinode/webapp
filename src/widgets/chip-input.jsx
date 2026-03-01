@@ -23,7 +23,6 @@ export default class ChipInput extends React.Component {
 
   static deriveStateFromProps(props) {
     return {
-      placeholder: props.chips ? '' : props.prompt,
       sortedChips: ChipInput.sortChips(props.chips, props.staticMembers),
       chipIndex: ChipInput.indexChips(props.chips)
     };
@@ -137,7 +136,7 @@ export default class ChipInput extends React.Component {
       <div className={className}>
         {chips}
         <input type="text"
-          placeholder={this.state.placeholder}
+          placeholder={this.props.prompt}
           onChange={this.handleTextInput}
           onFocus={this.handleFocusGained}
           onBlur={this.handleFocusLost}

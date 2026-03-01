@@ -928,6 +928,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "'"
     }]
+  },
+  add_members_prompt: {
+    id: "add_members_prompt",
+    defaultMessage: [{
+      "type": 0,
+      "value": "add members"
+    }]
   }
 });
 class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -1078,7 +1085,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       tinode: this.props.tinode,
       chips: this.state.members,
       staticMembers: this.state.staticMembers,
-      prompt: "add members",
+      prompt: this.props.intl.formatMessage(messages.add_members_prompt),
       filterFunc: this.handleContactFilter,
       onChipRemoved: this.handleMemberRemoved
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

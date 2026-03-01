@@ -91,7 +91,7 @@ export default class ContactsView extends React.Component {
   render() {
     return (
       <FormattedMessage id="contacts_not_found"
-        defaultMessage="You have no chats<br />¯∖_(ツ)_/¯"
+        defaultMessage="You have no chats\n¯∖_(ツ)_/¯"
         description="HTML message shown in ContactList when no contacts are found">{
         (no_contacts) => <ContactList
           tinode={this.props.tinode}
