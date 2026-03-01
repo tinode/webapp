@@ -853,7 +853,9 @@ class TinodeWeb extends React.Component {
       LocalStorageUtil.setObject('auth-token', this.tinode.getAuthToken());
     }
 
-    const goToTopic = this.state.requestedTopic;
+    // On reconnect, requestedTopic is undefined but topicSelected may still be set.
+    // Preserve the open topic so it gets restored after re-login.
+    const goToTopic = this.state.requestedTopic || this.state.topicSelected;
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
     const me = this.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;

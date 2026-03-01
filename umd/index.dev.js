@@ -10989,7 +10989,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
       _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('auth-token', this.tinode.getAuthToken());
     }
-    const goToTopic = this.state.requestedTopic;
+    const goToTopic = this.state.requestedTopic || this.state.topicSelected;
     const me = this.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;
     me.onContactUpdate = this.tnMeContactUpdate;
