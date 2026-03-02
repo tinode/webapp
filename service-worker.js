@@ -10,6 +10,10 @@ const webAppChannel = (typeof BroadcastChannel == 'function') ?
 
 // Basic internationalization.
 const i18n = {
+  'ar': {
+    'new_message': "رسالة جديدة",
+    'new_chat': "محادثة جديدة",
+  },
   'de': {
     'new_message': "Neue Nachricht",
     'new_chat': "Neuer Chat",
@@ -21,10 +25,6 @@ const i18n = {
   'fr': {
     'new_message': "Nouveau message",
     'new_chat': "Nouvelle conversation",
-  },
-  'vi': {
-    'new_message': "Tin nhắn mới",
-    'new_chat': "Cuộc trò chuyện mới",
   },
   'es': {
     'new_message': "Nuevo mensaje",
@@ -54,6 +54,10 @@ const i18n = {
     'new_message': "Нове повідомлення",
     'new_chat': "Новий чат",
   },
+  'vi': {
+    'new_message': "Tin nhắn mới",
+    'new_chat': "Cuộc trò chuyện mới",
+  },
   'zh': {
     'new_message': "新讯息",
     'new_chat': "新聊天",
@@ -61,10 +65,6 @@ const i18n = {
   'zh-TW': {
     'new_message': "新訊息",
     'new_chat': "新聊天",
-  },
-  'ar': {
-    'new_message': "رسالة جديدة",
-    'new_chat': "محادثة جديدة",
   }
 };
 
