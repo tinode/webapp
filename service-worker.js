@@ -22,6 +22,10 @@ const i18n = {
     'new_message': "Nouveau message",
     'new_chat': "Nouvelle conversation",
   },
+  'vi': {
+    'new_message': "Tin nhắn mới",
+    'new_chat': "Cuộc trò chuyện mới",
+  },
   'es': {
     'new_message': "Nuevo mensaje",
     'new_chat': "Nueva conversación",
