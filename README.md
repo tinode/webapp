@@ -53,6 +53,7 @@ The app is currently available in the following languages:
  * Spanish
  * Thai
  * Ukrainian
+ * Vietnamese
 
 More translations are welcome. See [instructions](https://github.com/tinode/chat/blob/devel/docs/translations.md#webapp).
 

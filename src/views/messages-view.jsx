@@ -333,6 +333,9 @@ class MessagesView extends React.Component {
       } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
         // If reader status has changed and data became available.
         topic.getMeta(topic.startMetaQuery().withLaterData().build());
+      } else if (!topic.isSubscribed() && this.props.ready && !prevProps.ready) {
+        // Connection restored (e.g. wake from sleep): resubscribe to the currently open topic.
+        this.subscribe(topic);
       }
     }
   }

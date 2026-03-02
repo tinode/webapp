@@ -54,6 +54,10 @@ const i18n = {
     'new_message': "Нове повідомлення",
     'new_chat': "Новий чат",
   },
+  'vi': {
+    'new_message': "Tin nhắn mới",
+    'new_chat': "Cuộc trò chuyện mới",
+  },
   'zh': {
     'new_message': "新讯息",
     'new_chat': "新聊天",

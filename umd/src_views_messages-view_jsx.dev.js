@@ -521,6 +521,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       } else if (topic.isSubscribed() && this.state.isReader && !prevState.isReader) {
         topic.getMeta(topic.startMetaQuery().withLaterData().build());
+      } else if (!topic.isSubscribed() && this.props.ready && !prevProps.ready) {
+        this.subscribe(topic);
       }
     }
   }
