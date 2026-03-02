@@ -1962,19 +1962,5 @@
     "description": "Link or title for working with wallpapers.",
     "missing": false,
     "obsolete": false
-  },
-  "label_full_name": {
-    "translation": "Họ và tên",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": false,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "Tổ chức",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": false,
-    "obsolete": true
   }
 }

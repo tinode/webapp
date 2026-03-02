@@ -1956,20 +1956,6 @@
     "missing": false,
     "obsolete": false
   },
-  "label_full_name": {
-    "translation": "Full name",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": false,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "Organization",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": false,
-    "obsolete": true
-  },
   "add_members_prompt": {
     "translation": "add members",
     "defaultMessage": "add members",

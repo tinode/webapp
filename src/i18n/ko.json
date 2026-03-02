@@ -1908,67 +1908,53 @@
     "obsolete": false
   },
   "unknown_name": {
-    "translation": "",
+    "translation": "알 수 없음",
     "defaultMessage": "Unknown",
     "description": "Name to show when the name is missing",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "save_action": {
-    "translation": "",
+    "translation": "저장",
     "defaultMessage": "Save",
     "description": "Label for Save button",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "cannot_parse_vcard": {
-    "translation": "",
+    "translation": "vCard 파일을 파싱할 수 없습니다.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "",
+    "translation": "채팅",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "",
+    "translation": "찾기",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_contact_card": {
-    "translation": "",
+    "translation": "연락처 카드",
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_contacts": {
-    "translation": "",
+    "translation": "연락처",
     "defaultMessage": "Contacts",
     "description": "Label for contact information",
-    "missing": true,
+    "missing": false,
     "obsolete": false
-  },
-  "label_full_name": {
-    "translation": "",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": true,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": true,
-    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "멤버 추가",

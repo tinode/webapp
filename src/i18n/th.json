@@ -1908,67 +1908,53 @@
     "obsolete": false
   },
   "unknown_name": {
-    "translation": "",
+    "translation": "ไม่ทราบ",
     "defaultMessage": "Unknown",
     "description": "Name to show when the name is missing",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "save_action": {
-    "translation": "",
+    "translation": "บันทึก",
     "defaultMessage": "Save",
     "description": "Label for Save button",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "cannot_parse_vcard": {
-    "translation": "",
+    "translation": "ไม่สามารถอ่านไฟล์ vCard ได้",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "",
+    "translation": "แชท",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "",
+    "translation": "ค้นหา",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_contact_card": {
-    "translation": "",
+    "translation": "นามบัตร",
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_contacts": {
-    "translation": "",
+    "translation": "ผู้ติดต่อ",
     "defaultMessage": "Contacts",
     "description": "Label for contact information",
-    "missing": true,
+    "missing": false,
     "obsolete": false
-  },
-  "label_full_name": {
-    "translation": "",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": true,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": true,
-    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "เพิ่มสมาชิก",
