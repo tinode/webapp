@@ -1921,27 +1921,6 @@
     "missing": false,
     "obsolete": false
   },
-  "label_available_reactions": {
-    "translation": "Available reactions",
-    "defaultMessage": "Available reactions",
-    "description": "Label for available reactions picker",
-    "missing": false,
-    "obsolete": true
-  },
-  "label_reaction_settings": {
-    "translation": "Selected reactions",
-    "defaultMessage": "Selected reactions",
-    "description": "Label for topic reaction settings",
-    "missing": false,
-    "obsolete": true
-  },
-  "no_reactions_selected": {
-    "translation": "No reactions selected",
-    "defaultMessage": "No reactions selected",
-    "description": "Shown when no reactions are selected",
-    "missing": false,
-    "obsolete": true
-  },
   "panel_title_reactions": {
     "translation": "Reactions",
     "defaultMessage": "Reactions",

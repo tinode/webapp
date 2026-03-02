@@ -1921,47 +1921,12 @@
     "missing": false,
     "obsolete": false
   },
-  "label_available_reactions": {
-    "translation": "Verfügbare Reaktionen",
-    "defaultMessage": "Available reactions",
-    "description": "Label for available reactions picker",
-    "missing": false,
-    "obsolete": true
-  },
-  "label_reaction_settings": {
-    "translation": "Ausgewählte Reaktionen",
-    "defaultMessage": "Selected reactions",
-    "description": "Label for topic reaction settings",
-    "missing": false,
-    "obsolete": true
-  },
-  "no_reactions_selected": {
-    "translation": "Keine Reaktionen ausgewählt",
-    "defaultMessage": "No reactions selected",
-    "description": "Shown when no reactions are selected",
-    "missing": false,
-    "obsolete": true
-  },
   "panel_title_reactions": {
     "translation": "Reaktionen",
     "defaultMessage": "Reactions",
     "description": "Title for reaction settings panel",
     "missing": false,
     "obsolete": false
-  },
-  "label_max_reactions_per_message": {
-    "translation": "Maximale Reaktionstypen pro Nachricht",
-    "defaultMessage": "Maximum reaction types per message",
-    "description": "Label for max reactions per message setting",
-    "missing": false,
-    "obsolete": true
-  },
-  "max_reactions_per_message_description": {
-    "translation": "Begrenzen Sie, wie viele verschiedene Reaktionstypen zu einer einzelnen Nachricht hinzugefügt werden können.",
-    "defaultMessage": "Limit how many different reaction types can be added to a single message.",
-    "description": "Description of max reactions per message",
-    "missing": false,
-    "obsolete": true
   },
   "unknown_name": {
     "translation": "Unbekannt",
@@ -1999,32 +1964,25 @@
     "obsolete": false
   },
   "disable_reactions": {
-    "translation": "",
+    "translation": "Reaktionen deaktivieren",
     "defaultMessage": "Disable reactions",
     "description": "Option for reactions use in topic",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "use_reactions_all": {
-    "translation": "",
+    "translation": "Alle Reaktionen verwenden",
     "defaultMessage": "Use all reactions",
     "description": "Option for reactions use in topic",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "use_reactions_selected": {
-    "translation": "",
+    "translation": "Ausgewählte Reaktionen verwenden:",
     "defaultMessage": "Use selected reactions:",
     "description": "Option for reactions use in topic",
-    "missing": true,
+    "missing": false,
     "obsolete": false
-  },
-  "label_organization": {
-    "translation": "",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": true,
-    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "Mitglieder hinzufügen",

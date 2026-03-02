@@ -1767,13 +1767,6 @@
     "missing": false,
     "obsolete": false
   },
-  "label_contacts": {
-    "translation": "Danh bạ",
-    "defaultMessage": "Contacts",
-    "description": "Label for contact information",
-    "missing": false,
-    "obsolete": true
-  },
   "label_keyboard": {
     "translation": "Bàn phím:",
     "defaultMessage": "Keyboard:",
@@ -1843,13 +1836,6 @@
     "description": "Menu item [Pin] for pinning message to the top.",
     "missing": false,
     "obsolete": false
-  },
-  "save_action": {
-    "translation": "Lưu",
-    "defaultMessage": "Save",
-    "description": "Label for Save button",
-    "missing": false,
-    "obsolete": true
   },
   "select_country": {
     "translation": "Chọn quốc gia",
@@ -1963,60 +1949,46 @@
     "missing": false,
     "obsolete": false
   },
-  "label_full_name": {
-    "translation": "Họ và tên",
-    "defaultMessage": "Full name",
-    "description": "Label for full name",
-    "missing": false,
-    "obsolete": true
-  },
-  "label_organization": {
-    "translation": "Tổ chức",
-    "defaultMessage": "Organization",
-    "description": "Label for organization",
-    "missing": false,
-    "obsolete": true
-  },
   "button_reactions": {
-    "translation": "",
+    "translation": "Biểu cảm",
     "defaultMessage": "Reactions",
     "description": "Navigation button for reactions panel.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "button_save": {
-    "translation": "",
+    "translation": "Lưu",
     "defaultMessage": "Save",
     "description": "Button [Save]",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "disable_reactions": {
-    "translation": "",
+    "translation": "Tắt biểu cảm",
     "defaultMessage": "Disable reactions",
     "description": "Option for reactions use in topic",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_reactions": {
-    "translation": "",
+    "translation": "Biểu cảm",
     "defaultMessage": "Reactions",
     "description": "Title for reaction settings panel",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "use_reactions_all": {
-    "translation": "",
+    "translation": "Dùng tất cả biểu cảm",
     "defaultMessage": "Use all reactions",
     "description": "Option for reactions use in topic",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "use_reactions_selected": {
-    "translation": "",
+    "translation": "Dùng biểu cảm đã chọn:",
     "defaultMessage": "Use selected reactions:",
     "description": "Option for reactions use in topic",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
