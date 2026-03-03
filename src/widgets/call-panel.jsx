@@ -346,11 +346,11 @@ class CallPanel extends React.PureComponent {
   }
 
   handleDataChannelClose(event) {
-    console.log('close data channel:', event);
+    console.info('close data channel:', event);
   }
 
   handleDataChannelEvent(event) {
-    console.log('data channel event:', event);
+    console.info('data channel event:', event);
     const channel = event.channel;
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;
@@ -680,7 +680,7 @@ class CallPanel extends React.PureComponent {
                 <div className={`caller-card${pulseAnimation} draggable`}>
                   <div className="avatar-box">
                     <LetterTile
-                      tinode={this.props.tinode}
+                      authorizeURL={this.props.tinode.authorizeURL}
                       avatar={this.props.avatar}
                       topic={this.props.topic}
                       title={this.props.title} />

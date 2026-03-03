@@ -254,3 +254,23 @@ export function defaultWallpaper() {
   const wp = wallpaperIndex[WALLPAPER_DEFAULTS.type][WALLPAPER_DEFAULTS.index];
   return {name: `../${WALLPAPER_DEFAULTS.path}${wp.name}`, size: wp.size};
 }
+
+export function wallpaperNameFromUrl(wallpaperUrl) {
+  // Get filename from URL.
+  const parts = wallpaperUrl.split('/');
+  return parts[parts.length - 1];
+}
+
+export function wallpaperTypeFromUrl(wallpaperUrl) {
+  // Get filename from URL.
+  const fname = wallpaperNameFromUrl(wallpaperUrl);
+  const wallpaperIndex = require('../../img/bkg/index.json');
+  for (const type in wallpaperIndex) {
+    for (let i = 0; i < wallpaperIndex[type].length; i++) {
+      if (wallpaperIndex[type][i].name == fname) {
+        return type;
+      }
+    }
+  }
+  return null;
+}

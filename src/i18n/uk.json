@@ -259,8 +259,8 @@
     "obsolete": false
   },
   "contacts_not_found": {
-    "translation": "Чатів немає<br />¯∖_(ツ)_/¯",
-    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "translation": "Чатів немає\n¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats\\n¯∖_(ツ)_/¯",
     "description": "HTML message shown in ContactList when no contacts are found",
     "missing": false,
     "obsolete": false
@@ -1218,7 +1218,7 @@
   "label_description": {
     "translation": "Опис",
     "defaultMessage": "Description",
-    "description": "Label for editing topic description",
+    "description": "Label for description of user or topic",
     "missing": false,
     "obsolete": false
   },
@@ -1904,6 +1904,62 @@
     "translation": "Сканувати мій ID:",
     "defaultMessage": "Scan my ID:",
     "description": "Label [Scan my ID:]",
+    "missing": false,
+    "obsolete": false
+  },
+  "unknown_name": {
+    "translation": "Невідомий",
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_action": {
+    "translation": "Зберегти",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_parse_vcard": {
+    "translation": "Не вдалося обробити файл vCard.",
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_now": {
+    "translation": "Написати",
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "find_user": {
+    "translation": "Знайти",
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contact_card": {
+    "translation": "Картка контакту",
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Контакти",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": false
+  },
+  "add_members_prompt": {
+    "translation": "додати учасників",
+    "defaultMessage": "add members",
+    "description": "Placeholder in group members input field",
     "missing": false,
     "obsolete": false
   }

@@ -259,8 +259,8 @@
     "obsolete": false
   },
   "contacts_not_found": {
-    "translation": "채팅이없습니다<br/>¯∖_(ツ)_/¯",
-    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "translation": "채팅이없습니다\n¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats\\n¯∖_(ツ)_/¯",
     "description": "HTML message shown in ContactList when no contacts are found",
     "missing": false,
     "obsolete": false
@@ -1218,7 +1218,7 @@
   "label_description": {
     "translation": "설명",
     "defaultMessage": "Description",
-    "description": "Label for editing topic description",
+    "description": "Label for description of user or topic",
     "missing": false,
     "obsolete": false
   },
@@ -1904,6 +1904,62 @@
     "translation": "내 ID 스캔:",
     "defaultMessage": "Scan my ID:",
     "description": "Label [Scan my ID:]",
+    "missing": false,
+    "obsolete": false
+  },
+  "unknown_name": {
+    "translation": "알 수 없음",
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_action": {
+    "translation": "저장",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_parse_vcard": {
+    "translation": "vCard 파일을 파싱할 수 없습니다.",
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_now": {
+    "translation": "채팅",
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "find_user": {
+    "translation": "찾기",
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contact_card": {
+    "translation": "연락처 카드",
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "연락처",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": false
+  },
+  "add_members_prompt": {
+    "translation": "멤버 추가",
+    "defaultMessage": "add members",
+    "description": "Placeholder in group members input field",
     "missing": false,
     "obsolete": false
   }

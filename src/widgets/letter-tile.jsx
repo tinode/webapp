@@ -27,7 +27,7 @@ export default class LetterTile extends React.PureComponent {
         }
       }
     } else if (this.props.avatar) {
-      const url = this.props.tinode.authorizeURL(sanitizeUrlForMime(this.props.avatar, 'image'));
+      const url = this.props.authorizeURL(sanitizeUrlForMime(this.props.avatar, 'image'));
       // If avatar image is invalid, show a placeholder.
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = <img className={className} alt="avatar" src={url}
