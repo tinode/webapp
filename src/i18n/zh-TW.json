@@ -1935,6 +1935,13 @@
     "missing": false,
     "obsolete": false
   },
+  "save_action": {
+    "translation": "儲存",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": true
+  },
   "cannot_parse_vcard": {
     "translation": "無法解析 vCard 檔案。",
     "defaultMessage": "Cannot parse vCard file.",
@@ -1950,7 +1957,7 @@
     "obsolete": false
   },
   "find_user": {
-    "translation": "查找",
+    "translation": "尋找",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
     "missing": false,
@@ -1983,6 +1990,13 @@
     "description": "Option for reactions use in topic",
     "missing": false,
     "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "聯絡人",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "新增成員",

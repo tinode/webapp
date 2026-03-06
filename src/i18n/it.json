@@ -1935,6 +1935,13 @@
     "missing": false,
     "obsolete": false
   },
+  "save_action": {
+    "translation": "Salva",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": true
+  },
   "cannot_parse_vcard": {
     "translation": "Impossibile analizzare il file vCard.",
     "defaultMessage": "Cannot parse vCard file.",
@@ -1943,14 +1950,14 @@
     "obsolete": false
   },
   "chat_now": {
-    "translation": "Chat",
+    "translation": "Chatta",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
     "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "Trova",
+    "translation": "Cerca",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
     "missing": false,
@@ -1983,6 +1990,13 @@
     "description": "Option for reactions use in topic",
     "missing": false,
     "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Contatti",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "aggiungi membri",

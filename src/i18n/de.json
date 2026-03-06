@@ -1935,15 +1935,22 @@
     "missing": false,
     "obsolete": false
   },
+  "save_action": {
+    "translation": "Speichern",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": true
+  },
   "cannot_parse_vcard": {
-    "translation": "vCard-Datei kann nicht analysiert werden.",
+    "translation": "vCard-Datei konnte nicht verarbeitet werden.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
     "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "Chat",
+    "translation": "Chatten",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
     "missing": false,
@@ -1983,6 +1990,13 @@
     "description": "Option for reactions use in topic",
     "missing": false,
     "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Kontakte",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "Mitglieder hinzufügen",

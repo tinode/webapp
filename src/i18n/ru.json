@@ -1929,28 +1929,35 @@
     "obsolete": false
   },
   "unknown_name": {
-    "translation": "Неизвестно",
+    "translation": "Неизвестный",
     "defaultMessage": "Unknown",
     "description": "Name to show when the name is missing",
     "missing": false,
     "obsolete": false
   },
+  "save_action": {
+    "translation": "Сохранить",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": true
+  },
   "cannot_parse_vcard": {
-    "translation": "Не удается проанализировать файл vCard.",
+    "translation": "Не удалось обработать файл vCard.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
     "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "Чат",
+    "translation": "Написать",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
     "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "Поиск",
+    "translation": "Искать",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
     "missing": false,
@@ -1983,6 +1990,13 @@
     "description": "Option for reactions use in topic",
     "missing": false,
     "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Контакты",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "добавить участников",

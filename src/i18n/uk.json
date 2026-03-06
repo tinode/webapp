@@ -1929,35 +1929,42 @@
     "obsolete": false
   },
   "unknown_name": {
-    "translation": "Невідомо",
+    "translation": "Невідомий",
     "defaultMessage": "Unknown",
     "description": "Name to show when the name is missing",
     "missing": false,
     "obsolete": false
   },
+  "save_action": {
+    "translation": "Зберегти",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": true
+  },
   "cannot_parse_vcard": {
-    "translation": "Не вдається проаналізувати файл vCard.",
+    "translation": "Не вдалося обробити файл vCard.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
     "missing": false,
     "obsolete": false
   },
   "chat_now": {
-    "translation": "Чат",
+    "translation": "Написати",
     "defaultMessage": "Chat",
     "description": "Label for message button in contact card",
     "missing": false,
     "obsolete": false
   },
   "find_user": {
-    "translation": "Пошук",
+    "translation": "Знайти",
     "defaultMessage": "Find",
     "description": "Label for search button in contact card",
     "missing": false,
     "obsolete": false
   },
   "label_contact_card": {
-    "translation": "Карточка контакту",
+    "translation": "Картка контакту",
     "defaultMessage": "Contact Card",
     "description": "Label for contact card preview",
     "missing": false,
@@ -1983,6 +1990,13 @@
     "description": "Option for reactions use in topic",
     "missing": false,
     "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Контакти",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "додати учасників",

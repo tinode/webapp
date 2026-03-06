@@ -1935,8 +1935,15 @@
     "missing": false,
     "obsolete": false
   },
+  "save_action": {
+    "translation": "저장",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": true
+  },
   "cannot_parse_vcard": {
-    "translation": "vCard 파일을 구문 분석할 수 없습니다.",
+    "translation": "vCard 파일을 파싱할 수 없습니다.",
     "defaultMessage": "Cannot parse vCard file.",
     "description": "Error message when vCard file cannot be parsed",
     "missing": false,
@@ -1983,6 +1990,13 @@
     "description": "Option for reactions use in topic",
     "missing": false,
     "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "연락처",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": true
   },
   "add_members_prompt": {
     "translation": "멤버 추가",
