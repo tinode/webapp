@@ -38,6 +38,10 @@ const i18n = {
     'new_message': "새로운 메시지",
     'new_chat': "새로운 채팅",
   },
+  'pt': {
+    'new_message': "Nova Mensagem",
+    'new_chat': "Nova Conversa",
+  },
   'ro': {
     'new_message': "Mesaj nou",
     'new_chat': "Chat nou",
