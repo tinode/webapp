@@ -1509,7 +1509,7 @@ i.search {
   line-height: 3rem;
 }
 .contact-box .avatar-box > .checkmark.m-icon {
-  line-height: unset;
+  line-height: 1;
 }
 .contact-box.small .avatar-box > .m-icon {
   font-size: 1.6rem;
@@ -1608,7 +1608,7 @@ img.channel {
   background-color: var(--clr-bright);
   overflow: visible;
   border: 0.0px solid var(--clr-transparent);
-  padding-left: 0.5px;
+  padding-left: 0;
 }
 
 .contact-box .deleted.m-icon {
@@ -1779,6 +1779,7 @@ img.channel {
   cursor: pointer;
   width: 3rem;
   height: 3rem;
+  padding: 0;
   line-height: 3rem;
   border-radius: 50%;
   box-shadow: 0 1px 4px var(--clr-shadow-dialog); /* rgba(0,0,0,0.4) similar to menu */
@@ -1867,6 +1868,7 @@ img.channel {
 /* Div holding QR code */
 .qr-code {
   align-self: center;
+  padding: 1rem;
 }
 
 #messages-container {
