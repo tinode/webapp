@@ -16,6 +16,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -31,11 +33,9 @@ const VIDEO_MUTED_EVENT = 'video:muted';
 const VIDEO_UNMUTED_EVENT = 'video:unmuted';
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   already_in_call: {
-    id: "already_in_call",
-    defaultMessage: [{
-      "type": 0,
-      "value": "You already in an ongoing call!"
-    }]
+    id: 'already_in_call',
+    defaultMessage: 'You already in an ongoing call!',
+    description: 'Error message when the user tried to accept a new call without finishing pervious one'
   }
 });
 class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -581,77 +581,97 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
     const minimizedClass = this.props.minimized ? 'minimized' : null;
     const fullScreen = this.props.minimized ? 'fullscreen' : 'fullscreen_exit';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
       id: "video-container",
       className: minimizedClass,
-      ref: this.containerRef
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "video-container-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-party self",
-      disabled: this.state.audioOnly || this.props.minimized
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      ref: this.localRef,
-      autoPlay: true,
-      muted: true,
-      playsInline: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name inactive"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "calls_you_label",
-      defaultMessage: [{
-        "type": 0,
-        "value": "You"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-party peer",
-      disabled: !remoteActive
-    }, remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      ref: this.remoteRef,
-      autoPlay: true,
-      playsInline: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name inactive"
-    }, peerTitle)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("audio", {
-      ref: this.remoteRef,
-      autoPlay: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `caller-card${pulseAnimation} draggable`
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: this.props.avatar,
-      topic: this.props.topic,
-      title: this.props.title
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name"
-    }, peerTitle))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "full-screen",
-      onClick: this.props.onToggleMinimize
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, fullScreen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "controls",
-      className: minimizedClass
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "danger",
-      onClick: this.handleCloseClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.handleToggleCameraClick,
-      disabled: disabled
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.handleToggleMicClick,
-      disabled: disabled
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, audioIcon))));
+      ref: this.containerRef,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        id: "video-container-panel",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+          className: "call-party self",
+          disabled: this.state.audioOnly || this.props.minimized,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("video", {
+            ref: this.localRef,
+            autoPlay: true,
+            muted: true,
+            playsInline: true
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+            className: "caller-name inactive",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "calls_you_label",
+              defaultMessage: "You",
+              description: "Shown over the local video screen"
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+          className: "call-party peer",
+          disabled: !remoteActive,
+          children: remoteActive ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("video", {
+              ref: this.remoteRef,
+              autoPlay: true,
+              playsInline: true
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+              className: "caller-name inactive",
+              children: peerTitle
+            }, void 0, false)]
+          }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("audio", {
+              ref: this.remoteRef,
+              autoPlay: true
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+              className: `caller-card${pulseAnimation} draggable`,
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+                className: "avatar-box",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+                  authorizeURL: this.props.tinode.authorizeURL,
+                  avatar: this.props.avatar,
+                  topic: this.props.topic,
+                  title: this.props.title
+                }, void 0, false)
+              }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+                className: "caller-name",
+                children: peerTitle
+              }, void 0, false)]
+            }, void 0, true)]
+          }, void 0, true)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("button", {
+        className: "full-screen",
+        onClick: this.props.onToggleMinimize,
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+          className: "material-icons",
+          children: fullScreen
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        id: "controls",
+        className: minimizedClass,
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("button", {
+          className: "danger",
+          onClick: this.handleCloseClick,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "call_end"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: this.handleToggleCameraClick,
+          disabled: disabled,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+            className: "material-icons",
+            children: videoIcon
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: this.handleToggleMicClick,
+          disabled: disabled,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+            className: "material-icons",
+            children: audioIcon
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;

@@ -15,6 +15,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
 /* harmony import */ var _widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/permissions-editor.jsx */ "./src/widgets/permissions-editor.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -22,18 +24,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   delete_account: {
-    id: "delete_account",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete account"
-    }]
+    id: 'delete_account',
+    defaultMessage: 'Delete account',
+    description: 'Title for delete account warning'
   },
   delete_account_warning: {
-    id: "delete_account_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to delete your account? It cannot be undone."
-    }]
+    id: 'delete_account_warning',
+    defaultMessage: 'Are you sure you want to delete your account? It cannot be undone.',
+    description: 'Warning message when deleting an account'
   }
 });
 class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -98,142 +96,153 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     this.props.onShowAlert(formatMessage(messages.delete_account), formatMessage(messages.delete_account_warning), _ => this.props.onDeleteAccount(), null, true, null);
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      mode: this.state.editedPermissions,
-      skip: "O",
-      onSubmit: this.handlePermissionsChanged,
-      onCancel: this.handleHidePermissionsEditor
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_password",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Password"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "password_unchanged_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Unchanged"
-      }]
-    }, password_unchanged => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      placeholder: password_unchanged,
-      type: "password",
-      onFinished: this.handlePasswordUpdate
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "incognito-mode"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_incognito_mode",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Incognito mode:"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      name: "incognito",
-      id: "incognito-mode",
-      checked: this.props.incognitoMode,
-      onChange: this.handleCheckboxClick
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "small gray"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "incognito_mode_description",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Hide your online status and typing indicators."
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "danger flat-button",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onLogout();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "exit_to_app"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_logout",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Logout"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "danger flat-button",
-      onClick: e => {
-        this.handleDeleteAccount(e);
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "delete"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_delete_account",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Delete account"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_default_access_mode",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Default access mode:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Auth: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
-      onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth')
-    }, this.state.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
-      onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon')
-    }, this.state.anon)))), this.state.blockedCount > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "block"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "gray",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onShowBlocked();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "blocked_contacts_link",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Blocked contacts ("
-      }, {
-        "type": 1,
-        "value": "count"
-      }, {
-        "type": 0,
-        "value": ")"
-      }],
-      values: {
-        count: this.state.blockedCount
-      }
-    })))) : null));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+      children: this.state.showPermissionEditorFor ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        mode: this.state.editedPermissions,
+        skip: "O",
+        onSubmit: this.handlePermissionsChanged,
+        onCancel: this.handleHidePermissionsEditor
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "scrollable-panel",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "panel-form-column",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_password",
+              defaultMessage: "Password",
+              description: "Label for password editing"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "password_unchanged_prompt",
+              defaultMessage: "Unchanged",
+              description: "Message in editor while password is unchanged",
+              children: password_unchanged => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+                placeholder: password_unchanged,
+                type: "password",
+                onFinished: this.handlePasswordUpdate
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "hr"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("label", {
+            htmlFor: "incognito-mode",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_incognito_mode",
+              defaultMessage: "Incognito mode:",
+              description: "Label for incognito mode toggle"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: "incognito",
+            id: "incognito-mode",
+            checked: this.props.incognitoMode,
+            onChange: this.handleCheckboxClick
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("span", {
+            className: "small gray",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "incognito_mode_description",
+              defaultMessage: "Hide your online status and typing indicators.",
+              description: "Description for incognito mode toggle"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "hr"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "panel-form-column",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+            href: "#",
+            className: "danger flat-button",
+            onClick: e => {
+              e.preventDefault();
+              this.props.onLogout();
+            },
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+              className: "material-icons",
+              children: "exit_to_app"
+            }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_logout",
+              defaultMessage: "Logout",
+              description: "Button [Logout]"
+            }, void 0, false)]
+          }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+            href: "#",
+            className: "danger flat-button",
+            onClick: e => {
+              this.handleDeleteAccount(e);
+            },
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+              className: "material-icons",
+              children: "delete"
+            }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_delete_account",
+              defaultMessage: "Delete account",
+              description: "Button [Delete account]"
+            }, void 0, false)]
+          }, void 0, true)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "hr"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "panel-form-column",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("label", {
+              className: "small",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_default_access_mode",
+                defaultMessage: "Default access mode:",
+                description: "Label for default access mode"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            className: "quoted",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+              children: ["Auth: ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tt", {
+                className: "clickable",
+                onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth'),
+                children: this.state.auth
+              }, void 0, false)]
+            }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+              children: ["Anon: ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tt", {
+                className: "clickable",
+                onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon'),
+                children: this.state.anon
+              }, void 0, false)]
+            }, void 0, true)]
+          }, void 0, true)]
+        }, void 0, true), this.state.blockedCount > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            className: "hr"
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            className: "panel-form-row",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+              className: "material-icons",
+              children: "block"
+            }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+              href: "#",
+              className: "gray",
+              onClick: e => {
+                e.preventDefault();
+                this.props.onShowBlocked();
+              },
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "blocked_contacts_link",
+                defaultMessage: "Blocked contacts ({count})",
+                values: {
+                  count: this.state.blockedCount
+                },
+                description: "Blocked contacts link"
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true)]
+        }, void 0, true) : null]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 ;
@@ -255,6 +264,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -262,108 +273,44 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   joiner: {
-    id: "permission_join",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Join ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_join',
+    defaultMessage: "Join ({val})",
+    description: 'Name of J permission'
   },
   reader: {
-    id: "permission_read",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Read ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_read',
+    defaultMessage: "Read ({val})",
+    description: 'Name of R permission'
   },
   writer: {
-    id: "permission_write",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Write ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_write',
+    defaultMessage: "Write ({val})",
+    description: 'Name of W permission'
   },
   preser: {
-    id: "permission_pres",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Get notified ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_pres',
+    defaultMessage: "Get notified ({val})",
+    description: 'Name of P permission'
   },
   approver: {
-    id: "permission_admin",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Approve ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_admin',
+    defaultMessage: "Approve ({val})",
+    description: 'Name of A permission'
   },
   sharer: {
-    id: "permission_share",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Share ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_share',
+    defaultMessage: "Share ({val})",
+    description: 'Name of S permission'
   },
   deleter: {
-    id: "permission_delete",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_delete',
+    defaultMessage: "Delete ({val})",
+    description: 'Name of D permission'
   },
   owner: {
-    id: "permission_owner",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Owner ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_owner',
+    defaultMessage: "Owner ({val})",
+    description: 'Name of O permission'
   }
 });
 class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -440,65 +387,80 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
       if (skip.indexOf(c) >= 0 && mode.indexOf(c) < 0) {
         continue;
       }
-      items.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
-        key: c
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", null, names[c]), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-        className: "checkbox"
-      }, skip.indexOf(c) < 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        name: c,
-        checked: mode.indexOf(c) >= 0,
-        onChange: this.handleChange
-      }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        name: c,
-        checked: mode.indexOf(c) >= 0
-      })), this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-        className: "checkbox"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        name: c,
-        checked: compare.indexOf(c) >= 0
-      })) : null));
+      items.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tr", {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("td", {
+          children: names[c]
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("td", {
+          className: "checkbox",
+          children: skip.indexOf(c) < 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: c,
+            checked: mode.indexOf(c) >= 0,
+            onChange: this.handleChange
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: c,
+            checked: mode.indexOf(c) >= 0
+          }, void 0, false)
+        }, void 0, false), this.props.compare ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("td", {
+          className: "checkbox",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: c,
+            checked: compare.indexOf(c) >= 0
+          }, void 0, false)
+        }, void 0, false) : null]
+      }, c, true));
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, this.props.userTitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "contact-box small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      item: this.props.item,
-      title: this.props.userTitle,
-      small: true,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(this.props.userAvatar ? this.props.userAvatar : null)
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_permissions",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Permissions"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
-      className: "permission-editor"
-    }, this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null, this.props.modeTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null, this.props.compareTitle))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, items)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "outline",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+      className: "panel-form-column",
+      children: [this.props.userTitle ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("ul", {
+        className: "contact-box small",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          tinode: this.props.tinode,
+          item: this.props.item,
+          title: this.props.userTitle,
+          small: true,
+          avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(this.props.userAvatar ? this.props.userAvatar : null)
+        }, void 0, false)
+      }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("label", {
+        className: "small",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "title_permissions",
+          defaultMessage: "Permissions",
+          description: "Section title"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("table", {
+        className: "permission-editor",
+        children: [this.props.compare ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("thead", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tr", {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("th", {}, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("th", {
+              children: this.props.modeTitle
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("th", {
+              children: this.props.compareTitle
+            }, void 0, false)]
+          }, void 0, true)
+        }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tbody", {
+          children: items
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("br", {}, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("button", {
+          className: "outline",
+          onClick: this.handleCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_cancel",
+            defaultMessage: "Cancel",
+            description: "Button [Cancel]"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("button", {
+          className: "primary",
+          onClick: this.handleSubmit,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_ok",
+            defaultMessage: "OK",
+            description: "Button [OK]"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;

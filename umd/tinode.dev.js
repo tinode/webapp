@@ -439,8 +439,8 @@ const MESSAGE_STATUS_SENT = 50;
 const MESSAGE_STATUS_RECEIVED = 60;
 const MESSAGE_STATUS_READ = 70;
 const MESSAGE_STATUS_TO_ME = 80;
-const EXPIRE_PROMISES_TIMEOUT = 5000;
-const EXPIRE_PROMISES_PERIOD = 1000;
+const EXPIRE_PROMISES_TIMEOUT = 5_000;
+const EXPIRE_PROMISES_PERIOD = 1_000;
 const RECV_TIMEOUT = 100;
 const DEFAULT_MESSAGES_PAGE = 24;
 const DEL_CHAR = '\u2421';
@@ -448,7 +448,7 @@ const MAX_PINNED_COUNT = 5;
 const TAG_ALIAS = 'alias:';
 const TAG_EMAIL = 'email:';
 const TAG_PHONE = 'tel:';
-const BACKOFF_BASE = 2000;
+const BACKOFF_BASE = 2_000;
 const BACKOFF_MAX_ITER = 10;
 const BACKOFF_JITTER = 0.3;
 
@@ -1140,6 +1140,10 @@ class DB {
         from = 0;
         to = Number.MAX_SAFE_INTEGER;
       }
+      if (to > 0 && to <= from) {
+        resolve();
+        return;
+      }
       const range = to > 0 ? IDBKeyRange.bound([topicName, from], [topicName, to], false, true) : IDBKeyRange.only([topicName, from]);
       const trx = this.db.transaction(['message'], 'readwrite');
       trx.onsuccess = event => {
@@ -1166,8 +1170,13 @@ class DB {
           this.#logger('PCache', 'readMessages', event.target.error);
           reject(event.target.error);
         };
+        const ranges = query.ranges.filter(r => !r.hi || r.hi > r.low);
+        if (ranges.length == 0) {
+          resolve(result);
+          return;
+        }
         let count = 0;
-        query.ranges.forEach(range => {
+        ranges.forEach(range => {
           const key = range.hi ? IDBKeyRange.bound([topicName, range.low], [topicName, range.hi], false, true) : IDBKeyRange.only([topicName, range.low]);
           trx.objectStore('message').getAll(key).onsuccess = event => {
             const msgs = event.target.result;
@@ -1182,7 +1191,7 @@ class DB {
               }
             }
             count++;
-            if (count == query.ranges.length) {
+            if (count == ranges.length) {
               resolve(result);
             }
           };
@@ -1197,6 +1206,10 @@ class DB {
         this.#logger('PCache', 'readMessages', event.target.error);
         reject(event.target.error);
       };
+      if (since >= before) {
+        resolve(result);
+        return;
+      }
       const range = IDBKeyRange.bound([topicName, since], [topicName, before], false, true);
       trx.objectStore('message').openCursor(range, 'prev').onsuccess = event => {
         const cursor = event.target.result;
@@ -6023,7 +6036,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.2";
+const PACKAGE_VERSION = "0.25.3";
 
 /***/ })
 
@@ -6039,12 +6052,6 @@ const PACKAGE_VERSION = "0.25.2";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -6053,6 +6060,12 @@ const PACKAGE_VERSION = "0.25.2";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -6074,11 +6087,26 @@ const PACKAGE_VERSION = "0.25.2";
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = function(exports, definition) {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};

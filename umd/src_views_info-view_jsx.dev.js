@@ -28,6 +28,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -47,109 +49,79 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   info: {
-    id: "panel_title_info",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Info"
-    }]
+    id: 'panel_title_info',
+    description: 'Title for InfoView',
+    defaultMessage: 'Info'
   },
   general: {
-    id: "panel_title_general",
-    defaultMessage: [{
-      "type": 0,
-      "value": "General"
-    }]
+    id: 'panel_title_general',
+    description: 'Title for TopicCommon.',
+    defaultMessage: 'General'
   },
   security: {
-    id: "panel_title_security",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Security"
-    }]
+    id: 'panel_title_security',
+    description: 'Title for TopicSecirity and AccSecurity.',
+    defaultMessage: 'Security'
   },
   members: {
-    id: "panel_title_members",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Members"
-    }]
+    id: 'panel_title_members',
+    description: 'Title for managing group members view.',
+    defaultMessage: 'Members'
   },
   crop: {
-    id: "panel_title_crop",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Drag to Adjust"
-    }]
+    id: 'panel_title_crop',
+    description: 'Title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
   },
   perm_want: {
-    id: "requested_permissions",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Requested"
-    }]
+    id: 'requested_permissions',
+    defaultMessage: 'Requested',
+    description: 'Title for permissions'
   },
   perm_given: {
-    id: "granted_permissions",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Granted"
-    }]
+    id: 'granted_permissions',
+    defaultMessage: 'Granted',
+    description: 'Title for permissions'
   },
   perm_auth: {
-    id: "permissions_authenticated",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Authenticated"
-    }]
+    id: 'permissions_authenticated',
+    defaultMessage: 'Authenticated',
+    description: 'Title for editing default authenticated permissions'
   },
   perm_anon: {
-    id: "permissions_anonymous",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Anonymous"
-    }]
+    id: 'permissions_anonymous',
+    defaultMessage: 'Anonymous',
+    description: 'Title for editing default anonymous permissions'
   },
   perm_user: {
-    id: "permissions_user",
-    defaultMessage: [{
-      "type": 0,
-      "value": "User's Permissions"
-    }]
+    id: 'permissions_user',
+    defaultMessage: 'User\'s Permissions',
+    description: 'Title for editing user\'s permissions'
   },
   edit_permissions: {
-    id: "menu_item_edit_permissions",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Edit permissions"
-    }]
+    id: 'menu_item_edit_permissions',
+    defaultMessage: 'Edit permissions',
+    description: 'Menu item [Edit permissions]'
   },
   qrcode: {
-    id: "scan_qr_code",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Scan QR Code"
-    }]
+    id: 'scan_qr_code',
+    defaultMessage: 'Scan QR Code',
+    description: 'Title for scanning QR code'
   },
   text_copied: {
-    id: "text_copied",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Copied to clipboard"
-    }]
+    id: 'text_copied',
+    defaultMessage: 'Copied to clipboard',
+    description: 'Notification that text has been copied to clipboard'
   },
   self_topic_name: {
-    id: "self_topic_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Saved messages"
-    }]
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
   },
   self_topic_comment: {
-    id: "self_topic_comment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Notes, messages, links, files saved for posterity"
-    }]
+    id: 'self_topic_comment',
+    defaultMessage: 'Notes, messages, links, files saved for posterity',
+    description: 'Comment for self topic for UI'
   }
 });
 class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -531,310 +503,358 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     const panelTitle = formatMessage((view == 'perm' ? messages['perm_' + args[0]] : messages[view]) || messages['info']);
     const topic = this.props.tinode.getTopic(this.state.topic);
     const alias = topic && topic.alias();
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "info-view"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `toast${this.state.toast ? ' show' : ''}`
-    }, this.state.toast), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caption-panel",
-      id: "info-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-title",
-      id: "info-title"
-    }, panelTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      onCancel: this.handleBackNavigate
-    }))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      level: this.props.errorLevel,
-      text: this.props.errorText,
-      onClearError: this.props.onError
-    }) : null, view == 'members' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_manager_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      tinode: this.props.tinode,
-      members: this.state.contactList,
-      requiredMember: this.props.myUserId,
-      keepInitialMembers: !this.state.admin && !this.state.owner,
-      myUserId: this.props.myUserId,
-      contacts: this.props.searchableContacts,
-      onCancel: this.handleBackNavigate,
-      onSubmit: this.handleMemberUpdateRequest
-    }) : view == 'perm' && args.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
-      tinode: this.props.tinode,
-      mode: this.state.editedPermissions,
-      compare: this.state.immutablePermissions,
-      skip: this.state.editedPermissionsSkipped,
-      modeTitle: this.state.editedPermissionsTitle,
-      compareTitle: this.state.immutablePermissionsTitle,
-      userTitle: this.state.userPermissionsTitle,
-      item: this.state.userPermissionsEdited,
-      userAvatar: this.state.userPermissionsAvatar,
-      onSubmit: mode => this.handlePermissionsChanged(args[0], mode),
-      onCancel: this.handleBackNavigate
-    }) : view == 'general' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
-      tinode: this.props.tinode,
-      topic: this.props.topic,
-      reqCredMethod: this.props.reqCredMethod,
-      onCredAdd: this.props.onCredAdd,
-      onUpdateTagsRequest: this.props.onTopicTagsUpdateRequest,
-      onCredConfirm: this.props.onCredConfirm,
-      onCredDelete: this.props.onCredDelete,
-      onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
-      onError: this.props.onError
-    }) : view == 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
-      topic: this.props.topic,
-      owner: this.state.owner,
-      admin: this.state.admin,
-      sharer: this.state.sharer,
-      deleter: this.state.deleter,
-      muted: this.state.muted,
-      groupTopic: this.state.groupTopic,
-      channel: this.state.channel,
-      access: this.state.access,
-      modeGiven: this.state.modeGiven,
-      modeWant: this.state.modeWant,
-      modeGiven2: this.state.modeGiven2,
-      modeWant2: this.state.modeWant2,
-      auth: this.state.auth,
-      anon: this.state.anon,
-      onShowAlert: this.props.onShowAlert,
-      onDeleteMessages: this.props.onDeleteMessages,
-      onLeaveTopic: this.props.onLeaveTopic,
-      onBlockTopic: this.props.onBlockTopic,
-      onReportTopic: this.props.onReportTopic,
-      onLaunchPermissionsEditor: this.handleLaunchPermissionsEditor,
-      onNavigate: this.props.onNavigate
-    }) : view == 'qrcode' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_show_qrcode_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-      uri: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.topic,
-      onCancel: this.handleBackNavigate
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "info-view-content",
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "flat-button float-right",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onNavigate('general');
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "edit"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_edit",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Edit"
-      }]
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      avatar: this.state.avatar,
-      readOnly: true,
-      uid: this.props.topic,
-      title: this.state.fullName
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_topic_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Name"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "large ellipsized"
-    }, this.state.fullName, "\xA0", this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "podcasts") : null)), this.state.private ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_private",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Private comment"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "large ellipsized"
-    }, this.state.private)) : null, !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_user_id",
-      defaultMessage: [{
-        "type": 0,
-        "value": "ID:"
-      }]
-    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.address)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      style: {
-        marginLeft: 'auto'
-      }
-    }, "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        this.handleCopyToClipboard(e, this.state.address);
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "content_copy")), "\xA0 \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleShowQRCode
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "qr_code")), "\xA0 \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleShare
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "share")), "\xA0")), alias ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_alias",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Alias:"
-      }]
-    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, alias)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      style: {
-        marginLeft: 'auto'
-      }
-    }, "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        this.handleCopyToClipboard(e, alias);
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "content_copy")), "\xA0 \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons",
-      style: {
-        opacity: 0
-      }
-    }, "qr_code"), "\xA0")) : null) : null, this.state.trustedBadges.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      trustedBadges: this.state.trustedBadges
-    })) : null, this.state.groupTopic && topic.subcnt > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_subscriber_count",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Subscribers:"
-      }]
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_member_count",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Members:"
-      }]
-    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedNumber, {
-      value: topic.subcnt
-    })) : null, this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_description",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Description"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.description)) : null), !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_muting_topic",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Muted:"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      name: "P",
-      checked: this.state.muted,
-      onChange: this.handleMuted
-    }))) : null, this.state.archived ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_unarchive_topic",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Archived:"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      name: "archived",
-      checked: true,
-      onChange: this.handleUnarchive
-    })) : null, !this.state.isSelf ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "flat-button",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onNavigate('security');
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "security"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_security",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Security"
-      }]
-    })))) : null, this.state.groupTopic && this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_group_members",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Group members:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "flat-button",
-      onClick: this.handleShowAddMembers
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "person_add"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_add_members",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Add members"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "group_has_no_members",
-      defaultMessage: [{
-        "type": 0,
-        "value": "No members"
-      }]
-    }, no_members => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      tinode: this.props.tinode,
-      contacts: this.state.contactList,
-      myUserId: this.props.myUserId,
-      emptyListMessage: no_members,
-      topicSelected: this.state.selectedContact,
-      showOnline: false,
-      showUnread: false,
-      showMode: true,
-      noScroll: true,
-      onTopicSelected: this.handleMemberSelected,
-      showContextMenu: this.state.admin ? this.handleContextMenu : false
-    }))) : null));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+      id: "info-view",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+        className: `toast${this.state.toast ? ' show' : ''}`,
+        children: this.state.toast
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+        className: "caption-panel",
+        id: "info-caption-panel",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+          className: "panel-title",
+          id: "info-title",
+          children: panelTitle
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            onCancel: this.handleBackNavigate
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), this.props.displayMobile ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        level: this.props.errorLevel,
+        text: this.props.errorText,
+        onClearError: this.props.onError
+      }, void 0, false) : null, view == 'members' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_group_manager_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        tinode: this.props.tinode,
+        members: this.state.contactList,
+        requiredMember: this.props.myUserId,
+        keepInitialMembers: !this.state.admin && !this.state.owner,
+        myUserId: this.props.myUserId,
+        contacts: this.props.searchableContacts,
+        onCancel: this.handleBackNavigate,
+        onSubmit: this.handleMemberUpdateRequest
+      }, void 0, false) : view == 'perm' && args.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        tinode: this.props.tinode,
+        mode: this.state.editedPermissions,
+        compare: this.state.immutablePermissions,
+        skip: this.state.editedPermissionsSkipped,
+        modeTitle: this.state.editedPermissionsTitle,
+        compareTitle: this.state.immutablePermissionsTitle,
+        userTitle: this.state.userPermissionsTitle,
+        item: this.state.userPermissionsEdited,
+        userAvatar: this.state.userPermissionsAvatar,
+        onSubmit: mode => this.handlePermissionsChanged(args[0], mode),
+        onCancel: this.handleBackNavigate
+      }, void 0, false) : view == 'general' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        tinode: this.props.tinode,
+        topic: this.props.topic,
+        reqCredMethod: this.props.reqCredMethod,
+        onCredAdd: this.props.onCredAdd,
+        onUpdateTagsRequest: this.props.onTopicTagsUpdateRequest,
+        onCredConfirm: this.props.onCredConfirm,
+        onCredDelete: this.props.onCredDelete,
+        onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
+        onError: this.props.onError
+      }, void 0, false) : view == 'security' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        topic: this.props.topic,
+        owner: this.state.owner,
+        admin: this.state.admin,
+        sharer: this.state.sharer,
+        deleter: this.state.deleter,
+        muted: this.state.muted,
+        groupTopic: this.state.groupTopic,
+        channel: this.state.channel,
+        access: this.state.access,
+        modeGiven: this.state.modeGiven,
+        modeWant: this.state.modeWant,
+        modeGiven2: this.state.modeGiven2,
+        modeWant2: this.state.modeWant2,
+        auth: this.state.auth,
+        anon: this.state.anon,
+        onShowAlert: this.props.onShowAlert,
+        onDeleteMessages: this.props.onDeleteMessages,
+        onLeaveTopic: this.props.onLeaveTopic,
+        onBlockTopic: this.props.onBlockTopic,
+        onReportTopic: this.props.onReportTopic,
+        onLaunchPermissionsEditor: this.handleLaunchPermissionsEditor,
+        onNavigate: this.props.onNavigate
+      }, void 0, false) : view == 'qrcode' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_show_qrcode_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        uri: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.topic,
+        onCancel: this.handleBackNavigate
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+        id: "info-view-content",
+        className: "scrollable-panel",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+          className: "panel-form-column",
+          children: [!this.state.isSelf ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+            href: "#",
+            className: "flat-button float-right",
+            onClick: e => {
+              e.preventDefault();
+              this.props.onNavigate('general');
+            },
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+              className: "material-icons",
+              children: "edit"
+            }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_edit",
+              defaultMessage: "Edit",
+              description: "Call to action [Edit]"
+            }, void 0, false)]
+          }, void 0, true) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("center", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              tinode: this.props.tinode,
+              avatar: this.state.avatar,
+              readOnly: true,
+              uid: this.props.topic,
+              title: this.state.fullName
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_topic_name",
+                  defaultMessage: "Name",
+                  description: "Label for editing topic name"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              className: "large ellipsized",
+              children: [this.state.fullName, "\xA0", this.state.channel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                className: "material-icons",
+                children: "podcasts"
+              }, void 0, false) : null]
+            }, void 0, true)]
+          }, void 0, true), this.state.private ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_private",
+                  defaultMessage: "Private comment",
+                  description: "Label for editing 'private'"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              className: "large ellipsized",
+              children: this.state.private
+            }, void 0, false)]
+          }, void 0, true) : null, !this.state.isSelf ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              className: "panel-form-row",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+                children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+                  className: "small",
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                    id: "label_user_id",
+                    defaultMessage: "ID:",
+                    description: "Label for user address (ID)"
+                  }, void 0, false)
+                }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("tt", {
+                  children: this.state.address
+                }, void 0, false)]
+              }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+                style: {
+                  marginLeft: 'auto'
+                },
+                children: ["\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+                  href: "#",
+                  onClick: e => {
+                    this.handleCopyToClipboard(e, this.state.address);
+                  },
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                    className: "material-icons",
+                    children: "content_copy"
+                  }, void 0, false)
+                }, void 0, false), "\xA0 \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+                  href: "#",
+                  onClick: this.handleShowQRCode,
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                    className: "material-icons",
+                    children: "qr_code"
+                  }, void 0, false)
+                }, void 0, false), "\xA0 \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+                  href: "#",
+                  onClick: this.handleShare,
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                    className: "material-icons",
+                    children: "share"
+                  }, void 0, false)
+                }, void 0, false), "\xA0"]
+              }, void 0, true)]
+            }, void 0, true), alias ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              className: "panel-form-row",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+                children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+                  className: "small",
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                    id: "label_alias",
+                    defaultMessage: "Alias:",
+                    description: "Label for user or topic alias"
+                  }, void 0, false)
+                }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("tt", {
+                  children: alias
+                }, void 0, false)]
+              }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+                style: {
+                  marginLeft: 'auto'
+                },
+                children: ["\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+                  href: "#",
+                  onClick: e => {
+                    this.handleCopyToClipboard(e, alias);
+                  },
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                    className: "material-icons",
+                    children: "content_copy"
+                  }, void 0, false)
+                }, void 0, false), "\xA0 \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                  className: "material-icons",
+                  style: {
+                    opacity: 0
+                  },
+                  children: "qr_code"
+                }, void 0, false), "\xA0"]
+              }, void 0, true)]
+            }, void 0, true) : null]
+          }, void 0, true) : null, this.state.trustedBadges.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "group",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+              trustedBadges: this.state.trustedBadges
+            }, void 0, false)
+          }, void 0, false) : null, this.state.groupTopic && topic.subcnt > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+              className: "small",
+              children: this.state.channel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_subscriber_count",
+                defaultMessage: "Subscribers:",
+                description: "Label for the count of channel subscribers"
+              }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_member_count",
+                defaultMessage: "Members:",
+                description: "Label for the count of group topic members"
+              }, void 0, false)
+            }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedNumber, {
+              value: topic.subcnt
+            }, void 0, false)]
+          }, void 0, true) : null, this.state.description ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+              className: "small",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_description",
+                defaultMessage: "Description",
+                description: "Label for description of user or topic"
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+              children: this.state.description
+            }, void 0, false)]
+          }, void 0, true) : null]
+        }, void 0, true), !this.state.isSelf ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "hr"
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "panel-form-row",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_muting_topic",
+                defaultMessage: "Muted:",
+                description: "Label for Muting/unmuting the topic"
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+              name: "P",
+              checked: this.state.muted,
+              onChange: this.handleMuted
+            }, void 0, false)]
+          }, void 0, true)]
+        }, void 0, true) : null, this.state.archived ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_unarchive_topic",
+              defaultMessage: "Archived:",
+              description: "Label for unarchiving the topic"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            name: "archived",
+            checked: true,
+            onChange: this.handleUnarchive
+          }, void 0, false)]
+        }, void 0, true) : null, !this.state.isSelf ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "hr"
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "panel-form-row",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+              href: "#",
+              className: "flat-button",
+              onClick: e => {
+                e.preventDefault();
+                this.props.onNavigate('security');
+              },
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                className: "material-icons",
+                children: "security"
+              }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "button_security",
+                defaultMessage: "Security",
+                description: "Navigaton button for security panel."
+              }, void 0, false)]
+            }, void 0, true)
+          }, void 0, false)]
+        }, void 0, true) : null, this.state.groupTopic && this.state.sharer ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "hr"
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "panel-form-row",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("label", {
+              className: "small",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_group_members",
+                defaultMessage: "Group members:",
+                description: "Section title or label"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("div", {
+            className: "panel-form-row",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("a", {
+              href: "#",
+              className: "flat-button",
+              onClick: this.handleShowAddMembers,
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)("i", {
+                className: "material-icons",
+                children: "person_add"
+              }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "button_add_members",
+                defaultMessage: "Add members",
+                description: "Flat button [Add members] (to topic)"
+              }, void 0, false)]
+            }, void 0, true)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "group_has_no_members",
+            defaultMessage: "No members",
+            description: "Shown in place of group members",
+            children: no_members => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxDEV)(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              tinode: this.props.tinode,
+              contacts: this.state.contactList,
+              myUserId: this.props.myUserId,
+              emptyListMessage: no_members,
+              topicSelected: this.state.selectedContact,
+              showOnline: false,
+              showUnread: false,
+              showMode: true,
+              noScroll: true,
+              onTopicSelected: this.handleMemberSelected,
+              showContextMenu: this.state.admin ? this.handleContextMenu : false
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true) : null]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -855,37 +875,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var _contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-list.jsx */ "./src/widgets/contact-list.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   no_contacts: {
-    id: "no_contacts",
-    defaultMessage: [{
-      "type": 0,
-      "value": "You have no contacts :-("
-    }]
+    id: 'no_contacts',
+    defaultMessage: 'You have no contacts :-(',
+    description: 'Shown in ContactsView when the user has no contacts'
   },
   contacts_not_found_short: {
-    id: "contacts_not_found_short",
-    defaultMessage: [{
-      "type": 0,
-      "value": "No contacts match '"
-    }, {
-      "type": 1,
-      "value": "query"
-    }, {
-      "type": 0,
-      "value": "'"
-    }]
+    id: 'contacts_not_found_short',
+    defaultMessage: "No contacts match ''{query}''",
+    description: 'Shown in ContactsView when search returned no results'
   },
   add_members_prompt: {
-    id: "add_members_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "add members"
-    }]
+    id: 'add_members_prompt',
+    defaultMessage: 'add members',
+    description: 'Placeholder in group members input field'
   }
 });
 class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -1018,70 +1028,71 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.props.onCancel();
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "group-manager"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_group_members",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Group Members"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
-      chips: this.state.members,
-      staticMembers: this.state.staticMembers,
-      prompt: this.props.intl.formatMessage(messages.add_members_prompt),
-      filterFunc: this.handleContactFilter,
-      onChipRemoved: this.handleMemberRemoved
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_all_contacts",
-      defaultMessage: [{
-        "type": 0,
-        "value": "All Contacts"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      contacts: this.props.contacts,
-      myUserId: this.props.myUserId,
-      topicSelected: this.state.selectedContacts,
-      filter: this.state.contactFilter,
-      filterFunc: GroupManager.doContactFiltering,
-      emptyListMessage: this.state.noContactsMessage,
-      showOnline: false,
-      showUnread: false,
-      onTopicSelected: this.handleContactSelected
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "group-manager-buttons",
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      id: "group-manager",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          className: "small",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "title_group_members",
+            defaultMessage: "Group Members",
+            description: "Section title"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          tinode: this.props.tinode,
+          chips: this.state.members,
+          staticMembers: this.state.staticMembers,
+          prompt: this.props.intl.formatMessage(messages.add_members_prompt),
+          filterFunc: this.handleContactFilter,
+          onChipRemoved: this.handleMemberRemoved
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          className: "small",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "title_all_contacts",
+            defaultMessage: "All Contacts",
+            description: "Section title [All Contacts]"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        tinode: this.props.tinode,
+        contacts: this.props.contacts,
+        myUserId: this.props.myUserId,
+        topicSelected: this.state.selectedContacts,
+        filter: this.state.contactFilter,
+        filterFunc: GroupManager.doContactFiltering,
+        emptyListMessage: this.state.noContactsMessage,
+        showOnline: false,
+        showUnread: false,
+        onTopicSelected: this.handleContactSelected
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        id: "group-manager-buttons",
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: this.handleCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_cancel",
+            defaultMessage: "Cancel",
+            description: "Button [Cancel]"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: "primary",
+          onClick: this.handleSubmit,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_ok",
+            defaultMessage: "OK",
+            description: "Button [OK]"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -1103,6 +1114,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -1110,108 +1123,44 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   joiner: {
-    id: "permission_join",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Join ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_join',
+    defaultMessage: "Join ({val})",
+    description: 'Name of J permission'
   },
   reader: {
-    id: "permission_read",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Read ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_read',
+    defaultMessage: "Read ({val})",
+    description: 'Name of R permission'
   },
   writer: {
-    id: "permission_write",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Write ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_write',
+    defaultMessage: "Write ({val})",
+    description: 'Name of W permission'
   },
   preser: {
-    id: "permission_pres",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Get notified ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_pres',
+    defaultMessage: "Get notified ({val})",
+    description: 'Name of P permission'
   },
   approver: {
-    id: "permission_admin",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Approve ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_admin',
+    defaultMessage: "Approve ({val})",
+    description: 'Name of A permission'
   },
   sharer: {
-    id: "permission_share",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Share ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_share',
+    defaultMessage: "Share ({val})",
+    description: 'Name of S permission'
   },
   deleter: {
-    id: "permission_delete",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_delete',
+    defaultMessage: "Delete ({val})",
+    description: 'Name of D permission'
   },
   owner: {
-    id: "permission_owner",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Owner ("
-    }, {
-      "type": 1,
-      "value": "val"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    id: 'permission_owner',
+    defaultMessage: "Owner ({val})",
+    description: 'Name of O permission'
   }
 });
 class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -1288,65 +1237,80 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
       if (skip.indexOf(c) >= 0 && mode.indexOf(c) < 0) {
         continue;
       }
-      items.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
-        key: c
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", null, names[c]), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-        className: "checkbox"
-      }, skip.indexOf(c) < 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        name: c,
-        checked: mode.indexOf(c) >= 0,
-        onChange: this.handleChange
-      }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        name: c,
-        checked: mode.indexOf(c) >= 0
-      })), this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-        className: "checkbox"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        name: c,
-        checked: compare.indexOf(c) >= 0
-      })) : null));
+      items.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tr", {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("td", {
+          children: names[c]
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("td", {
+          className: "checkbox",
+          children: skip.indexOf(c) < 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: c,
+            checked: mode.indexOf(c) >= 0,
+            onChange: this.handleChange
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: c,
+            checked: mode.indexOf(c) >= 0
+          }, void 0, false)
+        }, void 0, false), this.props.compare ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("td", {
+          className: "checkbox",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            name: c,
+            checked: compare.indexOf(c) >= 0
+          }, void 0, false)
+        }, void 0, false) : null]
+      }, c, true));
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, this.props.userTitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "contact-box small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      item: this.props.item,
-      title: this.props.userTitle,
-      small: true,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(this.props.userAvatar ? this.props.userAvatar : null)
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_permissions",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Permissions"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
-      className: "permission-editor"
-    }, this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null, this.props.modeTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null, this.props.compareTitle))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, items)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "outline",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+      className: "panel-form-column",
+      children: [this.props.userTitle ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("ul", {
+        className: "contact-box small",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          tinode: this.props.tinode,
+          item: this.props.item,
+          title: this.props.userTitle,
+          small: true,
+          avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(this.props.userAvatar ? this.props.userAvatar : null)
+        }, void 0, false)
+      }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("label", {
+        className: "small",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "title_permissions",
+          defaultMessage: "Permissions",
+          description: "Section title"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("table", {
+        className: "permission-editor",
+        children: [this.props.compare ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("thead", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tr", {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("th", {}, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("th", {
+              children: this.props.modeTitle
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("th", {
+              children: this.props.compareTitle
+            }, void 0, false)]
+          }, void 0, true)
+        }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("tbody", {
+          children: items
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("br", {}, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("button", {
+          className: "outline",
+          onClick: this.handleCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_cancel",
+            defaultMessage: "Cancel",
+            description: "Button [Cancel]"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("button", {
+          className: "primary",
+          onClick: this.handleSubmit,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_ok",
+            defaultMessage: "OK",
+            description: "Button [OK]"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -1371,6 +1335,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -1388,23 +1354,28 @@ class ShowQRCode extends (react__WEBPACK_IMPORTED_MODULE_1___default().PureCompo
     });
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "qr-code",
-      ref: this.qrCodeRef
-    }), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("tt", null, this.props.uri)), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      className: "outline",
-      onClick: this.props.onCancel
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      className: "panel-form-column",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("br", {}, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "qr-code",
+        ref: this.qrCodeRef
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("tt", {
+          children: this.props.uri
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: "outline",
+          onClick: this.props.onCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+            id: "button_ok",
+            defaultMessage: "OK",
+            description: "Button [OK]"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -1422,99 +1393,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   clear_messages: {
-    id: "action_clear_messages",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Clear Messages"
-    }]
+    id: 'action_clear_messages',
+    defaultMessage: 'Clear Messages',
+    description: 'Flat button [Clear Messages] (soft-delete messages)'
   },
   clear_messages_warning: {
-    id: "clear_messages_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to clear all messages? It cannot be undone."
-    }]
+    id: 'clear_messages_warning',
+    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
+    description: 'Alert dialog warning when deleting all messages.'
   },
   delete_messages: {
-    id: "action_delete_messages",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Clear Messages for All"
-    }]
+    id: 'action_delete_messages',
+    defaultMessage: 'Clear Messages for All',
+    description: 'Flat button [Clear for All] (hard-delete all messages)'
   },
   delete_messages_warning: {
-    id: "delete_messages_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to delete all messages for everyone? It cannot be undone."
-    }]
+    id: 'delete_messages_warning',
+    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
+    description: 'Alert dialog warning when hard-deleting all messages.'
   },
   topic_delete: {
-    id: "topic_delete",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete Conversation"
-    }]
+    id: 'topic_delete',
+    defaultMessage: 'Delete Conversation',
+    description: 'Alert title when deleting the topic.'
   },
   topic_delete_warning: {
-    id: "topic_delete_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to delete this conversation? It cannot be undone."
-    }]
+    id: 'topic_delete_warning',
+    defaultMessage: 'Are you sure you want to delete this conversation? It cannot be undone.',
+    description: 'Alert warning when deleting entire topic'
   },
   leave_chat: {
-    id: "action_leave_chat",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Leave Conversation"
-    }]
+    id: 'action_leave_chat',
+    defaultMessage: 'Leave Conversation',
+    description: 'Flat button [Leave Conversation]'
   },
   leave_chat_warning: {
-    id: "leave_chat_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to leave this conversation?"
-    }]
+    id: 'leave_chat_warning',
+    defaultMessage: 'Are you sure you want to leave this conversation?',
+    description: 'Alert dialog warning when unsubscribing from a chat.'
   },
   block_contact: {
-    id: "action_block_contact",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Block Contact"
-    }]
+    id: 'action_block_contact',
+    defaultMessage: "Block Contact",
+    description: "Flat button [Block Contact]"
   },
   block_contact_warning: {
-    id: "block_contact_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to block this contact?"
-    }]
+    id: 'block_contact_warning',
+    defaultMessage: 'Are you sure you want to block this contact?',
+    description: 'Alert dialog warning when blocking a contact.'
   },
   report_chat: {
-    id: "action_report_chat",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Report Conversation"
-    }]
+    id: 'action_report_chat',
+    defaultMessage: 'Report Conversation',
+    description: 'Flat button [Report Group]'
   },
   report_chat_warning: {
-    id: "report_chat_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to block and report this conversation?"
-    }]
+    id: 'report_chat_warning',
+    defaultMessage: 'Are you sure you want to block and report this conversation?',
+    description: 'Alert dialog warning when reporting a conversation for abuse'
   },
   other_user: {
-    id: "label_other_user",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Other"
-    }]
+    id: 'label_other_user',
+    defaultMessage: 'Other',
+    description: 'Label for the other user when the user is unnamed'
   }
 });
 class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -1567,117 +1514,150 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, !this.props.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "flat-button",
-      onClick: this.handleDeleteMessages
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "delete_outline"), " \xA0", formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)) : null, this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "danger flat-button",
-      onClick: this.handleDeleteTopic
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "delete"), " \xA0", formatMessage(messages.topic_delete)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "danger flat-button",
-      onClick: this.handleLeave
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "danger flat-button",
-      onClick: this.handleBlock
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "danger flat-button",
-      onClick: this.handleReport
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "report"), " \xA0", formatMessage(messages.report_chat)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_your_permissions",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Your permissions:"
-      }]
-    })), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onLaunchPermissionsEditor('want');
-      }
-    }, this.props.access)), !this.props.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_default_access_mode",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Default access mode:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Auth: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: this.props.owner ? 'clickable' : null,
-      onClick: e => {
-        e.preventDefault();
-        if (this.props.owner) {
-          this.props.onLaunchPermissionsEditor('auth');
-        }
-      }
-    }, this.props.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: this.props.owner ? 'clickable' : null,
-      onClick: e => {
-        e.preventDefault();
-        if (this.props.owner) {
-          this.props.onLaunchPermissionsEditor('anon');
-        }
-      }
-    }, this.props.anon)))) : null) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_permissions",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Permissions:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_you",
-      defaultMessage: [{
-        "type": 0,
-        "value": "You:"
-      }]
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onLaunchPermissionsEditor('want');
-      }
-    }, this.props.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.fullName ? this.props.fullName : formatMessage(messages.other_user), ": \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onLaunchPermissionsEditor('given');
-      }
-    }, this.props.modeGiven2))))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "scrollable-panel",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [!this.props.channel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          href: "#",
+          className: "flat-button",
+          onClick: this.handleDeleteMessages,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "delete_outline"
+          }, void 0, false), " \xA0", formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)]
+        }, void 0, true) : null, this.props.owner ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          href: "#",
+          className: "danger flat-button",
+          onClick: this.handleDeleteTopic,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "delete"
+          }, void 0, false), " \xA0", formatMessage(messages.topic_delete)]
+        }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          href: "#",
+          className: "danger flat-button",
+          onClick: this.handleLeave,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "exit_to_app"
+          }, void 0, false), " \xA0", formatMessage(messages.leave_chat)]
+        }, void 0, true), !this.props.groupTopic ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          href: "#",
+          className: "danger flat-button",
+          onClick: this.handleBlock,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "block"
+          }, void 0, false), " \xA0", formatMessage(messages.block_contact)]
+        }, void 0, true) : null, !this.props.owner ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          href: "#",
+          className: "danger flat-button",
+          onClick: this.handleReport,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "report"
+          }, void 0, false), " \xA0", formatMessage(messages.report_chat)]
+        }, void 0, true) : null]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "hr"
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: this.props.groupTopic ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_your_permissions",
+                defaultMessage: "Your permissions:",
+                description: "Label for current user permissions"
+              }, void 0, false)
+            }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("tt", {
+              className: "clickable",
+              onClick: e => {
+                e.preventDefault();
+                this.props.onLaunchPermissionsEditor('want');
+              },
+              children: this.props.access
+            }, void 0, false)]
+          }, void 0, true), !this.props.channel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_default_access_mode",
+                  defaultMessage: "Default access mode:",
+                  description: "Label for default access mode"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+              className: "quoted",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+                children: ["Auth: ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("tt", {
+                  className: this.props.owner ? 'clickable' : null,
+                  onClick: e => {
+                    e.preventDefault();
+                    if (this.props.owner) {
+                      this.props.onLaunchPermissionsEditor('auth');
+                    }
+                  },
+                  children: this.props.auth
+                }, void 0, false)]
+              }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+                children: ["Anon: ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("tt", {
+                  className: this.props.owner ? 'clickable' : null,
+                  onClick: e => {
+                    e.preventDefault();
+                    if (this.props.owner) {
+                      this.props.onLaunchPermissionsEditor('anon');
+                    }
+                  },
+                  children: this.props.anon
+                }, void 0, false)]
+              }, void 0, true)]
+            }, void 0, true)]
+          }, void 0, true) : null]
+        }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+              className: "small",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_permissions",
+                defaultMessage: "Permissions:",
+                description: "Section title"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+            className: "quoted",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_you",
+                defaultMessage: "You:",
+                description: "Label for the current user"
+              }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("tt", {
+                className: "clickable",
+                onClick: e => {
+                  e.preventDefault();
+                  this.props.onLaunchPermissionsEditor('want');
+                },
+                children: this.props.access
+              }, void 0, false)]
+            }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+              children: [this.props.fullName ? this.props.fullName : formatMessage(messages.other_user), ": \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("tt", {
+                className: "clickable",
+                onClick: e => {
+                  e.preventDefault();
+                  this.props.onLaunchPermissionsEditor('given');
+                },
+                children: this.props.modeGiven2
+              }, void 0, false)]
+            }, void 0, true)]
+          }, void 0, true)]
+        }, void 0, true)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;

@@ -71,7 +71,8 @@ if (rtl.includes(baseLanguage)) {
 const root = createRoot(document.getElementById('mountPoint'));
 messageLoader[htmlLang]().then(messages =>
   root.render(
-    <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
-      <TinodeWeb />
-    </IntlProvider>
+    React.createElement(IntlProvider,
+      { locale: language, messages: messages, textComponent: React.Fragment },
+      React.createElement(TinodeWeb, null)
+    )
 ));

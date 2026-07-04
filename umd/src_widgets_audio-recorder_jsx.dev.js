@@ -18,6 +18,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -39,39 +41,29 @@ const SAFARI_AUDIO_MIME_TYPE = 'audio/mp4';
 const AUDIO_MIME_TYPES = [DEFAULT_AUDIO_MIME_TYPE, SAFARI_AUDIO_MIME_TYPE, ''];
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   icon_title_delete: {
-    id: "icon_title_delete",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete recording"
-    }]
+    id: 'icon_title_delete',
+    defaultMessage: 'Delete recording',
+    description: 'Icon tool tip for deleting recorded audio'
   },
   icon_title_pause: {
-    id: "icon_title_pause",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Pause playback"
-    }]
+    id: 'icon_title_pause',
+    defaultMessage: 'Pause playback',
+    description: 'Icon tool tip for pausing audio playback'
   },
   icon_title_resume: {
-    id: "icon_title_resume",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Resume playback"
-    }]
+    id: 'icon_title_resume',
+    defaultMessage: 'Resume playback',
+    description: 'Icon tool tip for resuming audio playback'
   },
   icon_title_send: {
-    id: "icon_title_send",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Send message"
-    }]
+    id: 'icon_title_send',
+    defaultMessage: 'Send message',
+    description: 'Icon tool tip for sending a message'
   },
   failed_to_init_audio: {
-    id: "failed_to_init_audio",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Failed to initialize audio recording"
-    }]
+    id: 'failed_to_init_audio',
+    defaultMessage: 'Failed to initialize audio recording',
+    description: 'Error message when audio is not available'
   }
 });
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -344,42 +336,52 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       formatMessage
     } = this.props.intl;
     const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "audio"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleDelete,
-      title: formatMessage(messages.icon_title_delete)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
-    }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      ref: this.canvasRef
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      src: this.state.blobUrl,
-      preview: this.state.preview,
-      duration: this.durationMillis,
-      short: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "duration"
-    }, this.state.duration), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handlePause,
-      title: formatMessage(messages.icon_title_pause)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "pause_circle_outline")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleResume,
-      title: formatMessage(messages.icon_title_resume)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: resumeClass
-    }, "radio_button_checked")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleDone,
-      title: formatMessage(messages.icon_title_send)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "send")));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+      className: "audio",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+        href: "#",
+        onClick: this.handleDelete,
+        title: formatMessage(messages.icon_title_delete),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+          className: "material-icons gray",
+          children: "delete_outline"
+        }, void 0, false)
+      }, void 0, false), this.state.recording ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("canvas", {
+        ref: this.canvasRef
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        src: this.state.blobUrl,
+        preview: this.state.preview,
+        duration: this.durationMillis,
+        short: true
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        className: "duration",
+        children: this.state.duration
+      }, void 0, false), this.state.recording ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+        href: "#",
+        onClick: this.handlePause,
+        title: formatMessage(messages.icon_title_pause),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+          className: "material-icons",
+          children: "pause_circle_outline"
+        }, void 0, false)
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+        href: "#",
+        onClick: this.handleResume,
+        title: formatMessage(messages.icon_title_resume),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+          className: resumeClass,
+          children: "radio_button_checked"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+        href: "#",
+        onClick: this.handleDone,
+        title: formatMessage(messages.icon_title_send),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+          className: "material-icons",
+          children: "send"
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AudioRecorder));

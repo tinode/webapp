@@ -19,6 +19,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../img/bkg/index.json */ "./img/bkg/index.json");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -88,110 +90,120 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     return this.state.selectedType != _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type || this.state.wallpaper != _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__[_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.type][_config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.index].name || this.state.blur != 0;
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `panel-form-row${this.hasChanged() ? ' clean-clickable' : ''}`
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      className: `flat-button${this.hasChanged() ? '' : ' disabled'}`,
-      onClick: () => this.handleWallpaperSelected(null)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "undo"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_restore",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Restore default"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "tabbar"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tab === 'patt' ? 'active' : null
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      "data-id": "patt",
-      onClick: this.handleTabClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "tabtitle_pattern",
-      defaultMessage: [{
-        "type": 0,
-        "value": "pattern"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tab === 'img' ? 'active' : null
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      "data-id": "img",
-      onClick: this.handleTabClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "tabtitle_image",
-      defaultMessage: [{
-        "type": 0,
-        "value": "image"
-      }]
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "settings-form",
-      className: "scrollable-panel"
-    }, this.state.tab === 'patt' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "image-grid"
-    }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__.patt.map((img, idx) => {
-      const selected = this.state.wallpaper === img.name ? ' selected' : '';
-      const dark = this.props.colorSchema == 'dark' ? 'inverted' : null;
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: idx,
-        "data-id": idx,
-        className: `image-grid-cell${selected}`,
-        onClick: this.handleWallpaperSelected
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-        src: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path + img.name,
-        alt: img.name,
-        className: dark,
-        style: {
-          width: `${img.size}px`,
-          height: `${img.size}px`
-        }
-      }));
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_blur_wallpaper",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Blur:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "range",
-      id: "blur",
-      name: "blur",
-      min: "0",
-      max: "5",
-      step: "1",
-      value: this.state.blur,
-      onChange: this.handleBlurChanged
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "image-grid"
-    }, _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__.img.map((img, idx) => {
-      const selected = this.state.wallpaper === img.name ? ' selected' : '';
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: idx,
-        "data-id": idx,
-        className: `image-grid-cell${selected}`,
-        onClick: this.handleWallpaperSelected
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-        src: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path + img.pr,
-        alt: img.name,
-        style: {
-          width: '100%',
-          height: '100%'
-        }
-      }));
-    })))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+      className: "flex-column",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        className: `panel-form-row${this.hasChanged() ? ' clean-clickable' : ''}`,
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+          className: `flat-button${this.hasChanged() ? '' : ' disabled'}`,
+          onClick: () => this.handleWallpaperSelected(null),
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+            className: "material-icons",
+            children: "undo"
+          }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_restore",
+            defaultMessage: "Restore default",
+            description: "Reset setting to default"
+          }, void 0, false)]
+        }, void 0, true)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("ul", {
+        className: "tabbar",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("li", {
+          className: this.state.tab === 'patt' ? 'active' : null,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+            href: "#",
+            "data-id": "patt",
+            onClick: this.handleTabClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "tabtitle_pattern",
+              defaultMessage: "pattern",
+              description: "Tab title Pattern"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("li", {
+          className: this.state.tab === 'img' ? 'active' : null,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+            href: "#",
+            "data-id": "img",
+            onClick: this.handleTabClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "tabtitle_image",
+              defaultMessage: "image",
+              description: "Tab title Image"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        id: "settings-form",
+        className: "scrollable-panel",
+        children: this.state.tab === 'patt' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+          className: "image-grid",
+          children: _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__.patt.map((img, idx) => {
+            const selected = this.state.wallpaper === img.name ? ' selected' : '';
+            const dark = this.props.colorSchema == 'dark' ? 'inverted' : null;
+            return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+              "data-id": idx,
+              className: `image-grid-cell${selected}`,
+              onClick: this.handleWallpaperSelected,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("img", {
+                src: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path + img.name,
+                alt: img.name,
+                className: dark,
+                style: {
+                  width: `${img.size}px`,
+                  height: `${img.size}px`
+                }
+              }, void 0, false)
+            }, idx, false);
+          })
+        }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+            className: "panel-form-column",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+              className: "panel-form-row",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_blur_wallpaper",
+                  defaultMessage: "Blur:",
+                  description: "Label adjusting blur amount"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+              className: "panel-form-row",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("input", {
+                type: "range",
+                id: "blur",
+                name: "blur",
+                min: "0",
+                max: "5",
+                step: "1",
+                value: this.state.blur,
+                onChange: this.handleBlurChanged
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+            className: "image-grid",
+            children: _img_bkg_index_json__WEBPACK_IMPORTED_MODULE_5__.img.map((img, idx) => {
+              const selected = this.state.wallpaper === img.name ? ' selected' : '';
+              return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+                "data-id": idx,
+                className: `image-grid-cell${selected}`,
+                onClick: this.handleWallpaperSelected,
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("img", {
+                  src: _config_js__WEBPACK_IMPORTED_MODULE_3__.WALLPAPER_DEFAULTS.path + img.pr,
+                  alt: img.name,
+                  style: {
+                    width: '100%',
+                    height: '100%'
+                  }
+                }, void 0, false)
+              }, idx, false);
+            })
+          }, void 0, false)]
+        }, void 0, true)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 

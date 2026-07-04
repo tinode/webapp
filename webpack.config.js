@@ -1,4 +1,3 @@
-const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
@@ -15,7 +14,12 @@ module.exports = (env, argv) => {
         {
           test: /\.jsx?$/,
           use: [
-            'babel-loader',
+            {
+              loader: 'babel-loader',
+              options: {
+                envName: mode === 'prod' ? 'production' : 'development',
+              },
+            },
           ],
           exclude: /node_modules/,
         },
@@ -28,29 +32,7 @@ module.exports = (env, argv) => {
     },
     optimization: {
       minimize: (mode === 'prod'),
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
-            ecma: undefined,
-            warnings: false,
-            parse: {},
-            compress: {},
-            format: {
-              comments: false,
-            },
-            mangle: true, // Note `mangle.properties` is `false` by default.
-            module: false,
-            output: null,
-            toplevel: false,
-            nameCache: null,
-            ie8: false,
-            keep_classnames: undefined,
-            keep_fnames: false,
-            safari10: false,
-          },
-          extractComments: false,
-        })
-      ]
+      minimizer: ['...']
     },
     performance: {
       maxEntrypointSize: maxAssetSize,
