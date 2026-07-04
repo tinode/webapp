@@ -18,7 +18,7 @@ const InfoView = React.lazy(_ => import('./info-view.jsx'));
 const MessagesView = React.lazy(_ => import('./messages-view.jsx'));
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_COLOR_SCHEME, DEFAULT_P2P_ACCESS_MODE, DEFAULT_TEXT_SIZE, FORWARDED_PREVIEW_LENGTH,
+import { API_KEY, APP_NAME, BASE_APP_NAME, DEFAULT_COLOR_SCHEME, DEFAULT_P2P_ACCESS_MODE, DEFAULT_TEXT_SIZE, FORWARDED_PREVIEW_LENGTH,
   LOGGING_ENABLED, MEDIA_BREAKPOINT, WAKE_UP_TICK, WAKE_UP_TIMEOUT } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
@@ -441,7 +441,7 @@ class TinodeWeb extends React.Component {
     }
 
     try {
-      this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, APP_NAME));
+      this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, BASE_APP_NAME));
       return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
         return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
           this.checkForAppUpdate(reg);
@@ -493,7 +493,7 @@ class TinodeWeb extends React.Component {
         return Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             return firebaseGetToken(fcm, {
-              serviceWorkerRegistration: reg,
+              serviceWorkerRegistration: sw,
               vapidKey: FIREBASE_INIT.messagingVapidKey
             }).then(token => {
               if (token) {
@@ -1604,8 +1604,11 @@ class TinodeWeb extends React.Component {
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
-    if (this.state.firebaseToken) {
-      firebaseDelToken(this.fcm);
+    if (this.state.firebaseToken && this.fcm) {
+      // Unsubscribe failures (e.g. 403 token-unsubscribe-failed) should not block logout.
+      firebaseDelToken(this.fcm).catch(err => {
+        console.warn('Failed to delete FCM token on logout', err);
+      });
     }
 
     // Reset color scheme.
