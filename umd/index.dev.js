@@ -6693,7 +6693,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     } else {
-      cleared = Promose.resolve();
+      cleared = Promise.resolve();
     }
     this.setState(this.getBlankState());
     cleared.then(_ => {
