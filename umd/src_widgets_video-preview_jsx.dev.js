@@ -14,17 +14,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   unrecognized_video_format: {
-    id: "unrecognized_video_format",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Format of this video is not recognized"
-    }]
+    id: 'unrecognized_video_format',
+    defaultMessage: 'Format of this video is not recognized',
+    description: 'Error message when uploaded video is invalid'
   }
 });
 class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -77,61 +77,88 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     const height = this.props.content.height || '-';
     const controlist = this.props.onSendMessage ? 'nodownload' : '';
     const autoPlay = !this.props.onSendMessage;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "preview-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onClose();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      className: "image-preview",
-      controls: true,
-      controlsList: controlist,
-      disablePictureInPicture: true,
-      ref: this.videoRef,
-      autoPlay: autoPlay,
-      src: this.props.tinode.authorizeURL(this.props.content.url),
-      poster: this.props.content.preview,
-      alt: this.props.content.filename
-    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      messagePrompt: "add_image_caption",
-      acceptBlank: true,
-      tinode: this.props.tinode,
-      reply: this.props.reply,
-      onCancelReply: this.props.onCancelReply,
-      onSendMessage: this.handleSendVideo,
-      onError: this.props.onError
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_file_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "File name:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.filename
-    }, this.props.content.filename))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_content_type",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Content type:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_size",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Size:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      id: "image-preview",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        id: "preview-caption-panel",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("span", {
+          children: this.props.content.filename
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          href: "#",
+          onClick: e => {
+            e.preventDefault();
+            this.props.onClose();
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
+            className: "m-icon gray",
+            children: "close"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        id: "image-preview-container",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("video", {
+          className: "image-preview",
+          controls: true,
+          controlsList: controlist,
+          disablePictureInPicture: true,
+          ref: this.videoRef,
+          autoPlay: autoPlay,
+          src: this.props.tinode.authorizeURL(this.props.content.url),
+          poster: this.props.content.preview,
+          alt: this.props.content.filename
+        }, void 0, false)
+      }, void 0, false), this.props.onSendMessage ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        messagePrompt: "add_image_caption",
+        acceptBlank: true,
+        tinode: this.props.tinode,
+        reply: this.props.reply,
+        onCancelReply: this.props.onCancelReply,
+        onSendMessage: this.handleSendVideo,
+        onError: this.props.onError
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        id: "image-preview-footer",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("b", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_file_name",
+                defaultMessage: "File name:",
+                description: "Label for a file name"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("span", {
+              title: this.props.content.filename,
+              children: this.props.content.filename
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("b", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_content_type",
+                defaultMessage: "Content type:",
+                description: "Label for file content type (mime)"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            children: this.props.content.type
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("b", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_size",
+                defaultMessage: "Size:",
+                description: "Label for file size"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            children: [width, " × ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)]
+          }, void 0, true)]
+        }, void 0, true)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;

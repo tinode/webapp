@@ -21,6 +21,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -30,11 +32,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   unknown_name: {
-    id: "unknown_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unknown"
-    }]
+    id: 'unknown_name',
+    defaultMessage: 'Unknown',
+    description: 'Name to show when the name is missing'
   }
 });
 class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -82,12 +82,15 @@ class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const contacts = [];
     emails.forEach((email, idx) => {
       const types = Array.isArray(email.des) ? email.des.join(', ') : '';
-      contacts.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      contacts.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
         className: "group quoted",
-        key: `email-${idx}`
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, email.value), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "small gray"
-      }, " ", types ? `(${types})` : '')));
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("tt", {
+          children: email.value
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+          className: "small gray",
+          children: [" ", types ? `(${types})` : '']
+        }, void 0, true)]
+      }, `email-${idx}`, true));
     });
     phones.forEach((phone, idx) => {
       let val = phone.value;
@@ -96,98 +99,125 @@ class TheCardPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         val = number ? number.formatInternational() : phone.value;
       } catch (err) {}
       const types = Array.isArray(phone.des) ? phone.des.join(', ') : '';
-      contacts.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      contacts.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
         className: "group quoted",
-        key: `tel-${idx}`
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "small gray"
-      }, " ", types ? `(${types})` : '')));
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("tt", {
+          children: val
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+          className: "small gray",
+          children: [" ", types ? `(${types})` : '']
+        }, void 0, true)]
+      }, `tel-${idx}`, true));
     });
     tinodeIds.forEach((tid, idx) => {
       const types = Array.isArray(tid.des) ? tid.des.join(', ') : '';
-      contacts.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      contacts.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
         className: "group quoted",
-        key: `tinode-${idx}`
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, tid.value), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "small gray"
-      }, " ", types ? `(${types})` : '')));
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("tt", {
+          children: tid.value
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+          className: "small gray",
+          children: [" ", types ? `(${types})` : '']
+        }, void 0, true)]
+      }, `tinode-${idx}`, true));
     });
     urls.forEach((url, idx) => {
       const types = Array.isArray(url.des) ? url.des.join(', ') : '';
-      contacts.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      contacts.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
         className: "group quoted",
-        key: `url-${idx}`
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, url.value), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "small gray"
-      }, " ", types ? `(${types})` : '')));
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("tt", {
+          children: url.value
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+          className: "small gray",
+          children: [" ", types ? `(${types})` : '']
+        }, void 0, true)]
+      }, `url-${idx}`, true));
     });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "preview-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_contact_card",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Contact Card"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onClose();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "doc-card"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: photoUrl || true,
-      topic: "usrXXX123",
-      title: fullName
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "large ellipsized"
-    }, fullName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, messages.unknown_name))), org ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, org)) : null, note ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_description",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Description"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "quoted"
-    }, note)) : null, contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_user_contacts",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Contacts"
-      }]
-    })), contacts) : null))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      noInput: true,
-      tinode: this.props.tinode,
-      reply: this.props.reply,
-      onCancelReply: this.props.onCancelReply,
-      onSendMessage: this.handleSendCard,
-      onError: this.props.onError
-    }));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+      id: "image-preview",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "preview-caption-panel",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_contact_card",
+            defaultMessage: "Contact Card",
+            description: "Label for contact card preview"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+          href: "#",
+          onClick: e => {
+            e.preventDefault();
+            this.props.onClose();
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+            className: "m-icon gray",
+            children: "close"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "image-preview-container",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+          className: "doc-card",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            className: "panel-form-column",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("center", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+                className: "avatar-box",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                  authorizeURL: this.props.tinode.authorizeURL,
+                  avatar: photoUrl || true,
+                  topic: "usrXXX123",
+                  title: fullName
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+              className: "group",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+                className: "large ellipsized",
+                children: fullName || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  ...messages.unknown_name
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), org ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+              className: "group",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+                children: org
+              }, void 0, false)
+            }, void 0, false) : null, note ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+              className: "group",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_description",
+                  defaultMessage: "Description",
+                  description: "Label for description of user or topic"
+                }, void 0, false)
+              }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+                className: "quoted",
+                children: note
+              }, void 0, false)]
+            }, void 0, true) : null, contacts.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+              className: "group",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_user_contacts",
+                  defaultMessage: "Contacts",
+                  description: "Label for user contacts"
+                }, void 0, false)
+              }, void 0, false), contacts]
+            }, void 0, true) : null]
+          }, void 0, true)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_send_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        noInput: true,
+        tinode: this.props.tinode,
+        reply: this.props.reply,
+        onCancelReply: this.props.onCancelReply,
+        onSendMessage: this.handleSendCard,
+        onError: this.props.onError
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 

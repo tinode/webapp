@@ -20,6 +20,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -85,68 +87,95 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     const download_url = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.urlAsAttachment)(this.props.content.url);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "preview-caption-panel"
-    }, this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: download_url,
-      download: this.props.content.filename
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "download_action",
-      defaultMessage: [{
-        "type": 0,
-        "value": "download"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onClose();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-container",
-      ref: node => this.assignWidth(node)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.props.content.url,
-      style: size,
-      className: "image-preview",
-      alt: this.props.content.filename
-    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      messagePrompt: "add_image_caption",
-      acceptBlank: true,
-      tinode: this.props.tinode,
-      reply: this.props.reply,
-      onCancelReply: this.props.onCancelReply,
-      onSendMessage: this.handleSendImage,
-      onError: this.props.onError
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "image-preview-footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_file_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "File name:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.filename
-    }, fname))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_content_type",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Content type:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_size",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Size:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.bytesToHumanSize)(this.props.content.size)))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+      id: "image-preview",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "preview-caption-panel",
+        children: [this.props.onSendMessage ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+          children: fname
+        }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+          href: download_url,
+          download: this.props.content.filename,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "file_download"
+          }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "download_action",
+            defaultMessage: "download",
+            description: "Call to action [download]"
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("a", {
+          href: "#",
+          onClick: e => {
+            e.preventDefault();
+            this.props.onClose();
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+            className: "m-icon gray",
+            children: "close"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "image-preview-container",
+        ref: node => this.assignWidth(node),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("img", {
+          src: this.props.content.url,
+          style: size,
+          className: "image-preview",
+          alt: this.props.content.filename
+        }, void 0, false)
+      }, void 0, false), this.props.onSendMessage ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        messagePrompt: "add_image_caption",
+        acceptBlank: true,
+        tinode: this.props.tinode,
+        reply: this.props.reply,
+        onCancelReply: this.props.onCancelReply,
+        onSendMessage: this.handleSendImage,
+        onError: this.props.onError
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "image-preview-footer",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("b", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_file_name",
+                defaultMessage: "File name:",
+                description: "Label for a file name"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("span", {
+              title: this.props.content.filename,
+              children: fname
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("b", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_content_type",
+                defaultMessage: "Content type:",
+                description: "Label for file content type (mime)"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            children: this.props.content.type
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("b", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_size",
+                defaultMessage: "Size:",
+                description: "Label for file size"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            children: [width, " × ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.bytesToHumanSize)(this.props.content.size)]
+          }, void 0, true)]
+        }, void 0, true)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;

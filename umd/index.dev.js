@@ -2,4392 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./img/bkg/index.json":
-/*!****************************!*\
-  !*** ./img/bkg/index.json ***!
-  \****************************/
-/***/ (function(module) {
-
-module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200},{"name":"a01.jpg","size":384},{"name":"a02.jpg","size":384},{"name":"a03.jpg","size":384},{"name":"a04.png","size":400},{"name":"a05.jpg","size":400},{"name":"a06.jpg","size":256},{"name":"a07.jpg","size":384},{"name":"a08.jpg","size":384},{"name":"a09.jpg","size":400},{"name":"a10.jpg","size":256},{"name":"a11.png","size":200}],"img":[{"name":"w01.jpg","pr":"p01.jpg"},{"name":"w02.jpg","pr":"p02.jpg"},{"name":"w03.jpg","pr":"p03.jpg"},{"name":"w04.jpg","pr":"p04.jpg"},{"name":"w05.jpg","pr":"p05.jpg"},{"name":"w06.jpg","pr":"p06.jpg"},{"name":"w07.jpg","pr":"p07.jpg"},{"name":"w08.jpg","pr":"p08.jpg"},{"name":"w09.jpg","pr":"p09.jpg"},{"name":"w10.jpg","pr":"p10.jpg"},{"name":"w11.jpg","pr":"p11.jpg"},{"name":"w12.jpg","pr":"p12.jpg"},{"name":"w13.jpg","pr":"p13.jpg"},{"name":"w14.jpg","pr":"p14.jpg"},{"name":"w15.jpg","pr":"p15.jpg"},{"name":"w16.jpg","pr":"p16.jpg"},{"name":"w17.jpg","pr":"p17.jpg"},{"name":"w18.jpg","pr":"p18.jpg"},{"name":"w19.jpg","pr":"p19.jpg"},{"name":"w20.jpg","pr":"p20.jpg"},{"name":"w21.jpg","pr":"p21.jpg"},{"name":"w22.jpg","pr":"p22.jpg"},{"name":"w23.jpg","pr":"p23.jpg"},{"name":"w24.jpg","pr":"p24.jpg"}]}');
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/app/dist/esm/index.esm2017.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@firebase/app/dist/esm/index.esm2017.js ***!
-  \**************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FirebaseError: function() { return /* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError; },
-/* harmony export */   SDK_VERSION: function() { return /* binding */ SDK_VERSION; },
-/* harmony export */   _DEFAULT_ENTRY_NAME: function() { return /* binding */ DEFAULT_ENTRY_NAME; },
-/* harmony export */   _addComponent: function() { return /* binding */ _addComponent; },
-/* harmony export */   _addOrOverwriteComponent: function() { return /* binding */ _addOrOverwriteComponent; },
-/* harmony export */   _apps: function() { return /* binding */ _apps; },
-/* harmony export */   _clearComponents: function() { return /* binding */ _clearComponents; },
-/* harmony export */   _components: function() { return /* binding */ _components; },
-/* harmony export */   _getProvider: function() { return /* binding */ _getProvider; },
-/* harmony export */   _isFirebaseApp: function() { return /* binding */ _isFirebaseApp; },
-/* harmony export */   _isFirebaseServerApp: function() { return /* binding */ _isFirebaseServerApp; },
-/* harmony export */   _registerComponent: function() { return /* binding */ _registerComponent; },
-/* harmony export */   _removeServiceInstance: function() { return /* binding */ _removeServiceInstance; },
-/* harmony export */   _serverApps: function() { return /* binding */ _serverApps; },
-/* harmony export */   deleteApp: function() { return /* binding */ deleteApp; },
-/* harmony export */   getApp: function() { return /* binding */ getApp; },
-/* harmony export */   getApps: function() { return /* binding */ getApps; },
-/* harmony export */   initializeApp: function() { return /* binding */ initializeApp; },
-/* harmony export */   initializeServerApp: function() { return /* binding */ initializeServerApp; },
-/* harmony export */   onLog: function() { return /* binding */ onLog; },
-/* harmony export */   registerVersion: function() { return /* binding */ registerVersion; },
-/* harmony export */   setLogLevel: function() { return /* binding */ setLogLevel; }
-/* harmony export */ });
-/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js");
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
-
-
-
-
-
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-class PlatformLoggerServiceImpl {
-    constructor(container) {
-        this.container = container;
-    }
-    // In initial implementation, this will be called by installations on
-    // auth token refresh, and installations will send this string.
-    getPlatformInfoString() {
-        const providers = this.container.getProviders();
-        // Loop through providers and get library/version pairs from any that are
-        // version components.
-        return providers
-            .map(provider => {
-            if (isVersionServiceProvider(provider)) {
-                const service = provider.getImmediate();
-                return `${service.library}/${service.version}`;
-            }
-            else {
-                return null;
-            }
-        })
-            .filter(logString => logString)
-            .join(' ');
-    }
-}
-/**
- *
- * @param provider check if this provider provides a VersionService
- *
- * NOTE: Using Provider<'app-version'> is a hack to indicate that the provider
- * provides VersionService. The provider is not necessarily a 'app-version'
- * provider.
- */
-function isVersionServiceProvider(provider) {
-    const component = provider.getComponent();
-    return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* ComponentType.VERSION */;
-}
-
-const name$q = "@firebase/app";
-const version$1 = "0.13.2";
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const logger = new _firebase_logger__WEBPACK_IMPORTED_MODULE_1__.Logger('@firebase/app');
-
-const name$p = "@firebase/app-compat";
-
-const name$o = "@firebase/analytics-compat";
-
-const name$n = "@firebase/analytics";
-
-const name$m = "@firebase/app-check-compat";
-
-const name$l = "@firebase/app-check";
-
-const name$k = "@firebase/auth";
-
-const name$j = "@firebase/auth-compat";
-
-const name$i = "@firebase/database";
-
-const name$h = "@firebase/data-connect";
-
-const name$g = "@firebase/database-compat";
-
-const name$f = "@firebase/functions";
-
-const name$e = "@firebase/functions-compat";
-
-const name$d = "@firebase/installations";
-
-const name$c = "@firebase/installations-compat";
-
-const name$b = "@firebase/messaging";
-
-const name$a = "@firebase/messaging-compat";
-
-const name$9 = "@firebase/performance";
-
-const name$8 = "@firebase/performance-compat";
-
-const name$7 = "@firebase/remote-config";
-
-const name$6 = "@firebase/remote-config-compat";
-
-const name$5 = "@firebase/storage";
-
-const name$4 = "@firebase/storage-compat";
-
-const name$3 = "@firebase/firestore";
-
-const name$2 = "@firebase/ai";
-
-const name$1 = "@firebase/firestore-compat";
-
-const name = "firebase";
-const version = "11.10.0";
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * The default app name
- *
- * @internal
- */
-const DEFAULT_ENTRY_NAME = '[DEFAULT]';
-const PLATFORM_LOG_STRING = {
-    [name$q]: 'fire-core',
-    [name$p]: 'fire-core-compat',
-    [name$n]: 'fire-analytics',
-    [name$o]: 'fire-analytics-compat',
-    [name$l]: 'fire-app-check',
-    [name$m]: 'fire-app-check-compat',
-    [name$k]: 'fire-auth',
-    [name$j]: 'fire-auth-compat',
-    [name$i]: 'fire-rtdb',
-    [name$h]: 'fire-data-connect',
-    [name$g]: 'fire-rtdb-compat',
-    [name$f]: 'fire-fn',
-    [name$e]: 'fire-fn-compat',
-    [name$d]: 'fire-iid',
-    [name$c]: 'fire-iid-compat',
-    [name$b]: 'fire-fcm',
-    [name$a]: 'fire-fcm-compat',
-    [name$9]: 'fire-perf',
-    [name$8]: 'fire-perf-compat',
-    [name$7]: 'fire-rc',
-    [name$6]: 'fire-rc-compat',
-    [name$5]: 'fire-gcs',
-    [name$4]: 'fire-gcs-compat',
-    [name$3]: 'fire-fst',
-    [name$1]: 'fire-fst-compat',
-    [name$2]: 'fire-vertex',
-    'fire-js': 'fire-js', // Platform identifier for JS SDK.
-    [name]: 'fire-js-all'
-};
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * @internal
- */
-const _apps = new Map();
-/**
- * @internal
- */
-const _serverApps = new Map();
-/**
- * Registered components.
- *
- * @internal
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const _components = new Map();
-/**
- * @param component - the component being added to this app's container
- *
- * @internal
- */
-function _addComponent(app, component) {
-    try {
-        app.container.addComponent(component);
-    }
-    catch (e) {
-        logger.debug(`Component ${component.name} failed to register with FirebaseApp ${app.name}`, e);
-    }
-}
-/**
- *
- * @internal
- */
-function _addOrOverwriteComponent(app, component) {
-    app.container.addOrOverwriteComponent(component);
-}
-/**
- *
- * @param component - the component to register
- * @returns whether or not the component is registered successfully
- *
- * @internal
- */
-function _registerComponent(component) {
-    const componentName = component.name;
-    if (_components.has(componentName)) {
-        logger.debug(`There were multiple attempts to register component ${componentName}.`);
-        return false;
-    }
-    _components.set(componentName, component);
-    // add the component to existing app instances
-    for (const app of _apps.values()) {
-        _addComponent(app, component);
-    }
-    for (const serverApp of _serverApps.values()) {
-        _addComponent(serverApp, component);
-    }
-    return true;
-}
-/**
- *
- * @param app - FirebaseApp instance
- * @param name - service name
- *
- * @returns the provider for the service with the matching name
- *
- * @internal
- */
-function _getProvider(app, name) {
-    const heartbeatController = app.container
-        .getProvider('heartbeat')
-        .getImmediate({ optional: true });
-    if (heartbeatController) {
-        void heartbeatController.triggerHeartbeat();
-    }
-    return app.container.getProvider(name);
-}
-/**
- *
- * @param app - FirebaseApp instance
- * @param name - service name
- * @param instanceIdentifier - service instance identifier in case the service supports multiple instances
- *
- * @internal
- */
-function _removeServiceInstance(app, name, instanceIdentifier = DEFAULT_ENTRY_NAME) {
-    _getProvider(app, name).clearInstance(instanceIdentifier);
-}
-/**
- *
- * @param obj - an object of type FirebaseApp or FirebaseOptions.
- *
- * @returns true if the provide object is of type FirebaseApp.
- *
- * @internal
- */
-function _isFirebaseApp(obj) {
-    return obj.options !== undefined;
-}
-/**
- *
- * @param obj - an object of type FirebaseApp.
- *
- * @returns true if the provided object is of type FirebaseServerAppImpl.
- *
- * @internal
- */
-function _isFirebaseServerApp(obj) {
-    if (obj === null || obj === undefined) {
-        return false;
-    }
-    return obj.settings !== undefined;
-}
-/**
- * Test only
- *
- * @internal
- */
-function _clearComponents() {
-    _components.clear();
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const ERRORS = {
-    ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
-        'call initializeApp() first',
-    ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}'",
-    ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
-    ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
-    ["server-app-deleted" /* AppError.SERVER_APP_DELETED */]: 'Firebase Server App has been deleted',
-    ["no-options" /* AppError.NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
-    ["invalid-app-argument" /* AppError.INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
-        'Firebase App instance.',
-    ["invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
-    ["idb-open" /* AppError.IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-get" /* AppError.IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-set" /* AppError.IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-delete" /* AppError.IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.',
-    ["finalization-registry-not-supported" /* AppError.FINALIZATION_REGISTRY_NOT_SUPPORTED */]: 'FirebaseServerApp deleteOnDeref field defined but the JS runtime does not support FinalizationRegistry.',
-    ["invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */]: 'FirebaseServerApp is not for use in browser environments.'
-};
-const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-class FirebaseAppImpl {
-    constructor(options, config, container) {
-        this._isDeleted = false;
-        this._options = Object.assign({}, options);
-        this._config = Object.assign({}, config);
-        this._name = config.name;
-        this._automaticDataCollectionEnabled =
-            config.automaticDataCollectionEnabled;
-        this._container = container;
-        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* ComponentType.PUBLIC */));
-    }
-    get automaticDataCollectionEnabled() {
-        this.checkDestroyed();
-        return this._automaticDataCollectionEnabled;
-    }
-    set automaticDataCollectionEnabled(val) {
-        this.checkDestroyed();
-        this._automaticDataCollectionEnabled = val;
-    }
-    get name() {
-        this.checkDestroyed();
-        return this._name;
-    }
-    get options() {
-        this.checkDestroyed();
-        return this._options;
-    }
-    get config() {
-        this.checkDestroyed();
-        return this._config;
-    }
-    get container() {
-        return this._container;
-    }
-    get isDeleted() {
-        return this._isDeleted;
-    }
-    set isDeleted(val) {
-        this._isDeleted = val;
-    }
-    /**
-     * This function will throw an Error if the App has already been deleted -
-     * use before performing API actions on the App.
-     */
-    checkDestroyed() {
-        if (this.isDeleted) {
-            throw ERROR_FACTORY.create("app-deleted" /* AppError.APP_DELETED */, { appName: this._name });
-        }
-    }
-}
-
-/**
- * @license
- * Copyright 2023 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-// Parse the token and check to see if the `exp` claim is in the future.
-// Reports an error to the console if the token or claim could not be parsed, or if `exp` is in
-// the past.
-function validateTokenTTL(base64Token, tokenName) {
-    const secondPart = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64Decode)(base64Token.split('.')[1]);
-    if (secondPart === null) {
-        console.error(`FirebaseServerApp ${tokenName} is invalid: second part could not be parsed.`);
-        return;
-    }
-    const expClaim = JSON.parse(secondPart).exp;
-    if (expClaim === undefined) {
-        console.error(`FirebaseServerApp ${tokenName} is invalid: expiration claim could not be parsed`);
-        return;
-    }
-    const exp = JSON.parse(secondPart).exp * 1000;
-    const now = new Date().getTime();
-    const diff = exp - now;
-    if (diff <= 0) {
-        console.error(`FirebaseServerApp ${tokenName} is invalid: the token has expired.`);
-    }
-}
-class FirebaseServerAppImpl extends FirebaseAppImpl {
-    constructor(options, serverConfig, name, container) {
-        // Build configuration parameters for the FirebaseAppImpl base class.
-        const automaticDataCollectionEnabled = serverConfig.automaticDataCollectionEnabled !== undefined
-            ? serverConfig.automaticDataCollectionEnabled
-            : true;
-        // Create the FirebaseAppSettings object for the FirebaseAppImp constructor.
-        const config = {
-            name,
-            automaticDataCollectionEnabled
-        };
-        if (options.apiKey !== undefined) {
-            // Construct the parent FirebaseAppImp object.
-            super(options, config, container);
-        }
-        else {
-            const appImpl = options;
-            super(appImpl.options, config, container);
-        }
-        // Now construct the data for the FirebaseServerAppImpl.
-        this._serverConfig = Object.assign({ automaticDataCollectionEnabled }, serverConfig);
-        // Ensure that the current time is within the `authIdtoken` window of validity.
-        if (this._serverConfig.authIdToken) {
-            validateTokenTTL(this._serverConfig.authIdToken, 'authIdToken');
-        }
-        // Ensure that the current time is within the `appCheckToken` window of validity.
-        if (this._serverConfig.appCheckToken) {
-            validateTokenTTL(this._serverConfig.appCheckToken, 'appCheckToken');
-        }
-        this._finalizationRegistry = null;
-        if (typeof FinalizationRegistry !== 'undefined') {
-            this._finalizationRegistry = new FinalizationRegistry(() => {
-                this.automaticCleanup();
-            });
-        }
-        this._refCount = 0;
-        this.incRefCount(this._serverConfig.releaseOnDeref);
-        // Do not retain a hard reference to the dref object, otherwise the FinalizationRegistry
-        // will never trigger.
-        this._serverConfig.releaseOnDeref = undefined;
-        serverConfig.releaseOnDeref = undefined;
-        registerVersion(name$q, version$1, 'serverapp');
-    }
-    toJSON() {
-        return undefined;
-    }
-    get refCount() {
-        return this._refCount;
-    }
-    // Increment the reference count of this server app. If an object is provided, register it
-    // with the finalization registry.
-    incRefCount(obj) {
-        if (this.isDeleted) {
-            return;
-        }
-        this._refCount++;
-        if (obj !== undefined && this._finalizationRegistry !== null) {
-            this._finalizationRegistry.register(obj, this);
-        }
-    }
-    // Decrement the reference count.
-    decRefCount() {
-        if (this.isDeleted) {
-            return 0;
-        }
-        return --this._refCount;
-    }
-    // Invoked by the FinalizationRegistry callback to note that this app should go through its
-    // reference counts and delete itself if no reference count remain. The coordinating logic that
-    // handles this is in deleteApp(...).
-    automaticCleanup() {
-        void deleteApp(this);
-    }
-    get settings() {
-        this.checkDestroyed();
-        return this._serverConfig;
-    }
-    /**
-     * This function will throw an Error if the App has already been deleted -
-     * use before performing API actions on the App.
-     */
-    checkDestroyed() {
-        if (this.isDeleted) {
-            throw ERROR_FACTORY.create("server-app-deleted" /* AppError.SERVER_APP_DELETED */);
-        }
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * The current SDK version.
- *
- * @public
- */
-const SDK_VERSION = version;
-function initializeApp(_options, rawConfig = {}) {
-    let options = _options;
-    if (typeof rawConfig !== 'object') {
-        const name = rawConfig;
-        rawConfig = { name };
-    }
-    const config = Object.assign({ name: DEFAULT_ENTRY_NAME, automaticDataCollectionEnabled: true }, rawConfig);
-    const name = config.name;
-    if (typeof name !== 'string' || !name) {
-        throw ERROR_FACTORY.create("bad-app-name" /* AppError.BAD_APP_NAME */, {
-            appName: String(name)
-        });
-    }
-    options || (options = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)());
-    if (!options) {
-        throw ERROR_FACTORY.create("no-options" /* AppError.NO_OPTIONS */);
-    }
-    const existingApp = _apps.get(name);
-    if (existingApp) {
-        // return the existing app if options and config deep equal the ones in the existing app.
-        if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(options, existingApp.options) &&
-            (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(config, existingApp.config)) {
-            return existingApp;
-        }
-        else {
-            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, { appName: name });
-        }
-    }
-    const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(name);
-    for (const component of _components.values()) {
-        container.addComponent(component);
-    }
-    const newApp = new FirebaseAppImpl(options, config, container);
-    _apps.set(name, newApp);
-    return newApp;
-}
-function initializeServerApp(_options, _serverAppConfig) {
-    if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isBrowser)() && !(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isWebWorker)()) {
-        // FirebaseServerApp isn't designed to be run in browsers.
-        throw ERROR_FACTORY.create("invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */);
-    }
-    if (_serverAppConfig.automaticDataCollectionEnabled === undefined) {
-        _serverAppConfig.automaticDataCollectionEnabled = true;
-    }
-    let appOptions;
-    if (_isFirebaseApp(_options)) {
-        appOptions = _options.options;
-    }
-    else {
-        appOptions = _options;
-    }
-    // Build an app name based on a hash of the configuration options.
-    const nameObj = Object.assign(Object.assign({}, _serverAppConfig), appOptions);
-    // However, Do not mangle the name based on releaseOnDeref, since it will vary between the
-    // construction of FirebaseServerApp instances. For example, if the object is the request headers.
-    if (nameObj.releaseOnDeref !== undefined) {
-        delete nameObj.releaseOnDeref;
-    }
-    const hashCode = (s) => {
-        return [...s].reduce((hash, c) => (Math.imul(31, hash) + c.charCodeAt(0)) | 0, 0);
-    };
-    if (_serverAppConfig.releaseOnDeref !== undefined) {
-        if (typeof FinalizationRegistry === 'undefined') {
-            throw ERROR_FACTORY.create("finalization-registry-not-supported" /* AppError.FINALIZATION_REGISTRY_NOT_SUPPORTED */, {});
-        }
-    }
-    const nameString = '' + hashCode(JSON.stringify(nameObj));
-    const existingApp = _serverApps.get(nameString);
-    if (existingApp) {
-        existingApp.incRefCount(_serverAppConfig.releaseOnDeref);
-        return existingApp;
-    }
-    const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(nameString);
-    for (const component of _components.values()) {
-        container.addComponent(component);
-    }
-    const newApp = new FirebaseServerAppImpl(appOptions, _serverAppConfig, nameString, container);
-    _serverApps.set(nameString, newApp);
-    return newApp;
-}
-/**
- * Retrieves a {@link @firebase/app#FirebaseApp} instance.
- *
- * When called with no arguments, the default app is returned. When an app name
- * is provided, the app corresponding to that name is returned.
- *
- * An exception is thrown if the app being retrieved has not yet been
- * initialized.
- *
- * @example
- * ```javascript
- * // Return the default app
- * const app = getApp();
- * ```
- *
- * @example
- * ```javascript
- * // Return a named app
- * const otherApp = getApp("otherApp");
- * ```
- *
- * @param name - Optional name of the app to return. If no name is
- *   provided, the default is `"[DEFAULT]"`.
- *
- * @returns The app corresponding to the provided app name.
- *   If no app name is provided, the default app is returned.
- *
- * @public
- */
-function getApp(name = DEFAULT_ENTRY_NAME) {
-    const app = _apps.get(name);
-    if (!app && name === DEFAULT_ENTRY_NAME && (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)()) {
-        return initializeApp();
-    }
-    if (!app) {
-        throw ERROR_FACTORY.create("no-app" /* AppError.NO_APP */, { appName: name });
-    }
-    return app;
-}
-/**
- * A (read-only) array of all initialized apps.
- * @public
- */
-function getApps() {
-    return Array.from(_apps.values());
-}
-/**
- * Renders this app unusable and frees the resources of all associated
- * services.
- *
- * @example
- * ```javascript
- * deleteApp(app)
- *   .then(function() {
- *     console.log("App deleted successfully");
- *   })
- *   .catch(function(error) {
- *     console.log("Error deleting app:", error);
- *   });
- * ```
- *
- * @public
- */
-async function deleteApp(app) {
-    let cleanupProviders = false;
-    const name = app.name;
-    if (_apps.has(name)) {
-        cleanupProviders = true;
-        _apps.delete(name);
-    }
-    else if (_serverApps.has(name)) {
-        const firebaseServerApp = app;
-        if (firebaseServerApp.decRefCount() <= 0) {
-            _serverApps.delete(name);
-            cleanupProviders = true;
-        }
-    }
-    if (cleanupProviders) {
-        await Promise.all(app.container
-            .getProviders()
-            .map(provider => provider.delete()));
-        app.isDeleted = true;
-    }
-}
-/**
- * Registers a library's name and version for platform logging purposes.
- * @param library - Name of 1p or 3p library (e.g. firestore, angularfire)
- * @param version - Current version of that library.
- * @param variant - Bundle variant, e.g., node, rn, etc.
- *
- * @public
- */
-function registerVersion(libraryKeyOrName, version, variant) {
-    var _a;
-    // TODO: We can use this check to whitelist strings when/if we set up
-    // a good whitelist system.
-    let library = (_a = PLATFORM_LOG_STRING[libraryKeyOrName]) !== null && _a !== void 0 ? _a : libraryKeyOrName;
-    if (variant) {
-        library += `-${variant}`;
-    }
-    const libraryMismatch = library.match(/\s|\//);
-    const versionMismatch = version.match(/\s|\//);
-    if (libraryMismatch || versionMismatch) {
-        const warning = [
-            `Unable to register library "${library}" with version "${version}":`
-        ];
-        if (libraryMismatch) {
-            warning.push(`library name "${library}" contains illegal characters (whitespace or "/")`);
-        }
-        if (libraryMismatch && versionMismatch) {
-            warning.push('and');
-        }
-        if (versionMismatch) {
-            warning.push(`version name "${version}" contains illegal characters (whitespace or "/")`);
-        }
-        logger.warn(warning.join(' '));
-        return;
-    }
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* ComponentType.VERSION */));
-}
-/**
- * Sets log handler for all Firebase SDKs.
- * @param logCallback - An optional custom log handler that executes user code whenever
- * the Firebase SDK makes a logging call.
- *
- * @public
- */
-function onLog(logCallback, options) {
-    if (logCallback !== null && typeof logCallback !== 'function') {
-        throw ERROR_FACTORY.create("invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */);
-    }
-    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
-}
-/**
- * Sets log level for all Firebase SDKs.
- *
- * All of the log types above the current log level are captured (i.e. if
- * you set the log level to `info`, errors are logged, but `debug` and
- * `verbose` logs are not).
- *
- * @public
- */
-function setLogLevel(logLevel) {
-    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setLogLevel)(logLevel);
-}
-
-/**
- * @license
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const DB_NAME = 'firebase-heartbeat-database';
-const DB_VERSION = 1;
-const STORE_NAME = 'firebase-heartbeat-store';
-let dbPromise = null;
-function getDbPromise() {
-    if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DB_NAME, DB_VERSION, {
-            upgrade: (db, oldVersion) => {
-                // We don't use 'break' in this switch statement, the fall-through
-                // behavior is what we want, because if there are multiple versions between
-                // the old version and the current version, we want ALL the migrations
-                // that correspond to those versions to run, not only the last one.
-                // eslint-disable-next-line default-case
-                switch (oldVersion) {
-                    case 0:
-                        try {
-                            db.createObjectStore(STORE_NAME);
-                        }
-                        catch (e) {
-                            // Safari/iOS browsers throw occasional exceptions on
-                            // db.createObjectStore() that may be a bug. Avoid blocking
-                            // the rest of the app functionality.
-                            console.warn(e);
-                        }
-                }
-            }
-        }).catch(e => {
-            throw ERROR_FACTORY.create("idb-open" /* AppError.IDB_OPEN */, {
-                originalErrorMessage: e.message
-            });
-        });
-    }
-    return dbPromise;
-}
-async function readHeartbeatsFromIndexedDB(app) {
-    try {
-        const db = await getDbPromise();
-        const tx = db.transaction(STORE_NAME);
-        const result = await tx.objectStore(STORE_NAME).get(computeKey(app));
-        // We already have the value but tx.done can throw,
-        // so we need to await it here to catch errors
-        await tx.done;
-        return result;
-    }
-    catch (e) {
-        if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
-            logger.warn(e.message);
-        }
-        else {
-            const idbGetError = ERROR_FACTORY.create("idb-get" /* AppError.IDB_GET */, {
-                originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
-            });
-            logger.warn(idbGetError.message);
-        }
-    }
-}
-async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
-    try {
-        const db = await getDbPromise();
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        const objectStore = tx.objectStore(STORE_NAME);
-        await objectStore.put(heartbeatObject, computeKey(app));
-        await tx.done;
-    }
-    catch (e) {
-        if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
-            logger.warn(e.message);
-        }
-        else {
-            const idbGetError = ERROR_FACTORY.create("idb-set" /* AppError.IDB_WRITE */, {
-                originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
-            });
-            logger.warn(idbGetError.message);
-        }
-    }
-}
-function computeKey(app) {
-    return `${app.name}!${app.options.appId}`;
-}
-
-/**
- * @license
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const MAX_HEADER_BYTES = 1024;
-const MAX_NUM_STORED_HEARTBEATS = 30;
-class HeartbeatServiceImpl {
-    constructor(container) {
-        this.container = container;
-        /**
-         * In-memory cache for heartbeats, used by getHeartbeatsHeader() to generate
-         * the header string.
-         * Stores one record per date. This will be consolidated into the standard
-         * format of one record per user agent string before being sent as a header.
-         * Populated from indexedDB when the controller is instantiated and should
-         * be kept in sync with indexedDB.
-         * Leave public for easier testing.
-         */
-        this._heartbeatsCache = null;
-        const app = this.container.getProvider('app').getImmediate();
-        this._storage = new HeartbeatStorageImpl(app);
-        this._heartbeatsCachePromise = this._storage.read().then(result => {
-            this._heartbeatsCache = result;
-            return result;
-        });
-    }
-    /**
-     * Called to report a heartbeat. The function will generate
-     * a HeartbeatsByUserAgent object, update heartbeatsCache, and persist it
-     * to IndexedDB.
-     * Note that we only store one heartbeat per day. So if a heartbeat for today is
-     * already logged, subsequent calls to this function in the same day will be ignored.
-     */
-    async triggerHeartbeat() {
-        var _a, _b;
-        try {
-            const platformLogger = this.container
-                .getProvider('platform-logger')
-                .getImmediate();
-            // This is the "Firebase user agent" string from the platform logger
-            // service, not the browser user agent.
-            const agent = platformLogger.getPlatformInfoString();
-            const date = getUTCDateString();
-            if (((_a = this._heartbeatsCache) === null || _a === void 0 ? void 0 : _a.heartbeats) == null) {
-                this._heartbeatsCache = await this._heartbeatsCachePromise;
-                // If we failed to construct a heartbeats cache, then return immediately.
-                if (((_b = this._heartbeatsCache) === null || _b === void 0 ? void 0 : _b.heartbeats) == null) {
-                    return;
-                }
-            }
-            // Do not store a heartbeat if one is already stored for this day
-            // or if a header has already been sent today.
-            if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
-                this._heartbeatsCache.heartbeats.some(singleDateHeartbeat => singleDateHeartbeat.date === date)) {
-                return;
-            }
-            else {
-                // There is no entry for this date. Create one.
-                this._heartbeatsCache.heartbeats.push({ date, agent });
-                // If the number of stored heartbeats exceeds the maximum number of stored heartbeats, remove the heartbeat with the earliest date.
-                // Since this is executed each time a heartbeat is pushed, the limit can only be exceeded by one, so only one needs to be removed.
-                if (this._heartbeatsCache.heartbeats.length > MAX_NUM_STORED_HEARTBEATS) {
-                    const earliestHeartbeatIdx = getEarliestHeartbeatIdx(this._heartbeatsCache.heartbeats);
-                    this._heartbeatsCache.heartbeats.splice(earliestHeartbeatIdx, 1);
-                }
-            }
-            return this._storage.overwrite(this._heartbeatsCache);
-        }
-        catch (e) {
-            logger.warn(e);
-        }
-    }
-    /**
-     * Returns a base64 encoded string which can be attached to the heartbeat-specific header directly.
-     * It also clears all heartbeats from memory as well as in IndexedDB.
-     *
-     * NOTE: Consuming product SDKs should not send the header if this method
-     * returns an empty string.
-     */
-    async getHeartbeatsHeader() {
-        var _a;
-        try {
-            if (this._heartbeatsCache === null) {
-                await this._heartbeatsCachePromise;
-            }
-            // If it's still null or the array is empty, there is no data to send.
-            if (((_a = this._heartbeatsCache) === null || _a === void 0 ? void 0 : _a.heartbeats) == null ||
-                this._heartbeatsCache.heartbeats.length === 0) {
-                return '';
-            }
-            const date = getUTCDateString();
-            // Extract as many heartbeats from the cache as will fit under the size limit.
-            const { heartbeatsToSend, unsentEntries } = extractHeartbeatsForHeader(this._heartbeatsCache.heartbeats);
-            const headerString = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(JSON.stringify({ version: 2, heartbeats: heartbeatsToSend }));
-            // Store last sent date to prevent another being logged/sent for the same day.
-            this._heartbeatsCache.lastSentHeartbeatDate = date;
-            if (unsentEntries.length > 0) {
-                // Store any unsent entries if they exist.
-                this._heartbeatsCache.heartbeats = unsentEntries;
-                // This seems more likely than emptying the array (below) to lead to some odd state
-                // since the cache isn't empty and this will be called again on the next request,
-                // and is probably safest if we await it.
-                await this._storage.overwrite(this._heartbeatsCache);
-            }
-            else {
-                this._heartbeatsCache.heartbeats = [];
-                // Do not wait for this, to reduce latency.
-                void this._storage.overwrite(this._heartbeatsCache);
-            }
-            return headerString;
-        }
-        catch (e) {
-            logger.warn(e);
-            return '';
-        }
-    }
-}
-function getUTCDateString() {
-    const today = new Date();
-    // Returns date format 'YYYY-MM-DD'
-    return today.toISOString().substring(0, 10);
-}
-function extractHeartbeatsForHeader(heartbeatsCache, maxSize = MAX_HEADER_BYTES) {
-    // Heartbeats grouped by user agent in the standard format to be sent in
-    // the header.
-    const heartbeatsToSend = [];
-    // Single date format heartbeats that are not sent.
-    let unsentEntries = heartbeatsCache.slice();
-    for (const singleDateHeartbeat of heartbeatsCache) {
-        // Look for an existing entry with the same user agent.
-        const heartbeatEntry = heartbeatsToSend.find(hb => hb.agent === singleDateHeartbeat.agent);
-        if (!heartbeatEntry) {
-            // If no entry for this user agent exists, create one.
-            heartbeatsToSend.push({
-                agent: singleDateHeartbeat.agent,
-                dates: [singleDateHeartbeat.date]
-            });
-            if (countBytes(heartbeatsToSend) > maxSize) {
-                // If the header would exceed max size, remove the added heartbeat
-                // entry and stop adding to the header.
-                heartbeatsToSend.pop();
-                break;
-            }
-        }
-        else {
-            heartbeatEntry.dates.push(singleDateHeartbeat.date);
-            // If the header would exceed max size, remove the added date
-            // and stop adding to the header.
-            if (countBytes(heartbeatsToSend) > maxSize) {
-                heartbeatEntry.dates.pop();
-                break;
-            }
-        }
-        // Pop unsent entry from queue. (Skipped if adding the entry exceeded
-        // quota and the loop breaks early.)
-        unsentEntries = unsentEntries.slice(1);
-    }
-    return {
-        heartbeatsToSend,
-        unsentEntries
-    };
-}
-class HeartbeatStorageImpl {
-    constructor(app) {
-        this.app = app;
-        this._canUseIndexedDBPromise = this.runIndexedDBEnvironmentCheck();
-    }
-    async runIndexedDBEnvironmentCheck() {
-        if (!(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)()) {
-            return false;
-        }
-        else {
-            return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)()
-                .then(() => true)
-                .catch(() => false);
-        }
-    }
-    /**
-     * Read all heartbeats.
-     */
-    async read() {
-        const canUseIndexedDB = await this._canUseIndexedDBPromise;
-        if (!canUseIndexedDB) {
-            return { heartbeats: [] };
-        }
-        else {
-            const idbHeartbeatObject = await readHeartbeatsFromIndexedDB(this.app);
-            if (idbHeartbeatObject === null || idbHeartbeatObject === void 0 ? void 0 : idbHeartbeatObject.heartbeats) {
-                return idbHeartbeatObject;
-            }
-            else {
-                return { heartbeats: [] };
-            }
-        }
-    }
-    // overwrite the storage with the provided heartbeats
-    async overwrite(heartbeatsObject) {
-        var _a;
-        const canUseIndexedDB = await this._canUseIndexedDBPromise;
-        if (!canUseIndexedDB) {
-            return;
-        }
-        else {
-            const existingHeartbeatsObject = await this.read();
-            return writeHeartbeatsToIndexedDB(this.app, {
-                lastSentHeartbeatDate: (_a = heartbeatsObject.lastSentHeartbeatDate) !== null && _a !== void 0 ? _a : existingHeartbeatsObject.lastSentHeartbeatDate,
-                heartbeats: heartbeatsObject.heartbeats
-            });
-        }
-    }
-    // add heartbeats
-    async add(heartbeatsObject) {
-        var _a;
-        const canUseIndexedDB = await this._canUseIndexedDBPromise;
-        if (!canUseIndexedDB) {
-            return;
-        }
-        else {
-            const existingHeartbeatsObject = await this.read();
-            return writeHeartbeatsToIndexedDB(this.app, {
-                lastSentHeartbeatDate: (_a = heartbeatsObject.lastSentHeartbeatDate) !== null && _a !== void 0 ? _a : existingHeartbeatsObject.lastSentHeartbeatDate,
-                heartbeats: [
-                    ...existingHeartbeatsObject.heartbeats,
-                    ...heartbeatsObject.heartbeats
-                ]
-            });
-        }
-    }
-}
-/**
- * Calculate bytes of a HeartbeatsByUserAgent array after being wrapped
- * in a platform logging header JSON object, stringified, and converted
- * to base 64.
- */
-function countBytes(heartbeatsCache) {
-    // base64 has a restricted set of characters, all of which should be 1 byte.
-    return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(
-    // heartbeatsCache wrapper properties
-    JSON.stringify({ version: 2, heartbeats: heartbeatsCache })).length;
-}
-/**
- * Returns the index of the heartbeat with the earliest date.
- * If the heartbeats array is empty, -1 is returned.
- */
-function getEarliestHeartbeatIdx(heartbeats) {
-    if (heartbeats.length === 0) {
-        return -1;
-    }
-    let earliestHeartbeatIdx = 0;
-    let earliestHeartbeatDate = heartbeats[0].date;
-    for (let i = 1; i < heartbeats.length; i++) {
-        if (heartbeats[i].date < earliestHeartbeatDate) {
-            earliestHeartbeatDate = heartbeats[i].date;
-            earliestHeartbeatIdx = i;
-        }
-    }
-    return earliestHeartbeatIdx;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function registerCoreComponents(variant) {
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
-    // Register `app` package.
-    registerVersion(name$q, version$1, variant);
-    // BUILD_TARGET will be replaced by values like esm2017, cjs2017, etc during the compilation
-    registerVersion(name$q, version$1, 'esm2017');
-    // Register platform SDK identifier (no version).
-    registerVersion('fire-js', '');
-}
-
-/**
- * Firebase App
- *
- * @remarks This package coordinates the communication between the different Firebase components
- * @packageDocumentation
- */
-registerCoreComponents('');
-
-
-//# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/component/dist/esm/index.esm2017.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@firebase/component/dist/esm/index.esm2017.js ***!
-  \********************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Component: function() { return /* binding */ Component; },
-/* harmony export */   ComponentContainer: function() { return /* binding */ ComponentContainer; },
-/* harmony export */   Provider: function() { return /* binding */ Provider; }
-/* harmony export */ });
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-
-
-/**
- * Component for service name T, e.g. `auth`, `auth-internal`
- */
-class Component {
-    /**
-     *
-     * @param name The public service name, e.g. app, auth, firestore, database
-     * @param instanceFactory Service factory responsible for creating the public interface
-     * @param type whether the service provided by the component is public or private
-     */
-    constructor(name, instanceFactory, type) {
-        this.name = name;
-        this.instanceFactory = instanceFactory;
-        this.type = type;
-        this.multipleInstances = false;
-        /**
-         * Properties to be added to the service namespace
-         */
-        this.serviceProps = {};
-        this.instantiationMode = "LAZY" /* InstantiationMode.LAZY */;
-        this.onInstanceCreated = null;
-    }
-    setInstantiationMode(mode) {
-        this.instantiationMode = mode;
-        return this;
-    }
-    setMultipleInstances(multipleInstances) {
-        this.multipleInstances = multipleInstances;
-        return this;
-    }
-    setServiceProps(props) {
-        this.serviceProps = props;
-        return this;
-    }
-    setInstanceCreatedCallback(callback) {
-        this.onInstanceCreated = callback;
-        return this;
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const DEFAULT_ENTRY_NAME = '[DEFAULT]';
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Provider for instance for service name T, e.g. 'auth', 'auth-internal'
- * NameServiceMapping[T] is an alias for the type of the instance
- */
-class Provider {
-    constructor(name, container) {
-        this.name = name;
-        this.container = container;
-        this.component = null;
-        this.instances = new Map();
-        this.instancesDeferred = new Map();
-        this.instancesOptions = new Map();
-        this.onInitCallbacks = new Map();
-    }
-    /**
-     * @param identifier A provider can provide multiple instances of a service
-     * if this.component.multipleInstances is true.
-     */
-    get(identifier) {
-        // if multipleInstances is not supported, use the default name
-        const normalizedIdentifier = this.normalizeInstanceIdentifier(identifier);
-        if (!this.instancesDeferred.has(normalizedIdentifier)) {
-            const deferred = new _firebase_util__WEBPACK_IMPORTED_MODULE_0__.Deferred();
-            this.instancesDeferred.set(normalizedIdentifier, deferred);
-            if (this.isInitialized(normalizedIdentifier) ||
-                this.shouldAutoInitialize()) {
-                // initialize the service if it can be auto-initialized
-                try {
-                    const instance = this.getOrInitializeService({
-                        instanceIdentifier: normalizedIdentifier
-                    });
-                    if (instance) {
-                        deferred.resolve(instance);
-                    }
-                }
-                catch (e) {
-                    // when the instance factory throws an exception during get(), it should not cause
-                    // a fatal error. We just return the unresolved promise in this case.
-                }
-            }
-        }
-        return this.instancesDeferred.get(normalizedIdentifier).promise;
-    }
-    getImmediate(options) {
-        var _a;
-        // if multipleInstances is not supported, use the default name
-        const normalizedIdentifier = this.normalizeInstanceIdentifier(options === null || options === void 0 ? void 0 : options.identifier);
-        const optional = (_a = options === null || options === void 0 ? void 0 : options.optional) !== null && _a !== void 0 ? _a : false;
-        if (this.isInitialized(normalizedIdentifier) ||
-            this.shouldAutoInitialize()) {
-            try {
-                return this.getOrInitializeService({
-                    instanceIdentifier: normalizedIdentifier
-                });
-            }
-            catch (e) {
-                if (optional) {
-                    return null;
-                }
-                else {
-                    throw e;
-                }
-            }
-        }
-        else {
-            // In case a component is not initialized and should/cannot be auto-initialized at the moment, return null if the optional flag is set, or throw
-            if (optional) {
-                return null;
-            }
-            else {
-                throw Error(`Service ${this.name} is not available`);
-            }
-        }
-    }
-    getComponent() {
-        return this.component;
-    }
-    setComponent(component) {
-        if (component.name !== this.name) {
-            throw Error(`Mismatching Component ${component.name} for Provider ${this.name}.`);
-        }
-        if (this.component) {
-            throw Error(`Component for ${this.name} has already been provided`);
-        }
-        this.component = component;
-        // return early without attempting to initialize the component if the component requires explicit initialization (calling `Provider.initialize()`)
-        if (!this.shouldAutoInitialize()) {
-            return;
-        }
-        // if the service is eager, initialize the default instance
-        if (isComponentEager(component)) {
-            try {
-                this.getOrInitializeService({ instanceIdentifier: DEFAULT_ENTRY_NAME });
-            }
-            catch (e) {
-                // when the instance factory for an eager Component throws an exception during the eager
-                // initialization, it should not cause a fatal error.
-                // TODO: Investigate if we need to make it configurable, because some component may want to cause
-                // a fatal error in this case?
-            }
-        }
-        // Create service instances for the pending promises and resolve them
-        // NOTE: if this.multipleInstances is false, only the default instance will be created
-        // and all promises with resolve with it regardless of the identifier.
-        for (const [instanceIdentifier, instanceDeferred] of this.instancesDeferred.entries()) {
-            const normalizedIdentifier = this.normalizeInstanceIdentifier(instanceIdentifier);
-            try {
-                // `getOrInitializeService()` should always return a valid instance since a component is guaranteed. use ! to make typescript happy.
-                const instance = this.getOrInitializeService({
-                    instanceIdentifier: normalizedIdentifier
-                });
-                instanceDeferred.resolve(instance);
-            }
-            catch (e) {
-                // when the instance factory throws an exception, it should not cause
-                // a fatal error. We just leave the promise unresolved.
-            }
-        }
-    }
-    clearInstance(identifier = DEFAULT_ENTRY_NAME) {
-        this.instancesDeferred.delete(identifier);
-        this.instancesOptions.delete(identifier);
-        this.instances.delete(identifier);
-    }
-    // app.delete() will call this method on every provider to delete the services
-    // TODO: should we mark the provider as deleted?
-    async delete() {
-        const services = Array.from(this.instances.values());
-        await Promise.all([
-            ...services
-                .filter(service => 'INTERNAL' in service) // legacy services
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .map(service => service.INTERNAL.delete()),
-            ...services
-                .filter(service => '_delete' in service) // modularized services
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .map(service => service._delete())
-        ]);
-    }
-    isComponentSet() {
-        return this.component != null;
-    }
-    isInitialized(identifier = DEFAULT_ENTRY_NAME) {
-        return this.instances.has(identifier);
-    }
-    getOptions(identifier = DEFAULT_ENTRY_NAME) {
-        return this.instancesOptions.get(identifier) || {};
-    }
-    initialize(opts = {}) {
-        const { options = {} } = opts;
-        const normalizedIdentifier = this.normalizeInstanceIdentifier(opts.instanceIdentifier);
-        if (this.isInitialized(normalizedIdentifier)) {
-            throw Error(`${this.name}(${normalizedIdentifier}) has already been initialized`);
-        }
-        if (!this.isComponentSet()) {
-            throw Error(`Component ${this.name} has not been registered yet`);
-        }
-        const instance = this.getOrInitializeService({
-            instanceIdentifier: normalizedIdentifier,
-            options
-        });
-        // resolve any pending promise waiting for the service instance
-        for (const [instanceIdentifier, instanceDeferred] of this.instancesDeferred.entries()) {
-            const normalizedDeferredIdentifier = this.normalizeInstanceIdentifier(instanceIdentifier);
-            if (normalizedIdentifier === normalizedDeferredIdentifier) {
-                instanceDeferred.resolve(instance);
-            }
-        }
-        return instance;
-    }
-    /**
-     *
-     * @param callback - a function that will be invoked  after the provider has been initialized by calling provider.initialize().
-     * The function is invoked SYNCHRONOUSLY, so it should not execute any longrunning tasks in order to not block the program.
-     *
-     * @param identifier An optional instance identifier
-     * @returns a function to unregister the callback
-     */
-    onInit(callback, identifier) {
-        var _a;
-        const normalizedIdentifier = this.normalizeInstanceIdentifier(identifier);
-        const existingCallbacks = (_a = this.onInitCallbacks.get(normalizedIdentifier)) !== null && _a !== void 0 ? _a : new Set();
-        existingCallbacks.add(callback);
-        this.onInitCallbacks.set(normalizedIdentifier, existingCallbacks);
-        const existingInstance = this.instances.get(normalizedIdentifier);
-        if (existingInstance) {
-            callback(existingInstance, normalizedIdentifier);
-        }
-        return () => {
-            existingCallbacks.delete(callback);
-        };
-    }
-    /**
-     * Invoke onInit callbacks synchronously
-     * @param instance the service instance`
-     */
-    invokeOnInitCallbacks(instance, identifier) {
-        const callbacks = this.onInitCallbacks.get(identifier);
-        if (!callbacks) {
-            return;
-        }
-        for (const callback of callbacks) {
-            try {
-                callback(instance, identifier);
-            }
-            catch (_a) {
-                // ignore errors in the onInit callback
-            }
-        }
-    }
-    getOrInitializeService({ instanceIdentifier, options = {} }) {
-        let instance = this.instances.get(instanceIdentifier);
-        if (!instance && this.component) {
-            instance = this.component.instanceFactory(this.container, {
-                instanceIdentifier: normalizeIdentifierForFactory(instanceIdentifier),
-                options
-            });
-            this.instances.set(instanceIdentifier, instance);
-            this.instancesOptions.set(instanceIdentifier, options);
-            /**
-             * Invoke onInit listeners.
-             * Note this.component.onInstanceCreated is different, which is used by the component creator,
-             * while onInit listeners are registered by consumers of the provider.
-             */
-            this.invokeOnInitCallbacks(instance, instanceIdentifier);
-            /**
-             * Order is important
-             * onInstanceCreated() should be called after this.instances.set(instanceIdentifier, instance); which
-             * makes `isInitialized()` return true.
-             */
-            if (this.component.onInstanceCreated) {
-                try {
-                    this.component.onInstanceCreated(this.container, instanceIdentifier, instance);
-                }
-                catch (_a) {
-                    // ignore errors in the onInstanceCreatedCallback
-                }
-            }
-        }
-        return instance || null;
-    }
-    normalizeInstanceIdentifier(identifier = DEFAULT_ENTRY_NAME) {
-        if (this.component) {
-            return this.component.multipleInstances ? identifier : DEFAULT_ENTRY_NAME;
-        }
-        else {
-            return identifier; // assume multiple instances are supported before the component is provided.
-        }
-    }
-    shouldAutoInitialize() {
-        return (!!this.component &&
-            this.component.instantiationMode !== "EXPLICIT" /* InstantiationMode.EXPLICIT */);
-    }
-}
-// undefined should be passed to the service factory for the default instance
-function normalizeIdentifierForFactory(identifier) {
-    return identifier === DEFAULT_ENTRY_NAME ? undefined : identifier;
-}
-function isComponentEager(component) {
-    return component.instantiationMode === "EAGER" /* InstantiationMode.EAGER */;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * ComponentContainer that provides Providers for service name T, e.g. `auth`, `auth-internal`
- */
-class ComponentContainer {
-    constructor(name) {
-        this.name = name;
-        this.providers = new Map();
-    }
-    /**
-     *
-     * @param component Component being added
-     * @param overwrite When a component with the same name has already been registered,
-     * if overwrite is true: overwrite the existing component with the new component and create a new
-     * provider with the new component. It can be useful in tests where you want to use different mocks
-     * for different tests.
-     * if overwrite is false: throw an exception
-     */
-    addComponent(component) {
-        const provider = this.getProvider(component.name);
-        if (provider.isComponentSet()) {
-            throw new Error(`Component ${component.name} has already been registered with ${this.name}`);
-        }
-        provider.setComponent(component);
-    }
-    addOrOverwriteComponent(component) {
-        const provider = this.getProvider(component.name);
-        if (provider.isComponentSet()) {
-            // delete the existing provider from the container, so we can register the new component
-            this.providers.delete(component.name);
-        }
-        this.addComponent(component);
-    }
-    /**
-     * getProvider provides a type safe interface where it can only be called with a field name
-     * present in NameServiceMapping interface.
-     *
-     * Firebase SDKs providing services should extend NameServiceMapping interface to register
-     * themselves.
-     */
-    getProvider(name) {
-        if (this.providers.has(name)) {
-            return this.providers.get(name);
-        }
-        // create a Provider for a service that hasn't registered with Firebase
-        const provider = new Provider(name, this);
-        this.providers.set(name, provider);
-        return provider;
-    }
-    getProviders() {
-        return Array.from(this.providers.values());
-    }
-}
-
-
-//# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@firebase/installations/dist/esm/index.esm2017.js ***!
-  \************************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteInstallations: function() { return /* binding */ deleteInstallations; },
-/* harmony export */   getId: function() { return /* binding */ getId; },
-/* harmony export */   getInstallations: function() { return /* binding */ getInstallations; },
-/* harmony export */   getToken: function() { return /* binding */ getToken; },
-/* harmony export */   onIdChange: function() { return /* binding */ onIdChange; }
-/* harmony export */ });
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
-
-
-
-
-
-const name = "@firebase/installations";
-const version = "0.6.18";
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const PENDING_TIMEOUT_MS = 10000;
-const PACKAGE_VERSION = `w:${version}`;
-const INTERNAL_AUTH_VERSION = 'FIS_v2';
-const INSTALLATIONS_API_URL = 'https://firebaseinstallations.googleapis.com/v1';
-const TOKEN_EXPIRATION_BUFFER = 60 * 60 * 1000; // One hour
-const SERVICE = 'installations';
-const SERVICE_NAME = 'Installations';
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const ERROR_DESCRIPTION_MAP = {
-    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
-    ["not-registered" /* ErrorCode.NOT_REGISTERED */]: 'Firebase Installation is not registered.',
-    ["installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
-    ["request-failed" /* ErrorCode.REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
-    ["app-offline" /* ErrorCode.APP_OFFLINE */]: 'Could not process request. Application offline.',
-    ["delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
-};
-const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory(SERVICE, SERVICE_NAME, ERROR_DESCRIPTION_MAP);
-/** Returns true if error is a FirebaseError that is based on an error from the server. */
-function isServerError(error) {
-    return (error instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError &&
-        error.code.includes("request-failed" /* ErrorCode.REQUEST_FAILED */));
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function getInstallationsEndpoint({ projectId }) {
-    return `${INSTALLATIONS_API_URL}/projects/${projectId}/installations`;
-}
-function extractAuthTokenInfoFromResponse(response) {
-    return {
-        token: response.token,
-        requestStatus: 2 /* RequestStatus.COMPLETED */,
-        expiresIn: getExpiresInFromResponseExpiresIn(response.expiresIn),
-        creationTime: Date.now()
-    };
-}
-async function getErrorFromResponse(requestName, response) {
-    const responseJson = await response.json();
-    const errorData = responseJson.error;
-    return ERROR_FACTORY.create("request-failed" /* ErrorCode.REQUEST_FAILED */, {
-        requestName,
-        serverCode: errorData.code,
-        serverMessage: errorData.message,
-        serverStatus: errorData.status
-    });
-}
-function getHeaders({ apiKey }) {
-    return new Headers({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'x-goog-api-key': apiKey
-    });
-}
-function getHeadersWithAuth(appConfig, { refreshToken }) {
-    const headers = getHeaders(appConfig);
-    headers.append('Authorization', getAuthorizationHeader(refreshToken));
-    return headers;
-}
-/**
- * Calls the passed in fetch wrapper and returns the response.
- * If the returned response has a status of 5xx, re-runs the function once and
- * returns the response.
- */
-async function retryIfServerError(fn) {
-    const result = await fn();
-    if (result.status >= 500 && result.status < 600) {
-        // Internal Server Error. Retry request.
-        return fn();
-    }
-    return result;
-}
-function getExpiresInFromResponseExpiresIn(responseExpiresIn) {
-    // This works because the server will never respond with fractions of a second.
-    return Number(responseExpiresIn.replace('s', '000'));
-}
-function getAuthorizationHeader(refreshToken) {
-    return `${INTERNAL_AUTH_VERSION} ${refreshToken}`;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function createInstallationRequest({ appConfig, heartbeatServiceProvider }, { fid }) {
-    const endpoint = getInstallationsEndpoint(appConfig);
-    const headers = getHeaders(appConfig);
-    // If heartbeat service exists, add the heartbeat string to the header.
-    const heartbeatService = heartbeatServiceProvider.getImmediate({
-        optional: true
-    });
-    if (heartbeatService) {
-        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
-        if (heartbeatsHeader) {
-            headers.append('x-firebase-client', heartbeatsHeader);
-        }
-    }
-    const body = {
-        fid,
-        authVersion: INTERNAL_AUTH_VERSION,
-        appId: appConfig.appId,
-        sdkVersion: PACKAGE_VERSION
-    };
-    const request = {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-    };
-    const response = await retryIfServerError(() => fetch(endpoint, request));
-    if (response.ok) {
-        const responseValue = await response.json();
-        const registeredInstallationEntry = {
-            fid: responseValue.fid || fid,
-            registrationStatus: 2 /* RequestStatus.COMPLETED */,
-            refreshToken: responseValue.refreshToken,
-            authToken: extractAuthTokenInfoFromResponse(responseValue.authToken)
-        };
-        return registeredInstallationEntry;
-    }
-    else {
-        throw await getErrorFromResponse('Create Installation', response);
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/** Returns a promise that resolves after given time passes. */
-function sleep(ms) {
-    return new Promise(resolve => {
-        setTimeout(resolve, ms);
-    });
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function bufferToBase64UrlSafe(array) {
-    const b64 = btoa(String.fromCharCode(...array));
-    return b64.replace(/\+/g, '-').replace(/\//g, '_');
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const VALID_FID_PATTERN = /^[cdef][\w-]{21}$/;
-const INVALID_FID = '';
-/**
- * Generates a new FID using random values from Web Crypto API.
- * Returns an empty string if FID generation fails for any reason.
- */
-function generateFid() {
-    try {
-        // A valid FID has exactly 22 base64 characters, which is 132 bits, or 16.5
-        // bytes. our implementation generates a 17 byte array instead.
-        const fidByteArray = new Uint8Array(17);
-        const crypto = self.crypto || self.msCrypto;
-        crypto.getRandomValues(fidByteArray);
-        // Replace the first 4 random bits with the constant FID header of 0b0111.
-        fidByteArray[0] = 0b01110000 + (fidByteArray[0] % 0b00010000);
-        const fid = encode(fidByteArray);
-        return VALID_FID_PATTERN.test(fid) ? fid : INVALID_FID;
-    }
-    catch (_a) {
-        // FID generation errored
-        return INVALID_FID;
-    }
-}
-/** Converts a FID Uint8Array to a base64 string representation. */
-function encode(fidByteArray) {
-    const b64String = bufferToBase64UrlSafe(fidByteArray);
-    // Remove the 23rd character that was added because of the extra 4 bits at the
-    // end of our 17 byte array, and the '=' padding.
-    return b64String.substr(0, 22);
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/** Returns a string key that can be used to identify the app. */
-function getKey(appConfig) {
-    return `${appConfig.appName}!${appConfig.appId}`;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const fidChangeCallbacks = new Map();
-/**
- * Calls the onIdChange callbacks with the new FID value, and broadcasts the
- * change to other tabs.
- */
-function fidChanged(appConfig, fid) {
-    const key = getKey(appConfig);
-    callFidChangeCallbacks(key, fid);
-    broadcastFidChange(key, fid);
-}
-function addCallback(appConfig, callback) {
-    // Open the broadcast channel if it's not already open,
-    // to be able to listen to change events from other tabs.
-    getBroadcastChannel();
-    const key = getKey(appConfig);
-    let callbackSet = fidChangeCallbacks.get(key);
-    if (!callbackSet) {
-        callbackSet = new Set();
-        fidChangeCallbacks.set(key, callbackSet);
-    }
-    callbackSet.add(callback);
-}
-function removeCallback(appConfig, callback) {
-    const key = getKey(appConfig);
-    const callbackSet = fidChangeCallbacks.get(key);
-    if (!callbackSet) {
-        return;
-    }
-    callbackSet.delete(callback);
-    if (callbackSet.size === 0) {
-        fidChangeCallbacks.delete(key);
-    }
-    // Close broadcast channel if there are no more callbacks.
-    closeBroadcastChannel();
-}
-function callFidChangeCallbacks(key, fid) {
-    const callbacks = fidChangeCallbacks.get(key);
-    if (!callbacks) {
-        return;
-    }
-    for (const callback of callbacks) {
-        callback(fid);
-    }
-}
-function broadcastFidChange(key, fid) {
-    const channel = getBroadcastChannel();
-    if (channel) {
-        channel.postMessage({ key, fid });
-    }
-    closeBroadcastChannel();
-}
-let broadcastChannel = null;
-/** Opens and returns a BroadcastChannel if it is supported by the browser. */
-function getBroadcastChannel() {
-    if (!broadcastChannel && 'BroadcastChannel' in self) {
-        broadcastChannel = new BroadcastChannel('[Firebase] FID Change');
-        broadcastChannel.onmessage = e => {
-            callFidChangeCallbacks(e.data.key, e.data.fid);
-        };
-    }
-    return broadcastChannel;
-}
-function closeBroadcastChannel() {
-    if (fidChangeCallbacks.size === 0 && broadcastChannel) {
-        broadcastChannel.close();
-        broadcastChannel = null;
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const DATABASE_NAME = 'firebase-installations-database';
-const DATABASE_VERSION = 1;
-const OBJECT_STORE_NAME = 'firebase-installations-store';
-let dbPromise = null;
-function getDbPromise() {
-    if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
-            upgrade: (db, oldVersion) => {
-                // We don't use 'break' in this switch statement, the fall-through
-                // behavior is what we want, because if there are multiple versions between
-                // the old version and the current version, we want ALL the migrations
-                // that correspond to those versions to run, not only the last one.
-                // eslint-disable-next-line default-case
-                switch (oldVersion) {
-                    case 0:
-                        db.createObjectStore(OBJECT_STORE_NAME);
-                }
-            }
-        });
-    }
-    return dbPromise;
-}
-/** Assigns or overwrites the record for the given key with the given value. */
-async function set(appConfig, value) {
-    const key = getKey(appConfig);
-    const db = await getDbPromise();
-    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
-    const objectStore = tx.objectStore(OBJECT_STORE_NAME);
-    const oldValue = (await objectStore.get(key));
-    await objectStore.put(value, key);
-    await tx.done;
-    if (!oldValue || oldValue.fid !== value.fid) {
-        fidChanged(appConfig, value.fid);
-    }
-    return value;
-}
-/** Removes record(s) from the objectStore that match the given key. */
-async function remove(appConfig) {
-    const key = getKey(appConfig);
-    const db = await getDbPromise();
-    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
-    await tx.objectStore(OBJECT_STORE_NAME).delete(key);
-    await tx.done;
-}
-/**
- * Atomically updates a record with the result of updateFn, which gets
- * called with the current value. If newValue is undefined, the record is
- * deleted instead.
- * @return Updated value
- */
-async function update(appConfig, updateFn) {
-    const key = getKey(appConfig);
-    const db = await getDbPromise();
-    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
-    const store = tx.objectStore(OBJECT_STORE_NAME);
-    const oldValue = (await store.get(key));
-    const newValue = updateFn(oldValue);
-    if (newValue === undefined) {
-        await store.delete(key);
-    }
-    else {
-        await store.put(newValue, key);
-    }
-    await tx.done;
-    if (newValue && (!oldValue || oldValue.fid !== newValue.fid)) {
-        fidChanged(appConfig, newValue.fid);
-    }
-    return newValue;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Updates and returns the InstallationEntry from the database.
- * Also triggers a registration request if it is necessary and possible.
- */
-async function getInstallationEntry(installations) {
-    let registrationPromise;
-    const installationEntry = await update(installations.appConfig, oldEntry => {
-        const installationEntry = updateOrCreateInstallationEntry(oldEntry);
-        const entryWithPromise = triggerRegistrationIfNecessary(installations, installationEntry);
-        registrationPromise = entryWithPromise.registrationPromise;
-        return entryWithPromise.installationEntry;
-    });
-    if (installationEntry.fid === INVALID_FID) {
-        // FID generation failed. Waiting for the FID from the server.
-        return { installationEntry: await registrationPromise };
-    }
-    return {
-        installationEntry,
-        registrationPromise
-    };
-}
-/**
- * Creates a new Installation Entry if one does not exist.
- * Also clears timed out pending requests.
- */
-function updateOrCreateInstallationEntry(oldEntry) {
-    const entry = oldEntry || {
-        fid: generateFid(),
-        registrationStatus: 0 /* RequestStatus.NOT_STARTED */
-    };
-    return clearTimedOutRequest(entry);
-}
-/**
- * If the Firebase Installation is not registered yet, this will trigger the
- * registration and return an InProgressInstallationEntry.
- *
- * If registrationPromise does not exist, the installationEntry is guaranteed
- * to be registered.
- */
-function triggerRegistrationIfNecessary(installations, installationEntry) {
-    if (installationEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
-        if (!navigator.onLine) {
-            // Registration required but app is offline.
-            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */));
-            return {
-                installationEntry,
-                registrationPromise: registrationPromiseWithError
-            };
-        }
-        // Try registering. Change status to IN_PROGRESS.
-        const inProgressEntry = {
-            fid: installationEntry.fid,
-            registrationStatus: 1 /* RequestStatus.IN_PROGRESS */,
-            registrationTime: Date.now()
-        };
-        const registrationPromise = registerInstallation(installations, inProgressEntry);
-        return { installationEntry: inProgressEntry, registrationPromise };
-    }
-    else if (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
-        return {
-            installationEntry,
-            registrationPromise: waitUntilFidRegistration(installations)
-        };
-    }
-    else {
-        return { installationEntry };
-    }
-}
-/** This will be executed only once for each new Firebase Installation. */
-async function registerInstallation(installations, installationEntry) {
-    try {
-        const registeredInstallationEntry = await createInstallationRequest(installations, installationEntry);
-        return set(installations.appConfig, registeredInstallationEntry);
-    }
-    catch (e) {
-        if (isServerError(e) && e.customData.serverCode === 409) {
-            // Server returned a "FID cannot be used" error.
-            // Generate a new ID next time.
-            await remove(installations.appConfig);
-        }
-        else {
-            // Registration failed. Set FID as not registered.
-            await set(installations.appConfig, {
-                fid: installationEntry.fid,
-                registrationStatus: 0 /* RequestStatus.NOT_STARTED */
-            });
-        }
-        throw e;
-    }
-}
-/** Call if FID registration is pending in another request. */
-async function waitUntilFidRegistration(installations) {
-    // Unfortunately, there is no way of reliably observing when a value in
-    // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
-    // so we need to poll.
-    let entry = await updateInstallationRequest(installations.appConfig);
-    while (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
-        // createInstallation request still in progress.
-        await sleep(100);
-        entry = await updateInstallationRequest(installations.appConfig);
-    }
-    if (entry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
-        // The request timed out or failed in a different call. Try again.
-        const { installationEntry, registrationPromise } = await getInstallationEntry(installations);
-        if (registrationPromise) {
-            return registrationPromise;
-        }
-        else {
-            // if there is no registrationPromise, entry is registered.
-            return installationEntry;
-        }
-    }
-    return entry;
-}
-/**
- * Called only if there is a CreateInstallation request in progress.
- *
- * Updates the InstallationEntry in the DB based on the status of the
- * CreateInstallation request.
- *
- * Returns the updated InstallationEntry.
- */
-function updateInstallationRequest(appConfig) {
-    return update(appConfig, oldEntry => {
-        if (!oldEntry) {
-            throw ERROR_FACTORY.create("installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */);
-        }
-        return clearTimedOutRequest(oldEntry);
-    });
-}
-function clearTimedOutRequest(entry) {
-    if (hasInstallationRequestTimedOut(entry)) {
-        return {
-            fid: entry.fid,
-            registrationStatus: 0 /* RequestStatus.NOT_STARTED */
-        };
-    }
-    return entry;
-}
-function hasInstallationRequestTimedOut(installationEntry) {
-    return (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
-        installationEntry.registrationTime + PENDING_TIMEOUT_MS < Date.now());
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function generateAuthTokenRequest({ appConfig, heartbeatServiceProvider }, installationEntry) {
-    const endpoint = getGenerateAuthTokenEndpoint(appConfig, installationEntry);
-    const headers = getHeadersWithAuth(appConfig, installationEntry);
-    // If heartbeat service exists, add the heartbeat string to the header.
-    const heartbeatService = heartbeatServiceProvider.getImmediate({
-        optional: true
-    });
-    if (heartbeatService) {
-        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
-        if (heartbeatsHeader) {
-            headers.append('x-firebase-client', heartbeatsHeader);
-        }
-    }
-    const body = {
-        installation: {
-            sdkVersion: PACKAGE_VERSION,
-            appId: appConfig.appId
-        }
-    };
-    const request = {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-    };
-    const response = await retryIfServerError(() => fetch(endpoint, request));
-    if (response.ok) {
-        const responseValue = await response.json();
-        const completedAuthToken = extractAuthTokenInfoFromResponse(responseValue);
-        return completedAuthToken;
-    }
-    else {
-        throw await getErrorFromResponse('Generate Auth Token', response);
-    }
-}
-function getGenerateAuthTokenEndpoint(appConfig, { fid }) {
-    return `${getInstallationsEndpoint(appConfig)}/${fid}/authTokens:generate`;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Returns a valid authentication token for the installation. Generates a new
- * token if one doesn't exist, is expired or about to expire.
- *
- * Should only be called if the Firebase Installation is registered.
- */
-async function refreshAuthToken(installations, forceRefresh = false) {
-    let tokenPromise;
-    const entry = await update(installations.appConfig, oldEntry => {
-        if (!isEntryRegistered(oldEntry)) {
-            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
-        }
-        const oldAuthToken = oldEntry.authToken;
-        if (!forceRefresh && isAuthTokenValid(oldAuthToken)) {
-            // There is a valid token in the DB.
-            return oldEntry;
-        }
-        else if (oldAuthToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
-            // There already is a token request in progress.
-            tokenPromise = waitUntilAuthTokenRequest(installations, forceRefresh);
-            return oldEntry;
-        }
-        else {
-            // No token or token expired.
-            if (!navigator.onLine) {
-                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
-            }
-            const inProgressEntry = makeAuthTokenRequestInProgressEntry(oldEntry);
-            tokenPromise = fetchAuthTokenFromServer(installations, inProgressEntry);
-            return inProgressEntry;
-        }
-    });
-    const authToken = tokenPromise
-        ? await tokenPromise
-        : entry.authToken;
-    return authToken;
-}
-/**
- * Call only if FID is registered and Auth Token request is in progress.
- *
- * Waits until the current pending request finishes. If the request times out,
- * tries once in this thread as well.
- */
-async function waitUntilAuthTokenRequest(installations, forceRefresh) {
-    // Unfortunately, there is no way of reliably observing when a value in
-    // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
-    // so we need to poll.
-    let entry = await updateAuthTokenRequest(installations.appConfig);
-    while (entry.authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
-        // generateAuthToken still in progress.
-        await sleep(100);
-        entry = await updateAuthTokenRequest(installations.appConfig);
-    }
-    const authToken = entry.authToken;
-    if (authToken.requestStatus === 0 /* RequestStatus.NOT_STARTED */) {
-        // The request timed out or failed in a different call. Try again.
-        return refreshAuthToken(installations, forceRefresh);
-    }
-    else {
-        return authToken;
-    }
-}
-/**
- * Called only if there is a GenerateAuthToken request in progress.
- *
- * Updates the InstallationEntry in the DB based on the status of the
- * GenerateAuthToken request.
- *
- * Returns the updated InstallationEntry.
- */
-function updateAuthTokenRequest(appConfig) {
-    return update(appConfig, oldEntry => {
-        if (!isEntryRegistered(oldEntry)) {
-            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
-        }
-        const oldAuthToken = oldEntry.authToken;
-        if (hasAuthTokenRequestTimedOut(oldAuthToken)) {
-            return Object.assign(Object.assign({}, oldEntry), { authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ } });
-        }
-        return oldEntry;
-    });
-}
-async function fetchAuthTokenFromServer(installations, installationEntry) {
-    try {
-        const authToken = await generateAuthTokenRequest(installations, installationEntry);
-        const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken });
-        await set(installations.appConfig, updatedInstallationEntry);
-        return authToken;
-    }
-    catch (e) {
-        if (isServerError(e) &&
-            (e.customData.serverCode === 401 || e.customData.serverCode === 404)) {
-            // Server returned a "FID not found" or a "Invalid authentication" error.
-            // Generate a new ID next time.
-            await remove(installations.appConfig);
-        }
-        else {
-            const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ } });
-            await set(installations.appConfig, updatedInstallationEntry);
-        }
-        throw e;
-    }
-}
-function isEntryRegistered(installationEntry) {
-    return (installationEntry !== undefined &&
-        installationEntry.registrationStatus === 2 /* RequestStatus.COMPLETED */);
-}
-function isAuthTokenValid(authToken) {
-    return (authToken.requestStatus === 2 /* RequestStatus.COMPLETED */ &&
-        !isAuthTokenExpired(authToken));
-}
-function isAuthTokenExpired(authToken) {
-    const now = Date.now();
-    return (now < authToken.creationTime ||
-        authToken.creationTime + authToken.expiresIn < now + TOKEN_EXPIRATION_BUFFER);
-}
-/** Returns an updated InstallationEntry with an InProgressAuthToken. */
-function makeAuthTokenRequestInProgressEntry(oldEntry) {
-    const inProgressAuthToken = {
-        requestStatus: 1 /* RequestStatus.IN_PROGRESS */,
-        requestTime: Date.now()
-    };
-    return Object.assign(Object.assign({}, oldEntry), { authToken: inProgressAuthToken });
-}
-function hasAuthTokenRequestTimedOut(authToken) {
-    return (authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
-        authToken.requestTime + PENDING_TIMEOUT_MS < Date.now());
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Creates a Firebase Installation if there isn't one for the app and
- * returns the Installation ID.
- * @param installations - The `Installations` instance.
- *
- * @public
- */
-async function getId(installations) {
-    const installationsImpl = installations;
-    const { installationEntry, registrationPromise } = await getInstallationEntry(installationsImpl);
-    if (registrationPromise) {
-        registrationPromise.catch(console.error);
-    }
-    else {
-        // If the installation is already registered, update the authentication
-        // token if needed.
-        refreshAuthToken(installationsImpl).catch(console.error);
-    }
-    return installationEntry.fid;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Returns a Firebase Installations auth token, identifying the current
- * Firebase Installation.
- * @param installations - The `Installations` instance.
- * @param forceRefresh - Force refresh regardless of token expiration.
- *
- * @public
- */
-async function getToken(installations, forceRefresh = false) {
-    const installationsImpl = installations;
-    await completeInstallationRegistration(installationsImpl);
-    // At this point we either have a Registered Installation in the DB, or we've
-    // already thrown an error.
-    const authToken = await refreshAuthToken(installationsImpl, forceRefresh);
-    return authToken.token;
-}
-async function completeInstallationRegistration(installations) {
-    const { registrationPromise } = await getInstallationEntry(installations);
-    if (registrationPromise) {
-        // A createInstallation request is in progress. Wait until it finishes.
-        await registrationPromise;
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function deleteInstallationRequest(appConfig, installationEntry) {
-    const endpoint = getDeleteEndpoint(appConfig, installationEntry);
-    const headers = getHeadersWithAuth(appConfig, installationEntry);
-    const request = {
-        method: 'DELETE',
-        headers
-    };
-    const response = await retryIfServerError(() => fetch(endpoint, request));
-    if (!response.ok) {
-        throw await getErrorFromResponse('Delete Installation', response);
-    }
-}
-function getDeleteEndpoint(appConfig, { fid }) {
-    return `${getInstallationsEndpoint(appConfig)}/${fid}`;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Deletes the Firebase Installation and all associated data.
- * @param installations - The `Installations` instance.
- *
- * @public
- */
-async function deleteInstallations(installations) {
-    const { appConfig } = installations;
-    const entry = await update(appConfig, oldEntry => {
-        if (oldEntry && oldEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
-            // Delete the unregistered entry without sending a deleteInstallation request.
-            return undefined;
-        }
-        return oldEntry;
-    });
-    if (entry) {
-        if (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
-            // Can't delete while trying to register.
-            throw ERROR_FACTORY.create("delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */);
-        }
-        else if (entry.registrationStatus === 2 /* RequestStatus.COMPLETED */) {
-            if (!navigator.onLine) {
-                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
-            }
-            else {
-                await deleteInstallationRequest(appConfig, entry);
-                await remove(appConfig);
-            }
-        }
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Sets a new callback that will get called when Installation ID changes.
- * Returns an unsubscribe function that will remove the callback when called.
- * @param installations - The `Installations` instance.
- * @param callback - The callback function that is invoked when FID changes.
- * @returns A function that can be called to unsubscribe.
- *
- * @public
- */
-function onIdChange(installations, callback) {
-    const { appConfig } = installations;
-    addCallback(appConfig, callback);
-    return () => {
-        removeCallback(appConfig, callback);
-    };
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Returns an instance of {@link Installations} associated with the given
- * {@link @firebase/app#FirebaseApp} instance.
- * @param app - The {@link @firebase/app#FirebaseApp} instance.
- *
- * @public
- */
-function getInstallations(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp)()) {
-    const installationsImpl = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'installations').getImmediate();
-    return installationsImpl;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function extractAppConfig(app) {
-    if (!app || !app.options) {
-        throw getMissingValueError('App Configuration');
-    }
-    if (!app.name) {
-        throw getMissingValueError('App Name');
-    }
-    // Required app config keys
-    const configKeys = [
-        'projectId',
-        'apiKey',
-        'appId'
-    ];
-    for (const keyName of configKeys) {
-        if (!app.options[keyName]) {
-            throw getMissingValueError(keyName);
-        }
-    }
-    return {
-        appName: app.name,
-        projectId: app.options.projectId,
-        apiKey: app.options.apiKey,
-        appId: app.options.appId
-    };
-}
-function getMissingValueError(valueName) {
-    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
-        valueName
-    });
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const INSTALLATIONS_NAME = 'installations';
-const INSTALLATIONS_NAME_INTERNAL = 'installations-internal';
-const publicFactory = (container) => {
-    const app = container.getProvider('app').getImmediate();
-    // Throws if app isn't configured properly.
-    const appConfig = extractAppConfig(app);
-    const heartbeatServiceProvider = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'heartbeat');
-    const installationsImpl = {
-        app,
-        appConfig,
-        heartbeatServiceProvider,
-        _delete: () => Promise.resolve()
-    };
-    return installationsImpl;
-};
-const internalFactory = (container) => {
-    const app = container.getProvider('app').getImmediate();
-    // Internal FIS instance relies on public FIS instance.
-    const installations = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, INSTALLATIONS_NAME).getImmediate();
-    const installationsInternal = {
-        getId: () => getId(installations),
-        getToken: (forceRefresh) => getToken(installations, forceRefresh)
-    };
-    return installationsInternal;
-};
-function registerInstallations() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* ComponentType.PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
-}
-
-/**
- * The Firebase Installations Web SDK.
- * This SDK does not work in a Node.js environment.
- *
- * @packageDocumentation
- */
-registerInstallations();
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version);
-// BUILD_TARGET will be replaced by values like esm2017, cjs2017, etc during the compilation
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'esm2017');
-
-
-//# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@firebase/logger/dist/esm/index.esm2017.js ***!
-  \*****************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LogLevel: function() { return /* binding */ LogLevel; },
-/* harmony export */   Logger: function() { return /* binding */ Logger; },
-/* harmony export */   setLogLevel: function() { return /* binding */ setLogLevel; },
-/* harmony export */   setUserLogHandler: function() { return /* binding */ setUserLogHandler; }
-/* harmony export */ });
-/**
- * @license
- * Copyright 2017 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * A container for all of the Logger instances
- */
-const instances = [];
-/**
- * The JS SDK supports 5 log levels and also allows a user the ability to
- * silence the logs altogether.
- *
- * The order is a follows:
- * DEBUG < VERBOSE < INFO < WARN < ERROR
- *
- * All of the log types above the current log level will be captured (i.e. if
- * you set the log level to `INFO`, errors will still be logged, but `DEBUG` and
- * `VERBOSE` logs will not)
- */
-var LogLevel;
-(function (LogLevel) {
-    LogLevel[LogLevel["DEBUG"] = 0] = "DEBUG";
-    LogLevel[LogLevel["VERBOSE"] = 1] = "VERBOSE";
-    LogLevel[LogLevel["INFO"] = 2] = "INFO";
-    LogLevel[LogLevel["WARN"] = 3] = "WARN";
-    LogLevel[LogLevel["ERROR"] = 4] = "ERROR";
-    LogLevel[LogLevel["SILENT"] = 5] = "SILENT";
-})(LogLevel || (LogLevel = {}));
-const levelStringToEnum = {
-    'debug': LogLevel.DEBUG,
-    'verbose': LogLevel.VERBOSE,
-    'info': LogLevel.INFO,
-    'warn': LogLevel.WARN,
-    'error': LogLevel.ERROR,
-    'silent': LogLevel.SILENT
-};
-/**
- * The default log level
- */
-const defaultLogLevel = LogLevel.INFO;
-/**
- * By default, `console.debug` is not displayed in the developer console (in
- * chrome). To avoid forcing users to have to opt-in to these logs twice
- * (i.e. once for firebase, and once in the console), we are sending `DEBUG`
- * logs to the `console.log` function.
- */
-const ConsoleMethod = {
-    [LogLevel.DEBUG]: 'log',
-    [LogLevel.VERBOSE]: 'log',
-    [LogLevel.INFO]: 'info',
-    [LogLevel.WARN]: 'warn',
-    [LogLevel.ERROR]: 'error'
-};
-/**
- * The default log handler will forward DEBUG, VERBOSE, INFO, WARN, and ERROR
- * messages on to their corresponding console counterparts (if the log method
- * is supported by the current log level)
- */
-const defaultLogHandler = (instance, logType, ...args) => {
-    if (logType < instance.logLevel) {
-        return;
-    }
-    const now = new Date().toISOString();
-    const method = ConsoleMethod[logType];
-    if (method) {
-        console[method](`[${now}]  ${instance.name}:`, ...args);
-    }
-    else {
-        throw new Error(`Attempted to log a message with an invalid logType (value: ${logType})`);
-    }
-};
-class Logger {
-    /**
-     * Gives you an instance of a Logger to capture messages according to
-     * Firebase's logging scheme.
-     *
-     * @param name The name that the logs will be associated with
-     */
-    constructor(name) {
-        this.name = name;
-        /**
-         * The log level of the given Logger instance.
-         */
-        this._logLevel = defaultLogLevel;
-        /**
-         * The main (internal) log handler for the Logger instance.
-         * Can be set to a new function in internal package code but not by user.
-         */
-        this._logHandler = defaultLogHandler;
-        /**
-         * The optional, additional, user-defined log handler for the Logger instance.
-         */
-        this._userLogHandler = null;
-        /**
-         * Capture the current instance for later use
-         */
-        instances.push(this);
-    }
-    get logLevel() {
-        return this._logLevel;
-    }
-    set logLevel(val) {
-        if (!(val in LogLevel)) {
-            throw new TypeError(`Invalid value "${val}" assigned to \`logLevel\``);
-        }
-        this._logLevel = val;
-    }
-    // Workaround for setter/getter having to be the same type.
-    setLogLevel(val) {
-        this._logLevel = typeof val === 'string' ? levelStringToEnum[val] : val;
-    }
-    get logHandler() {
-        return this._logHandler;
-    }
-    set logHandler(val) {
-        if (typeof val !== 'function') {
-            throw new TypeError('Value assigned to `logHandler` must be a function');
-        }
-        this._logHandler = val;
-    }
-    get userLogHandler() {
-        return this._userLogHandler;
-    }
-    set userLogHandler(val) {
-        this._userLogHandler = val;
-    }
-    /**
-     * The functions below are all based on the `console` interface
-     */
-    debug(...args) {
-        this._userLogHandler && this._userLogHandler(this, LogLevel.DEBUG, ...args);
-        this._logHandler(this, LogLevel.DEBUG, ...args);
-    }
-    log(...args) {
-        this._userLogHandler &&
-            this._userLogHandler(this, LogLevel.VERBOSE, ...args);
-        this._logHandler(this, LogLevel.VERBOSE, ...args);
-    }
-    info(...args) {
-        this._userLogHandler && this._userLogHandler(this, LogLevel.INFO, ...args);
-        this._logHandler(this, LogLevel.INFO, ...args);
-    }
-    warn(...args) {
-        this._userLogHandler && this._userLogHandler(this, LogLevel.WARN, ...args);
-        this._logHandler(this, LogLevel.WARN, ...args);
-    }
-    error(...args) {
-        this._userLogHandler && this._userLogHandler(this, LogLevel.ERROR, ...args);
-        this._logHandler(this, LogLevel.ERROR, ...args);
-    }
-}
-function setLogLevel(level) {
-    instances.forEach(inst => {
-        inst.setLogLevel(level);
-    });
-}
-function setUserLogHandler(logCallback, options) {
-    for (const instance of instances) {
-        let customLogLevel = null;
-        if (options && options.level) {
-            customLogLevel = levelStringToEnum[options.level];
-        }
-        if (logCallback === null) {
-            instance.userLogHandler = null;
-        }
-        else {
-            instance.userLogHandler = (instance, level, ...args) => {
-                const message = args
-                    .map(arg => {
-                    if (arg == null) {
-                        return null;
-                    }
-                    else if (typeof arg === 'string') {
-                        return arg;
-                    }
-                    else if (typeof arg === 'number' || typeof arg === 'boolean') {
-                        return arg.toString();
-                    }
-                    else if (arg instanceof Error) {
-                        return arg.message;
-                    }
-                    else {
-                        try {
-                            return JSON.stringify(arg);
-                        }
-                        catch (ignored) {
-                            return null;
-                        }
-                    }
-                })
-                    .filter(arg => arg)
-                    .join(' ');
-                if (level >= (customLogLevel !== null && customLogLevel !== void 0 ? customLogLevel : instance.logLevel)) {
-                    logCallback({
-                        level: LogLevel[level].toLowerCase(),
-                        message,
-                        args,
-                        type: instance.name
-                    });
-                }
-            };
-        }
-    }
-}
-
-
-//# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@firebase/messaging/dist/esm/index.esm2017.js ***!
-  \********************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteToken: function() { return /* binding */ deleteToken; },
-/* harmony export */   getMessaging: function() { return /* binding */ getMessagingInWindow; },
-/* harmony export */   getToken: function() { return /* binding */ getToken; },
-/* harmony export */   isSupported: function() { return /* binding */ isWindowSupported; },
-/* harmony export */   onMessage: function() { return /* binding */ onMessage; }
-/* harmony export */ });
-/* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
-/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
-
-
-
-
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const DEFAULT_SW_PATH = '/firebase-messaging-sw.js';
-const DEFAULT_SW_SCOPE = '/firebase-cloud-messaging-push-scope';
-const DEFAULT_VAPID_KEY = 'BDOU99-h67HcA6JeFXHbSNMu7e2yNNu3RzoMj8TM4W88jITfq7ZmPvIM1Iv-4_l2LxQcYwhqby2xGpWwzjfAnG4';
-const ENDPOINT = 'https://fcmregistrations.googleapis.com/v1';
-const CONSOLE_CAMPAIGN_ID = 'google.c.a.c_id';
-const CONSOLE_CAMPAIGN_NAME = 'google.c.a.c_l';
-const CONSOLE_CAMPAIGN_TIME = 'google.c.a.ts';
-/** Set to '1' if Analytics is enabled for the campaign */
-const CONSOLE_CAMPAIGN_ANALYTICS_ENABLED = 'google.c.a.e';
-const DEFAULT_REGISTRATION_TIMEOUT = 10000;
-var MessageType$1;
-(function (MessageType) {
-    MessageType[MessageType["DATA_MESSAGE"] = 1] = "DATA_MESSAGE";
-    MessageType[MessageType["DISPLAY_NOTIFICATION"] = 3] = "DISPLAY_NOTIFICATION";
-})(MessageType$1 || (MessageType$1 = {}));
-
-/**
- * @license
- * Copyright 2018 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-var MessageType;
-(function (MessageType) {
-    MessageType["PUSH_RECEIVED"] = "push-received";
-    MessageType["NOTIFICATION_CLICKED"] = "notification-clicked";
-})(MessageType || (MessageType = {}));
-
-/**
- * @license
- * Copyright 2017 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function arrayToBase64(array) {
-    const uint8Array = new Uint8Array(array);
-    const base64String = btoa(String.fromCharCode(...uint8Array));
-    return base64String.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-}
-function base64ToArray(base64String) {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-    const rawData = atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const OLD_DB_NAME = 'fcm_token_details_db';
-/**
- * The last DB version of 'fcm_token_details_db' was 4. This is one higher, so that the upgrade
- * callback is called for all versions of the old DB.
- */
-const OLD_DB_VERSION = 5;
-const OLD_OBJECT_STORE_NAME = 'fcm_token_object_Store';
-async function migrateOldDatabase(senderId) {
-    if ('databases' in indexedDB) {
-        // indexedDb.databases() is an IndexedDB v3 API and does not exist in all browsers. TODO: Remove
-        // typecast when it lands in TS types.
-        const databases = await indexedDB.databases();
-        const dbNames = databases.map(db => db.name);
-        if (!dbNames.includes(OLD_DB_NAME)) {
-            // old DB didn't exist, no need to open.
-            return null;
-        }
-    }
-    let tokenDetails = null;
-    const db = await (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, {
-        upgrade: async (db, oldVersion, newVersion, upgradeTransaction) => {
-            var _a;
-            if (oldVersion < 2) {
-                // Database too old, skip migration.
-                return;
-            }
-            if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
-                // Database did not exist. Nothing to do.
-                return;
-            }
-            const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
-            const value = await objectStore.index('fcmSenderId').get(senderId);
-            await objectStore.clear();
-            if (!value) {
-                // No entry in the database, nothing to migrate.
-                return;
-            }
-            if (oldVersion === 2) {
-                const oldDetails = value;
-                if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
-                    return;
-                }
-                tokenDetails = {
-                    token: oldDetails.fcmToken,
-                    createTime: (_a = oldDetails.createTime) !== null && _a !== void 0 ? _a : Date.now(),
-                    subscriptionOptions: {
-                        auth: oldDetails.auth,
-                        p256dh: oldDetails.p256dh,
-                        endpoint: oldDetails.endpoint,
-                        swScope: oldDetails.swScope,
-                        vapidKey: typeof oldDetails.vapidKey === 'string'
-                            ? oldDetails.vapidKey
-                            : arrayToBase64(oldDetails.vapidKey)
-                    }
-                };
-            }
-            else if (oldVersion === 3) {
-                const oldDetails = value;
-                tokenDetails = {
-                    token: oldDetails.fcmToken,
-                    createTime: oldDetails.createTime,
-                    subscriptionOptions: {
-                        auth: arrayToBase64(oldDetails.auth),
-                        p256dh: arrayToBase64(oldDetails.p256dh),
-                        endpoint: oldDetails.endpoint,
-                        swScope: oldDetails.swScope,
-                        vapidKey: arrayToBase64(oldDetails.vapidKey)
-                    }
-                };
-            }
-            else if (oldVersion === 4) {
-                const oldDetails = value;
-                tokenDetails = {
-                    token: oldDetails.fcmToken,
-                    createTime: oldDetails.createTime,
-                    subscriptionOptions: {
-                        auth: arrayToBase64(oldDetails.auth),
-                        p256dh: arrayToBase64(oldDetails.p256dh),
-                        endpoint: oldDetails.endpoint,
-                        swScope: oldDetails.swScope,
-                        vapidKey: arrayToBase64(oldDetails.vapidKey)
-                    }
-                };
-            }
-        }
-    });
-    db.close();
-    // Delete all old databases.
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
-    return checkTokenDetails(tokenDetails) ? tokenDetails : null;
-}
-function checkTokenDetails(tokenDetails) {
-    if (!tokenDetails || !tokenDetails.subscriptionOptions) {
-        return false;
-    }
-    const { subscriptionOptions } = tokenDetails;
-    return (typeof tokenDetails.createTime === 'number' &&
-        tokenDetails.createTime > 0 &&
-        typeof tokenDetails.token === 'string' &&
-        tokenDetails.token.length > 0 &&
-        typeof subscriptionOptions.auth === 'string' &&
-        subscriptionOptions.auth.length > 0 &&
-        typeof subscriptionOptions.p256dh === 'string' &&
-        subscriptionOptions.p256dh.length > 0 &&
-        typeof subscriptionOptions.endpoint === 'string' &&
-        subscriptionOptions.endpoint.length > 0 &&
-        typeof subscriptionOptions.swScope === 'string' &&
-        subscriptionOptions.swScope.length > 0 &&
-        typeof subscriptionOptions.vapidKey === 'string' &&
-        subscriptionOptions.vapidKey.length > 0);
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-// Exported for tests.
-const DATABASE_NAME = 'firebase-messaging-database';
-const DATABASE_VERSION = 1;
-const OBJECT_STORE_NAME = 'firebase-messaging-store';
-let dbPromise = null;
-function getDbPromise() {
-    if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
-            upgrade: (upgradeDb, oldVersion) => {
-                // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
-                // because if there are multiple versions between the old version and the current version, we
-                // want ALL the migrations that correspond to those versions to run, not only the last one.
-                // eslint-disable-next-line default-case
-                switch (oldVersion) {
-                    case 0:
-                        upgradeDb.createObjectStore(OBJECT_STORE_NAME);
-                }
-            }
-        });
-    }
-    return dbPromise;
-}
-/** Gets record(s) from the objectStore that match the given key. */
-async function dbGet(firebaseDependencies) {
-    const key = getKey(firebaseDependencies);
-    const db = await getDbPromise();
-    const tokenDetails = (await db
-        .transaction(OBJECT_STORE_NAME)
-        .objectStore(OBJECT_STORE_NAME)
-        .get(key));
-    if (tokenDetails) {
-        return tokenDetails;
-    }
-    else {
-        // Check if there is a tokenDetails object in the old DB.
-        const oldTokenDetails = await migrateOldDatabase(firebaseDependencies.appConfig.senderId);
-        if (oldTokenDetails) {
-            await dbSet(firebaseDependencies, oldTokenDetails);
-            return oldTokenDetails;
-        }
-    }
-}
-/** Assigns or overwrites the record for the given key with the given value. */
-async function dbSet(firebaseDependencies, tokenDetails) {
-    const key = getKey(firebaseDependencies);
-    const db = await getDbPromise();
-    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
-    await tx.objectStore(OBJECT_STORE_NAME).put(tokenDetails, key);
-    await tx.done;
-    return tokenDetails;
-}
-/** Removes record(s) from the objectStore that match the given key. */
-async function dbRemove(firebaseDependencies) {
-    const key = getKey(firebaseDependencies);
-    const db = await getDbPromise();
-    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
-    await tx.objectStore(OBJECT_STORE_NAME).delete(key);
-    await tx.done;
-}
-function getKey({ appConfig }) {
-    return appConfig.appId;
-}
-
-/**
- * @license
- * Copyright 2017 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const ERROR_MAP = {
-    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
-    ["only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
-    ["only-available-in-sw" /* ErrorCode.AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
-    ["permission-default" /* ErrorCode.PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
-    ["permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
-    ["unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
-    ["indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
-    ["failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
-    ["token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
-    ["token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
-    ["token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
-        'user from FCM: {$errorInfo}',
-    ["token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
-    ["token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
-    ["use-sw-after-get-token" /* ErrorCode.USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
-        'called before calling getToken() to ensure your service worker is used.',
-    ["invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
-    ["invalid-bg-handler" /* ErrorCode.INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
-    ["invalid-vapid-key" /* ErrorCode.INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
-    ["use-vapid-key-after-get-token" /* ErrorCode.USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
-        'called before calling getToken() to ensure your VAPID key is used.'
-};
-const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function requestGetToken(firebaseDependencies, subscriptionOptions) {
-    const headers = await getHeaders(firebaseDependencies);
-    const body = getBody(subscriptionOptions);
-    const subscribeOptions = {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-    };
-    let responseData;
-    try {
-        const response = await fetch(getEndpoint(firebaseDependencies.appConfig), subscribeOptions);
-        responseData = await response.json();
-    }
-    catch (err) {
-        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
-            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
-        });
-    }
-    if (responseData.error) {
-        const message = responseData.error.message;
-        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
-            errorInfo: message
-        });
-    }
-    if (!responseData.token) {
-        throw ERROR_FACTORY.create("token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */);
-    }
-    return responseData.token;
-}
-async function requestUpdateToken(firebaseDependencies, tokenDetails) {
-    const headers = await getHeaders(firebaseDependencies);
-    const body = getBody(tokenDetails.subscriptionOptions);
-    const updateOptions = {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify(body)
-    };
-    let responseData;
-    try {
-        const response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${tokenDetails.token}`, updateOptions);
-        responseData = await response.json();
-    }
-    catch (err) {
-        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
-            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
-        });
-    }
-    if (responseData.error) {
-        const message = responseData.error.message;
-        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
-            errorInfo: message
-        });
-    }
-    if (!responseData.token) {
-        throw ERROR_FACTORY.create("token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */);
-    }
-    return responseData.token;
-}
-async function requestDeleteToken(firebaseDependencies, token) {
-    const headers = await getHeaders(firebaseDependencies);
-    const unsubscribeOptions = {
-        method: 'DELETE',
-        headers
-    };
-    try {
-        const response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${token}`, unsubscribeOptions);
-        const responseData = await response.json();
-        if (responseData.error) {
-            const message = responseData.error.message;
-            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
-                errorInfo: message
-            });
-        }
-    }
-    catch (err) {
-        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
-            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
-        });
-    }
-}
-function getEndpoint({ projectId }) {
-    return `${ENDPOINT}/projects/${projectId}/registrations`;
-}
-async function getHeaders({ appConfig, installations }) {
-    const authToken = await installations.getToken();
-    return new Headers({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'x-goog-api-key': appConfig.apiKey,
-        'x-goog-firebase-installations-auth': `FIS ${authToken}`
-    });
-}
-function getBody({ p256dh, auth, endpoint, vapidKey }) {
-    const body = {
-        web: {
-            endpoint,
-            auth,
-            p256dh
-        }
-    };
-    if (vapidKey !== DEFAULT_VAPID_KEY) {
-        body.web.applicationPubKey = vapidKey;
-    }
-    return body;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-// UpdateRegistration will be called once every week.
-const TOKEN_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-async function getTokenInternal(messaging) {
-    const pushSubscription = await getPushSubscription(messaging.swRegistration, messaging.vapidKey);
-    const subscriptionOptions = {
-        vapidKey: messaging.vapidKey,
-        swScope: messaging.swRegistration.scope,
-        endpoint: pushSubscription.endpoint,
-        auth: arrayToBase64(pushSubscription.getKey('auth')),
-        p256dh: arrayToBase64(pushSubscription.getKey('p256dh'))
-    };
-    const tokenDetails = await dbGet(messaging.firebaseDependencies);
-    if (!tokenDetails) {
-        // No token, get a new one.
-        return getNewToken(messaging.firebaseDependencies, subscriptionOptions);
-    }
-    else if (!isTokenValid(tokenDetails.subscriptionOptions, subscriptionOptions)) {
-        // Invalid token, get a new one.
-        try {
-            await requestDeleteToken(messaging.firebaseDependencies, tokenDetails.token);
-        }
-        catch (e) {
-            // Suppress errors because of #2364
-            console.warn(e);
-        }
-        return getNewToken(messaging.firebaseDependencies, subscriptionOptions);
-    }
-    else if (Date.now() >= tokenDetails.createTime + TOKEN_EXPIRATION_MS) {
-        // Weekly token refresh
-        return updateToken(messaging, {
-            token: tokenDetails.token,
-            createTime: Date.now(),
-            subscriptionOptions
-        });
-    }
-    else {
-        // Valid token, nothing to do.
-        return tokenDetails.token;
-    }
-}
-/**
- * This method deletes the token from the database, unsubscribes the token from FCM, and unregisters
- * the push subscription if it exists.
- */
-async function deleteTokenInternal(messaging) {
-    const tokenDetails = await dbGet(messaging.firebaseDependencies);
-    if (tokenDetails) {
-        await requestDeleteToken(messaging.firebaseDependencies, tokenDetails.token);
-        await dbRemove(messaging.firebaseDependencies);
-    }
-    // Unsubscribe from the push subscription.
-    const pushSubscription = await messaging.swRegistration.pushManager.getSubscription();
-    if (pushSubscription) {
-        return pushSubscription.unsubscribe();
-    }
-    // If there's no SW, consider it a success.
-    return true;
-}
-async function updateToken(messaging, tokenDetails) {
-    try {
-        const updatedToken = await requestUpdateToken(messaging.firebaseDependencies, tokenDetails);
-        const updatedTokenDetails = Object.assign(Object.assign({}, tokenDetails), { token: updatedToken, createTime: Date.now() });
-        await dbSet(messaging.firebaseDependencies, updatedTokenDetails);
-        return updatedToken;
-    }
-    catch (e) {
-        throw e;
-    }
-}
-async function getNewToken(firebaseDependencies, subscriptionOptions) {
-    const token = await requestGetToken(firebaseDependencies, subscriptionOptions);
-    const tokenDetails = {
-        token,
-        createTime: Date.now(),
-        subscriptionOptions
-    };
-    await dbSet(firebaseDependencies, tokenDetails);
-    return tokenDetails.token;
-}
-/**
- * Gets a PushSubscription for the current user.
- */
-async function getPushSubscription(swRegistration, vapidKey) {
-    const subscription = await swRegistration.pushManager.getSubscription();
-    if (subscription) {
-        return subscription;
-    }
-    return swRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        // Chrome <= 75 doesn't support base64-encoded VAPID key. For backward compatibility, VAPID key
-        // submitted to pushManager#subscribe must be of type Uint8Array.
-        applicationServerKey: base64ToArray(vapidKey)
-    });
-}
-/**
- * Checks if the saved tokenDetails object matches the configuration provided.
- */
-function isTokenValid(dbOptions, currentOptions) {
-    const isVapidKeyEqual = currentOptions.vapidKey === dbOptions.vapidKey;
-    const isEndpointEqual = currentOptions.endpoint === dbOptions.endpoint;
-    const isAuthEqual = currentOptions.auth === dbOptions.auth;
-    const isP256dhEqual = currentOptions.p256dh === dbOptions.p256dh;
-    return isVapidKeyEqual && isEndpointEqual && isAuthEqual && isP256dhEqual;
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function externalizePayload(internalPayload) {
-    const payload = {
-        from: internalPayload.from,
-        // eslint-disable-next-line camelcase
-        collapseKey: internalPayload.collapse_key,
-        // eslint-disable-next-line camelcase
-        messageId: internalPayload.fcmMessageId
-    };
-    propagateNotificationPayload(payload, internalPayload);
-    propagateDataPayload(payload, internalPayload);
-    propagateFcmOptions(payload, internalPayload);
-    return payload;
-}
-function propagateNotificationPayload(payload, messagePayloadInternal) {
-    if (!messagePayloadInternal.notification) {
-        return;
-    }
-    payload.notification = {};
-    const title = messagePayloadInternal.notification.title;
-    if (!!title) {
-        payload.notification.title = title;
-    }
-    const body = messagePayloadInternal.notification.body;
-    if (!!body) {
-        payload.notification.body = body;
-    }
-    const image = messagePayloadInternal.notification.image;
-    if (!!image) {
-        payload.notification.image = image;
-    }
-    const icon = messagePayloadInternal.notification.icon;
-    if (!!icon) {
-        payload.notification.icon = icon;
-    }
-}
-function propagateDataPayload(payload, messagePayloadInternal) {
-    if (!messagePayloadInternal.data) {
-        return;
-    }
-    payload.data = messagePayloadInternal.data;
-}
-function propagateFcmOptions(payload, messagePayloadInternal) {
-    var _a, _b, _c, _d, _e;
-    // fcmOptions.link value is written into notification.click_action. see more in b/232072111
-    if (!messagePayloadInternal.fcmOptions &&
-        !((_a = messagePayloadInternal.notification) === null || _a === void 0 ? void 0 : _a.click_action)) {
-        return;
-    }
-    payload.fcmOptions = {};
-    const link = (_c = (_b = messagePayloadInternal.fcmOptions) === null || _b === void 0 ? void 0 : _b.link) !== null && _c !== void 0 ? _c : (_d = messagePayloadInternal.notification) === null || _d === void 0 ? void 0 : _d.click_action;
-    if (!!link) {
-        payload.fcmOptions.link = link;
-    }
-    // eslint-disable-next-line camelcase
-    const analyticsLabel = (_e = messagePayloadInternal.fcmOptions) === null || _e === void 0 ? void 0 : _e.analytics_label;
-    if (!!analyticsLabel) {
-        payload.fcmOptions.analyticsLabel = analyticsLabel;
-    }
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function isConsoleMessage(data) {
-    // This message has a campaign ID, meaning it was sent using the Firebase Console.
-    return typeof data === 'object' && !!data && CONSOLE_CAMPAIGN_ID in data;
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-_mergeStrings('AzSCbw63g1R0nCw85jG8', 'Iaya3yLKwmgvh7cF0q4');
-function _mergeStrings(s1, s2) {
-    const resultArray = [];
-    for (let i = 0; i < s1.length; i++) {
-        resultArray.push(s1.charAt(i));
-        if (i < s2.length) {
-            resultArray.push(s2.charAt(i));
-        }
-    }
-    return resultArray.join('');
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function extractAppConfig(app) {
-    if (!app || !app.options) {
-        throw getMissingValueError('App Configuration Object');
-    }
-    if (!app.name) {
-        throw getMissingValueError('App Name');
-    }
-    // Required app config keys
-    const configKeys = [
-        'projectId',
-        'apiKey',
-        'appId',
-        'messagingSenderId'
-    ];
-    const { options } = app;
-    for (const keyName of configKeys) {
-        if (!options[keyName]) {
-            throw getMissingValueError(keyName);
-        }
-    }
-    return {
-        appName: app.name,
-        projectId: options.projectId,
-        apiKey: options.apiKey,
-        appId: options.appId,
-        senderId: options.messagingSenderId
-    };
-}
-function getMissingValueError(valueName) {
-    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
-        valueName
-    });
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-class MessagingService {
-    constructor(app, installations, analyticsProvider) {
-        // logging is only done with end user consent. Default to false.
-        this.deliveryMetricsExportedToBigQueryEnabled = false;
-        this.onBackgroundMessageHandler = null;
-        this.onMessageHandler = null;
-        this.logEvents = [];
-        this.isLogServiceStarted = false;
-        const appConfig = extractAppConfig(app);
-        this.firebaseDependencies = {
-            app,
-            appConfig,
-            installations,
-            analyticsProvider
-        };
-    }
-    _delete() {
-        return Promise.resolve();
-    }
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function registerDefaultSw(messaging) {
-    try {
-        messaging.swRegistration = await navigator.serviceWorker.register(DEFAULT_SW_PATH, {
-            scope: DEFAULT_SW_SCOPE
-        });
-        // The timing when browser updates sw when sw has an update is unreliable from experiment. It
-        // leads to version conflict when the SDK upgrades to a newer version in the main page, but sw
-        // is stuck with the old version. For example,
-        // https://github.com/firebase/firebase-js-sdk/issues/2590 The following line reliably updates
-        // sw if there was an update.
-        messaging.swRegistration.update().catch(() => {
-            /* it is non blocking and we don't care if it failed */
-        });
-        await waitForRegistrationActive(messaging.swRegistration);
-    }
-    catch (e) {
-        throw ERROR_FACTORY.create("failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */, {
-            browserErrorMessage: e === null || e === void 0 ? void 0 : e.message
-        });
-    }
-}
-/**
- * Waits for registration to become active. MDN documentation claims that
- * a service worker registration should be ready to use after awaiting
- * navigator.serviceWorker.register() but that doesn't seem to be the case in
- * practice, causing the SDK to throw errors when calling
- * swRegistration.pushManager.subscribe() too soon after register(). The only
- * solution seems to be waiting for the service worker registration `state`
- * to become "active".
- */
-async function waitForRegistrationActive(registration) {
-    return new Promise((resolve, reject) => {
-        const rejectTimeout = setTimeout(() => reject(new Error(`Service worker not registered after ${DEFAULT_REGISTRATION_TIMEOUT} ms`)), DEFAULT_REGISTRATION_TIMEOUT);
-        const incomingSw = registration.installing || registration.waiting;
-        if (registration.active) {
-            clearTimeout(rejectTimeout);
-            resolve();
-        }
-        else if (incomingSw) {
-            incomingSw.onstatechange = ev => {
-                var _a;
-                if (((_a = ev.target) === null || _a === void 0 ? void 0 : _a.state) === 'activated') {
-                    incomingSw.onstatechange = null;
-                    clearTimeout(rejectTimeout);
-                    resolve();
-                }
-            };
-        }
-        else {
-            clearTimeout(rejectTimeout);
-            reject(new Error('No incoming service worker found.'));
-        }
-    });
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function updateSwReg(messaging, swRegistration) {
-    if (!swRegistration && !messaging.swRegistration) {
-        await registerDefaultSw(messaging);
-    }
-    if (!swRegistration && !!messaging.swRegistration) {
-        return;
-    }
-    if (!(swRegistration instanceof ServiceWorkerRegistration)) {
-        throw ERROR_FACTORY.create("invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */);
-    }
-    messaging.swRegistration = swRegistration;
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function updateVapidKey(messaging, vapidKey) {
-    if (!!vapidKey) {
-        messaging.vapidKey = vapidKey;
-    }
-    else if (!messaging.vapidKey) {
-        messaging.vapidKey = DEFAULT_VAPID_KEY;
-    }
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function getToken$1(messaging, options) {
-    if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
-    }
-    if (Notification.permission === 'default') {
-        await Notification.requestPermission();
-    }
-    if (Notification.permission !== 'granted') {
-        throw ERROR_FACTORY.create("permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */);
-    }
-    await updateVapidKey(messaging, options === null || options === void 0 ? void 0 : options.vapidKey);
-    await updateSwReg(messaging, options === null || options === void 0 ? void 0 : options.serviceWorkerRegistration);
-    return getTokenInternal(messaging);
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function logToScion(messaging, messageType, data) {
-    const eventType = getEventType(messageType);
-    const analytics = await messaging.firebaseDependencies.analyticsProvider.get();
-    analytics.logEvent(eventType, {
-        /* eslint-disable camelcase */
-        message_id: data[CONSOLE_CAMPAIGN_ID],
-        message_name: data[CONSOLE_CAMPAIGN_NAME],
-        message_time: data[CONSOLE_CAMPAIGN_TIME],
-        message_device_time: Math.floor(Date.now() / 1000)
-        /* eslint-enable camelcase */
-    });
-}
-function getEventType(messageType) {
-    switch (messageType) {
-        case MessageType.NOTIFICATION_CLICKED:
-            return 'notification_open';
-        case MessageType.PUSH_RECEIVED:
-            return 'notification_foreground';
-        default:
-            throw new Error();
-    }
-}
-
-/**
- * @license
- * Copyright 2017 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function messageEventListener(messaging, event) {
-    const internalPayload = event.data;
-    if (!internalPayload.isFirebaseMessaging) {
-        return;
-    }
-    if (messaging.onMessageHandler &&
-        internalPayload.messageType === MessageType.PUSH_RECEIVED) {
-        if (typeof messaging.onMessageHandler === 'function') {
-            messaging.onMessageHandler(externalizePayload(internalPayload));
-        }
-        else {
-            messaging.onMessageHandler.next(externalizePayload(internalPayload));
-        }
-    }
-    // Log to Scion if applicable
-    const dataPayload = internalPayload.data;
-    if (isConsoleMessage(dataPayload) &&
-        dataPayload[CONSOLE_CAMPAIGN_ANALYTICS_ENABLED] === '1') {
-        await logToScion(messaging, internalPayload.messageType, dataPayload);
-    }
-}
-
-const name = "@firebase/messaging";
-const version = "0.12.22";
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const WindowMessagingFactory = (container) => {
-    const messaging = new MessagingService(container.getProvider('app').getImmediate(), container.getProvider('installations-internal').getImmediate(), container.getProvider('analytics-internal'));
-    navigator.serviceWorker.addEventListener('message', e => messageEventListener(messaging, e));
-    return messaging;
-};
-const WindowMessagingInternalFactory = (container) => {
-    const messaging = container
-        .getProvider('messaging')
-        .getImmediate();
-    const messagingInternal = {
-        getToken: (options) => getToken$1(messaging, options)
-    };
-    return messagingInternal;
-};
-function registerMessagingInWindow() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* ComponentType.PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
-    // BUILD_TARGET will be replaced by values like esm2017, cjs2017, etc during the compilation
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Checks if all required APIs exist in the browser.
- * @returns a Promise that resolves to a boolean.
- *
- * @public
- */
-async function isWindowSupported() {
-    try {
-        // This throws if open() is unsupported, so adding it to the conditional
-        // statement below can cause an uncaught error.
-        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.validateIndexedDBOpenable)();
-    }
-    catch (e) {
-        return false;
-    }
-    // firebase-js-sdk/issues/2393 reveals that idb#open in Safari iframe and Firefox private browsing
-    // might be prohibited to run. In these contexts, an error would be thrown during the messaging
-    // instantiating phase, informing the developers to import/call isSupported for special handling.
-    return (typeof window !== 'undefined' &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.isIndexedDBAvailable)() &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.areCookiesEnabled)() &&
-        'serviceWorker' in navigator &&
-        'PushManager' in window &&
-        'Notification' in window &&
-        'fetch' in window &&
-        ServiceWorkerRegistration.prototype.hasOwnProperty('showNotification') &&
-        PushSubscription.prototype.hasOwnProperty('getKey'));
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-async function deleteToken$1(messaging) {
-    if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
-    }
-    if (!messaging.swRegistration) {
-        await registerDefaultSw(messaging);
-    }
-    return deleteTokenInternal(messaging);
-}
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function onMessage$1(messaging, nextOrObserver) {
-    if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
-    }
-    messaging.onMessageHandler = nextOrObserver;
-    return () => {
-        messaging.onMessageHandler = null;
-    };
-}
-
-/**
- * @license
- * Copyright 2017 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Retrieves a Firebase Cloud Messaging instance.
- *
- * @returns The Firebase Cloud Messaging instance associated with the provided firebase app.
- *
- * @public
- */
-function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.getApp)()) {
-    // Conscious decision to make this async check non-blocking during the messaging instance
-    // initialization phase for performance consideration. An error would be thrown latter for
-    // developer's information. Developers can then choose to import and call `isSupported` for
-    // special handling.
-    isWindowSupported().then(isSupported => {
-        // If `isWindowSupported()` resolved, but returned false.
-        if (!isSupported) {
-            throw ERROR_FACTORY.create("unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */);
-        }
-    }, _ => {
-        // If `isWindowSupported()` rejected.
-        throw ERROR_FACTORY.create("indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */);
-    });
-    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
-}
-/**
- * Subscribes the {@link Messaging} instance to push notifications. Returns a Firebase Cloud
- * Messaging registration token that can be used to send push messages to that {@link Messaging}
- * instance.
- *
- * If notification permission isn't already granted, this method asks the user for permission. The
- * returned promise rejects if the user does not allow the app to show notifications.
- *
- * @param messaging - The {@link Messaging} instance.
- * @param options - Provides an optional vapid key and an optional service worker registration.
- *
- * @returns The promise resolves with an FCM registration token.
- *
- * @public
- */
-async function getToken(messaging, options) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
-    return getToken$1(messaging, options);
-}
-/**
- * Deletes the registration token associated with this {@link Messaging} instance and unsubscribes
- * the {@link Messaging} instance from the push subscription.
- *
- * @param messaging - The {@link Messaging} instance.
- *
- * @returns The promise resolves when the token has been successfully deleted.
- *
- * @public
- */
-function deleteToken(messaging) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
-    return deleteToken$1(messaging);
-}
-/**
- * When a push message is received and the user is currently on a page for your origin, the
- * message is passed to the page and an `onMessage()` event is dispatched with the payload of
- * the push message.
- *
- *
- * @param messaging - The {@link Messaging} instance.
- * @param nextOrObserver - This function, or observer object with `next` defined,
- *     is called when a message is received and the user is currently viewing your page.
- * @returns To stop listening for messages execute this returned function.
- *
- * @public
- */
-function onMessage(messaging, nextOrObserver) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
-    return onMessage$1(messaging, nextOrObserver);
-}
-
-/**
- * The Firebase Cloud Messaging Web SDK.
- * This SDK does not work in a Node.js environment.
- *
- * @packageDocumentation
- */
-registerMessagingInWindow();
-
-
-//# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/util/dist/index.esm2017.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@firebase/util/dist/index.esm2017.js ***!
-  \***********************************************************/
+/***/ "./node_modules/@firebase/util/dist/index.esm.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@firebase/util/dist/index.esm.js ***!
+  \*******************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -4418,6 +36,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   deepExtend: function() { return /* binding */ deepExtend; },
 /* harmony export */   errorPrefix: function() { return /* binding */ errorPrefix; },
 /* harmony export */   extractQuerystring: function() { return /* binding */ extractQuerystring; },
+/* harmony export */   generateSHA256Hash: function() { return /* binding */ generateSHA256Hash; },
 /* harmony export */   getDefaultAppConfig: function() { return /* binding */ getDefaultAppConfig; },
 /* harmony export */   getDefaultEmulatorHost: function() { return /* binding */ getDefaultEmulatorHost; },
 /* harmony export */   getDefaultEmulatorHostnameAndPort: function() { return /* binding */ getDefaultEmulatorHostnameAndPort; },
@@ -4457,7 +76,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   stringLength: function() { return /* binding */ stringLength; },
 /* harmony export */   stringToByteArray: function() { return /* binding */ stringToByteArray; },
 /* harmony export */   stringify: function() { return /* binding */ stringify; },
-/* harmony export */   updateEmulatorBanner: function() { return /* binding */ updateEmulatorBanner; },
 /* harmony export */   validateArgCount: function() { return /* binding */ validateArgCount; },
 /* harmony export */   validateCallback: function() { return /* binding */ validateCallback; },
 /* harmony export */   validateContextObject: function() { return /* binding */ validateContextObject; },
@@ -5041,7 +659,7 @@ const getDefaults = () => {
  * @returns a URL host formatted like `127.0.0.1:9999` or `[::1]:4000` if available
  * @public
  */
-const getDefaultEmulatorHost = (productName) => { var _a, _b; return (_b = (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a.emulatorHosts) === null || _b === void 0 ? void 0 : _b[productName]; };
+const getDefaultEmulatorHost = (productName) => getDefaults()?.emulatorHosts?.[productName];
 /**
  * Returns emulator hostname and port stored in the __FIREBASE_DEFAULTS__ object
  * for the given product.
@@ -5071,13 +689,13 @@ const getDefaultEmulatorHostnameAndPort = (productName) => {
  * Returns Firebase app config stored in the __FIREBASE_DEFAULTS__ object.
  * @public
  */
-const getDefaultAppConfig = () => { var _a; return (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a.config; };
+const getDefaultAppConfig = () => getDefaults()?.config;
 /**
  * Returns an experimental setting on the __FIREBASE_DEFAULTS__ object (properties
  * prefixed by "_")
  * @public
  */
-const getExperimentalSetting = (name) => { var _a; return (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a[`_${name}`]; };
+const getExperimentalSetting = (name) => getDefaults()?.[`_${name}`];
 
 /**
  * @license
@@ -5136,53 +754,6 @@ class Deferred {
 
 /**
  * @license
- * Copyright 2025 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Checks whether host is a cloud workstation or not.
- * @public
- */
-function isCloudWorkstation(url) {
-    // `isCloudWorkstation` is called without protocol in certain connect*Emulator functions
-    // In HTTP request builders, it's called with the protocol.
-    // If called with protocol prefix, it's a valid URL, so we extract the hostname
-    // If called without, we assume the string is the hostname.
-    try {
-        const host = url.startsWith('http://') || url.startsWith('https://')
-            ? new URL(url).hostname
-            : url;
-        return host.endsWith('.cloudworkstations.dev');
-    }
-    catch (_a) {
-        return false;
-    }
-}
-/**
- * Makes a fetch request to the given server.
- * Mostly used for forwarding cookies in Firebase Studio.
- * @public
- */
-async function pingServer(endpoint) {
-    const result = await fetch(endpoint, {
-        credentials: 'include'
-    });
-    return result.ok;
-}
-
-/**
- * @license
  * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -5212,12 +783,22 @@ function createMockUserToken(token, projectId) {
     if (!sub) {
         throw new Error("mockUserToken must contain 'sub' or 'user_id' field!");
     }
-    const payload = Object.assign({ 
+    const payload = {
         // Set all required fields to decent defaults
-        iss: `https://securetoken.google.com/${project}`, aud: project, iat, exp: iat + 3600, auth_time: iat, sub, user_id: sub, firebase: {
+        iss: `https://securetoken.google.com/${project}`,
+        aud: project,
+        iat,
+        exp: iat + 3600,
+        auth_time: iat,
+        sub,
+        user_id: sub,
+        firebase: {
             sign_in_provider: 'custom',
             identities: {}
-        } }, token);
+        },
+        // Override with user options
+        ...token
+    };
     // Unsecured JWTs use the empty string as a signature.
     const signature = '';
     return [
@@ -5225,152 +806,6 @@ function createMockUserToken(token, projectId) {
         base64urlEncodeWithoutPadding(JSON.stringify(payload)),
         signature
     ].join('.');
-}
-const emulatorStatus = {};
-// Checks whether any products are running on an emulator
-function getEmulatorSummary() {
-    const summary = {
-        prod: [],
-        emulator: []
-    };
-    for (const key of Object.keys(emulatorStatus)) {
-        if (emulatorStatus[key]) {
-            summary.emulator.push(key);
-        }
-        else {
-            summary.prod.push(key);
-        }
-    }
-    return summary;
-}
-function getOrCreateEl(id) {
-    let parentDiv = document.getElementById(id);
-    let created = false;
-    if (!parentDiv) {
-        parentDiv = document.createElement('div');
-        parentDiv.setAttribute('id', id);
-        created = true;
-    }
-    return { created, element: parentDiv };
-}
-let previouslyDismissed = false;
-/**
- * Updates Emulator Banner. Primarily used for Firebase Studio
- * @param name
- * @param isRunningEmulator
- * @public
- */
-function updateEmulatorBanner(name, isRunningEmulator) {
-    if (typeof window === 'undefined' ||
-        typeof document === 'undefined' ||
-        !isCloudWorkstation(window.location.host) ||
-        emulatorStatus[name] === isRunningEmulator ||
-        emulatorStatus[name] || // If already set to use emulator, can't go back to prod.
-        previouslyDismissed) {
-        return;
-    }
-    emulatorStatus[name] = isRunningEmulator;
-    function prefixedId(id) {
-        return `__firebase__banner__${id}`;
-    }
-    const bannerId = '__firebase__banner';
-    const summary = getEmulatorSummary();
-    const showError = summary.prod.length > 0;
-    function tearDown() {
-        const element = document.getElementById(bannerId);
-        if (element) {
-            element.remove();
-        }
-    }
-    function setupBannerStyles(bannerEl) {
-        bannerEl.style.display = 'flex';
-        bannerEl.style.background = '#7faaf0';
-        bannerEl.style.position = 'fixed';
-        bannerEl.style.bottom = '5px';
-        bannerEl.style.left = '5px';
-        bannerEl.style.padding = '.5em';
-        bannerEl.style.borderRadius = '5px';
-        bannerEl.style.alignItems = 'center';
-    }
-    function setupIconStyles(prependIcon, iconId) {
-        prependIcon.setAttribute('width', '24');
-        prependIcon.setAttribute('id', iconId);
-        prependIcon.setAttribute('height', '24');
-        prependIcon.setAttribute('viewBox', '0 0 24 24');
-        prependIcon.setAttribute('fill', 'none');
-        prependIcon.style.marginLeft = '-6px';
-    }
-    function setupCloseBtn() {
-        const closeBtn = document.createElement('span');
-        closeBtn.style.cursor = 'pointer';
-        closeBtn.style.marginLeft = '16px';
-        closeBtn.style.fontSize = '24px';
-        closeBtn.innerHTML = ' &times;';
-        closeBtn.onclick = () => {
-            previouslyDismissed = true;
-            tearDown();
-        };
-        return closeBtn;
-    }
-    function setupLinkStyles(learnMoreLink, learnMoreId) {
-        learnMoreLink.setAttribute('id', learnMoreId);
-        learnMoreLink.innerText = 'Learn more';
-        learnMoreLink.href =
-            'https://firebase.google.com/docs/studio/preview-apps#preview-backend';
-        learnMoreLink.setAttribute('target', '__blank');
-        learnMoreLink.style.paddingLeft = '5px';
-        learnMoreLink.style.textDecoration = 'underline';
-    }
-    function setupDom() {
-        const banner = getOrCreateEl(bannerId);
-        const firebaseTextId = prefixedId('text');
-        const firebaseText = document.getElementById(firebaseTextId) || document.createElement('span');
-        const learnMoreId = prefixedId('learnmore');
-        const learnMoreLink = document.getElementById(learnMoreId) ||
-            document.createElement('a');
-        const prependIconId = prefixedId('preprendIcon');
-        const prependIcon = document.getElementById(prependIconId) ||
-            document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        if (banner.created) {
-            // update styles
-            const bannerEl = banner.element;
-            setupBannerStyles(bannerEl);
-            setupLinkStyles(learnMoreLink, learnMoreId);
-            const closeBtn = setupCloseBtn();
-            setupIconStyles(prependIcon, prependIconId);
-            bannerEl.append(prependIcon, firebaseText, learnMoreLink, closeBtn);
-            document.body.appendChild(bannerEl);
-        }
-        if (showError) {
-            firebaseText.innerText = `Preview backend disconnected.`;
-            prependIcon.innerHTML = `<g clip-path="url(#clip0_6013_33858)">
-<path d="M4.8 17.6L12 5.6L19.2 17.6H4.8ZM6.91667 16.4H17.0833L12 7.93333L6.91667 16.4ZM12 15.6C12.1667 15.6 12.3056 15.5444 12.4167 15.4333C12.5389 15.3111 12.6 15.1667 12.6 15C12.6 14.8333 12.5389 14.6944 12.4167 14.5833C12.3056 14.4611 12.1667 14.4 12 14.4C11.8333 14.4 11.6889 14.4611 11.5667 14.5833C11.4556 14.6944 11.4 14.8333 11.4 15C11.4 15.1667 11.4556 15.3111 11.5667 15.4333C11.6889 15.5444 11.8333 15.6 12 15.6ZM11.4 13.6H12.6V10.4H11.4V13.6Z" fill="#212121"/>
-</g>
-<defs>
-<clipPath id="clip0_6013_33858">
-<rect width="24" height="24" fill="white"/>
-</clipPath>
-</defs>`;
-        }
-        else {
-            prependIcon.innerHTML = `<g clip-path="url(#clip0_6083_34804)">
-<path d="M11.4 15.2H12.6V11.2H11.4V15.2ZM12 10C12.1667 10 12.3056 9.94444 12.4167 9.83333C12.5389 9.71111 12.6 9.56667 12.6 9.4C12.6 9.23333 12.5389 9.09444 12.4167 8.98333C12.3056 8.86111 12.1667 8.8 12 8.8C11.8333 8.8 11.6889 8.86111 11.5667 8.98333C11.4556 9.09444 11.4 9.23333 11.4 9.4C11.4 9.56667 11.4556 9.71111 11.5667 9.83333C11.6889 9.94444 11.8333 10 12 10ZM12 18.4C11.1222 18.4 10.2944 18.2333 9.51667 17.9C8.73889 17.5667 8.05556 17.1111 7.46667 16.5333C6.88889 15.9444 6.43333 15.2611 6.1 14.4833C5.76667 13.7056 5.6 12.8778 5.6 12C5.6 11.1111 5.76667 10.2833 6.1 9.51667C6.43333 8.73889 6.88889 8.06111 7.46667 7.48333C8.05556 6.89444 8.73889 6.43333 9.51667 6.1C10.2944 5.76667 11.1222 5.6 12 5.6C12.8889 5.6 13.7167 5.76667 14.4833 6.1C15.2611 6.43333 15.9389 6.89444 16.5167 7.48333C17.1056 8.06111 17.5667 8.73889 17.9 9.51667C18.2333 10.2833 18.4 11.1111 18.4 12C18.4 12.8778 18.2333 13.7056 17.9 14.4833C17.5667 15.2611 17.1056 15.9444 16.5167 16.5333C15.9389 17.1111 15.2611 17.5667 14.4833 17.9C13.7167 18.2333 12.8889 18.4 12 18.4ZM12 17.2C13.4444 17.2 14.6722 16.6944 15.6833 15.6833C16.6944 14.6722 17.2 13.4444 17.2 12C17.2 10.5556 16.6944 9.32778 15.6833 8.31667C14.6722 7.30555 13.4444 6.8 12 6.8C10.5556 6.8 9.32778 7.30555 8.31667 8.31667C7.30556 9.32778 6.8 10.5556 6.8 12C6.8 13.4444 7.30556 14.6722 8.31667 15.6833C9.32778 16.6944 10.5556 17.2 12 17.2Z" fill="#212121"/>
-</g>
-<defs>
-<clipPath id="clip0_6083_34804">
-<rect width="24" height="24" fill="white"/>
-</clipPath>
-</defs>`;
-            firebaseText.innerText = 'Preview backend running in this workspace.';
-        }
-        firebaseText.setAttribute('id', firebaseTextId);
-    }
-    if (document.readyState === 'loading') {
-        window.addEventListener('DOMContentLoaded', setupDom);
-    }
-    else {
-        setupDom();
-    }
 }
 
 /**
@@ -5423,8 +858,7 @@ function isMobileCordova() {
  */
 // Node detection logic from: https://github.com/iliakan/detect-node/
 function isNode() {
-    var _a;
-    const forceEnvironment = (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a.forceEnvironment;
+    const forceEnvironment = getDefaults()?.forceEnvironment;
     if (forceEnvironment === 'node') {
         return true;
     }
@@ -5551,8 +985,7 @@ function validateIndexedDBOpenable() {
                 preExist = false;
             };
             request.onerror = () => {
-                var _a;
-                reject(((_a = request.error) === null || _a === void 0 ? void 0 : _a.message) || '');
+                reject(request.error?.message || '');
             };
         }
         catch (error) {
@@ -6773,68 +2206,9 @@ function getModularInstance(service) {
     }
 }
 
-
-//# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@firebase/util/dist/postinstall.mjs":
-/*!**********************************************************!*\
-  !*** ./node_modules/@firebase/util/dist/postinstall.mjs ***!
-  \**********************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getDefaultsFromPostinstall: function() { return /* binding */ getDefaultsFromPostinstall; }
-/* harmony export */ });
-const getDefaultsFromPostinstall = () => (undefined);
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
-  \*********************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FirebaseError: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError; },
-/* harmony export */   SDK_VERSION: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION; },
-/* harmony export */   _DEFAULT_ENTRY_NAME: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME; },
-/* harmony export */   _addComponent: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent; },
-/* harmony export */   _addOrOverwriteComponent: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent; },
-/* harmony export */   _apps: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps; },
-/* harmony export */   _clearComponents: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents; },
-/* harmony export */   _components: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components; },
-/* harmony export */   _getProvider: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider; },
-/* harmony export */   _isFirebaseApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseApp; },
-/* harmony export */   _isFirebaseServerApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseServerApp; },
-/* harmony export */   _registerComponent: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent; },
-/* harmony export */   _removeServiceInstance: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance; },
-/* harmony export */   _serverApps: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._serverApps; },
-/* harmony export */   deleteApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp; },
-/* harmony export */   getApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp; },
-/* harmony export */   getApps: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps; },
-/* harmony export */   initializeApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp; },
-/* harmony export */   initializeServerApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeServerApp; },
-/* harmony export */   onLog: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog; },
-/* harmony export */   registerVersion: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion; },
-/* harmony export */   setLogLevel: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel; }
-/* harmony export */ });
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
-
-
-var name = "firebase";
-var version = "11.10.0";
-
 /**
  * @license
- * Copyright 2020 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -6848,378 +2222,72 @@ var version = "11.10.0";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
-  \***************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteToken: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken; },
-/* harmony export */   getMessaging: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging; },
-/* harmony export */   getToken: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken; },
-/* harmony export */   isSupported: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported; },
-/* harmony export */   onMessage: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage; }
-/* harmony export */ });
-/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
-
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/idb/build/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/idb/build/index.js ***!
-  \*****************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteDB: function() { return /* binding */ deleteDB; },
-/* harmony export */   openDB: function() { return /* binding */ openDB; },
-/* harmony export */   unwrap: function() { return /* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u; },
-/* harmony export */   wrap: function() { return /* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w; }
-/* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
-
-
-
 /**
- * Open a database.
- *
- * @param name Name of the database.
- * @param version Schema version.
- * @param callbacks Additional callbacks.
+ * Checks whether host is a cloud workstation or not.
+ * @public
  */
-function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
-    const request = indexedDB.open(name, version);
-    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
-    if (upgrade) {
-        request.addEventListener('upgradeneeded', (event) => {
-            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction), event);
-        });
+function isCloudWorkstation(url) {
+    // `isCloudWorkstation` is called without protocol in certain connect*Emulator functions
+    // In HTTP request builders, it's called with the protocol.
+    // If called with protocol prefix, it's a valid URL, so we extract the hostname
+    // If called without, we assume the string is the hostname.
+    try {
+        const host = url.startsWith('http://') || url.startsWith('https://')
+            ? new URL(url).hostname
+            : url;
+        return host.endsWith('.cloudworkstations.dev');
     }
-    if (blocked) {
-        request.addEventListener('blocked', (event) => blocked(
-        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
-        event.oldVersion, event.newVersion, event));
+    catch {
+        return false;
     }
-    openPromise
-        .then((db) => {
-        if (terminated)
-            db.addEventListener('close', () => terminated());
-        if (blocking) {
-            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
-        }
-    })
-        .catch(() => { });
-    return openPromise;
 }
 /**
- * Delete a database.
- *
- * @param name Name of the database.
+ * Makes a fetch request to the given server.
+ * Mostly used for forwarding cookies in Firebase Studio.
+ * @public
  */
-function deleteDB(name, { blocked } = {}) {
-    const request = indexedDB.deleteDatabase(name);
-    if (blocked) {
-        request.addEventListener('blocked', (event) => blocked(
-        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
-        event.oldVersion, event));
-    }
-    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
-}
-
-const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
-const writeMethods = ['put', 'add', 'delete', 'clear'];
-const cachedMethods = new Map();
-function getMethod(target, prop) {
-    if (!(target instanceof IDBDatabase &&
-        !(prop in target) &&
-        typeof prop === 'string')) {
-        return;
-    }
-    if (cachedMethods.get(prop))
-        return cachedMethods.get(prop);
-    const targetFuncName = prop.replace(/FromIndex$/, '');
-    const useIndex = prop !== targetFuncName;
-    const isWrite = writeMethods.includes(targetFuncName);
-    if (
-    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
-    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
-        !(isWrite || readMethods.includes(targetFuncName))) {
-        return;
-    }
-    const method = async function (storeName, ...args) {
-        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
-        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
-        let target = tx.store;
-        if (useIndex)
-            target = target.index(args.shift());
-        // Must reject if op rejects.
-        // If it's a write operation, must reject if tx.done rejects.
-        // Must reject with op rejection first.
-        // Must resolve with op value.
-        // Must handle both promises (no unhandled rejections)
-        return (await Promise.all([
-            target[targetFuncName](...args),
-            isWrite && tx.done,
-        ]))[0];
-    };
-    cachedMethods.set(prop, method);
-    return method;
-}
-(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
-    ...oldTraps,
-    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
-    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
-}));
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/idb/build/wrap-idb-value.js":
-/*!**************************************************!*\
-  !*** ./node_modules/idb/build/wrap-idb-value.js ***!
-  \**************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   a: function() { return /* binding */ reverseTransformCache; },
-/* harmony export */   i: function() { return /* binding */ instanceOfAny; },
-/* harmony export */   r: function() { return /* binding */ replaceTraps; },
-/* harmony export */   u: function() { return /* binding */ unwrap; },
-/* harmony export */   w: function() { return /* binding */ wrap; }
-/* harmony export */ });
-const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
-
-let idbProxyableTypes;
-let cursorAdvanceMethods;
-// This is a function to prevent it throwing up in node environments.
-function getIdbProxyableTypes() {
-    return (idbProxyableTypes ||
-        (idbProxyableTypes = [
-            IDBDatabase,
-            IDBObjectStore,
-            IDBIndex,
-            IDBCursor,
-            IDBTransaction,
-        ]));
-}
-// This is a function to prevent it throwing up in node environments.
-function getCursorAdvanceMethods() {
-    return (cursorAdvanceMethods ||
-        (cursorAdvanceMethods = [
-            IDBCursor.prototype.advance,
-            IDBCursor.prototype.continue,
-            IDBCursor.prototype.continuePrimaryKey,
-        ]));
-}
-const cursorRequestMap = new WeakMap();
-const transactionDoneMap = new WeakMap();
-const transactionStoreNamesMap = new WeakMap();
-const transformCache = new WeakMap();
-const reverseTransformCache = new WeakMap();
-function promisifyRequest(request) {
-    const promise = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            request.removeEventListener('success', success);
-            request.removeEventListener('error', error);
-        };
-        const success = () => {
-            resolve(wrap(request.result));
-            unlisten();
-        };
-        const error = () => {
-            reject(request.error);
-            unlisten();
-        };
-        request.addEventListener('success', success);
-        request.addEventListener('error', error);
+async function pingServer(endpoint) {
+    const result = await fetch(endpoint, {
+        credentials: 'include'
     });
-    promise
-        .then((value) => {
-        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
-        // (see wrapFunction).
-        if (value instanceof IDBCursor) {
-            cursorRequestMap.set(value, request);
-        }
-        // Catching to avoid "Uncaught Promise exceptions"
-    })
-        .catch(() => { });
-    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
-    // is because we create many promises from a single IDBRequest.
-    reverseTransformCache.set(promise, request);
-    return promise;
+    return result.ok;
 }
-function cacheDonePromiseForTransaction(tx) {
-    // Early bail if we've already created a done promise for this transaction.
-    if (transactionDoneMap.has(tx))
-        return;
-    const done = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            tx.removeEventListener('complete', complete);
-            tx.removeEventListener('error', error);
-            tx.removeEventListener('abort', error);
-        };
-        const complete = () => {
-            resolve();
-            unlisten();
-        };
-        const error = () => {
-            reject(tx.error || new DOMException('AbortError', 'AbortError'));
-            unlisten();
-        };
-        tx.addEventListener('complete', complete);
-        tx.addEventListener('error', error);
-        tx.addEventListener('abort', error);
-    });
-    // Cache it for later retrieval.
-    transactionDoneMap.set(tx, done);
+
+/**
+ * @license
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @public
+ * Generates a SHA-256 hash for the given input string.
+ *
+ * @param input The string to hash.
+ * @returns A promise that resolves to the SHA-256 hash as a hex string.
+ */
+async function generateSHA256Hash(input) {
+    const textEncoder = new TextEncoder();
+    const data = textEncoder.encode(input);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    // Convert ArrayBuffer to hex string
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hexHash;
 }
-let idbProxyTraps = {
-    get(target, prop, receiver) {
-        if (target instanceof IDBTransaction) {
-            // Special handling for transaction.done.
-            if (prop === 'done')
-                return transactionDoneMap.get(target);
-            // Polyfill for objectStoreNames because of Edge.
-            if (prop === 'objectStoreNames') {
-                return target.objectStoreNames || transactionStoreNamesMap.get(target);
-            }
-            // Make tx.store return the only store in the transaction, or undefined if there are many.
-            if (prop === 'store') {
-                return receiver.objectStoreNames[1]
-                    ? undefined
-                    : receiver.objectStore(receiver.objectStoreNames[0]);
-            }
-        }
-        // Else transform whatever we get back.
-        return wrap(target[prop]);
-    },
-    set(target, prop, value) {
-        target[prop] = value;
-        return true;
-    },
-    has(target, prop) {
-        if (target instanceof IDBTransaction &&
-            (prop === 'done' || prop === 'store')) {
-            return true;
-        }
-        return prop in target;
-    },
-};
-function replaceTraps(callback) {
-    idbProxyTraps = callback(idbProxyTraps);
-}
-function wrapFunction(func) {
-    // Due to expected object equality (which is enforced by the caching in `wrap`), we
-    // only create one new func per func.
-    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
-    if (func === IDBDatabase.prototype.transaction &&
-        !('objectStoreNames' in IDBTransaction.prototype)) {
-        return function (storeNames, ...args) {
-            const tx = func.call(unwrap(this), storeNames, ...args);
-            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
-            return wrap(tx);
-        };
-    }
-    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
-    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
-    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
-    // with real promises, so each advance methods returns a new promise for the cursor object, or
-    // undefined if the end of the cursor has been reached.
-    if (getCursorAdvanceMethods().includes(func)) {
-        return function (...args) {
-            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-            // the original object.
-            func.apply(unwrap(this), args);
-            return wrap(cursorRequestMap.get(this));
-        };
-    }
-    return function (...args) {
-        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-        // the original object.
-        return wrap(func.apply(unwrap(this), args));
-    };
-}
-function transformCachableValue(value) {
-    if (typeof value === 'function')
-        return wrapFunction(value);
-    // This doesn't return, it just creates a 'done' promise for the transaction,
-    // which is later returned for transaction.done (see idbObjectHandler).
-    if (value instanceof IDBTransaction)
-        cacheDonePromiseForTransaction(value);
-    if (instanceOfAny(value, getIdbProxyableTypes()))
-        return new Proxy(value, idbProxyTraps);
-    // Return the same value back if we're not going to transform it.
-    return value;
-}
-function wrap(value) {
-    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
-    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
-    if (value instanceof IDBRequest)
-        return promisifyRequest(value);
-    // If we've already transformed this value before, reuse the transformed value.
-    // This is faster, but it also provides object equality.
-    if (transformCache.has(value))
-        return transformCache.get(value);
-    const newValue = transformCachableValue(value);
-    // Not all types are transformed.
-    // These may be primitive types, so they can't be WeakMap keys.
-    if (newValue !== value) {
-        transformCache.set(value, newValue);
-        reverseTransformCache.set(newValue, value);
-    }
-    return newValue;
-}
-const unwrap = (value) => reverseTransformCache.get(value);
 
 
-
-
-/***/ }),
-
-/***/ "./node_modules/react-dom/client.js":
-/*!******************************************!*\
-  !*** ./node_modules/react-dom/client.js ***!
-  \******************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-
-var m = __webpack_require__(/*! react-dom */ "react-dom");
-if (false) // removed by dead control flow
-{} else {
-  var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-  exports.createRoot = function(c, o) {
-    i.usingClientEntryPoint = true;
-    try {
-      return m.createRoot(c, o);
-    } finally {
-      i.usingClientEntryPoint = false;
-    }
-  };
-  exports.hydrateRoot = function(c, h, o) {
-    i.usingClientEntryPoint = true;
-    try {
-      return m.hydrateRoot(c, h, o);
-    } finally {
-      i.usingClientEntryPoint = false;
-    }
-  };
-}
+//# sourceMappingURL=index.esm.js.map
 
 
 /***/ }),
@@ -7235,6 +2303,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   API_KEY: function() { return /* binding */ API_KEY; },
 /* harmony export */   APP_NAME: function() { return /* binding */ APP_NAME; },
 /* harmony export */   AVATAR_SIZE: function() { return /* binding */ AVATAR_SIZE; },
+/* harmony export */   BASE_APP_NAME: function() { return /* binding */ BASE_APP_NAME; },
 /* harmony export */   BROKEN_IMAGE_SIZE: function() { return /* binding */ BROKEN_IMAGE_SIZE; },
 /* harmony export */   CHANNEL_ACCESS_MODE: function() { return /* binding */ CHANNEL_ACCESS_MODE; },
 /* harmony export */   CLICKABLE_URL_SCHEMES: function() { return /* binding */ CLICKABLE_URL_SCHEMES; },
@@ -7289,7 +2358,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.24');
+const BASE_APP_NAME = 'TinodeWeb';
+const APP_NAME = BASE_APP_NAME + '/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.25');
 const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
@@ -7724,39 +2794,29 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   drafty_form: {
-    id: "drafty_form",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Form:"
-    }]
+    id: 'drafty_form',
+    defaultMessage: 'Form: ',
+    description: 'Comment for form in Drafty'
   },
   drafty_attachment: {
-    id: "drafty_attachment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Attachment"
-    }]
+    id: 'drafty_attachment',
+    defaultMessage: 'Attachment',
+    description: 'Comment for attachment in Drafty'
   },
   drafty_image: {
-    id: "drafty_image",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Picture"
-    }]
+    id: 'drafty_image',
+    defaultMessage: 'Picture',
+    description: 'Comment for embedded images in Drafty'
   },
   drafty_video: {
-    id: "drafty_video",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Video recording"
-    }]
+    id: 'drafty_video',
+    defaultMessage: 'Video recording',
+    description: 'Comment for videos embedded in Drafty'
   },
   drafty_unknown: {
-    id: "drafty_unknown",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unsupported"
-    }]
+    id: 'drafty_unknown',
+    defaultMessage: 'Unsupported',
+    description: 'Unsupported entity in drafty'
   }
 });
 function fullFormatter(style, data, values, key, stack) {
@@ -7855,15 +2915,15 @@ function fullFormatter(style, data, values, key, stack) {
         };
         let body = values;
         if (!Array.isArray(values) || !values.join('').trim()) {
-          body = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            key: "x1",
-            className: "gray"
+          body = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('span', {
+            key: 'x1',
+            className: 'gray'
           }, this.formatMessage(messages.drafty_unknown))];
         }
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "x0",
-          className: "m-icon gray"
-        }, "extension"), ' '].concat(body);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+          key: 'x0',
+          className: 'material-icons gray'
+        }, 'extension'), ' '].concat(body);
       }
       break;
   }
@@ -7953,10 +3013,10 @@ function previewFormatter(style, data, values, key) {
   switch (style) {
     case 'AU':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "au",
-        className: "m-icon thin"
-      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.secondsToTime)(data.duration / 1000)];
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'au',
+        className: 'material-icons'
+      }, 'mic'), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.secondsToTime)(data.duration / 1000)];
       break;
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -7971,10 +3031,10 @@ function previewFormatter(style, data, values, key) {
       break;
     case 'IM':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "im",
-        className: "m-icon thin"
-      }, "photo"), ' ', this.formatMessage(messages.drafty_image)];
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'im',
+        className: 'material-icons'
+      }, 'photo'), ' ', this.formatMessage(messages.drafty_image)];
       break;
     case 'BN':
       el = 'span';
@@ -7982,10 +3042,10 @@ function previewFormatter(style, data, values, key) {
       break;
     case 'FM':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "fm",
-        className: "m-icon thin"
-      }, "browse"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'fm',
+        className: 'material-icons'
+      }, 'dashboard'), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
       break;
     case 'RW':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -7999,10 +3059,10 @@ function previewFormatter(style, data, values, key) {
         delete data.ref;
       }
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "ex",
-        className: "m-icon thin"
-      }, "attachment"), ' ', this.formatMessage(messages.drafty_attachment)];
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'ex',
+        className: 'material-icons'
+      }, 'attachment'), ' ', this.formatMessage(messages.drafty_attachment)];
       break;
     case 'VC':
       el = _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
@@ -8020,25 +3080,25 @@ function previewFormatter(style, data, values, key) {
       break;
     case 'TC':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "tc",
-        className: "m-icon thin"
-      }, "id_card"), ' ', tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'tc',
+        className: 'material-icons'
+      }, 'contact_mail'), ' ', tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFn(data) || this.formatMessage(messages.drafty_unknown)];
       break;
     case 'VD':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "im",
-        className: "m-icon thin"
-      }, "play_circle_outline"), ' ', this.formatMessage(messages.drafty_video)];
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'im',
+        className: 'material-icons'
+      }, 'play_circle_outline'), ' ', this.formatMessage(messages.drafty_video)];
       break;
     default:
       if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "x0",
-          className: "m-icon gray thin"
-        }, "extension"), ' ', this.formatMessage(messages.drafty_unknown)];
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+          key: 'x0',
+          className: 'material-icons gray'
+        }, 'extension'), ' ', this.formatMessage(messages.drafty_unknown)];
       }
       break;
   }
@@ -8126,10 +3186,10 @@ function quoteFormatter(style, data, values, key) {
           delete data.ref;
         }
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "ex",
-          className: "m-icon"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+          key: 'ex',
+          className: 'material-icons'
+        }, 'attachment'), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_12__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
@@ -8220,10 +3280,10 @@ function replyFormatter(style, data, values, key, stack) {
     if (stack.includes('QQ')) {
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('span', {
         key: key
-      }, [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        key: "qq",
-        className: "m-icon"
-      }, "format_quote"), ' ']);
+      }, [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', {
+        key: 'qq',
+        className: 'material-icons'
+      }, 'format_quote'), ' ']);
     }
     const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue('QQ', data) || {};
     attr.key = key;
@@ -8815,6 +3875,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -8849,224 +3911,229 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.props.onSendOnEnterChanged(e.currentTarget.value);
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
       id: "settings-form",
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_color_schema",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Theme:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: "system"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "radio",
-      id: "system",
-      name: "color-scheme-select",
-      value: "auto",
-      checked: this.state.colorSchema == 'auto',
-      onChange: this.handleColorSchemaSelected
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "system"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "color_schema_system",
-      defaultMessage: [{
-        "type": 0,
-        "value": "System default"
-      }]
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: "img/routine.svg",
-      style: {
-        verticalAlign: 'top',
-        width: '1.6rem',
-        height: '1.6rem'
-      }
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: "light"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "radio",
-      id: "light",
-      name: "color-scheme-select",
-      value: "light",
-      checked: this.state.colorSchema == 'light',
-      onChange: this.handleColorSchemaSelected
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "light"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "color_schema_light",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Light"
-      }]
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon orange large"
-    }, "light_mode"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: "dark"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "radio",
-      id: "dark",
-      name: "color-scheme-select",
-      value: "dark",
-      checked: this.state.colorSchema == 'dark',
-      onChange: this.handleColorSchemaSelected
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "dark"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "color_schema_dark",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Dark"
-      }]
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon blue large"
-    }, "dark_mode")))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row clean-clickable"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      onClick: this.props.onSelectWallpapers,
-      className: "flat-button"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "wallpaper"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "wallpapers",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Wallpapers"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_text_size",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Text size:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "range",
-      id: "text_size",
-      name: "text_size",
-      min: "80",
-      max: "120",
-      step: "10",
-      list: "text_size_options",
-      value: this.state.textSize,
-      onChange: this.handleTextSizeChanged
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("datalist", {
-      id: "text_size_options"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-      value: "80",
-      label: "80%"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-      value: "90",
-      label: "90%"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-      value: "100",
-      label: "100%"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-      value: "110",
-      label: "110%"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-      value: "120",
-      label: "120%"
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_keyboard",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Keyboard:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: "plain"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "radio",
-      id: "plain",
-      name: "send-select",
-      value: "plain",
-      checked: this.state.sendOnEnter == 'plain',
-      onChange: this.handleSendOnEnterSelected
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "send_plain"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "send_plain",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Send on Enter"
-      }]
-    }), "\xA0"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "small gray"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "send_plain_explained",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Press Shift + Enter for new line"
-      }]
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: "command"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "radio",
-      id: "command",
-      name: "send-select",
-      value: "command",
-      checked: this.state.sendOnEnter == 'command',
-      onChange: this.handleSendOnEnterSelected
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "send_command"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "send_command",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Send on "
-      }, {
-        "type": 1,
-        "value": "key"
-      }],
-      values: {
-        key: this.isMac ? '⌘ + Enter' : 'Ctrl + Enter'
-      }
-    }), "\xA0"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "small gray"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "send_command_explained",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Press Enter for new line"
-      }]
-    })))))));
+      className: "scrollable-panel",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_color_schema",
+              defaultMessage: "Theme:",
+              description: "Label for selecting color scheme (dark, light) in Settings"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("ul", {
+            className: "quoted",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("li", {
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+                type: "radio",
+                id: "system",
+                name: "color-scheme-select",
+                value: "auto",
+                checked: this.state.colorSchema == 'auto',
+                onChange: this.handleColorSchemaSelected
+              }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+                htmlFor: "system",
+                children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "color_schema_system",
+                  defaultMessage: "System default",
+                  description: "Name of the color schema"
+                }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("img", {
+                  src: "img/routine.svg",
+                  style: {
+                    verticalAlign: 'top',
+                    width: '1.6rem',
+                    height: '1.6rem'
+                  }
+                }, void 0, false)]
+              }, void 0, true)]
+            }, "system", true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("li", {
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+                type: "radio",
+                id: "light",
+                name: "color-scheme-select",
+                value: "light",
+                checked: this.state.colorSchema == 'light',
+                onChange: this.handleColorSchemaSelected
+              }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+                htmlFor: "light",
+                children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "color_schema_light",
+                  defaultMessage: "Light",
+                  description: "Name of the color schema"
+                }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+                  className: "m-icon orange large",
+                  children: "light_mode"
+                }, void 0, false)]
+              }, void 0, true)]
+            }, "light", true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("li", {
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+                type: "radio",
+                id: "dark",
+                name: "color-scheme-select",
+                value: "dark",
+                checked: this.state.colorSchema == 'dark',
+                onChange: this.handleColorSchemaSelected
+              }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+                htmlFor: "dark",
+                children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "color_schema_dark",
+                  defaultMessage: "Dark",
+                  description: "Name of the color schema"
+                }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+                  className: "m-icon blue large",
+                  children: "dark_mode"
+                }, void 0, false)]
+              }, void 0, true)]
+            }, "dark", true)]
+          }, void 0, true)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "hr"
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-row clean-clickable",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          onClick: this.props.onSelectWallpapers,
+          className: "flat-button",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "wallpaper"
+          }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "wallpapers",
+            defaultMessage: "Wallpapers",
+            description: "Link or title for working with wallpapers."
+          }, void 0, false)]
+        }, void 0, true)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "hr"
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_text_size",
+              defaultMessage: "Text size:",
+              description: "Label adjusting text size"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+            type: "range",
+            id: "text_size",
+            name: "text_size",
+            min: "80",
+            max: "120",
+            step: "10",
+            list: "text_size_options",
+            value: this.state.textSize,
+            onChange: this.handleTextSizeChanged
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("datalist", {
+            id: "text_size_options",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("option", {
+              value: "80",
+              label: "80%"
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("option", {
+              value: "90",
+              label: "90%"
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("option", {
+              value: "100",
+              label: "100%"
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("option", {
+              value: "110",
+              label: "110%"
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("option", {
+              value: "120",
+              label: "120%"
+            }, void 0, false)]
+          }, void 0, true)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "hr"
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+          className: "small",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_keyboard",
+            defaultMessage: "Keyboard:",
+            description: "Label for send on enter settings"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("ul", {
+          className: "quoted",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("li", {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+              type: "radio",
+              id: "plain",
+              name: "send-select",
+              value: "plain",
+              checked: this.state.sendOnEnter == 'plain',
+              onChange: this.handleSendOnEnterSelected
+            }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+              htmlFor: "send_plain",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "send_plain",
+                defaultMessage: "Send on Enter",
+                description: "Config option to send message on hitting Enter"
+              }, void 0, false), "\xA0"]
+            }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+              className: "panel-form-row",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+                className: "small gray",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "send_plain_explained",
+                  defaultMessage: "Press Shift + Enter for new line",
+                  description: "Explanation how to enter newline when [Send on Enter] is enabled"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false)]
+          }, "plain", true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("li", {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+              type: "radio",
+              id: "command",
+              name: "send-select",
+              value: "command",
+              checked: this.state.sendOnEnter == 'command',
+              onChange: this.handleSendOnEnterSelected
+            }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+              htmlFor: "send_command",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "send_command",
+                defaultMessage: "Send on {key}",
+                values: {
+                  key: this.isMac ? '⌘ + Enter' : 'Ctrl + Enter'
+                },
+                description: "Config option to send message on hitting CTRL(or Cmd)-Enter"
+              }, void 0, false), "\xA0"]
+            }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+              className: "panel-form-row",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+                className: "small gray",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "send_command_explained",
+                  defaultMessage: "Press Enter for new line",
+                  description: "Explanation how to enter newline when [Send on CTRL-Enter] is enabled"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false)]
+          }, "command", true)]
+        }, void 0, true)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -9088,6 +4155,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -9104,45 +4173,44 @@ class AccNotificationsView extends (react__WEBPACK_IMPORTED_MODULE_0___default()
     }
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "message-sound"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_message_sound",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Message sound:"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      name: "sound",
-      id: "message-sound",
-      checked: this.props.messageSounds,
-      onChange: this.handleCheckboxClick
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "desktop-alerts"
-    }, this.props.desktopAlertsEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_push_notifications",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Notification alerts:"
-      }]
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_push_notifications_disabled",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Notification alerts (requires HTTPS):"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      name: "alert",
-      id: "desktop-alerts",
-      checked: this.props.desktopAlerts,
-      onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null
-    })));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+      className: "scrollable-panel",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("label", {
+          htmlFor: "message-sound",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_message_sound",
+            defaultMessage: "Message sound:",
+            description: "Label for message sounds toggle"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          name: "sound",
+          id: "message-sound",
+          checked: this.props.messageSounds,
+          onChange: this.handleCheckboxClick
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("label", {
+          htmlFor: "desktop-alerts",
+          children: this.props.desktopAlertsEnabled ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_push_notifications",
+            defaultMessage: "Notification alerts:",
+            description: "Label for push notifications switch"
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_push_notifications_disabled",
+            defaultMessage: "Notification alerts (requires HTTPS):",
+            description: "Label for push notifications switch"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          name: "alert",
+          id: "desktop-alerts",
+          checked: this.props.desktopAlerts,
+          onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -9166,97 +4234,100 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 
 class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_CONTACT_US,
-      className: "flat-button",
-      target: "_blank"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "email"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "link_contact_us",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Contact Us"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_TERMS_OF_SERVICE,
-      className: "flat-button",
-      target: "_blank"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "description"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "link_terms_of_service",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Terms of Service"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_PRIVACY_POLICY,
-      className: "flat-button",
-      target: "_blank"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "policy"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "link_privacy_policy",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Privacy Policy"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_client",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Client:"
-      }]
-    })), _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_sdk",
-      defaultMessage: [{
-        "type": 0,
-        "value": "SDK:"
-      }]
-    })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_server",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Server:"
-      }]
-    })), this.props.serverVersion), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_server_address",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Server address:"
-      }]
-    })), this.props.serverAddress)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      className: "scrollable-panel",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_CONTACT_US,
+          className: "flat-button",
+          target: "_blank",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "email"
+          }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "link_contact_us",
+            defaultMessage: "Contact Us",
+            description: "Ancor text for contacting us by email"
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_TERMS_OF_SERVICE,
+          className: "flat-button",
+          target: "_blank",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "description"
+          }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "link_terms_of_service",
+            defaultMessage: "Terms of Service",
+            description: "Ancor text for terms of service link"
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_PRIVACY_POLICY,
+          className: "flat-button",
+          target: "_blank",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "policy"
+          }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "link_privacy_policy",
+            defaultMessage: "Privacy Policy",
+            description: "Ancor text for privacy policy link"
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "hr"
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_client",
+              defaultMessage: "Client:",
+              description: "Label for a client version"
+            }, void 0, false)
+          }, void 0, false), _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_sdk",
+              defaultMessage: "SDK:"
+            }, void 0, false)
+          }, void 0, false), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary()]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_server",
+              defaultMessage: "Server:",
+              description: "Label for a server version"
+            }, void 0, false)
+          }, void 0, false), this.props.serverVersion]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_server_address",
+              defaultMessage: "Server address:"
+            }, void 0, false)
+          }, void 0, false), this.props.serverAddress]
+        }, void 0, true)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -9279,6 +4350,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -9286,16 +4359,8 @@ __webpack_require__.r(__webpack_exports__);
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   archived_contacts_title: {
     id: "archived_contacts",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Archived contacts ("
-    }, {
-      "type": 1,
-      "value": "count"
-    }, {
-      "type": 0,
-      "value": ")"
-    }]
+    defaultMessage: "Archived contacts ({count})",
+    description: "Label for archived chats"
   }
 });
 class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -9360,25 +4425,24 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.props.onShowArchive();
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "contacts_not_found",
-      defaultMessage: [{
-        "type": 0,
-        "value": "You have no chats\\n¯∖_(ツ)_/¯"
-      }]
-    }, no_contacts => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
-      connected: this.props.connected,
-      contacts: this.state.contactList,
-      emptyListMessage: no_contacts,
-      topicSelected: this.props.topicSelected,
-      myUserId: this.props.myUserId,
-      showOnline: true,
-      showUnread: true,
-      onTopicSelected: this.props.onTopicSelected,
-      showContextMenu: this.props.showContextMenu,
-      onAction: this.handleAction
-    }));
+      defaultMessage: "You have no chats\\n¯∖_(ツ)_/¯",
+      description: "HTML message shown in ContactList when no contacts are found",
+      children: no_contacts => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        tinode: this.props.tinode,
+        connected: this.props.connected,
+        contacts: this.state.contactList,
+        emptyListMessage: no_contacts,
+        topicSelected: this.props.topicSelected,
+        myUserId: this.props.myUserId,
+        showOnline: true,
+        showUnread: true,
+        onTopicSelected: this.props.onTopicSelected,
+        showContextMenu: this.props.showContextMenu,
+        onAction: this.handleAction
+      }, void 0, false)
+    }, void 0, false);
   }
 }
 ;
@@ -9401,6 +4465,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -9444,75 +4510,73 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("form", {
       id: "login-form",
-      onSubmit: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "login_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Login"
-      }]
-    }, login_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      id: "inputLogin",
-      placeholder: login_prompt,
-      autoComplete: "username",
-      autoCorrect: "off",
-      autoCapitalize: "none",
-      value: this.state.login,
-      onChange: this.handleLoginChange,
-      required: true,
-      autoFocus: true
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "password_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Password"
-      }]
-    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      type: "password",
-      id: "inputPassword",
-      placeholder: password_prompt,
-      autoComplete: "current-password",
-      value: this.state.password,
-      onChange: this.handlePasswordChange,
-      required: true
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      id: "save-token",
-      name: "save-token",
-      checked: this.state.saveToken,
-      onChange: this.handleToggleSaveToken
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "save-token"
-    }, "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "stay_logged_in",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Stay logged in"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#reset"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "forgot_password_link",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Forgot password?"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: submitClasses,
-      type: "submit"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_sign_in",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Sign in"
-      }]
-    }))));
+      onSubmit: this.handleSubmit,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "login_prompt",
+        defaultMessage: "Login",
+        description: "Placeholer for username/login",
+        children: login_prompt => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("input", {
+          type: "text",
+          id: "inputLogin",
+          placeholder: login_prompt,
+          autoComplete: "username",
+          autoCorrect: "off",
+          autoCapitalize: "none",
+          value: this.state.login,
+          onChange: this.handleLoginChange,
+          required: true,
+          autoFocus: true
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "password_prompt",
+        defaultMessage: "Password",
+        description: "Placeholder/prompt for entering password",
+        children: password_prompt => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          type: "password",
+          id: "inputPassword",
+          placeholder: password_prompt,
+          autoComplete: "current-password",
+          value: this.state.password,
+          onChange: this.handlePasswordChange,
+          required: true
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          id: "save-token",
+          name: "save-token",
+          checked: this.state.saveToken,
+          onChange: this.handleToggleSaveToken
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          htmlFor: "save-token",
+          children: ["\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "stay_logged_in",
+            defaultMessage: "Stay logged in",
+            description: "Label for a checkbox"
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          href: "#reset",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "forgot_password_link",
+            defaultMessage: "Forgot password?",
+            description: "Link to Reset password form"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: submitClasses,
+          type: "submit",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_sign_in",
+            defaultMessage: "Sign in",
+            description: "Button [Sign In]"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -9538,6 +4602,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/search-contacts.jsx */ "./src/widgets/search-contacts.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -9550,24 +4616,18 @@ __webpack_require__.r(__webpack_exports__);
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   search_for_contacts: {
     id: "search_for_contacts",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Use search to find contacts"
-    }]
+    defaultMessage: "Use search to find contacts",
+    description: "Text shown in contacts view when user entered no search query."
   },
   search_no_results: {
     id: "search_no_results",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Search returned no results"
-    }]
+    defaultMessage: "Search returned no results",
+    description: "Text shown in contacts view when query returned no results."
   },
   search_placeholder: {
     id: "search_placeholder",
-    defaultMessage: [{
-      "type": 0,
-      "value": "List like alice@example.com, +17025550003..."
-    }]
+    defaultMessage: "List like alice@example.com, +17025550003...",
+    description: "Placeholder in contacts search field"
   }
 });
 class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -9643,71 +4703,74 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     } = this.props.intl;
     const no_contacts_placeholder = formatMessage(this.state.searchQuery ? messages.search_no_results : messages.search_for_contacts);
     const search_placeholder = formatMessage(messages.search_placeholder);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "tabbar"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === 'find' ? 'active' : null
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      "data-id": "find",
-      onClick: this.handleTabClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "tabtitle_find_user",
-      defaultMessage: [{
-        "type": 0,
-        "value": "find"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === 'grp' ? 'active' : null
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      "data-id": "grp",
-      onClick: this.handleTabClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "tabtitle_new_group",
-      defaultMessage: [{
-        "type": 0,
-        "value": "new group"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === 'byid' ? 'active' : null
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      "data-id": "byid",
-      onClick: this.handleTabClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "tabtitle_group_by_id",
-      defaultMessage: [{
-        "type": 0,
-        "value": "by id"
-      }]
-    })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      tinode: this.props.tinode,
-      onSubmit: this.handleNewGroupSubmit,
-      onError: this.props.onError
-    }) : this.state.tabSelected === 'byid' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      myURI: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.getCurrentUserID(),
-      onSubmit: this.handleGroupByID,
-      onError: this.props.onError
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      placeholder: search_placeholder,
-      initialQuery: this.state.searchQuery || '',
-      onSearchContacts: this.handleSearchContacts
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      contacts: this.props.searchResults,
-      myUserId: this.props.myUserId,
-      emptyListMessage: no_contacts_placeholder,
-      showSelfTopic: !this.state.searchQuery,
-      showOnline: false,
-      showUnread: false,
-      showContextMenu: false,
-      onTopicSelected: this.handleSearchResultSelected
-    })));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+      className: "flex-column",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("ul", {
+        className: "tabbar",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("li", {
+          className: this.state.tabSelected === 'find' ? 'active' : null,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("a", {
+            href: "#",
+            "data-id": "find",
+            onClick: this.handleTabClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "tabtitle_find_user",
+              defaultMessage: "find",
+              description: "Tab title Find"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("li", {
+          className: this.state.tabSelected === 'grp' ? 'active' : null,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("a", {
+            href: "#",
+            "data-id": "grp",
+            onClick: this.handleTabClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "tabtitle_new_group",
+              defaultMessage: "new group",
+              description: "Tab title New Group"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("li", {
+          className: this.state.tabSelected === 'byid' ? 'active' : null,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("a", {
+            href: "#",
+            "data-id": "byid",
+            onClick: this.handleTabClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "tabtitle_group_by_id",
+              defaultMessage: "by id",
+              description: "Tab title Find topic by ID"
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), this.state.tabSelected === 'grp' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        tinode: this.props.tinode,
+        onSubmit: this.handleNewGroupSubmit,
+        onError: this.props.onError
+      }, void 0, false) : this.state.tabSelected === 'byid' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        myURI: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.getCurrentUserID(),
+        onSubmit: this.handleGroupByID,
+        onError: this.props.onError
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "flex-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          placeholder: search_placeholder,
+          initialQuery: this.state.searchQuery || '',
+          onSearchContacts: this.handleSearchContacts
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          tinode: this.props.tinode,
+          contacts: this.props.searchResults,
+          myUserId: this.props.myUserId,
+          emptyListMessage: no_contacts_placeholder,
+          showSelfTopic: !this.state.searchQuery,
+          showOnline: false,
+          showUnread: false,
+          showContextMenu: false,
+          onTopicSelected: this.handleSearchResultSelected
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -9731,6 +4794,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/host-selector.jsx */ "./src/widgets/host-selector.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -9781,78 +4846,82 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     ['def', 'ws', 'lp'].forEach(item => {
       const id = 'transport-' + item;
       const name = names[item];
-      transportOptions.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-        key: item
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-        type: "radio",
-        id: id,
-        name: "transport-select",
-        value: item,
-        checked: this.state.transport === item,
-        onChange: this.handleTransportSelected
-      }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-        htmlFor: id
-      }, name)));
+      transportOptions.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("li", {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("input", {
+          type: "radio",
+          id: id,
+          name: "transport-select",
+          value: item,
+          checked: this.state.transport === item,
+          onChange: this.handleTransportSelected
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          htmlFor: id,
+          children: name
+        }, void 0, false)]
+      }, item, true));
     });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("form", {
       id: "settings-form",
       className: "panel-form",
-      onSubmit: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_server_to_use",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Server to use:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      serverAddress: this.state.serverAddress,
-      onServerAddressChange: this.handleServerAddressChange
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      id: "secure-connection",
-      name: "secure-connection",
-      checked: this.state.secureConnection,
-      className: "quoted",
-      onChange: this.handleToggleSecure
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: "secure-connection"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_use_secure_connection",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Use secure connection"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_wire_transport",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Wire transport:"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "quoted"
-    }, transportOptions)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      type: "submit",
-      className: "primary"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_update",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Update"
-      }]
-    }))));
+      onSubmit: this.handleSubmit,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          className: "small",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_server_to_use",
+            defaultMessage: "Server to use:",
+            description: "Label for server selector in SettingsView"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        serverAddress: this.state.serverAddress,
+        onServerAddressChange: this.handleServerAddressChange
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          id: "secure-connection",
+          name: "secure-connection",
+          checked: this.state.secureConnection,
+          className: "quoted",
+          onChange: this.handleToggleSecure
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          htmlFor: "secure-connection",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_use_secure_connection",
+            defaultMessage: "Use secure connection",
+            description: "Label for WS/WSS connection type in SettingsView"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          className: "small",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_wire_transport",
+            defaultMessage: "Wire transport:",
+            description: "Label for wire transport selection in SettingsView"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("ul", {
+          className: "quoted",
+          children: transportOptions
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          type: "submit",
+          className: "primary",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_update",
+            defaultMessage: "Update",
+            description: "Button [Update]"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -9882,137 +4951,107 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
 /* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
 /* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
 
 
 
 
 
 
-const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_views_account-settings-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx")));
+const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_widgets_phone-edit_jsx"), __webpack_require__.e("src_views_account-settings-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx")));
 
-const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_views_create-account-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx")));
+const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_widgets_phone-edit_jsx"), __webpack_require__.e("src_views_create-account-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx")));
 
 
 const AccSecurityView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_acc-security-view_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx")));
 
 
 
-const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_views_password-reset-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx")));
+const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_widgets_phone-edit_jsx"), __webpack_require__.e("src_views_password-reset-view_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx")));
+
 
 
 const WallpapersView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_views_wallpapers_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ./wallpapers.jsx */ "./src/views/wallpapers.jsx")));
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   login: {
-    id: "sidepanel_title_login",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Sign In"
-    }]
+    id: 'sidepanel_title_login',
+    description: 'Sidepanel title for LoginView.',
+    defaultMessage: 'Sign In'
   },
   register: {
-    id: "sidepanel_title_register",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Create Account"
-    }]
+    id: 'sidepanel_title_register',
+    description: 'Sidepanel title for CreateAccountView.',
+    defaultMessage: 'Create Account'
   },
   settings: {
-    id: "sidepanel_title_settings",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Settings"
-    }]
+    id: 'sidepanel_title_settings',
+    description: 'Sidepanel title for SettingsView.',
+    defaultMessage: 'Settings'
   },
   edit: {
-    id: "sidepanel_title_account_settings",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Account Settings"
-    }]
+    id: 'sidepanel_title_account_settings',
+    description: 'Sidepanel title for AccountSettingsView.',
+    defaultMessage: 'Account Settings'
   },
   general: {
-    id: "panel_title_general",
-    defaultMessage: [{
-      "type": 0,
-      "value": "General"
-    }]
+    id: 'panel_title_general',
+    description: 'Title for TopicCommon.',
+    defaultMessage: 'General'
   },
   security: {
-    id: "panel_title_security",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Security"
-    }]
+    id: 'panel_title_security',
+    description: 'Title for TopicSecirity and AccSecurity.',
+    defaultMessage: 'Security'
   },
   crop: {
-    id: "panel_title_crop",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Drag to Adjust"
-    }]
+    id: 'panel_title_crop',
+    description: 'Title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
   },
   notif: {
-    id: "sidepanel_title_acc_notifications",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Notifications"
-    }]
+    id: 'sidepanel_title_acc_notifications',
+    description: 'Sidepanel title for AccNotificationsView.',
+    defaultMessage: 'Notifications'
   },
   acc_general: {
-    id: "sidepanel_title_acc_general",
-    defaultMessage: [{
-      "type": 0,
-      "value": "General"
-    }]
+    id: 'sidepanel_title_acc_general',
+    description: 'Sidepanel title for AccGeneralView.',
+    defaultMessage: 'General'
   },
   support: {
-    id: "sidepanel_title_acc_support",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Support"
-    }]
+    id: 'sidepanel_title_acc_support',
+    description: 'Sidepanel title for AccSupportView.',
+    defaultMessage: 'Support'
   },
   newtpk: {
-    id: "sidepanel_title_newtpk",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Start New Chat"
-    }]
+    id: 'sidepanel_title_newtpk',
+    description: 'Sidepanel title for NewTopicView.',
+    defaultMessage: 'Start New Chat'
   },
   cred: {
-    id: "sidepanel_title_cred",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Confirm Credentials"
-    }]
+    id: 'sidepanel_title_cred',
+    description: 'Sidepanel title for ValidationView.',
+    defaultMessage: 'Confirm Credentials'
   },
   reset: {
-    id: "sidepanel_title_reset",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Reset Password"
-    }]
+    id: 'sidepanel_title_reset',
+    description: 'Sidepanel title for PasswordResetView.',
+    defaultMessage: 'Reset Password'
   },
   archive: {
-    id: "sidepanel_title_archive",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Archived Chats"
-    }]
+    id: 'sidepanel_title_archive',
+    description: 'Sidepanel title for ContactsView-Archive.',
+    defaultMessage: 'Archived Chats'
   },
   blocked: {
-    id: "sidepanel_title_blocked",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Blocked Chats"
-    }]
+    id: 'sidepanel_title_blocked',
+    description: 'Sidepanel title for ContactsView-Blocked.',
+    defaultMessage: 'Blocked Chats'
   },
   wallpapers: {
-    id: "wallpapers",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Wallpapers"
-    }]
+    id: 'wallpapers',
+    description: 'Link or title for working with wallpapers.',
+    defaultMessage: 'Wallpapers'
   }
 });
 class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -10038,201 +5077,202 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     if (['login', 'contacts'].indexOf(view) == -1) {
       onCancel = this.props.onCancel;
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "sidepanel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      state: view,
-      title: title,
-      avatar: avatar,
-      tinode: this.props.tinode,
-      trustedBadges: badges,
-      myUserId: this.props.myUserId,
-      onSignUp: this.props.onSignUp,
-      onSettings: this.props.onSettings,
-      onNewTopic: () => this.props.onNavigate('newtpk'),
-      onCancel: onCancel
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      level: this.props.errorLevel,
-      text: this.props.errorText,
-      action: this.props.errorAction,
-      actionText: this.props.errorActionText,
-      onClearError: this.props.onError
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      show: this.props.loadSpinnerVisible
-    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
-      login: this.props.login,
-      disabled: this.props.loginDisabled,
-      persist: this.props.persist,
-      onLogin: this.props.onLoginRequest,
-      onPersistenceChange: this.props.onPersistenceChange
-    }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(CreateAccountView, {
-      tinode: this.props.tinode,
-      reqCredMethod: this.props.reqCredMethod,
-      onShowCountrySelector: this.props.onShowCountrySelector,
-      onCreateAccount: this.props.onCreateAccount,
-      onCancel: this.props.onCancel,
-      onError: this.props.onError
-    })) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
-      transport: this.props.transport,
-      serverAddress: this.props.serverAddress,
-      secureConnection: this.props.secureConnection,
-      onCancel: this.props.onCancel,
-      onUpdate: this.props.onGlobalSettings
-    })) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AccountSettingsView, {
-      tinode: this.props.tinode,
-      myUserId: this.props.myUserId,
-      trustedBadges: this.props.trustedBadges,
-      reqCredMethod: this.props.reqCredMethod,
-      onShowCountrySelector: this.props.onShowCountrySelector,
-      onNavigate: this.props.onNavigate,
-      onCredAdd: this.props.onCredAdd,
-      onCredDelete: this.props.onCredDelete,
-      onCredConfirm: this.props.onCredConfirm,
-      onError: this.props.onError
-    })) : view === 'general' || view === 'crop' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      topic: "me",
-      tinode: this.props.tinode,
-      myUserId: this.props.myUserId,
-      reqCredMethod: this.props.reqCredMethod,
-      onUpdateTopicDesc: this.props.onUpdateAccountDesc,
-      onUpdateTagsRequest: this.props.onUpdateAccountTags,
-      onError: this.props.onError
-    }) : view === 'acc_general' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      colorSchema: this.props.colorSchema,
-      onSelectWallpapers: this.props.onSelectWallpapers,
-      textSize: this.props.textSize,
-      sendOnEnter: this.props.sendOnEnter,
-      onChangeColorSchema: this.props.onChangeColorSchema,
-      onTextSizeChanged: this.props.onTextSizeChanged,
-      onSendOnEnterChanged: this.props.onSendOnEnterChanged
-    }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      messageSounds: this.props.messageSounds,
-      desktopAlerts: this.props.desktopAlerts,
-      desktopAlertsEnabled: this.props.desktopAlertsEnabled,
-      onTogglePushNotifications: this.props.onTogglePushNotifications,
-      onToggleMessageSounds: this.props.onToggleMessageSounds
-    }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AccSecurityView, {
-      tinode: this.props.tinode,
-      incognitoMode: this.props.incognitoMode,
-      onUpdateAccountDesc: this.props.onUpdateAccountDesc,
-      onUpdatePassword: this.props.onUpdatePassword,
-      onLogout: this.props.onLogout,
-      onDeleteAccount: this.props.onDeleteAccount,
-      onShowAlert: this.props.onShowAlert,
-      onShowBlocked: this.props.onShowBlocked,
-      onToggleIncognitoMode: this.props.onToggleIncognitoMode
-    })) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      serverAddress: this.props.serverAddress,
-      serverVersion: this.props.serverVersion
-    }) : view === 'wallpapers' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(WallpapersView, {
-      wallpaper: this.props.wallpaper,
-      wallpaperSize: this.props.wallpaperSize,
-      wallpaperBlur: this.props.wallpaperBlur,
-      colorSchema: this.props.colorSchema !== 'auto' ? this.props.colorSchema : this.props.systemColorSchema,
-      onWallpaperSelected: this.props.onWallpaperSelected
-    })) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      tinode: this.props.tinode,
-      myUserId: this.props.myUserId,
-      connected: this.props.connected,
-      topicSelected: this.props.topicSelected,
-      archive: view == 'archive',
-      blocked: view == 'blocked',
-      chatList: this.props.chatList,
-      showContextMenu: this.props.showContextMenu,
-      onTopicSelected: this.props.onTopicSelected,
-      onShowArchive: this.props.onShowArchive
-    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-      tinode: this.props.tinode,
-      searchResults: this.props.searchResults,
-      onInitFind: this.props.onInitFind,
-      onSearchContacts: this.props.onSearchContacts,
-      onCreateTopic: this.props.onCreateTopic,
-      onError: this.props.onError
-    })) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
-      credCode: this.props.credCode,
-      credMethod: this.props.credMethod,
-      credToken: this.props.credToken,
-      onSubmit: this.props.onValidateCredentials,
-      onCancel: this.props.onCancel
-    }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PasswordResetView, {
-      tinode: this.props.tinode,
-      reqCredMethod: this.props.reqCredMethod,
-      onShowCountrySelector: this.props.onShowCountrySelector,
-      onRequest: this.props.onPasswordResetRequest,
-      onReset: this.props.onResetPassword,
-      onCancel: this.props.onCancel,
-      onError: this.props.onError
-    })) : null);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+      id: "sidepanel",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        state: view,
+        title: title,
+        avatar: avatar,
+        tinode: this.props.tinode,
+        trustedBadges: badges,
+        myUserId: this.props.myUserId,
+        onSignUp: this.props.onSignUp,
+        onSettings: this.props.onSettings,
+        onNewTopic: () => this.props.onNavigate('newtpk'),
+        onCancel: onCancel
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        level: this.props.errorLevel,
+        text: this.props.errorText,
+        action: this.props.errorAction,
+        actionText: this.props.errorActionText,
+        onClearError: this.props.onError
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        show: this.props.loadSpinnerVisible
+      }, void 0, false), view === 'login' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_login_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        login: this.props.login,
+        disabled: this.props.loginDisabled,
+        persist: this.props.persist,
+        onLogin: this.props.onLoginRequest,
+        onPersistenceChange: this.props.onPersistenceChange
+      }, void 0, false) : view === 'register' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(CreateAccountView, {
+          tinode: this.props.tinode,
+          reqCredMethod: this.props.reqCredMethod,
+          onShowCountrySelector: this.props.onShowCountrySelector,
+          onCreateAccount: this.props.onCreateAccount,
+          onCancel: this.props.onCancel,
+          onError: this.props.onError
+        }, void 0, false)
+      }, void 0, false) : view === 'settings' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+          transport: this.props.transport,
+          serverAddress: this.props.serverAddress,
+          secureConnection: this.props.secureConnection,
+          onCancel: this.props.onCancel,
+          onUpdate: this.props.onGlobalSettings
+        }, void 0, false)
+      }, void 0, false) : view === 'edit' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(AccountSettingsView, {
+          tinode: this.props.tinode,
+          myUserId: this.props.myUserId,
+          trustedBadges: this.props.trustedBadges,
+          reqCredMethod: this.props.reqCredMethod,
+          onShowCountrySelector: this.props.onShowCountrySelector,
+          onNavigate: this.props.onNavigate,
+          onCredAdd: this.props.onCredAdd,
+          onCredDelete: this.props.onCredDelete,
+          onCredConfirm: this.props.onCredConfirm,
+          onError: this.props.onError
+        }, void 0, false)
+      }, void 0, false) : view === 'general' || view === 'crop' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        topic: "me",
+        tinode: this.props.tinode,
+        myUserId: this.props.myUserId,
+        reqCredMethod: this.props.reqCredMethod,
+        onUpdateTopicDesc: this.props.onUpdateAccountDesc,
+        onUpdateTagsRequest: this.props.onUpdateAccountTags,
+        onError: this.props.onError
+      }, void 0, false) : view === 'acc_general' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        colorSchema: this.props.colorSchema,
+        onSelectWallpapers: this.props.onSelectWallpapers,
+        textSize: this.props.textSize,
+        sendOnEnter: this.props.sendOnEnter,
+        onChangeColorSchema: this.props.onChangeColorSchema,
+        onTextSizeChanged: this.props.onTextSizeChanged,
+        onSendOnEnterChanged: this.props.onSendOnEnterChanged
+      }, void 0, false) : view === 'notif' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        messageSounds: this.props.messageSounds,
+        desktopAlerts: this.props.desktopAlerts,
+        desktopAlertsEnabled: this.props.desktopAlertsEnabled,
+        onTogglePushNotifications: this.props.onTogglePushNotifications,
+        onToggleMessageSounds: this.props.onToggleMessageSounds
+      }, void 0, false) : view === 'security' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(AccSecurityView, {
+          tinode: this.props.tinode,
+          incognitoMode: this.props.incognitoMode,
+          onUpdateAccountDesc: this.props.onUpdateAccountDesc,
+          onUpdatePassword: this.props.onUpdatePassword,
+          onLogout: this.props.onLogout,
+          onDeleteAccount: this.props.onDeleteAccount,
+          onShowAlert: this.props.onShowAlert,
+          onShowBlocked: this.props.onShowBlocked,
+          onToggleIncognitoMode: this.props.onToggleIncognitoMode
+        }, void 0, false)
+      }, void 0, false) : view === 'support' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        serverAddress: this.props.serverAddress,
+        serverVersion: this.props.serverVersion
+      }, void 0, false) : view === 'wallpapers' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(WallpapersView, {
+          wallpaper: this.props.wallpaper,
+          wallpaperSize: this.props.wallpaperSize,
+          wallpaperBlur: this.props.wallpaperBlur,
+          colorSchema: this.props.colorSchema !== 'auto' ? this.props.colorSchema : this.props.systemColorSchema,
+          onWallpaperSelected: this.props.onWallpaperSelected
+        }, void 0, false)
+      }, void 0, false) : view === 'contacts' || view == 'archive' || view == 'blocked' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        tinode: this.props.tinode,
+        myUserId: this.props.myUserId,
+        connected: this.props.connected,
+        topicSelected: this.props.topicSelected,
+        archive: view == 'archive',
+        blocked: view == 'blocked',
+        chatList: this.props.chatList,
+        showContextMenu: this.props.showContextMenu,
+        onTopicSelected: this.props.onTopicSelected,
+        onShowArchive: this.props.onShowArchive
+      }, void 0, false) : view === 'newtpk' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+          tinode: this.props.tinode,
+          searchResults: this.props.searchResults,
+          onInitFind: this.props.onInitFind,
+          onSearchContacts: this.props.onSearchContacts,
+          onCreateTopic: this.props.onCreateTopic,
+          onError: this.props.onError
+        }, void 0, false)
+      }, void 0, false) : view === 'cred' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        credCode: this.props.credCode,
+        credMethod: this.props.credMethod,
+        credToken: this.props.credToken,
+        onSubmit: this.props.onValidateCredentials,
+        onCancel: this.props.onCancel
+      }, void 0, false) : view === 'reset' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)("div", {
+          className: "panel-form-row",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxDEV)(PasswordResetView, {
+          tinode: this.props.tinode,
+          reqCredMethod: this.props.reqCredMethod,
+          onShowCountrySelector: this.props.onShowCountrySelector,
+          onRequest: this.props.onPasswordResetRequest,
+          onReset: this.props.onResetPassword,
+          onCancel: this.props.onCancel,
+          onError: this.props.onError
+        }, void 0, false)
+      }, void 0, false) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -10269,6 +5309,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
 
 
 
@@ -10291,97 +5332,68 @@ const MessagesView = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __we
 
 
 
+
 const POP_SOUND = new Audio('audio/msg.m4a');
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   reconnect_countdown: {
-    id: "reconnect_countdown",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Disconnected. Reconnecting in "
-    }, {
-      "type": 1,
-      "value": "seconds"
-    }, {
-      "type": 0,
-      "value": "…"
-    }]
+    id: 'reconnect_countdown',
+    defaultMessage: 'Disconnected. Reconnecting in {seconds}…',
+    description: 'Message shown when an app update is available.'
   },
   reconnect_now: {
-    id: "reconnect_now",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Try now"
-    }]
+    id: 'reconnect_now',
+    defaultMessage: 'Try now',
+    description: 'Prompt for reconnecting now'
   },
   push_init_failed: {
-    id: "push_init_failed",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Failed to initialize push notifications"
-    }]
+    id: 'push_init_failed',
+    defaultMessage: 'Failed to initialize push notifications',
+    description: 'Error message when push notifications have failed to initialize.'
   },
   invalid_security_token: {
-    id: "invalid_security_token",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Invalid security token"
-    }]
+    id: 'invalid_security_token',
+    defaultMessage: 'Invalid security token',
+    description: 'Error message when resetting password.'
   },
   no_connection: {
-    id: "no_connection",
-    defaultMessage: [{
-      "type": 0,
-      "value": "No connection"
-    }]
+    id: 'no_connection',
+    defaultMessage: 'No connection',
+    description: 'Warning that the user is offline.'
   },
   code_doesnot_match: {
-    id: "code_doesnot_match",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Code does not match"
-    }]
+    id: 'code_doesnot_match',
+    defaultMessage: 'Code does not match',
+    description: 'Error message when the credential validation code is incorrect.'
   },
   menu_item_info: {
-    id: "menu_item_info",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Info"
-    }]
+    id: 'menu_item_info',
+    defaultMessage: 'Info',
+    description: 'Show extended topic information'
   },
   menu_item_audio_call: {
-    id: "menu_item_audio_call",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Call"
-    }]
+    id: 'menu_item_audio_call',
+    defaultMessage: 'Call',
+    description: 'Start audio call'
   },
   menu_item_video_call: {
-    id: "menu_item_video_call",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Video call"
-    }]
+    id: 'menu_item_video_call',
+    defaultMessage: 'Video call',
+    description: 'Start video call'
   },
   cred_confirmed_successfully: {
-    id: "cred_confirmed_successfully",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Confirmed successfully"
-    }]
+    id: 'cred_confirmed_successfully',
+    defaultMessage: 'Confirmed successfully',
+    description: 'Notification message that the credential was successfully validated.'
   },
   password_reset_success: {
-    id: "password_reset_success",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Password reset successfully"
-    }]
+    id: 'password_reset_success',
+    defaultMessage: 'Password reset successfully',
+    description: 'Notification message that the password was successfully reset.'
   },
   select_country: {
-    id: "select_country",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Select country"
-    }]
+    id: 'select_country',
+    defaultMessage: 'Select country',
+    description: 'Placeholder for the country selector'
   }
 });
 class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -10666,7 +5678,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     };
     try {
-      this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_10__.APP_NAME));
+      this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_10__.BASE_APP_NAME));
       return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
         return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
           this.checkForAppUpdate(reg);
@@ -10718,7 +5730,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         return Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             return (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getToken)(fcm, {
-              serviceWorkerRegistration: reg,
+              serviceWorkerRegistration: sw,
               vapidKey: FIREBASE_INIT.messagingVapidKey
             }).then(token => {
               if (token) {
@@ -10770,21 +5782,20 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       const installingWorker = reg.installing;
       installingWorker.onstatechange = _ => {
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
-          const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-            id: "update_available",
-            defaultMessage: [{
-              "type": 0,
-              "value": "Update available."
-            }]
-          }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-            href: ""
-          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-            id: "reload_update",
-            defaultMessage: [{
-              "type": 0,
-              "value": "Reload"
-            }]
-          })), ".");
+          const msg = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.Fragment, {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "update_available",
+              defaultMessage: "Update available.",
+              description: "Message shown when an app update is available."
+            }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("a", {
+              href: "",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "reload_update",
+                defaultMessage: "Reload",
+                description: "Call to action to reload application when update is available."
+              }, void 0, false)
+            }, void 0, false), "."]
+          }, void 0, true);
           this.handleError(msg, 'info');
         }
       };
@@ -11723,11 +6734,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
-    if (this.state.firebaseToken) {
+    if (this.state.firebaseToken && this.fcm) {
       this.tinode.setDeviceToken(null);
-      if (this.fcm) {
-        (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(_ => {});
-      }
+      (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {});
     }
     document.documentElement.style.colorScheme = _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME == 'auto' ? 'light dark' : _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_COLOR_SCHEME;
     document.documentElement.style.setProperty('--message-text-size', `${_config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_TEXT_SIZE}pt`);
@@ -11738,7 +6747,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     } else {
-      cleared = Promose.resolve();
+      cleared = Promise.resolve();
     }
     this.setState(this.getBlankState());
     cleared.then(_ => {
@@ -11996,23 +7005,24 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleShowCountrySelector(code, dial, selectedCallback) {
-    this.handleShowAlert(this.props.intl.formatMessage(messages.select_country), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneCountrySelector, {
-      selected: code,
-      onSubmit: (c, d) => {
-        this.setState({
-          alertVisible: false
-        });
-        selectedCallback(c, d);
-      }
-    })), null, null, _ => {}, null);
+    this.handleShowAlert(this.props.intl.formatMessage(messages.select_country), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "loading_note",
+          defaultMessage: "Loading...",
+          description: "Message shown when component is loading"
+        }, void 0, false)
+      }, void 0, false),
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(PhoneCountrySelector, {
+        selected: code,
+        onSubmit: (c, d) => {
+          this.setState({
+            alertVisible: false
+          });
+          selectedCallback(c, d);
+        }
+      }, void 0, false)
+    }, void 0, false), null, null, _ => {}, null);
   }
   handleStartVideoCall() {
     this.setState({
@@ -12172,222 +7182,225 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   render() {
     const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorSchema;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
       id: "app-container",
-      ref: this.selfRef
-    }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      tinode: this.tinode,
-      bounds: this.state.applicationBounds,
-      clickAt: this.state.contextMenuClickAt,
-      params: this.state.contextMenuParams,
-      items: this.state.contextMenuItems,
-      hide: this.handleHideContextMenu,
-      onShowAlert: this.handleShowAlert,
-      onAction: this.handleContextMenuAction,
-      onTopicRemoved: topicName => {
-        if (topicName == this.state.topicSelected) {
-          this.handleTopicSelected(null);
-        }
-      },
-      onError: this.handleError
-    }) : null, this.state.forwardDialogVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      tinode: this.tinode,
-      contacts: this.state.chatList,
-      topicSelected: this.state.topicSelected,
-      myUserId: this.state.myUserId,
-      hide: this.handleHideForwardDialog,
-      onInitFind: this.tnInitFind,
-      searchResults: this.state.searchResults,
-      onSearchContacts: this.handleSearchContacts,
-      onTopicSelected: this.handleStartTopicRequest
-    }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      tinode: this.tinode,
-      topic: this.state.callTopic,
-      seq: this.state.callSeq,
-      callState: this.state.callState,
-      audioOnly: this.state.callAudioOnly,
-      onClose: this.handleCallClose,
-      onRinging: this.handleCallRinging,
-      onAcceptCall: this.handleCallAccept,
-      onReject: this.handleCallHangup
-    }) : null, this.state.alertVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      title: this.state.alertParams.title,
-      content: this.state.alertParams.content,
-      onReject: this.state.alertParams.onReject ? _ => this.setState({
-        alertVisible: false
-      }) : null,
-      reject: this.state.alertParams.reject,
-      onConfirm: this.state.alertParams.onConfirm ? _ => {
-        this.setState({
+      ref: this.selfRef,
+      children: [this.state.contextMenuVisible ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        tinode: this.tinode,
+        bounds: this.state.applicationBounds,
+        clickAt: this.state.contextMenuClickAt,
+        params: this.state.contextMenuParams,
+        items: this.state.contextMenuItems,
+        hide: this.handleHideContextMenu,
+        onShowAlert: this.handleShowAlert,
+        onAction: this.handleContextMenuAction,
+        onTopicRemoved: topicName => {
+          if (topicName == this.state.topicSelected) {
+            this.handleTopicSelected(null);
+          }
+        },
+        onError: this.handleError
+      }, void 0, false) : null, this.state.forwardDialogVisible ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        tinode: this.tinode,
+        contacts: this.state.chatList,
+        topicSelected: this.state.topicSelected,
+        myUserId: this.state.myUserId,
+        hide: this.handleHideForwardDialog,
+        onInitFind: this.tnInitFind,
+        searchResults: this.state.searchResults,
+        onSearchContacts: this.handleSearchContacts,
+        onTopicSelected: this.handleStartTopicRequest
+      }, void 0, false) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_11__.CALL_STATE_INCOMING_RECEIVED ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        tinode: this.tinode,
+        topic: this.state.callTopic,
+        seq: this.state.callSeq,
+        callState: this.state.callState,
+        audioOnly: this.state.callAudioOnly,
+        onClose: this.handleCallClose,
+        onRinging: this.handleCallRinging,
+        onAcceptCall: this.handleCallAccept,
+        onReject: this.handleCallHangup
+      }, void 0, false) : null, this.state.alertVisible ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        title: this.state.alertParams.title,
+        content: this.state.alertParams.content,
+        onReject: this.state.alertParams.onReject ? _ => this.setState({
           alertVisible: false
-        });
-        this.state.alertParams.onConfirm();
-      } : null,
-      confirm: this.state.alertParams.confirm
-    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      tinode: this.tinode,
-      connected: this.state.connected,
-      displayMobile: this.state.displayMobile,
-      state: this.state.sidePanelSelected,
-      title: this.state.sidePanelTitle,
-      avatar: this.state.sidePanelAvatar,
-      trustedBadges: this.state.myTrustedBadges,
-      login: this.state.login,
-      persist: this.state.persist,
-      myUserId: this.state.myUserId,
-      loginDisabled: this.state.loginDisabled,
-      loadSpinnerVisible: this.state.loadSpinnerVisible,
-      errorText: this.state.errorText,
-      errorLevel: this.state.errorLevel,
-      errorAction: this.state.errorAction,
-      errorActionText: this.state.errorActionText,
-      topicSelected: this.state.topicSelected,
-      chatList: this.state.chatList,
-      credMethod: this.state.credMethod,
-      credCode: this.state.credCode,
-      credToken: this.state.credToken,
-      transport: this.state.transport,
-      messageSounds: this.state.messageSounds,
-      desktopAlerts: this.state.desktopAlerts,
-      desktopAlertsEnabled: this.state.desktopAlertsEnabled,
-      incognitoMode: this.state.incognitoMode,
-      serverAddress: this.state.serverAddress,
-      secureConnection: this.state.secureConnection,
-      serverVersion: this.state.serverVersion,
-      reqCredMethod: this.state.reqCredMethod,
-      textSize: this.state.textSize,
-      colorSchema: this.state.colorSchema,
-      wallpaper: this.state.wallpaper,
-      wallpaperSize: this.state.wallpaperSize,
-      wallpaperBlur: this.state.wallpaperBlur,
-      systemColorSchema: this.state.systemColorSchema,
-      sendOnEnter: this.state.sendOnEnter,
-      onGlobalSettings: this.handleGlobalSettings,
-      onSignUp: this.handleNewAccount,
-      onSettings: this.handleSettings,
-      onNavigate: this.basicNavigator,
-      onLoginRequest: this.handleLoginRequest,
-      onPersistenceChange: this.handlePersistenceChange,
-      onCreateAccount: this.handleNewAccountRequest,
-      onUpdateAccountDesc: this.handleTopicUpdateRequest,
-      onUpdatePassword: this.handleUpdatePasswordRequest,
-      onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
-      onTogglePushNotifications: this.toggleFCMToken,
-      onToggleMessageSounds: this.handleToggleMessageSounds,
-      onToggleIncognitoMode: this.handleToggleIncognitoMode,
-      onChangeColorSchema: this.handleChangeColorSchema,
-      onTextSizeChanged: this.handleChangeTextSize,
-      onSendOnEnterChanged: this.handleSendOnEnter,
-      onSelectWallpapers: this.handleSelectWallpapers,
-      onWallpaperSelected: this.handleWallpaperSelected,
-      onCredAdd: this.handleCredAdd,
-      onCredDelete: this.handleCredDelete,
-      onCredConfirm: this.handleCredConfirm,
-      onTopicSelected: this.handleTopicSelected,
-      onCreateTopic: this.handleStartTopicRequest,
-      onLogout: this.handleLogout,
-      onDeleteAccount: this.handleDeleteAccount,
-      onShowAlert: this.handleShowAlert,
-      onCancel: this.handleSidepanelCancel,
-      onError: this.handleError,
-      onValidateCredentials: this.handleValidateCredentialsRequest,
-      onPasswordResetRequest: this.handlePasswordResetRequest,
-      onResetPassword: this.handleResetPassword,
-      onShowArchive: this.handleShowArchive,
-      onShowBlocked: this.handleShowBlocked,
-      onShowCountrySelector: this.handleShowCountrySelector,
-      onInitFind: this.tnInitFind,
-      searchResults: this.state.searchResults,
-      onSearchContacts: this.handleSearchContacts,
-      showContextMenu: this.handleShowContextMenu
-    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'topic-view' && !this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(MessagesView, {
-      tinode: this.tinode,
-      connected: this.state.connected,
-      ready: this.state.ready,
-      online: this.state.topicSelectedOnline,
-      acs: this.state.topicSelectedAcs,
-      displayMobile: this.state.displayMobile,
-      viewportWidth: this.state.viewportWidth,
-      viewportHeight: this.state.viewportHeight,
-      topic: this.state.topicSelected,
-      myUserId: this.state.myUserId,
-      myUserName: this.state.sidePanelTitle,
-      serverVersion: this.state.serverVersion,
-      serverAddress: this.state.serverAddress,
-      applicationVisible: this.state.applicationVisible,
-      colorSchema: colorSchema,
-      sendOnEnter: this.state.sendOnEnter,
-      wallpaper: this.state.wallpaper,
-      forwardMessage: this.state.forwardMessage,
-      onCancelForwardMessage: this.handleHideForwardDialog,
-      callTopic: this.state.callTopic,
-      callSeq: this.state.callSeq,
-      callState: this.state.callState,
-      callAudioOnly: this.state.callAudioOnly,
-      onCallHangup: this.handleCallHangup,
-      onAcceptCall: this.handleCallAccept,
-      onCallInvite: this.handleCallInvite,
-      onCallSendOffer: this.handleCallSendOffer,
-      onCallIceCandidate: this.handleCallIceCandidate,
-      onCallSendAnswer: this.handleCallSendAnswer,
-      errorText: this.state.errorText,
-      errorLevel: this.state.errorLevel,
-      errorAction: this.state.errorAction,
-      errorActionText: this.state.errorActionText,
-      newTopicParams: this.state.newTopicParams,
-      onHideMessagesView: this.handleHideMessagesView,
-      onError: this.handleError,
-      onNewTopicCreated: this.handleNewTopicCreated,
-      showContextMenu: this.handleShowContextMenu,
-      onChangePermissions: this.handleChangePermissions,
-      onNewChat: this.handleNewChatInvitation,
-      sendMessage: this.handleSendMessage,
-      onVideoCallClosed: this.handleCallClose
-    })) : null, this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(InfoView, {
-      tinode: this.tinode,
-      connected: this.state.connected,
-      displayMobile: this.state.displayMobile,
-      topic: this.state.topicSelected,
-      searchableContacts: this.state.searchableContacts,
-      myUserId: this.state.myUserId,
-      panel: this.state.infoPanel,
-      errorText: this.state.errorText,
-      errorLevel: this.state.errorLevel,
-      errorAction: this.state.errorAction,
-      errorActionText: this.state.errorActionText,
-      onNavigate: this.infoNavigator,
-      onTopicDescUpdateRequest: this.handleTopicUpdateRequest,
-      onShowAlert: this.handleShowAlert,
-      onChangePermissions: this.handleChangePermissions,
-      onMemberUpdateRequest: this.handleMemberUpdateRequest,
-      onDeleteTopic: this.handleDeleteTopicRequest,
-      onDeleteMessages: this.handleDeleteMessagesRequest,
-      onLeaveTopic: this.handleLeaveUnsubRequest,
-      onBlockTopic: this.handleBlockTopicRequest,
-      onReportTopic: this.handleReportTopic,
-      onShareTheCard: this.handleShareTheCard,
-      onTopicTagsUpdateRequest: this.handleTagsUpdateRequest,
-      onTopicUnArchive: this.handleUnarchive,
-      onInitFind: this.tnInitFind,
-      onError: this.handleError,
-      showContextMenu: this.handleShowContextMenu
-    })) : null);
+        }) : null,
+        reject: this.state.alertParams.reject,
+        onConfirm: this.state.alertParams.onConfirm ? _ => {
+          this.setState({
+            alertVisible: false
+          });
+          this.state.alertParams.onConfirm();
+        } : null,
+        confirm: this.state.alertParams.confirm
+      }, void 0, false) : null, !this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        tinode: this.tinode,
+        connected: this.state.connected,
+        displayMobile: this.state.displayMobile,
+        state: this.state.sidePanelSelected,
+        title: this.state.sidePanelTitle,
+        avatar: this.state.sidePanelAvatar,
+        trustedBadges: this.state.myTrustedBadges,
+        login: this.state.login,
+        persist: this.state.persist,
+        myUserId: this.state.myUserId,
+        loginDisabled: this.state.loginDisabled,
+        loadSpinnerVisible: this.state.loadSpinnerVisible,
+        errorText: this.state.errorText,
+        errorLevel: this.state.errorLevel,
+        errorAction: this.state.errorAction,
+        errorActionText: this.state.errorActionText,
+        topicSelected: this.state.topicSelected,
+        chatList: this.state.chatList,
+        credMethod: this.state.credMethod,
+        credCode: this.state.credCode,
+        credToken: this.state.credToken,
+        transport: this.state.transport,
+        messageSounds: this.state.messageSounds,
+        desktopAlerts: this.state.desktopAlerts,
+        desktopAlertsEnabled: this.state.desktopAlertsEnabled,
+        incognitoMode: this.state.incognitoMode,
+        serverAddress: this.state.serverAddress,
+        secureConnection: this.state.secureConnection,
+        serverVersion: this.state.serverVersion,
+        reqCredMethod: this.state.reqCredMethod,
+        textSize: this.state.textSize,
+        colorSchema: this.state.colorSchema,
+        wallpaper: this.state.wallpaper,
+        wallpaperSize: this.state.wallpaperSize,
+        wallpaperBlur: this.state.wallpaperBlur,
+        systemColorSchema: this.state.systemColorSchema,
+        sendOnEnter: this.state.sendOnEnter,
+        onGlobalSettings: this.handleGlobalSettings,
+        onSignUp: this.handleNewAccount,
+        onSettings: this.handleSettings,
+        onNavigate: this.basicNavigator,
+        onLoginRequest: this.handleLoginRequest,
+        onPersistenceChange: this.handlePersistenceChange,
+        onCreateAccount: this.handleNewAccountRequest,
+        onUpdateAccountDesc: this.handleTopicUpdateRequest,
+        onUpdatePassword: this.handleUpdatePasswordRequest,
+        onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
+        onTogglePushNotifications: this.toggleFCMToken,
+        onToggleMessageSounds: this.handleToggleMessageSounds,
+        onToggleIncognitoMode: this.handleToggleIncognitoMode,
+        onChangeColorSchema: this.handleChangeColorSchema,
+        onTextSizeChanged: this.handleChangeTextSize,
+        onSendOnEnterChanged: this.handleSendOnEnter,
+        onSelectWallpapers: this.handleSelectWallpapers,
+        onWallpaperSelected: this.handleWallpaperSelected,
+        onCredAdd: this.handleCredAdd,
+        onCredDelete: this.handleCredDelete,
+        onCredConfirm: this.handleCredConfirm,
+        onTopicSelected: this.handleTopicSelected,
+        onCreateTopic: this.handleStartTopicRequest,
+        onLogout: this.handleLogout,
+        onDeleteAccount: this.handleDeleteAccount,
+        onShowAlert: this.handleShowAlert,
+        onCancel: this.handleSidepanelCancel,
+        onError: this.handleError,
+        onValidateCredentials: this.handleValidateCredentialsRequest,
+        onPasswordResetRequest: this.handlePasswordResetRequest,
+        onResetPassword: this.handleResetPassword,
+        onShowArchive: this.handleShowArchive,
+        onShowBlocked: this.handleShowBlocked,
+        onShowCountrySelector: this.handleShowCountrySelector,
+        onInitFind: this.tnInitFind,
+        searchResults: this.state.searchResults,
+        onSearchContacts: this.handleSearchContacts,
+        showContextMenu: this.handleShowContextMenu
+      }, void 0, false) : null, !this.state.displayMobile || this.state.mobilePanel == 'topic-view' && !this.state.infoPanel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(MessagesView, {
+          tinode: this.tinode,
+          connected: this.state.connected,
+          ready: this.state.ready,
+          online: this.state.topicSelectedOnline,
+          acs: this.state.topicSelectedAcs,
+          displayMobile: this.state.displayMobile,
+          viewportWidth: this.state.viewportWidth,
+          viewportHeight: this.state.viewportHeight,
+          topic: this.state.topicSelected,
+          myUserId: this.state.myUserId,
+          myUserName: this.state.sidePanelTitle,
+          serverVersion: this.state.serverVersion,
+          serverAddress: this.state.serverAddress,
+          applicationVisible: this.state.applicationVisible,
+          colorSchema: colorSchema,
+          sendOnEnter: this.state.sendOnEnter,
+          wallpaper: this.state.wallpaper,
+          forwardMessage: this.state.forwardMessage,
+          onCancelForwardMessage: this.handleHideForwardDialog,
+          callTopic: this.state.callTopic,
+          callSeq: this.state.callSeq,
+          callState: this.state.callState,
+          callAudioOnly: this.state.callAudioOnly,
+          onCallHangup: this.handleCallHangup,
+          onAcceptCall: this.handleCallAccept,
+          onCallInvite: this.handleCallInvite,
+          onCallSendOffer: this.handleCallSendOffer,
+          onCallIceCandidate: this.handleCallIceCandidate,
+          onCallSendAnswer: this.handleCallSendAnswer,
+          errorText: this.state.errorText,
+          errorLevel: this.state.errorLevel,
+          errorAction: this.state.errorAction,
+          errorActionText: this.state.errorActionText,
+          newTopicParams: this.state.newTopicParams,
+          onHideMessagesView: this.handleHideMessagesView,
+          onError: this.handleError,
+          onNewTopicCreated: this.handleNewTopicCreated,
+          showContextMenu: this.handleShowContextMenu,
+          onChangePermissions: this.handleChangePermissions,
+          onNewChat: this.handleNewChatInvitation,
+          sendMessage: this.handleSendMessage,
+          onVideoCallClosed: this.handleCallClose
+        }, void 0, false)
+      }, void 0, false) : null, this.state.infoPanel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+        fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "loading_note",
+            defaultMessage: "Loading...",
+            description: "Message shown when component is loading"
+          }, void 0, false)
+        }, void 0, false),
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(InfoView, {
+          tinode: this.tinode,
+          connected: this.state.connected,
+          displayMobile: this.state.displayMobile,
+          topic: this.state.topicSelected,
+          searchableContacts: this.state.searchableContacts,
+          myUserId: this.state.myUserId,
+          panel: this.state.infoPanel,
+          errorText: this.state.errorText,
+          errorLevel: this.state.errorLevel,
+          errorAction: this.state.errorAction,
+          errorActionText: this.state.errorActionText,
+          onNavigate: this.infoNavigator,
+          onTopicDescUpdateRequest: this.handleTopicUpdateRequest,
+          onShowAlert: this.handleShowAlert,
+          onChangePermissions: this.handleChangePermissions,
+          onMemberUpdateRequest: this.handleMemberUpdateRequest,
+          onDeleteTopic: this.handleDeleteTopicRequest,
+          onDeleteMessages: this.handleDeleteMessagesRequest,
+          onLeaveTopic: this.handleLeaveUnsubRequest,
+          onBlockTopic: this.handleBlockTopicRequest,
+          onReportTopic: this.handleReportTopic,
+          onShareTheCard: this.handleShareTheCard,
+          onTopicTagsUpdateRequest: this.handleTagsUpdateRequest,
+          onTopicUnArchive: this.handleUnarchive,
+          onInitFind: this.tnInitFind,
+          onError: this.handleError,
+          showContextMenu: this.handleShowContextMenu
+        }, void 0, false)
+      }, void 0, false) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -12409,6 +7422,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../widgets/topic-desc-edit.jsx */ "./src/widgets/topic-desc-edit.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -12461,15 +7476,16 @@ class TopicCommonView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     }
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      tinode: this.props.tinode,
-      topic: this.props.topic,
-      onUpdateTopicDesc: this.props.onUpdateTopicDesc,
-      onUpdateTags: this.handleTagsUpdated,
-      onError: this.props.onError
-    }));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+      className: "scrollable-panel",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(_widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        tinode: this.props.tinode,
+        topic: this.props.topic,
+        onUpdateTopicDesc: this.props.onUpdateTopicDesc,
+        onUpdateTags: this.handleTagsUpdated,
+        onError: this.props.onError
+      }, void 0, false)
+    }, void 0, false);
   }
 }
 ;
@@ -12487,22 +7503,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   phone: {
-    id: "phone_dative",
-    defaultMessage: [{
-      "type": 0,
-      "value": "phone"
-    }]
+    id: 'phone_dative',
+    defaultMessage: 'phone',
+    description: "Dative case of 'phone', i.e. 'phone' in 'by phone'"
   },
   email: {
-    id: "email_dative",
-    defaultMessage: [{
-      "type": 0,
-      "value": "email"
-    }]
+    id: 'email_dative',
+    defaultMessage: 'email',
+    description: "Dative case of 'email', i.e. 'email' in 'by email'"
   }
 });
 class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -12567,59 +7581,59 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       'tel': formatMessage(messages.phone)
     };
     const method = methods[this.props.credMethod] || this.props.credMethod;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small gray",
-      htmlFor: "enter-confirmation-code"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "enter_confirmation_code_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Confirmation code"
-      }],
-      values: {
-        method: method
-      }
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "numeric_confirmation_code_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Numbers only"
-      }]
-    }, numbers_only => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      id: "enter-confirmation-code",
-      placeholder: numbers_only,
-      value: this.state.code,
-      onChange: this.handleCodeChange,
-      onKeyDown: this.handleKeyPress,
-      required: true
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_confirm",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Confirm"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "panel-form",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("label", {
+          className: "small gray",
+          htmlFor: "enter-confirmation-code",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "enter_confirmation_code_prompt",
+            defaultMessage: "Confirmation code",
+            description: "Request to enter confirmation code",
+            values: {
+              method: method
+            }
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "numeric_confirmation_code_prompt",
+          defaultMessage: "Numbers only",
+          description: "Prompt for numeric conformation code",
+          children: numbers_only => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+            type: "text",
+            id: "enter-confirmation-code",
+            placeholder: numbers_only,
+            value: this.state.code,
+            onChange: this.handleCodeChange,
+            onKeyDown: this.handleKeyPress,
+            required: true
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: this.handleCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_cancel",
+            defaultMessage: "Cancel",
+            description: "Button [Cancel]"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+          className: "primary",
+          onClick: this.handleSubmit,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_confirm",
+            defaultMessage: "Confirm",
+            description: "Button [Confirm]"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -12641,39 +7655,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "alert-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "alert"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title"
-    }, this.props.title), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "content"
-    }, this.props.content), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, this.props.onReject ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "outline",
-      onClick: this.props.onReject
-    }, this.props.reject || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })) : null, this.props.onConfirm ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.props.onConfirm
-    }, this.props.confirm || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    })) : null)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "alert-container",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "alert",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "title",
+          children: this.props.title
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "content",
+          children: this.props.content
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          className: "dialog-buttons",
+          children: [this.props.onReject ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+            className: "outline",
+            onClick: this.props.onReject,
+            children: this.props.reject || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_cancel",
+              defaultMessage: "Cancel",
+              description: "Button [Cancel]"
+            }, void 0, false)
+          }, void 0, false) : null, this.props.onConfirm ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+            className: "primary",
+            onClick: this.props.onConfirm,
+            children: this.props.confirm || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_ok",
+              defaultMessage: "OK",
+              description: "Button [OK]"
+            }, void 0, false)
+          }, void 0, false) : null]
+        }, void 0, true)]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 ;
@@ -12693,6 +7712,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -12706,11 +7727,9 @@ const THUMB_COLOR = '#1781d7';
 const MIN_PREVIEW_LENGTH = 16;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   icon_title_play: {
-    id: "icon_title_play",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Play recording"
-    }]
+    id: 'icon_title_play',
+    defaultMessage: 'Play recording',
+    description: 'Icon tool tip for starting audio playback'
   }
 });
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -12898,26 +7917,36 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   render() {
     const playClass = 'm-icon' + (this.props.short ? '' : ' large') + (this.state.canPlay ? '' : ' disabled');
-    const play = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    const play = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
       href: "#",
       onClick: this.handlePlay,
-      title: this.props.intl.formatMessage(messages.icon_title_play)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: playClass
-    }, this.state.playing ? 'pause_circle' : this.state.canPlay ? 'play_circle' : 'not_interested'));
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "audio-player"
-    }, this.props.short ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      className: "playback",
-      ref: this.canvasRef,
-      onClick: this.handleSeek
-    }), play) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, play, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      className: "playback",
-      ref: this.canvasRef,
-      onClick: this.handleSeek
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "timer"
-    }, this.state.currentTime, "/", this.state.duration))));
+      title: this.props.intl.formatMessage(messages.icon_title_play),
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
+        className: playClass,
+        children: this.state.playing ? 'pause_circle' : this.state.canPlay ? 'play_circle' : 'not_interested'
+      }, void 0, false)
+    }, void 0, false);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      className: "audio-player",
+      children: this.props.short ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("canvas", {
+          className: "playback",
+          ref: this.canvasRef,
+          onClick: this.handleSeek
+        }, void 0, false), play]
+      }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+        children: [play, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("canvas", {
+            className: "playback",
+            ref: this.canvasRef,
+            onClick: this.handleSeek
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            className: "timer",
+            children: [this.state.currentTime, "/", this.state.duration]
+          }, void 0, true)]
+        }, void 0, true)]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AudioPlayer));
@@ -12940,6 +7969,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cropper_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cropper.jsx */ "./src/widgets/cropper.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -12974,34 +8005,35 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     });
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_cropper_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      source: this.props.avatar,
-      onChange: this.handleChange
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: this.props.onCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      className: "panel-form",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_cropper_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          source: this.props.avatar,
+          onChange: this.handleChange
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: [this.props.onCancel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: this.props.onCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_cancel",
+            defaultMessage: "Cancel",
+            description: "Button [Cancel]"
+          }, void 0, false)
+        }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: "primary",
+          onClick: this.handleSubmit,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_ok",
+            defaultMessage: "OK",
+            description: "Button [OK]"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -13024,6 +8056,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -13052,46 +8086,53 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   render() {
     const randId = 'file-input-avatar-' + ('' + Math.random()).substring(0, 4);
     const className = 'avatar-upload' + (this.props.readOnly ? ' read-only' : '');
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: className
-    }, this.props.readOnly || !this.state.source ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "clear-avatar",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onImageUpdated();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "clear")), this.state.source ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.state.source, 'image')),
-      className: "preview"
-    }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: true,
-      topic: this.props.uid,
-      title: this.props.title
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "blank"
-    }, _config_js__WEBPACK_IMPORTED_MODULE_4__.AVATAR_SIZE, "\xD7", _config_js__WEBPACK_IMPORTED_MODULE_4__.AVATAR_SIZE), this.props.readOnly ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "file",
-      id: randId,
-      className: "inputfile hidden",
-      accept: "image/*",
-      onChange: this.handleFileReceived
-    }), this.props.readOnly ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      htmlFor: randId,
-      className: "round"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "file_upload")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      show: this.props.uploading,
-      large: true,
-      clear: true,
-      centered: true
-    }));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+      className: className,
+      children: [this.props.readOnly || !this.state.source ? null : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+        href: "#",
+        className: "clear-avatar",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onImageUpdated();
+        },
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "clear"
+        }, void 0, false)
+      }, void 0, false), this.state.source ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("img", {
+        src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.state.source, 'image')),
+        className: "preview"
+      }, void 0, false) : this.props.readOnly && this.props.uid ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "avatar-box",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          authorizeURL: this.props.tinode.authorizeURL,
+          avatar: true,
+          topic: this.props.uid,
+          title: this.props.title
+        }, void 0, false)
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "blank",
+        children: [_config_js__WEBPACK_IMPORTED_MODULE_4__.AVATAR_SIZE, "×", _config_js__WEBPACK_IMPORTED_MODULE_4__.AVATAR_SIZE]
+      }, void 0, true), this.props.readOnly ? null : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("input", {
+        type: "file",
+        id: randId,
+        className: "inputfile hidden",
+        accept: "image/*",
+        onChange: this.handleFileReceived
+      }, void 0, false), this.props.readOnly ? null : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("label", {
+        htmlFor: randId,
+        className: "round",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "file_upload"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        show: this.props.uploading,
+        large: true,
+        clear: true,
+        centered: true
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -13109,6 +8150,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 const icon_mapping = {
@@ -13116,25 +8159,19 @@ const icon_mapping = {
 };
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_verified: {
-    id: "badge_verified",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Verified/official"
-    }]
+    id: 'badge_verified',
+    defaultMessage: 'Verified/official',
+    description: 'Explanation of a verified account or topic badge'
   },
   badge_staff: {
-    id: "badge_staff",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Staff-managed"
-    }]
+    id: 'badge_staff',
+    defaultMessage: 'Staff-managed',
+    description: 'Explanation of a staff-managed account or topic badge'
   },
   badge_danger: {
-    id: "badge_danger",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Untrustworthy"
-    }]
+    id: 'badge_danger',
+    defaultMessage: 'Untrustworthy',
+    description: 'Suspicious or untrustworthy account or topic badge'
   }
 });
 class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -13148,14 +8185,17 @@ class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.props.trustedBadges.forEach(b => {
         const comment = this.props.short ? null : formatMessage(messages['badge_' + b]);
         const style = 'm-icon fill ' + b + '-color';
-        badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        badges.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
           className: "trusted-badge",
-          key: b
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: style
-        }, icon_mapping[b] || b), " ", comment));
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: style,
+            children: icon_mapping[b] || b
+          }, void 0, false), " ", comment]
+        }, b, true));
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, badges);
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+        children: badges
+      }, void 0, false);
     }
     return null;
   }
@@ -13177,18 +8217,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
         this.props.onBack();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "arrow_back"));
+      },
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+        className: "m-icon",
+        children: "arrow_back"
+      }, void 0, false)
+    }, void 0, false);
   }
 }
 
@@ -13212,6 +8256,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -13313,37 +8359,49 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.props.onClose();
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "alert-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "incoming-call"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-card incoming pulse"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: this.state.avatar || true,
-      topic: this.props.topic,
-      title: this.state.fullName
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-name"
-    }, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__.truncateString)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      short: true,
-      trustedBadges: this.state.trustedBadges
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "controls"
-    }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "danger",
-      onClick: this.handleRejectCall
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "positive",
-      onClick: this.handleAcceptCall
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "call"))) : null)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+      className: "alert-container",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        className: "incoming-call",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+          className: "caller-card incoming pulse",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            className: "avatar-box",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+              authorizeURL: this.props.tinode.authorizeURL,
+              avatar: this.state.avatar || true,
+              topic: this.props.topic,
+              title: this.state.fullName
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+            className: "caller-name",
+            children: [(0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__.truncateString)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              short: true,
+              trustedBadges: this.state.trustedBadges
+            }, void 0, false)]
+          }, void 0, true)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+          id: "controls",
+          children: this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("button", {
+              className: "danger",
+              onClick: this.handleRejectCall,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+                className: "m-icon",
+                children: "call_end"
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("button", {
+              className: "positive",
+              onClick: this.handleAcceptCall,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("i", {
+                className: "m-icon",
+                children: "call"
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true) : null
+        }, void 0, false)]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 ;
@@ -13365,6 +8423,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -13373,79 +8433,76 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const successClass = 'm-icon medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
-    const title = this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    const title = this.props.incoming ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "calls_incoming",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Incoming call"
-      }]
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      defaultMessage: "Incoming call",
+      description: "Incoming call label"
+    }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "calls_outgoing",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Outgoing call"
-      }]
-    });
+      defaultMessage: "Outgoing call",
+      description: "Outgoing call label"
+    }, void 0, false);
     let duration;
     if (isCallDropped) {
       switch (this.props.callState) {
         case 'busy':
-          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_busy",
-            defaultMessage: [{
-              "type": 0,
-              "value": "busy"
-            }]
-          });
+            defaultMessage: "busy",
+            description: "Label for busy call line"
+          }, void 0, false);
           break;
         case 'declined':
-          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_declined",
-            defaultMessage: [{
-              "type": 0,
-              "value": "declined"
-            }]
-          });
+            defaultMessage: "declined",
+            description: "Label for declined call"
+          }, void 0, false);
           break;
         case 'missed':
-          duration = this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = this.props.incoming ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_missed",
-            defaultMessage: [{
-              "type": 0,
-              "value": "missed"
-            }]
-          }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            defaultMessage: "missed",
+            description: "Label for missed incoming call"
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_cancelled",
-            defaultMessage: [{
-              "type": 0,
-              "value": "cancelled"
-            }]
-          });
+            defaultMessage: "cancelled",
+            description: "Label for cancelled outgoing call"
+          }, void 0, false);
           break;
         default:
-          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_disconnected",
-            defaultMessage: [{
-              "type": 0,
-              "value": "disconnected"
-            }]
-          });
+            defaultMessage: "disconnected",
+            description: "Label for disconnected call"
+          }, void 0, false);
           break;
       }
     } else {
-      duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
+      duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("span", {
+        children: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000)
+      }, void 0, false);
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-message"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon big gray"
-    }, "call")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column narrow"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, title), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "duration"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: successClass
-    }, callIcon), " ", duration)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+      className: "call-message",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("i", {
+          className: "m-icon big gray",
+          children: "call"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+        className: "flex-column narrow",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+          children: title
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+          className: "duration",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("i", {
+            className: successClass,
+            children: callIcon
+          }, void 0, false), " ", duration]
+        }, void 0, true)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 
@@ -13466,6 +8523,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -13477,66 +8536,61 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     if (isCallDropped) {
       switch (this.props.callState) {
         case 'busy':
-          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_busy",
-            defaultMessage: [{
-              "type": 0,
-              "value": "busy"
-            }]
-          });
+            defaultMessage: "busy",
+            description: "Label for busy call line"
+          }, void 0, false);
           break;
         case 'declined':
-          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_declined",
-            defaultMessage: [{
-              "type": 0,
-              "value": "declined"
-            }]
-          });
+            defaultMessage: "declined",
+            description: "Label for declined call"
+          }, void 0, false);
           break;
         case 'missed':
-          duration = this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = this.props.incoming ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_missed",
-            defaultMessage: [{
-              "type": 0,
-              "value": "missed"
-            }]
-          }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            defaultMessage: "missed",
+            description: "Label for missed incoming call"
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_cancelled",
-            defaultMessage: [{
-              "type": 0,
-              "value": "cancelled"
-            }]
-          });
+            defaultMessage: "cancelled",
+            description: "Label for cancelled outgoing call"
+          }, void 0, false);
           break;
         default:
-          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_disconnected",
-            defaultMessage: [{
-              "type": 0,
-              "value": "disconnected"
-            }]
-          });
+            defaultMessage: "disconnected",
+            description: "Label for disconnected call"
+          }, void 0, false);
           break;
       }
     } else if (['accepted', 'started'].includes(this.props.callState) && !this.props.duration) {
-      duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "call_in_progress",
-        defaultMessage: [{
-          "type": 0,
-          "value": "in progress"
-        }]
-      });
+        defaultMessage: "in progress",
+        description: "Label for call in progress"
+      }, void 0, false);
     } else {
-      duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
+      duration = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("span", {
+        children: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000)
+      }, void 0, false);
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "composed-material"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon thin"
-    }, "call"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon second thin"
-    }, icon2)), " ", duration);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+        className: "composed-material",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("i", {
+          className: "m-icon thin",
+          children: "call"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("i", {
+          className: "m-icon second thin",
+          children: icon2
+        }, void 0, false)]
+      }, void 0, true), " ", duration]
+    }, void 0, true);
   }
 }
 ;
@@ -13617,6 +8671,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _chip_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./chip.jsx */ "./src/widgets/chip.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -13721,7 +8777,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     let count = 0;
     const staticMembers = this.props.staticMembers || [];
     this.state.sortedChips.forEach(item => {
-      chips.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      chips.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
         tinode: this.props.tinode,
         onCancel: this.handleChipCancel,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageUrl)(item.public ? item.public.photo : null),
@@ -13730,26 +8786,26 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         topic: item.user,
         required: staticMembers.includes(item.user),
         invalid: item.invalid,
-        index: count,
-        key: item.user
-      }));
+        index: count
+      }, item.user, false));
       count++;
     });
     const className = "chip-input" + (this.state.focused ? ' focused' : '');
     const autoFocus = !(this.props.tabIndex > 0);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: className
-    }, chips, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      placeholder: this.props.prompt,
-      onChange: this.handleTextInput,
-      onFocus: this.handleFocusGained,
-      onBlur: this.handleFocusLost,
-      onKeyDown: this.handleKeyDown,
-      value: this.state.input,
-      tabIndex: this.props.tabIndex,
-      autoFocus: autoFocus
-    }));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+      className: className,
+      children: [chips, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("input", {
+        type: "text",
+        placeholder: this.props.prompt,
+        onChange: this.handleTextInput,
+        onFocus: this.handleFocusGained,
+        onBlur: this.handleFocusLost,
+        onKeyDown: this.handleKeyDown,
+        value: this.state.input,
+        tabIndex: this.props.tabIndex,
+        autoFocus: autoFocus
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -13769,6 +8825,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -13783,23 +8841,28 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
   render() {
     const title = this.props.title || this.props.topic;
     const className = this.props.invalid ? 'chip invalid' : 'chip';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: className
-    }, this.props.noAvatar ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "spacer"
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: this.props.avatar || true,
-      topic: this.props.topic,
-      title: this.props.title
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, title), this.props.onCancel && !this.props.required ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleCancel
-    }, "\xD7") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "spacer"
-    }));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: className,
+      children: [this.props.noAvatar ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+        className: "spacer"
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "avatar-box",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          authorizeURL: this.props.tinode.authorizeURL,
+          avatar: this.props.avatar || true,
+          topic: this.props.topic,
+          title: this.props.title
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+        children: title
+      }, void 0, false), this.props.onCancel && !this.props.required ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+        href: "#",
+        onClick: this.handleCancel,
+        children: "×"
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+        className: "spacer"
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -13817,6 +8880,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class ContactAction extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -13833,12 +8898,14 @@ class ContactAction extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("li", {
       onClick: this.handleClick,
-      className: "action"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "action-text"
-    }, formatMessage(this.props.title, this.props.values)));
+      className: "action",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "action-text",
+        children: formatMessage(this.props.title, this.props.values)
+      }, void 0, false)
+    }, void 0, false);
   }
 }
 ;
@@ -13858,6 +8925,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 const icon_mapping = {
   'muted': 'notifications_off',
@@ -13872,18 +8941,20 @@ class ContactBadges extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       this.props.badges.forEach(b => {
         const color = b.color ? ' ' + b.color : '';
         if (b.icon) {
-          badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          badges.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
             className: 'm-icon fill as-badge' + color,
-            key: b.key || b.icon
-          }, icon_mapping[b.icon] || b.icon));
+            children: icon_mapping[b.icon] || b.icon
+          }, b.key || b.icon, false));
         } else {
-          badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          badges.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("span", {
             className: 'badge' + color,
-            key: b.key || b.name
-          }, b.name));
+            children: b.name
+          }, b.key || b.name, false));
         }
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, badges);
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+        children: badges
+      }, void 0, false);
     }
     return null;
   }
@@ -13909,6 +8980,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -13918,18 +8991,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_you: {
-    id: "badge_you",
-    defaultMessage: [{
-      "type": 0,
-      "value": "you"
-    }]
+    id: 'badge_you',
+    defaultMessage: 'you',
+    description: 'Badge for indicating the current user'
   },
   badge_owner: {
-    id: "badge_owner",
-    defaultMessage: [{
-      "type": 0,
-      "value": "owner"
-    }]
+    id: 'badge_owner',
+    defaultMessage: 'owner',
+    description: 'Badge for indicating the owner'
   }
 });
 class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -13942,7 +9011,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     let contactsCount = 0;
     if (this.props.showSelfTopic) {
       const selected = showCheckmark ? this.props.topicSelected.indexOf('slf') > -1 : this.props.topicSelected === 'slf';
-      contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      contactNodes.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         tinode: this.props.tinode,
         avatar: true,
         showMode: this.props.showMode,
@@ -13951,22 +9020,20 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         onSelected: this.props.onTopicSelected,
         showContextMenu: this.props.showContextMenu,
         index: contactNodes.length,
-        item: "slf",
-        key: "slf"
-      }));
+        item: "slf"
+      }, 'slf', false));
       contactsCount++;
     }
     if (this.props.contacts && this.props.contacts.length > 0) {
       const usedKeys = {};
       this.props.contacts.forEach(c => {
         if (c.action) {
-          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          contactNodes.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
             title: c.title,
             action: c.action,
             values: c.values,
-            key: c.action,
             onAction: this.props.onAction
-          }));
+          }, c.action, false));
         } else {
           const key = this.props.showMode ? c.user : c.topic || c.user;
           if (usedKeys[key]) {
@@ -14020,7 +9087,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
               }
             }
           }
-          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          contactNodes.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             title: c.public ? c.public.fn : null,
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
@@ -14048,23 +9115,25 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
             deleted: c._deleted,
             onSelected: this.props.onTopicSelected,
             item: key,
-            index: contactNodes.length,
-            key: key
-          }));
+            index: contactNodes.length
+          }, key, false));
           contactsCount++;
         }
       }, this);
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: this.props.noScroll ? null : "scrollable-panel"
-    }, contactsCount == 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "center-medium-text",
-      style: {
-        whiteSpace: 'pre-line'
-      }
-    }, this.props.emptyListMessage) : null, contactNodes.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-      className: "contact-box"
-    }, contactNodes) : null);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+      className: this.props.noScroll ? null : "scrollable-panel",
+      children: [contactsCount == 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        className: "center-medium-text",
+        style: {
+          whiteSpace: 'pre-line'
+        },
+        children: this.props.emptyListMessage
+      }, void 0, false) : null, contactNodes.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("ul", {
+        className: "contact-box",
+        children: contactNodes
+      }, void 0, false) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -14091,6 +9160,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -14103,18 +9174,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   self_topic_name: {
-    id: "self_topic_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Saved messages"
-    }]
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
   },
   self_topic_comment: {
-    id: "self_topic_comment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Notes, messages, links, files saved for posterity"
-    }]
+    id: 'self_topic_comment',
+    defaultMessage: 'Notes, messages, links, files saved for posterity',
+    description: 'Comment for self topic for UI'
   }
 });
 class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -14147,13 +9214,13 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       if (self) {
         title = this.props.intl.formatMessage(messages.self_topic_name);
       } else {
-        title = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "unnamed_topic",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Unnamed"
-          }]
-        }));
+        title = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "unnamed_topic",
+            defaultMessage: "Unnamed",
+            description: "Title shown when the topic has no name"
+          }, void 0, false)
+        }, void 0, false);
       }
     } else if (title.length > 30) {
       title = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__.truncateString)(title, 30);
@@ -14207,71 +9274,94 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
         previewIsResponse: this.props.previewIsResponse
       }));
     } else if (this.props.preview) {
-      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon gray"
-      }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "gray"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "invalid_content",
-        defaultMessage: [{
-          "type": 0,
-          "value": "invalid content"
-        }]
-      })));
+      preview = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.Fragment, {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+          className: "m-icon gray",
+          children: "warning_amber"
+        }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+          className: "gray",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "invalid_content",
+            defaultMessage: "invalid content",
+            description: "Shown when the message is unreadable"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true);
     }
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
-    const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: 'm-icon small space-right' + (icon.color ? ' ' + icon.color : '')
-    }, icon.name) : null;
+    const marker = icon ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+      className: 'm-icon small space-right' + (icon.color ? ' ' + icon.color : ''),
+      children: icon.name
+    }, void 0, false) : null;
     const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
     const comment = preview || this.props.comment || (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
     const bgColor = this.props.showCheckmark ? null : this.props.selected ? 'selected' : this.props.pinned ? 'tpinned' : null;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("li", {
       className: bgColor,
-      onClick: this.handleClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: avatar,
-      title: this.props.title,
-      topic: this.props.item,
-      deleted: this.props.deleted
-    }), this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "deleted m-icon"
-    }, "cancel") : !self && this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: online
-    }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "checkmark m-icon"
-    }, "check_circle") : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "text-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: titleClass
-    }, title), this.props.isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon as-badge"
-    }, "group") : null, this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon as-badge"
-    }, "podcasts") : null, !self ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      badges: icon_badges
-    }) : null, !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      count: this.props.unread,
-      limit: 9
-    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      badges: badges
-    })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `contact-comment${this.props.reaction ? ' with-reaction' : ''}`
-    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, comment))), this.props.showContextMenu && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleContextClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more"))), this.props.reaction && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "react-icon"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon small"
-    }, "favorite")));
+      onClick: this.handleClick,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "avatar-box",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          authorizeURL: this.props.tinode.authorizeURL,
+          avatar: avatar,
+          title: this.props.title,
+          topic: this.props.item,
+          deleted: this.props.deleted
+        }, void 0, false), this.props.deleted ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+          className: "deleted m-icon",
+          children: "cancel"
+        }, void 0, false) : !self && this.props.showOnline ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("span", {
+          className: online
+        }, void 0, false) : this.props.showCheckmark && this.props.selected ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+          className: "checkmark m-icon",
+          children: "check_circle"
+        }, void 0, false) : null]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "text-box",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("span", {
+            className: titleClass,
+            children: title
+          }, void 0, false), this.props.isGroup ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+            className: "m-icon as-badge",
+            children: "group"
+          }, void 0, false) : null, this.props.isChannel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+            className: "m-icon as-badge",
+            children: "podcasts"
+          }, void 0, false) : null, !self ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            badges: icon_badges
+          }, void 0, false) : null, !this.props.deleted ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            count: this.props.unread,
+            limit: 9
+          }, void 0, false) : null]
+        }, void 0, true), this.props.showMode ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("span", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            badges: badges
+          }, void 0, false)
+        }, void 0, false) : this.props.small ? null : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+          className: `contact-comment${this.props.reaction ? ' with-reaction' : ''}`,
+          children: [marker, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("span", {
+            children: comment
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true), this.props.showContextMenu && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("span", {
+        className: "menuTrigger",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("a", {
+          href: "#",
+          onClick: this.handleContextClick,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "expand_more"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), this.props.reaction && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "react-icon",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("i", {
+          className: "m-icon small",
+          children: "favorite"
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -14291,191 +9381,141 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   info: {
-    id: "menu_item_info",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Info"
-    }]
+    id: 'menu_item_info',
+    defaultMessage: 'Info',
+    description: 'Show extended topic information'
   },
   clear_messages: {
-    id: "menu_item_clear_messages",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Clear messages"
-    }]
+    id: 'menu_item_clear_messages',
+    defaultMessage: 'Clear messages',
+    description: 'Delete all messages'
   },
   clear_for_all: {
-    id: "menu_item_clear_messages_for_all",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Clear for All"
-    }]
+    id: 'menu_item_clear_messages_for_all',
+    defaultMessage: 'Clear for All',
+    description: 'Delete all message(s) for all members'
   },
   delete: {
-    id: "menu_item_delete",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete"
-    }]
+    id: 'menu_item_delete',
+    defaultMessage: 'Delete',
+    description: 'Delete selected messages'
   },
   delete_for_all: {
-    id: "menu_item_delete_for_all",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete for All"
-    }]
+    id: 'menu_item_delete_for_all',
+    defaultMessage: 'Delete for All',
+    description: 'Delete selected message(s) for all members'
   },
   send_retry: {
-    id: "menu_item_send_retry",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Retry"
-    }]
+    id: 'menu_item_send_retry',
+    defaultMessage: 'Retry',
+    description: 'Retry sending message'
   },
   mute: {
-    id: "menu_item_mute",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Mute"
-    }]
+    id: 'menu_item_mute',
+    defaultMessage: 'Mute',
+    description: 'Turn off notifications'
   },
   unmute: {
-    id: "menu_item_unmute",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unmute"
-    }]
+    id: 'menu_item_unmute',
+    defaultMessage: 'Unmute',
+    description: 'Turn notifications on'
   },
   reply: {
-    id: "menu_item_reply",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Reply"
-    }]
+    id: 'menu_item_reply',
+    defaultMessage: 'Reply',
+    description: 'Reply to message'
   },
   forward: {
-    id: "menu_item_forward",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Forward"
-    }]
+    id: 'menu_item_forward',
+    defaultMessage: 'Forward',
+    description: 'Forward message'
   },
   edit: {
-    id: "menu_item_edit",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Edit"
-    }]
+    id: 'menu_item_edit',
+    defaultMessage: 'Edit',
+    description: 'Edit message'
   },
   topic_delete: {
-    id: "menu_item_delete_topic",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Delete"
-    }]
+    id: 'menu_item_delete_topic',
+    defaultMessage: 'Delete',
+    description: 'Delete entire topic'
   },
   topic_delete_warning: {
-    id: "topic_delete_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to delete this conversation? It cannot be undone."
-    }]
+    id: 'topic_delete_warning',
+    defaultMessage: 'Are you sure you want to delete this conversation? It cannot be undone.',
+    description: 'Alert warning when deleting entire topic'
   },
   delete_messages_warning: {
-    id: "delete_messages_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to delete all messages for everyone? It cannot be undone."
-    }]
+    id: 'delete_messages_warning',
+    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
+    description: 'Alert dialog warning when hard-deleting all messages.'
   },
   unblock: {
-    id: "menu_item_unblock",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unblock"
-    }]
+    id: 'menu_item_unblock',
+    defaultMessage: 'Unblock',
+    description: 'Unblock topic or user'
   },
   block: {
-    id: "menu_item_block",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Block"
-    }]
+    id: 'menu_item_block',
+    defaultMessage: 'Block',
+    description: 'Block topic or user'
   },
   topic_block_warning: {
-    id: "topic_block_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to block this conversation?"
-    }]
+    id: 'topic_block_warning',
+    defaultMessage: 'Are you sure you want to block this conversation?',
+    description: 'Alert warning when blocking a topic.'
   },
   member_delete: {
-    id: "menu_item_member_delete",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Remove"
-    }]
+    id: 'menu_item_member_delete',
+    defaultMessage: 'Remove',
+    description: 'Remove user from topic'
   },
   archive: {
-    id: "menu_item_archive_topic",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Archive"
-    }]
+    id: 'menu_item_archive_topic',
+    defaultMessage: 'Archive',
+    description: 'Move topic from the list of active chats to archive'
   },
   unarchive: {
-    id: "menu_item_restore_topic",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Restore"
-    }]
+    id: 'menu_item_restore_topic',
+    defaultMessage: 'Restore',
+    description: 'Restore topic from archive'
   },
   edit_permissions: {
-    id: "menu_item_edit_permissions",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Edit permissions"
-    }]
+    id: 'menu_item_edit_permissions',
+    defaultMessage: 'Edit permissions',
+    description: 'Menu item [Edit permissions]'
   },
   clear_messages_warning: {
-    id: "clear_messages_warning",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Are you sure you want to clear all messages? It cannot be undone."
-    }]
+    id: 'clear_messages_warning',
+    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
+    description: 'Alert dialog warning when deleting all messages.'
   },
   pin_message: {
-    id: "pin_message",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Pin"
-    }]
+    id: 'pin_message',
+    defaultMessage: 'Pin',
+    description: 'Menu item [Pin] for pinning message to the top.'
   },
   unpin_message: {
-    id: "unpin_message",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unpin"
-    }]
+    id: 'unpin_message',
+    defaultMessage: 'Unpin',
+    description: 'Menu item [Unpin] for un-pinning the message.'
   },
   pin_chat: {
-    id: "pin_chat",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Pin"
-    }]
+    id: 'pin_chat',
+    defaultMessage: 'Pin',
+    description: 'Menu item [Pin] for pinning chat to the top.'
   },
   unpin_chat: {
-    id: "unpin_chat",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unpin"
-    }]
+    id: 'unpin_chat',
+    defaultMessage: 'Unpin',
+    description: 'Menu item [Unpin] for un-pinning the chat.'
   }
 });
 class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -14820,15 +9860,14 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       }
       if (item && item.title) {
         const className = item.disabled ? 'disabled' : undefined;
-        menu.push(item.title == '-' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-          className: "separator",
-          key: count
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+        menu.push(item.title == '-' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("li", {
+          className: "separator"
+        }, count, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("li", {
           className: className,
           onClick: this.handleClick,
           "data-id": count,
-          key: count
-        }, item.title));
+          children: item.title
+        }, count, false));
       }
       count++;
     });
@@ -14840,11 +9879,12 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       left: left + 'px',
       top: top + 'px'
     };
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("ul", {
       className: "menu",
       style: position,
-      ref: this.selfRef
-    }, menu);
+      ref: this.selfRef,
+      children: menu
+    }, void 0, false);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContextMenu));
@@ -14864,16 +9904,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class CountBadge extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const className = 'counter-badge' + (this.props.size ? ` ${this.props.size}` : '') + (this.props.rect ? ' rect' : '');
     const displayCount = (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.shortenCount)(this.props.count, this.props.limit);
-    return this.props.count > 0 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    return this.props.count > 0 && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
       className: className,
-      style: this.props.style
-    }, displayCount);
+      style: this.props.style,
+      children: displayCount
+    }, void 0, false);
   }
 }
 ;
@@ -14892,6 +9935,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 const DEFAULT_MAX_ZOOM = 8;
 class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -15075,39 +10120,42 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       width: `${this.imageWidth * this.state.zoom}px`,
       height: `${this.imageHeight * this.state.zoom}px`
     };
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cropper"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "bounding-box",
-      ref: this.boundingBox
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.props.source,
-      className: "preview",
-      alt: "",
-      style: {
-        transform: t3d,
-        transformOrigin: orig
-      },
-      ref: this.preview,
-      onLoad: this.initScaling
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cutout circle",
-      ref: this.cutout
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "overlay",
-      style: overlay,
-      ref: this.overlay
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "zoom-wrapper"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "range",
-      className: "zoomer",
-      step: "0.001",
-      min: this.state.minZoom,
-      max: this.state.maxZoom,
-      value: this.state.zoom,
-      onChange: this.onZoom
-    })));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+      className: "cropper",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+        className: "bounding-box",
+        ref: this.boundingBox,
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("img", {
+          src: this.props.source,
+          className: "preview",
+          alt: "",
+          style: {
+            transform: t3d,
+            transformOrigin: orig
+          },
+          ref: this.preview,
+          onLoad: this.initScaling
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+          className: "cutout circle",
+          ref: this.cutout
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+          className: "overlay",
+          style: overlay,
+          ref: this.overlay
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+        className: "zoom-wrapper",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("input", {
+          type: "range",
+          className: "zoomer",
+          step: "0.001",
+          min: this.state.minZoom,
+          max: this.state.maxZoom,
+          value: this.state.zoom,
+          onChange: this.onZoom
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 
@@ -15126,6 +10174,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -15159,26 +10209,35 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     };
     const level = icons[this.props.level] || '';
     const className = 'info-box ' + level;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: className
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "icon"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, level)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.text, this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, "\xA0 ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      style: {
-        whiteSpace: 'nowrap'
-      },
-      onClick: e => {
-        e.preventDefault();
-        this.props.action();
-      }
-    }, this.props.actionText)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cancel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      onCancel: this.hide
-    })));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: className,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "icon",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon",
+          children: level
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+        children: [this.props.text, this.props.action ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+          children: ["\xA0 ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+            href: "#",
+            style: {
+              whiteSpace: 'nowrap'
+            },
+            onClick: e => {
+              e.preventDefault();
+              this.props.action();
+            },
+            children: this.props.actionText
+          }, void 0, false)]
+        }, void 0, true) : null]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "cancel",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          onCancel: this.hide
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -15199,37 +10258,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class FileProgress extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "uploader"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      style: {
-        width: this.props.progress * 100 + "%"
-      }
-    })), this.props.progress < 0.999 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onCancel();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "close"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "action_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "cancel"
-      }]
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "upload_finishing",
-      defaultMessage: [{
-        "type": 0,
-        "value": "finishing..."
-      }]
-    }));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "uploader",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+          style: {
+            width: this.props.progress * 100 + "%"
+          }
+        }, void 0, false)
+      }, void 0, false), this.props.progress < 0.999 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onCancel();
+        },
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "close"
+        }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "action_cancel",
+          defaultMessage: "cancel",
+          description: "Call to action [cancel]"
+        }, void 0, false)]
+      }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "upload_finishing",
+        defaultMessage: "finishing...",
+        description: "Notification that upload is finishing"
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 
@@ -15253,6 +10315,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _search_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./search-contacts.jsx */ "./src/widgets/search-contacts.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -15296,49 +10360,53 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     contacts = contacts.filter(c => {
       return c.name != this.props.topicSelected && c.acs.isJoiner() && c.acs.isWriter();
     });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "alert-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "forward-dialog"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title with-control"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "forward_to",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Forward to"
-      }],
-      desription: "Title of the contact selector dialog when forwarding a message"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleClose
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "close")))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "forward_to_search_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Search contacts"
-      }]
-    }, search_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      placeholder: search_placeholder,
-      onSearchContacts: this.handleSearchContacts
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "search_no_results",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Search returned no results"
-      }]
-    }, not_found_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      contacts: contacts,
-      myUserId: this.props.myUserId,
-      emptyListMessage: not_found_placeholder,
-      showOnline: false,
-      showUnread: false,
-      showContextMenu: false,
-      onTopicSelected: this.handleContactSelected
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+      className: "alert-container",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "forward-dialog",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          className: "title with-control",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "forward_to",
+              defaultMessage: "Forward to",
+              desription: "Title of the contact selector dialog when forwarding a message"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+              href: "#",
+              onClick: this.handleClose,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+                className: "m-icon",
+                children: "close"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "forward_to_search_placeholder",
+          defaultMessage: "Search contacts",
+          description: "Contact search prompt when forwarding a message.",
+          children: search_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            placeholder: search_placeholder,
+            onSearchContacts: this.handleSearchContacts
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "search_no_results",
+          defaultMessage: "Search returned no results",
+          description: "Text shown in contacts view when query returned no results.",
+          children: not_found_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            tinode: this.props.tinode,
+            contacts: contacts,
+            myUserId: this.props.myUserId,
+            emptyListMessage: not_found_placeholder,
+            showOnline: false,
+            showUnread: false,
+            showContextMenu: false,
+            onTopicSelected: this.handleContactSelected
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 
@@ -15357,6 +10425,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -15393,27 +10463,28 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     const hostOptions = [];
     for (let key in _config_js__WEBPACK_IMPORTED_MODULE_1__.KNOWN_HOSTS) {
       let item = _config_js__WEBPACK_IMPORTED_MODULE_1__.KNOWN_HOSTS[key];
-      hostOptions.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-        key: item,
+      hostOptions.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("option", {
         value: item
-      }));
+      }, item, false));
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "search",
-      id: "host-name",
-      placeholder: this.props.hostName,
-      list: "known-hosts",
-      className: "quoted",
-      value: this.state.hostName,
-      onChange: this.handleHostNameChange,
-      onBlur: this.handleEditingFinished,
-      onKeyDown: this.handleKeyDown,
-      required: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("datalist", {
-      id: "known-hosts"
-    }, hostOptions));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "panel-form-row",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+        type: "search",
+        id: "host-name",
+        placeholder: this.props.hostName,
+        list: "known-hosts",
+        className: "quoted",
+        value: this.state.hostName,
+        onChange: this.handleHostNameChange,
+        onBlur: this.handleEditingFinished,
+        onKeyDown: this.handleKeyDown,
+        required: true
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("datalist", {
+        id: "known-hosts",
+        children: hostOptions
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 
@@ -15432,6 +10503,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./visible-password.jsx */ "./src/widgets/visible-password.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -15533,14 +10606,19 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       if (!this.props.multiline || this.props.multiline == 1) {
         spanClass += ' short';
       }
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
         className: spanClass,
-        onClick: this.handleStartEditing
-      }, this.props.iconLeft && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon light-gray"
-      }, this.props.iconLeft), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, spanText), this.props.iconRight && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon light-gray"
-      }, this.props.iconRight));
+        onClick: this.handleStartEditing,
+        children: [this.props.iconLeft && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon light-gray",
+          children: this.props.iconLeft
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+          children: spanText
+        }, void 0, false), this.props.iconRight && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon light-gray",
+          children: this.props.iconRight
+        }, void 0, false)]
+      }, void 0, true);
     }
     let element;
     const attr = {};
@@ -15575,11 +10653,15 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       attr.spellCheck = this.props.spellCheck ? 'true' : 'false';
     }
     if (this.props.iconLeft || this.props.iconRight) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.iconLeft && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon light-gray"
-      }, this.props.iconLeft), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null), this.props.iconRight && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon light-gray"
-      }, this.props.iconRight));
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+        children: [this.props.iconLeft && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon light-gray",
+          children: this.props.iconLeft
+        }, void 0, false), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null), this.props.iconRight && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon light-gray",
+          children: this.props.iconRight
+        }, void 0, false)]
+      }, void 0, true);
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null);
   }
@@ -15601,6 +10683,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -15617,22 +10701,26 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   render() {
     const duration = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props['data-duration'] / 1000);
     const className = 'inline-video' + (this.props.onClick ? ' image-clickable' : '');
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: className
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "play-control"
-    }, this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon white x-big"
-    }, "play_arrow") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: "img/broken_video.png",
-      style: {
-        filter: 'invert(100%)'
-      },
-      width: "36",
-      height: "36"
-    })), duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "duration"
-    }, duration) : null);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: className,
+      children: [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "play-control",
+        children: this.props.onClick ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon white x-big",
+          children: "play_arrow"
+        }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("img", {
+          src: "img/broken_video.png",
+          style: {
+            filter: 'invert(100%)'
+          },
+          width: "36",
+          height: "36"
+        }, void 0, false)
+      }, void 0, false), duration ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "duration",
+        children: duration
+      }, void 0, false) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -15724,6 +10812,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -15734,33 +10824,38 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     let avatar;
     if (this.props.avatar === true) {
       if (tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isSelfTopicName(this.props.topic)) {
-        avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+        avatar = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("img", {
           className: "avatar self",
           alt: "avatar",
           src: _config_js__WEBPACK_IMPORTED_MODULE_4__.SELF_AVATAR_URI
-        });
+        }, void 0, false);
       } else {
         const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isGroupTopicName(this.props.topic);
         const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
         if (this.props.topic && this.props.title && this.props.title.trim()) {
           const letter = this.props.title.trim().charAt(0);
           const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
-          avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: className
-          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
+          avatar = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+            className: className,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+              children: letter
+            }, void 0, false)
+          }, void 0, false);
         } else {
           const className = 'm-icon ' + iconColor + (this.props.deleted ? ' disabled' : '');
-          avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            className: className
-          }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            className: className
-          }, "person");
+          avatar = isGroup ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+            className: className,
+            children: "group"
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+            className: className,
+            children: "person"
+          }, void 0, false);
         }
       }
     } else if (this.props.avatar) {
       const url = this.props.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
-      avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      avatar = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("img", {
         className: className,
         alt: "avatar",
         src: url,
@@ -15768,7 +10863,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
           e.target.onerror = null;
           e.target.src = "img/broken_image.png";
         }
-      });
+      }, void 0, false);
     } else {
       avatar = null;
     }
@@ -15790,15 +10885,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class LoadSpinner extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const className = 'load-spinner-box' + (this.props.large ? ' large' : '') + (this.props.clear ? ' clear' : '') + (this.props.centered ? ' centered' : '');
-    return this.props.show ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: className
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "loader-spinner"
-    })) : null;
+    return this.props.show ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+      className: className,
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+        className: "loader-spinner"
+      }, void 0, false)
+    }, void 0, false) : null;
   }
 }
 
@@ -15816,18 +10914,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class MenuCancel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
         this.props.onCancel();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "close"));
+      },
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+        className: "m-icon",
+        children: "close"
+      }, void 0, false)
+    }, void 0, false);
   }
 }
 
@@ -15845,26 +10947,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class MenuContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onNewTopic();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "chat_add_on")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onSettings();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "settings")));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onNewTopic();
+        },
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "chat_add_on"
+        }, void 0, false)
+      }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onSettings();
+        },
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "settings"
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -15883,26 +10993,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class MenuStart extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onSignUp();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "person_add")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onSettings();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "settings")));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onSignUp();
+        },
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "person_add"
+        }, void 0, false)
+      }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onSettings();
+        },
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+          className: "m-icon",
+          children: "settings"
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -15923,17 +11041,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
   invalid_id: {
-    id: "error_invalid_id",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Invalid ID"
-    }]
+    id: 'error_invalid_id',
+    defaultMessage: 'Invalid ID',
+    description: 'Error message'
   }
 });
 class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_1___default().PureComponent) {
@@ -15977,49 +11095,50 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_1___default().PureCom
     }
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "panel-form"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
-      id: "group_user_id_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Group or User ID"
-      }]
-    }, prompt => react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
-      type: "text",
-      placeholder: prompt,
-      value: this.state.groupId,
-      onChange: this.handleChange,
-      onKeyDown: this.handleKeyPress,
-      required: true,
-      autoFocus: true
-    }))), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
-      id: "button_subscribe",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Subscribe"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
-      id: "label_scan_id",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Scan my ID:"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "qr-code",
-      ref: this.qrCodeRef
-    })));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      className: "panel-form",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+          id: "group_user_id_prompt",
+          defaultMessage: "Group or User ID",
+          description: "Prompt for entering user or group ID",
+          children: prompt => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("input", {
+            type: "text",
+            placeholder: prompt,
+            value: this.state.groupId,
+            onChange: this.handleChange,
+            onKeyDown: this.handleKeyPress,
+            required: true,
+            autoFocus: true
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("button", {
+          className: "primary",
+          onClick: this.handleSubmit,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+            id: "button_subscribe",
+            defaultMessage: "Subscribe",
+            description: "Button [Subscribe]"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("br", {}, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("label", {
+          className: "small",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+            id: "label_scan_id",
+            defaultMessage: "Scan my ID:",
+            description: "Label [Scan my ID:]"
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "qr-code",
+          ref: this.qrCodeRef
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -16048,6 +11167,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -16161,141 +11282,141 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
   render() {
     if (this.state.newAvatar) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
         avatar: this.state.newAvatar,
         mime: this.state.newAvatarMime,
         onSubmit: this.handleAvatarCropped,
         onCancel: this.handleAvatarCropCancel,
         onError: this.props.onError
-      });
+      }, void 0, false);
     }
     let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("form", {
       className: "panel-form",
-      onSubmit: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      tinode: this.props.tinode,
-      avatar: this.state.imageUrl,
-      onError: this.props.onError,
-      onImageUpdated: this.handleImageChanged
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small",
-      htmlFor: "new-topic-fn"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_topic_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Name"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "topic_name_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Freeform name of the group"
-      }]
-    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      id: "new-topic-fn",
-      placeholder: placeholder,
-      ref: this.fullName,
-      value: this.state.fullName,
-      onChange: this.handleFieldEdit.bind(this, 'fullName'),
-      autoFocus: true,
-      required: true,
-      tabIndex: 0
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small",
-      htmlFor: "new-topic-priv"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_private",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Private comment"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "private_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Visible to you only"
-      }]
-    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      id: "new-topic-priv",
-      placeholder: placeholder,
-      value: this.state.private,
-      onChange: this.handleFieldEdit.bind(this, 'private'),
-      tabIndex: 1
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small",
-      htmlFor: "new-topic-desc"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_description",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Description"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "description_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Description (optional)"
-      }]
-    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      id: "new-topic-desc",
-      placeholder: placeholder,
-      value: this.state.description,
-      onChange: this.handleFieldEdit.bind(this, 'description'),
-      tabIndex: 2
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      checked: this.state.isChannel,
-      tabIndex: 3,
-      onChange: this.handleChannelToggle
-    }), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      onClick: this.handleChannelToggle
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "channel_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "This is a channel"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_tag_manager",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Tags (search & discovery)"
-      }]
-    }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      tinode: this.props.tinode,
-      tags: this.state.tags,
-      activated: true,
-      onTagsChanged: this.handleTagsChanged,
-      tabIndex: 4,
-      title: title
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: submitClasses
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_create",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Create"
-      }]
-    }))));
+      onSubmit: this.handleSubmit,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("center", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            tinode: this.props.tinode,
+            avatar: this.state.imageUrl,
+            onError: this.props.onError,
+            onImageUpdated: this.handleImageChanged
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("label", {
+            className: "small",
+            htmlFor: "new-topic-fn",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_topic_name",
+              defaultMessage: "Name",
+              description: "Label for editing topic name"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "topic_name_editing_placeholder",
+            defaultMessage: "Freeform name of the group",
+            description: "Prompt for entering topic name",
+            children: placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("input", {
+              type: "text",
+              id: "new-topic-fn",
+              placeholder: placeholder,
+              ref: this.fullName,
+              value: this.state.fullName,
+              onChange: this.handleFieldEdit.bind(this, 'fullName'),
+              autoFocus: true,
+              required: true,
+              tabIndex: 0
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("label", {
+            className: "small",
+            htmlFor: "new-topic-priv",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_private",
+              defaultMessage: "Private comment",
+              description: "Label for editing 'private'"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "private_editing_placeholder",
+            defaultMessage: "Visible to you only",
+            description: "Placeholder for editing 'private'",
+            children: placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("input", {
+              type: "text",
+              id: "new-topic-priv",
+              placeholder: placeholder,
+              value: this.state.private,
+              onChange: this.handleFieldEdit.bind(this, 'private'),
+              tabIndex: 1
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("label", {
+            className: "small",
+            htmlFor: "new-topic-desc",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_description",
+              defaultMessage: "Description",
+              description: "Label for description of user or topic"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "description_editing_placeholder",
+            defaultMessage: "Description (optional)",
+            description: "Placeholder for editing topic description",
+            children: placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("input", {
+              type: "text",
+              id: "new-topic-desc",
+              placeholder: placeholder,
+              value: this.state.description,
+              onChange: this.handleFieldEdit.bind(this, 'description'),
+              tabIndex: 2
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          checked: this.state.isChannel,
+          tabIndex: 3,
+          onChange: this.handleChannelToggle
+        }, void 0, false), "\xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("label", {
+          onClick: this.handleChannelToggle,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "channel_prompt",
+            defaultMessage: "This is a channel",
+            description: "Checkbox label when creating a channel"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "title_tag_manager",
+        defaultMessage: "Tags (search & discovery)",
+        description: "Section title for TagManager",
+        children: title => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          tinode: this.props.tinode,
+          tags: this.state.tags,
+          activated: true,
+          onTagsChanged: this.handleTagsChanged,
+          tabIndex: 4,
+          title: title
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("div", {
+        className: "dialog-buttons",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)("button", {
+          className: submitClasses,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_create",
+            defaultMessage: "Create",
+            description: "Button [Create]"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -16316,6 +11437,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -16371,29 +11494,37 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon search"
-    }, "search"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      className: "search",
-      type: "text",
-      placeholder: this.props.placeholder,
-      value: this.state.search,
-      onChange: this.handleSearchChange,
-      onKeyDown: this.handleKeyDown,
-      required: true,
-      autoFocus: true
-    }), this.state.search ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleClear
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "highlight_off")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "\xA0"))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "panel-form",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon search",
+          children: "search"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("input", {
+          className: "search",
+          type: "text",
+          placeholder: this.props.placeholder,
+          value: this.state.search,
+          onChange: this.handleSearchChange,
+          onKeyDown: this.handleKeyDown,
+          required: true,
+          autoFocus: true
+        }, void 0, false), this.state.search ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("a", {
+          href: "#",
+          onClick: this.handleClear,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "highlight_off"
+          }, void 0, false)
+        }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "\xA0"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 ;
@@ -16418,6 +11549,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu-contacts.jsx */ "./src/widgets/menu-contacts.jsx");
 /* harmony import */ var _menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./menu-start.jsx */ "./src/widgets/menu-start.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -16440,31 +11573,34 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     if (this.props.tinode) {
       avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrlForMime)(this.props.avatar, 'image'));
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
       id: "side-caption-panel",
-      className: "caption-panel"
-    }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_button_back_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      onBack: this.props.onCancel
-    }) : null, avatar ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "self-avatar",
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      avatar: avatar,
-      topic: this.props.myUserId,
-      title: this.props.title
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "sidepanel-title",
-      className: "panel-title"
-    }, this.props.title, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      badges: icon_badges
-    })), this.props.state === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      onSignUp: this.props.onSignUp,
-      onSettings: this.props.onSettings
-    }) : this.props.state === 'contacts' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      onNewTopic: this.props.onNewTopic,
-      onSettings: this.props.onSettings
-    }) : null);
+      className: "caption-panel",
+      children: [this.props.onCancel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_button_back_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        onBack: this.props.onCancel
+      }, void 0, false) : null, avatar ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "self-avatar",
+        className: "avatar-box",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          authorizeURL: this.props.tinode.authorizeURL,
+          avatar: avatar,
+          topic: this.props.myUserId,
+          title: this.props.title
+        }, void 0, false)
+      }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
+        id: "sidepanel-title",
+        className: "panel-title",
+        children: [this.props.title, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          badges: icon_badges
+        }, void 0, false)]
+      }, void 0, true), this.props.state === 'login' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        onSignUp: this.props.onSignUp,
+        onSettings: this.props.onSettings
+      }, void 0, false) : this.props.state === 'contacts' ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)(_menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        onNewTopic: this.props.onNewTopic,
+        onSettings: this.props.onSettings
+      }, void 0, false) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -16490,6 +11626,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -16597,86 +11735,92 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     } else {
       this.state.tags.forEach(tag => {
         if (tag != this.state.alias) {
-          tags.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          tags.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("span", {
             className: "badge",
-            key: tags.length
-          }, tag));
+            children: tag
+          }, tags.length, false));
         }
       });
       if (tags.length == 0) {
-        tags = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "tags_not_found",
-          defaultMessage: [{
-            "type": 0,
-            "value": "No tags defined. Add some."
-          }]
-        }));
+        tags = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "tags_not_found",
+            defaultMessage: "No tags defined. Add some.",
+            description: ""
+          }, void 0, false)
+        }, void 0, false);
       }
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, this.props.title)), this.state.activated ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "tags_editor_no_tags",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Add some tags"
-      }]
-    }, add_tags_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
-      chips: tags,
-      avatarDisabled: true,
-      prompt: add_tags_prompt,
-      tabIndex: this.props.tabIndex,
-      onEnter: this.handleAddTag,
-      onFocusLost: this.handleAddTag,
-      onCancel: this.handleCancel,
-      onChipRemoved: this.handleRemoveTag,
-      filterFunc: this.handleTagInput
-    })), this.props.onSubmit || this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "tag-manager-buttons",
-      className: "dialog-buttons panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "outline",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_cancel",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Cancel"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: this.handleSubmit
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
-      }]
-    }))) : null) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "flat-button",
-      onClick: e => {
-        e.preventDefault();
-        this.setState({
-          activated: true
-        });
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "edit"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_manage_tags",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Manage"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tags)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+      className: "panel-form-column",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        className: "panel-form-row",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("label", {
+          className: "small",
+          children: this.props.title
+        }, void 0, false)
+      }, void 0, false), this.state.activated ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "tags_editor_no_tags",
+          defaultMessage: "Add some tags",
+          description: "Tag editor prompt when no tags are found.",
+          children: add_tags_prompt => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            tinode: this.props.tinode,
+            chips: tags,
+            avatarDisabled: true,
+            prompt: add_tags_prompt,
+            tabIndex: this.props.tabIndex,
+            onEnter: this.handleAddTag,
+            onFocusLost: this.handleAddTag,
+            onCancel: this.handleCancel,
+            onChipRemoved: this.handleRemoveTag,
+            filterFunc: this.handleTagInput
+          }, void 0, false)
+        }, void 0, false), this.props.onSubmit || this.props.onCancel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+          id: "tag-manager-buttons",
+          className: "dialog-buttons panel-form-row",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("button", {
+            className: "outline",
+            onClick: this.handleCancel,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_cancel",
+              defaultMessage: "Cancel",
+              description: "Button [Cancel]"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("button", {
+            className: "primary",
+            onClick: this.handleSubmit,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "button_ok",
+              defaultMessage: "OK",
+              description: "Button [OK]"
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true) : null]
+      }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        className: "quoted",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+          href: "#",
+          className: "flat-button",
+          onClick: e => {
+            e.preventDefault();
+            this.setState({
+              activated: true
+            });
+          },
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "edit"
+          }, void 0, false), " \xA0", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "title_manage_tags",
+            defaultMessage: "Manage",
+            description: "Section title for the list of tags"
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+          children: tags
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -16697,17 +11841,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   unknown_name: {
-    id: "unknown_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Unknown"
-    }]
+    id: 'unknown_name',
+    defaultMessage: 'Unknown',
+    description: 'Name to show when the name is missing'
   }
 });
 class TheCardMini extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -16748,59 +11892,69 @@ class TheCardMini extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     const uid = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getFirstTinodeID(card);
     const contacts = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getEmails(card).concat(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhones(card));
     const org = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getOrg(card);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "contact-card"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "contact-body"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      authorizeURL: this.props.authorizeURL,
-      topic: uid || 'usr123XXX',
-      avatar: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhotoUrl(card) || true,
-      title: card.fn
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "name-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "name"
-    }, card.fn || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, messages.unknown_name)), org && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "org"
-    }, org))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "contact-actions"
-    }, uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      className: "flat-button",
-      "data-val": uid,
-      onClick: this.props.onChatClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_now",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Chat"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "divider"
-    })) : contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      className: "flat-button",
-      "data-val": contacts.join(','),
-      onClick: this.props.onFindClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "find_user",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Find"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "divider"
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      className: "flat-button",
-      onClick: this.handleDownload
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_save",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Save"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      className: "contact-card",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "contact-body",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "avatar-box",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            authorizeURL: this.props.authorizeURL,
+            topic: uid || 'usr123XXX',
+            avatar: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.getPhotoUrl(card) || true,
+            title: card.fn
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+          className: "name-box",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            className: "name",
+            children: card.fn || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              ...messages.unknown_name
+            }, void 0, false)
+          }, void 0, false), org && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            className: "org",
+            children: org
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        className: "contact-actions",
+        children: [uid ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+            className: "flat-button",
+            "data-val": uid,
+            onClick: this.props.onChatClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "chat_now",
+              defaultMessage: "Chat",
+              description: "Label for message button in contact card"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            className: "divider"
+          }, void 0, false)]
+        }, void 0, true) : contacts.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+            className: "flat-button",
+            "data-val": contacts.join(','),
+            onClick: this.props.onFindClick,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "find_user",
+              defaultMessage: "Find",
+              description: "Label for search button in contact card"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+            className: "divider"
+          }, void 0, false)]
+        }, void 0, true) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          className: "flat-button",
+          onClick: this.handleDownload,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "button_save",
+            defaultMessage: "Save",
+            description: "Button [Save]"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -16829,6 +11983,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -16842,32 +11998,24 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   alias_invalid: {
-    id: "alias_invalid",
-    defaultMessage: [{
-      "type": 0,
-      "value": "(invalid)"
-    }]
+    id: 'alias_invalid',
+    defaultMessage: '(invalid)',
+    description: 'Error message for invalid alias'
   },
   alias_already_taken: {
-    id: "alias_already_taken",
-    defaultMessage: [{
-      "type": 0,
-      "value": "(already taken)"
-    }]
+    id: 'alias_already_taken',
+    defaultMessage: '(already taken)',
+    description: 'Error message for alias already taken'
   },
   self_topic_name: {
-    id: "self_topic_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Saved messages"
-    }]
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
   },
   self_topic_comment: {
-    id: "self_topic_comment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Notes, messages, links, files saved for posterity"
-    }]
+    id: 'self_topic_comment',
+    defaultMessage: 'Notes, messages, links, files saved for posterity',
+    description: 'Comment for self topic for UI'
   }
 });
 const ALIAS_AVAILABILITY_CHECK_DELAY = 1000;
@@ -17077,155 +12225,176 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   }
   render() {
     if (this.state.newAvatar) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         avatar: this.state.newAvatar,
         mime: this.state.newAvatarMime,
         onSubmit: this.handleAvatarCropped,
         onCancel: this.handleAvatarCropCancel,
         onError: this.props.onError
-      });
+      }, void 0, false);
     }
     const editable = this.state.isMe || this.state.owner && !this.state.isSelf;
     let alias = this.state.tags && this.state.tags.find(t => t.startsWith('alias:'));
     if (alias) {
       alias = alias.substring(6);
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      tinode: this.props.tinode,
-      avatar: this.state.avatar,
-      readOnly: !editable,
-      uid: this.props.topic,
-      title: this.state.fullName,
-      onImageUpdated: this.handleImageUpdated,
-      onError: this.props.onError
-    })), this.state.isMe ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_your_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Your name"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "full_name_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Full name, e.g. John Doe"
-      }]
-    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: full_name_placeholder,
-      value: this.state.fullName,
-      required: true,
-      onFinished: this.handleFullNameUpdate
-    })))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_topic_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Name"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "topic_name_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Freeform name of the group"
-      }]
-    }, group_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: group_name_placeholder,
-      readOnly: !editable,
-      value: this.state.fullName,
-      required: true,
-      maxLength: 32,
-      onFinished: this.handleFullNameUpdate
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_private",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Private comment"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "private_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Visible to you only"
-      }]
-    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: private_placeholder,
-      value: this.state.private,
-      onFinished: this.handlePrivateUpdate
-    }))))), editable || alias ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: 'small ' + (this.state.aliasError ? 'invalid' : '')
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_alias_edit",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Alias"
-      }]
-    }), " ", this.state.aliasError)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "alias_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Alias (optional)"
-      }]
-    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: private_placeholder,
-      readOnly: !editable,
-      value: alias,
-      validator: this.validateAlias,
-      iconLeft: "alternate_email",
-      maxLength: 24,
-      spellCheck: false,
-      onFinished: this.handleAliasUpdate
-    })))) : null, editable || this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_description",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Description"
-      }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "description_editing_placeholder",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Description (optional)"
-      }]
-    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: private_placeholder,
-      readOnly: !editable,
-      value: this.state.description,
-      multiline: 2,
-      onFinished: this.handleDescriptionUpdate
-    })))) : null), editable && !this.state.isMe ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_tag_manager",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Tags (search & discovery)"
-      }]
-    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      tinode: this.props.tinode,
-      title: title_tag_manager,
-      activated: false,
-      tags: this.state.tags,
-      onSubmit: this.handleTagsUpdated
-    }))) : null);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.Fragment, {
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+        className: "panel-form-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("center", {
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            tinode: this.props.tinode,
+            avatar: this.state.avatar,
+            readOnly: !editable,
+            uid: this.props.topic,
+            title: this.state.fullName,
+            onImageUpdated: this.handleImageUpdated,
+            onError: this.props.onError
+          }, void 0, false)
+        }, void 0, false), this.state.isMe ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("label", {
+            className: "small",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "label_your_name",
+              defaultMessage: "Your name",
+              description: "Label for full name editing"
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "full_name_prompt",
+              defaultMessage: "Full name, e.g. John Doe",
+              description: "Input placeholder for person's full name",
+              children: full_name_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                placeholder: full_name_placeholder,
+                value: this.state.fullName,
+                required: true,
+                onFinished: this.handleFullNameUpdate
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_topic_name",
+                  defaultMessage: "Name",
+                  description: "Label for editing topic name"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "topic_name_editing_placeholder",
+                defaultMessage: "Freeform name of the group",
+                description: "Prompt for entering topic name",
+                children: group_name_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                  placeholder: group_name_placeholder,
+                  readOnly: !editable,
+                  value: this.state.fullName,
+                  required: true,
+                  maxLength: 32,
+                  onFinished: this.handleFullNameUpdate
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            className: "group",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("label", {
+                className: "small",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "label_private",
+                  defaultMessage: "Private comment",
+                  description: "Label for editing 'private'"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "private_editing_placeholder",
+                defaultMessage: "Visible to you only",
+                description: "Placeholder for editing 'private'",
+                children: private_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                  placeholder: private_placeholder,
+                  value: this.state.private,
+                  onFinished: this.handlePrivateUpdate
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true)]
+        }, void 0, true), editable || alias ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("label", {
+              className: 'small ' + (this.state.aliasError ? 'invalid' : ''),
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_alias_edit",
+                defaultMessage: "Alias",
+                description: "Label for editing user or topic alias"
+              }, void 0, false), " ", this.state.aliasError]
+            }, void 0, true)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "alias_editing_placeholder",
+              defaultMessage: "Alias (optional)",
+              description: "Placeholder for editing user or topic alias",
+              children: private_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                placeholder: private_placeholder,
+                readOnly: !editable,
+                value: alias,
+                validator: this.validateAlias,
+                iconLeft: "alternate_email",
+                maxLength: 24,
+                spellCheck: false,
+                onFinished: this.handleAliasUpdate
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true) : null, editable || this.state.description ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+          className: "group",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("label", {
+              className: "small",
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "label_description",
+                defaultMessage: "Description",
+                description: "Label for description of user or topic"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "description_editing_placeholder",
+              defaultMessage: "Description (optional)",
+              description: "Placeholder for editing topic description",
+              children: private_placeholder => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                placeholder: private_placeholder,
+                readOnly: !editable,
+                value: this.state.description,
+                multiline: 2,
+                onFinished: this.handleDescriptionUpdate
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false)]
+        }, void 0, true) : null]
+      }, void 0, true), editable && !this.state.isMe ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.Fragment, {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+          className: "hr"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "title_tag_manager",
+          defaultMessage: "Tags (search & discovery)",
+          description: "Section title for TagManager",
+          children: title_tag_manager => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            tinode: this.props.tinode,
+            title: title_tag_manager,
+            activated: false,
+            tags: this.state.tags,
+            onSubmit: this.handleTagsUpdated
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -17246,6 +12415,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -17253,14 +12424,16 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     super(props);
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "inline-image"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "rounded-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      progress: this.props.progress,
-      onCancel: this.props.onCancelUpload
-    })));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "inline-image",
+      children: [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "rounded-container",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          progress: this.props.progress,
+          onCancel: this.props.onCancelUpload
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;
@@ -17279,6 +12452,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -17340,29 +12515,1406 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
       tabIndex: "-1",
       className: "group-focus",
-      onBlur: this.handleEditingFinished
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      className: "with-icon-right",
-      type: this.state.visible ? 'text' : 'password',
-      value: this.state.value,
-      placeholder: this.props.placeholder,
-      maxLength: 32,
-      required: this.props.required ? 'required' : '',
-      autoFocus: this.props.autoFocus ? 'autoFocus' : '',
-      autoComplete: this.props.autoComplete,
-      onChange: this.handeTextChange,
-      onKeyDown: this.handleKeyDown,
-      ref: this.inputRef
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      onClick: this.handleVisibility
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon clickable light-gray"
-    }, this.state.visible ? 'visibility' : 'visibility_off')));
+      onBlur: this.handleEditingFinished,
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("input", {
+        className: "with-icon-right",
+        type: this.state.visible ? 'text' : 'password',
+        value: this.state.value,
+        placeholder: this.props.placeholder,
+        maxLength: 32,
+        required: this.props.required ? 'required' : '',
+        autoFocus: this.props.autoFocus ? 'autoFocus' : '',
+        autoComplete: this.props.autoComplete,
+        onChange: this.handeTextChange,
+        onKeyDown: this.handleKeyDown,
+        ref: this.inputRef
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("span", {
+        onClick: this.handleVisibility,
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("i", {
+          className: "m-icon clickable light-gray",
+          children: this.state.visible ? 'visibility' : 'visibility_off'
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
+
+/***/ }),
+
+/***/ "./node_modules/react-dom/client.js":
+/*!******************************************!*\
+  !*** ./node_modules/react-dom/client.js ***!
+  \******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var m = __webpack_require__(/*! react-dom */ "react-dom");
+if (false) // removed by dead control flow
+{} else {
+  var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  exports.createRoot = function(c, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.createRoot(c, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+  exports.hydrateRoot = function(c, h, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.hydrateRoot(c, h, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react/cjs/react-jsx-dev-runtime.development.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/react/cjs/react-jsx-dev-runtime.development.js ***!
+  \*********************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+/**
+ * @license React
+ * react-jsx-dev-runtime.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+var React = __webpack_require__(/*! react */ "react");
+
+// ATTENTION
+// When adding new symbols to this file,
+// Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
+// The Symbol used to tag the ReactElement-like types.
+var REACT_ELEMENT_TYPE = Symbol.for('react.element');
+var REACT_PORTAL_TYPE = Symbol.for('react.portal');
+var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
+var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
+var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
+var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
+var REACT_CONTEXT_TYPE = Symbol.for('react.context');
+var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
+var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
+var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
+var REACT_MEMO_TYPE = Symbol.for('react.memo');
+var REACT_LAZY_TYPE = Symbol.for('react.lazy');
+var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
+var MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
+var FAUX_ITERATOR_SYMBOL = '@@iterator';
+function getIteratorFn(maybeIterable) {
+  if (maybeIterable === null || typeof maybeIterable !== 'object') {
+    return null;
+  }
+
+  var maybeIterator = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL];
+
+  if (typeof maybeIterator === 'function') {
+    return maybeIterator;
+  }
+
+  return null;
+}
+
+var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+function error(format) {
+  {
+    {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      printWarning('error', format, args);
+    }
+  }
+}
+
+function printWarning(level, format, args) {
+  // When changing this logic, you might want to also
+  // update consoleWithStackDev.www.js as well.
+  {
+    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+    var stack = ReactDebugCurrentFrame.getStackAddendum();
+
+    if (stack !== '') {
+      format += '%s';
+      args = args.concat([stack]);
+    } // eslint-disable-next-line react-internal/safe-string-coercion
+
+
+    var argsWithFormat = args.map(function (item) {
+      return String(item);
+    }); // Careful: RN currently depends on this prefix
+
+    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+    // breaks IE9: https://github.com/facebook/react/issues/13610
+    // eslint-disable-next-line react-internal/no-production-logging
+
+    Function.prototype.apply.call(console[level], console, argsWithFormat);
+  }
+}
+
+// -----------------------------------------------------------------------------
+
+var enableScopeAPI = false; // Experimental Create Event Handle API.
+var enableCacheElement = false;
+var enableTransitionTracing = false; // No known bugs, but needs performance testing
+
+var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
+// stuff. Intended to enable React core members to more easily debug scheduling
+// issues in DEV builds.
+
+var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
+
+var REACT_MODULE_REFERENCE;
+
+{
+  REACT_MODULE_REFERENCE = Symbol.for('react.module.reference');
+}
+
+function isValidElementType(type) {
+  if (typeof type === 'string' || typeof type === 'function') {
+    return true;
+  } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+
+
+  if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing  || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden  || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCacheElement  || enableTransitionTracing ) {
+    return true;
+  }
+
+  if (typeof type === 'object' && type !== null) {
+    if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || // This needs to include all possible module reference object
+    // types supported by any Flight configuration anywhere since
+    // we don't know which Flight build this will end up being used
+    // with.
+    type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== undefined) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function getWrappedName(outerType, innerType, wrapperName) {
+  var displayName = outerType.displayName;
+
+  if (displayName) {
+    return displayName;
+  }
+
+  var functionName = innerType.displayName || innerType.name || '';
+  return functionName !== '' ? wrapperName + "(" + functionName + ")" : wrapperName;
+} // Keep in sync with react-reconciler/getComponentNameFromFiber
+
+
+function getContextName(type) {
+  return type.displayName || 'Context';
+} // Note that the reconciler package should generally prefer to use getComponentNameFromFiber() instead.
+
+
+function getComponentNameFromType(type) {
+  if (type == null) {
+    // Host root, text node or just invalid type.
+    return null;
+  }
+
+  {
+    if (typeof type.tag === 'number') {
+      error('Received an unexpected object in getComponentNameFromType(). ' + 'This is likely a bug in React. Please file an issue.');
+    }
+  }
+
+  if (typeof type === 'function') {
+    return type.displayName || type.name || null;
+  }
+
+  if (typeof type === 'string') {
+    return type;
+  }
+
+  switch (type) {
+    case REACT_FRAGMENT_TYPE:
+      return 'Fragment';
+
+    case REACT_PORTAL_TYPE:
+      return 'Portal';
+
+    case REACT_PROFILER_TYPE:
+      return 'Profiler';
+
+    case REACT_STRICT_MODE_TYPE:
+      return 'StrictMode';
+
+    case REACT_SUSPENSE_TYPE:
+      return 'Suspense';
+
+    case REACT_SUSPENSE_LIST_TYPE:
+      return 'SuspenseList';
+
+  }
+
+  if (typeof type === 'object') {
+    switch (type.$$typeof) {
+      case REACT_CONTEXT_TYPE:
+        var context = type;
+        return getContextName(context) + '.Consumer';
+
+      case REACT_PROVIDER_TYPE:
+        var provider = type;
+        return getContextName(provider._context) + '.Provider';
+
+      case REACT_FORWARD_REF_TYPE:
+        return getWrappedName(type, type.render, 'ForwardRef');
+
+      case REACT_MEMO_TYPE:
+        var outerName = type.displayName || null;
+
+        if (outerName !== null) {
+          return outerName;
+        }
+
+        return getComponentNameFromType(type.type) || 'Memo';
+
+      case REACT_LAZY_TYPE:
+        {
+          var lazyComponent = type;
+          var payload = lazyComponent._payload;
+          var init = lazyComponent._init;
+
+          try {
+            return getComponentNameFromType(init(payload));
+          } catch (x) {
+            return null;
+          }
+        }
+
+      // eslint-disable-next-line no-fallthrough
+    }
+  }
+
+  return null;
+}
+
+var assign = Object.assign;
+
+// Helpers to patch console.logs to avoid logging during side-effect free
+// replaying on render function. This currently only patches the object
+// lazily which won't cover if the log function was extracted eagerly.
+// We could also eagerly patch the method.
+var disabledDepth = 0;
+var prevLog;
+var prevInfo;
+var prevWarn;
+var prevError;
+var prevGroup;
+var prevGroupCollapsed;
+var prevGroupEnd;
+
+function disabledLog() {}
+
+disabledLog.__reactDisabledLog = true;
+function disableLogs() {
+  {
+    if (disabledDepth === 0) {
+      /* eslint-disable react-internal/no-production-logging */
+      prevLog = console.log;
+      prevInfo = console.info;
+      prevWarn = console.warn;
+      prevError = console.error;
+      prevGroup = console.group;
+      prevGroupCollapsed = console.groupCollapsed;
+      prevGroupEnd = console.groupEnd; // https://github.com/facebook/react/issues/19099
+
+      var props = {
+        configurable: true,
+        enumerable: true,
+        value: disabledLog,
+        writable: true
+      }; // $FlowFixMe Flow thinks console is immutable.
+
+      Object.defineProperties(console, {
+        info: props,
+        log: props,
+        warn: props,
+        error: props,
+        group: props,
+        groupCollapsed: props,
+        groupEnd: props
+      });
+      /* eslint-enable react-internal/no-production-logging */
+    }
+
+    disabledDepth++;
+  }
+}
+function reenableLogs() {
+  {
+    disabledDepth--;
+
+    if (disabledDepth === 0) {
+      /* eslint-disable react-internal/no-production-logging */
+      var props = {
+        configurable: true,
+        enumerable: true,
+        writable: true
+      }; // $FlowFixMe Flow thinks console is immutable.
+
+      Object.defineProperties(console, {
+        log: assign({}, props, {
+          value: prevLog
+        }),
+        info: assign({}, props, {
+          value: prevInfo
+        }),
+        warn: assign({}, props, {
+          value: prevWarn
+        }),
+        error: assign({}, props, {
+          value: prevError
+        }),
+        group: assign({}, props, {
+          value: prevGroup
+        }),
+        groupCollapsed: assign({}, props, {
+          value: prevGroupCollapsed
+        }),
+        groupEnd: assign({}, props, {
+          value: prevGroupEnd
+        })
+      });
+      /* eslint-enable react-internal/no-production-logging */
+    }
+
+    if (disabledDepth < 0) {
+      error('disabledDepth fell below zero. ' + 'This is a bug in React. Please file an issue.');
+    }
+  }
+}
+
+var ReactCurrentDispatcher = ReactSharedInternals.ReactCurrentDispatcher;
+var prefix;
+function describeBuiltInComponentFrame(name, source, ownerFn) {
+  {
+    if (prefix === undefined) {
+      // Extract the VM specific prefix used by each line.
+      try {
+        throw Error();
+      } catch (x) {
+        var match = x.stack.trim().match(/\n( *(at )?)/);
+        prefix = match && match[1] || '';
+      }
+    } // We use the prefix to ensure our stacks line up with native stack frames.
+
+
+    return '\n' + prefix + name;
+  }
+}
+var reentry = false;
+var componentFrameCache;
+
+{
+  var PossiblyWeakMap = typeof WeakMap === 'function' ? WeakMap : Map;
+  componentFrameCache = new PossiblyWeakMap();
+}
+
+function describeNativeComponentFrame(fn, construct) {
+  // If something asked for a stack inside a fake render, it should get ignored.
+  if ( !fn || reentry) {
+    return '';
+  }
+
+  {
+    var frame = componentFrameCache.get(fn);
+
+    if (frame !== undefined) {
+      return frame;
+    }
+  }
+
+  var control;
+  reentry = true;
+  var previousPrepareStackTrace = Error.prepareStackTrace; // $FlowFixMe It does accept undefined.
+
+  Error.prepareStackTrace = undefined;
+  var previousDispatcher;
+
+  {
+    previousDispatcher = ReactCurrentDispatcher.current; // Set the dispatcher in DEV because this might be call in the render function
+    // for warnings.
+
+    ReactCurrentDispatcher.current = null;
+    disableLogs();
+  }
+
+  try {
+    // This should throw.
+    if (construct) {
+      // Something should be setting the props in the constructor.
+      var Fake = function () {
+        throw Error();
+      }; // $FlowFixMe
+
+
+      Object.defineProperty(Fake.prototype, 'props', {
+        set: function () {
+          // We use a throwing setter instead of frozen or non-writable props
+          // because that won't throw in a non-strict mode function.
+          throw Error();
+        }
+      });
+
+      if (typeof Reflect === 'object' && Reflect.construct) {
+        // We construct a different control for this case to include any extra
+        // frames added by the construct call.
+        try {
+          Reflect.construct(Fake, []);
+        } catch (x) {
+          control = x;
+        }
+
+        Reflect.construct(fn, [], Fake);
+      } else {
+        try {
+          Fake.call();
+        } catch (x) {
+          control = x;
+        }
+
+        fn.call(Fake.prototype);
+      }
+    } else {
+      try {
+        throw Error();
+      } catch (x) {
+        control = x;
+      }
+
+      fn();
+    }
+  } catch (sample) {
+    // This is inlined manually because closure doesn't do it for us.
+    if (sample && control && typeof sample.stack === 'string') {
+      // This extracts the first frame from the sample that isn't also in the control.
+      // Skipping one frame that we assume is the frame that calls the two.
+      var sampleLines = sample.stack.split('\n');
+      var controlLines = control.stack.split('\n');
+      var s = sampleLines.length - 1;
+      var c = controlLines.length - 1;
+
+      while (s >= 1 && c >= 0 && sampleLines[s] !== controlLines[c]) {
+        // We expect at least one stack frame to be shared.
+        // Typically this will be the root most one. However, stack frames may be
+        // cut off due to maximum stack limits. In this case, one maybe cut off
+        // earlier than the other. We assume that the sample is longer or the same
+        // and there for cut off earlier. So we should find the root most frame in
+        // the sample somewhere in the control.
+        c--;
+      }
+
+      for (; s >= 1 && c >= 0; s--, c--) {
+        // Next we find the first one that isn't the same which should be the
+        // frame that called our sample function and the control.
+        if (sampleLines[s] !== controlLines[c]) {
+          // In V8, the first line is describing the message but other VMs don't.
+          // If we're about to return the first line, and the control is also on the same
+          // line, that's a pretty good indicator that our sample threw at same line as
+          // the control. I.e. before we entered the sample frame. So we ignore this result.
+          // This can happen if you passed a class to function component, or non-function.
+          if (s !== 1 || c !== 1) {
+            do {
+              s--;
+              c--; // We may still have similar intermediate frames from the construct call.
+              // The next one that isn't the same should be our match though.
+
+              if (c < 0 || sampleLines[s] !== controlLines[c]) {
+                // V8 adds a "new" prefix for native classes. Let's remove it to make it prettier.
+                var _frame = '\n' + sampleLines[s].replace(' at new ', ' at '); // If our component frame is labeled "<anonymous>"
+                // but we have a user-provided "displayName"
+                // splice it in to make the stack more readable.
+
+
+                if (fn.displayName && _frame.includes('<anonymous>')) {
+                  _frame = _frame.replace('<anonymous>', fn.displayName);
+                }
+
+                {
+                  if (typeof fn === 'function') {
+                    componentFrameCache.set(fn, _frame);
+                  }
+                } // Return the line we found.
+
+
+                return _frame;
+              }
+            } while (s >= 1 && c >= 0);
+          }
+
+          break;
+        }
+      }
+    }
+  } finally {
+    reentry = false;
+
+    {
+      ReactCurrentDispatcher.current = previousDispatcher;
+      reenableLogs();
+    }
+
+    Error.prepareStackTrace = previousPrepareStackTrace;
+  } // Fallback to just using the name if we couldn't make it throw.
+
+
+  var name = fn ? fn.displayName || fn.name : '';
+  var syntheticFrame = name ? describeBuiltInComponentFrame(name) : '';
+
+  {
+    if (typeof fn === 'function') {
+      componentFrameCache.set(fn, syntheticFrame);
+    }
+  }
+
+  return syntheticFrame;
+}
+function describeFunctionComponentFrame(fn, source, ownerFn) {
+  {
+    return describeNativeComponentFrame(fn, false);
+  }
+}
+
+function shouldConstruct(Component) {
+  var prototype = Component.prototype;
+  return !!(prototype && prototype.isReactComponent);
+}
+
+function describeUnknownElementTypeFrameInDEV(type, source, ownerFn) {
+
+  if (type == null) {
+    return '';
+  }
+
+  if (typeof type === 'function') {
+    {
+      return describeNativeComponentFrame(type, shouldConstruct(type));
+    }
+  }
+
+  if (typeof type === 'string') {
+    return describeBuiltInComponentFrame(type);
+  }
+
+  switch (type) {
+    case REACT_SUSPENSE_TYPE:
+      return describeBuiltInComponentFrame('Suspense');
+
+    case REACT_SUSPENSE_LIST_TYPE:
+      return describeBuiltInComponentFrame('SuspenseList');
+  }
+
+  if (typeof type === 'object') {
+    switch (type.$$typeof) {
+      case REACT_FORWARD_REF_TYPE:
+        return describeFunctionComponentFrame(type.render);
+
+      case REACT_MEMO_TYPE:
+        // Memo may contain any component type so we recursively resolve it.
+        return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
+
+      case REACT_LAZY_TYPE:
+        {
+          var lazyComponent = type;
+          var payload = lazyComponent._payload;
+          var init = lazyComponent._init;
+
+          try {
+            // Lazy may contain any component type so we recursively resolve it.
+            return describeUnknownElementTypeFrameInDEV(init(payload), source, ownerFn);
+          } catch (x) {}
+        }
+    }
+  }
+
+  return '';
+}
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+var loggedTypeFailures = {};
+var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+
+function setCurrentlyValidatingElement(element) {
+  {
+    if (element) {
+      var owner = element._owner;
+      var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
+      ReactDebugCurrentFrame.setExtraStackFrame(stack);
+    } else {
+      ReactDebugCurrentFrame.setExtraStackFrame(null);
+    }
+  }
+}
+
+function checkPropTypes(typeSpecs, values, location, componentName, element) {
+  {
+    // $FlowFixMe This is okay but Flow doesn't know it.
+    var has = Function.call.bind(hasOwnProperty);
+
+    for (var typeSpecName in typeSpecs) {
+      if (has(typeSpecs, typeSpecName)) {
+        var error$1 = void 0; // Prop type validation may throw. In case they do, we don't want to
+        // fail the render phase where it didn't fail before. So we log it.
+        // After these have been cleaned up, we'll let them throw.
+
+        try {
+          // This is intentionally an invariant that gets caught. It's the same
+          // behavior as without this statement except with a better message.
+          if (typeof typeSpecs[typeSpecName] !== 'function') {
+            // eslint-disable-next-line react-internal/prod-error-codes
+            var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+            err.name = 'Invariant Violation';
+            throw err;
+          }
+
+          error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED');
+        } catch (ex) {
+          error$1 = ex;
+        }
+
+        if (error$1 && !(error$1 instanceof Error)) {
+          setCurrentlyValidatingElement(element);
+
+          error('%s: type specification of %s' + ' `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error$1);
+
+          setCurrentlyValidatingElement(null);
+        }
+
+        if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
+          // Only monitor this failure once because there tends to be a lot of the
+          // same error.
+          loggedTypeFailures[error$1.message] = true;
+          setCurrentlyValidatingElement(element);
+
+          error('Failed %s type: %s', location, error$1.message);
+
+          setCurrentlyValidatingElement(null);
+        }
+      }
+    }
+  }
+}
+
+var isArrayImpl = Array.isArray; // eslint-disable-next-line no-redeclare
+
+function isArray(a) {
+  return isArrayImpl(a);
+}
+
+/*
+ * The `'' + value` pattern (used in in perf-sensitive code) throws for Symbol
+ * and Temporal.* types. See https://github.com/facebook/react/pull/22064.
+ *
+ * The functions in this module will throw an easier-to-understand,
+ * easier-to-debug exception with a clear errors message message explaining the
+ * problem. (Instead of a confusing exception thrown inside the implementation
+ * of the `value` object).
+ */
+// $FlowFixMe only called in DEV, so void return is not possible.
+function typeName(value) {
+  {
+    // toStringTag is needed for namespaced types like Temporal.Instant
+    var hasToStringTag = typeof Symbol === 'function' && Symbol.toStringTag;
+    var type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || 'Object';
+    return type;
+  }
+} // $FlowFixMe only called in DEV, so void return is not possible.
+
+
+function willCoercionThrow(value) {
+  {
+    try {
+      testStringCoercion(value);
+      return false;
+    } catch (e) {
+      return true;
+    }
+  }
+}
+
+function testStringCoercion(value) {
+  // If you ended up here by following an exception call stack, here's what's
+  // happened: you supplied an object or symbol value to React (as a prop, key,
+  // DOM attribute, CSS property, string ref, etc.) and when React tried to
+  // coerce it to a string using `'' + value`, an exception was thrown.
+  //
+  // The most common types that will cause this exception are `Symbol` instances
+  // and Temporal objects like `Temporal.Instant`. But any object that has a
+  // `valueOf` or `[Symbol.toPrimitive]` method that throws will also cause this
+  // exception. (Library authors do this to prevent users from using built-in
+  // numeric operators like `+` or comparison operators like `>=` because custom
+  // methods are needed to perform accurate arithmetic or comparison.)
+  //
+  // To fix the problem, coerce this object or symbol value to a string before
+  // passing it to React. The most reliable way is usually `String(value)`.
+  //
+  // To find which value is throwing, check the browser or debugger console.
+  // Before this exception was thrown, there should be `console.error` output
+  // that shows the type (Symbol, Temporal.PlainDate, etc.) that caused the
+  // problem and how that type was used: key, atrribute, input value prop, etc.
+  // In most cases, this console output also shows the component and its
+  // ancestor components where the exception happened.
+  //
+  // eslint-disable-next-line react-internal/safe-string-coercion
+  return '' + value;
+}
+function checkKeyStringCoercion(value) {
+  {
+    if (willCoercionThrow(value)) {
+      error('The provided key is an unsupported type %s.' + ' This value must be coerced to a string before before using it here.', typeName(value));
+
+      return testStringCoercion(value); // throw (to help callers find troubleshooting comments)
+    }
+  }
+}
+
+var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
+var RESERVED_PROPS = {
+  key: true,
+  ref: true,
+  __self: true,
+  __source: true
+};
+var specialPropKeyWarningShown;
+var specialPropRefWarningShown;
+var didWarnAboutStringRefs;
+
+{
+  didWarnAboutStringRefs = {};
+}
+
+function hasValidRef(config) {
+  {
+    if (hasOwnProperty.call(config, 'ref')) {
+      var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
+
+      if (getter && getter.isReactWarning) {
+        return false;
+      }
+    }
+  }
+
+  return config.ref !== undefined;
+}
+
+function hasValidKey(config) {
+  {
+    if (hasOwnProperty.call(config, 'key')) {
+      var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
+
+      if (getter && getter.isReactWarning) {
+        return false;
+      }
+    }
+  }
+
+  return config.key !== undefined;
+}
+
+function warnIfStringRefCannotBeAutoConverted(config, self) {
+  {
+    if (typeof config.ref === 'string' && ReactCurrentOwner.current && self && ReactCurrentOwner.current.stateNode !== self) {
+      var componentName = getComponentNameFromType(ReactCurrentOwner.current.type);
+
+      if (!didWarnAboutStringRefs[componentName]) {
+        error('Component "%s" contains the string ref "%s". ' + 'Support for string refs will be removed in a future major release. ' + 'This case cannot be automatically converted to an arrow function. ' + 'We ask you to manually fix this case by using useRef() or createRef() instead. ' + 'Learn more about using refs safely here: ' + 'https://reactjs.org/link/strict-mode-string-ref', getComponentNameFromType(ReactCurrentOwner.current.type), config.ref);
+
+        didWarnAboutStringRefs[componentName] = true;
+      }
+    }
+  }
+}
+
+function defineKeyPropWarningGetter(props, displayName) {
+  {
+    var warnAboutAccessingKey = function () {
+      if (!specialPropKeyWarningShown) {
+        specialPropKeyWarningShown = true;
+
+        error('%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
+      }
+    };
+
+    warnAboutAccessingKey.isReactWarning = true;
+    Object.defineProperty(props, 'key', {
+      get: warnAboutAccessingKey,
+      configurable: true
+    });
+  }
+}
+
+function defineRefPropWarningGetter(props, displayName) {
+  {
+    var warnAboutAccessingRef = function () {
+      if (!specialPropRefWarningShown) {
+        specialPropRefWarningShown = true;
+
+        error('%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
+      }
+    };
+
+    warnAboutAccessingRef.isReactWarning = true;
+    Object.defineProperty(props, 'ref', {
+      get: warnAboutAccessingRef,
+      configurable: true
+    });
+  }
+}
+/**
+ * Factory method to create a new React element. This no longer adheres to
+ * the class pattern, so do not use new to call it. Also, instanceof check
+ * will not work. Instead test $$typeof field against Symbol.for('react.element') to check
+ * if something is a React Element.
+ *
+ * @param {*} type
+ * @param {*} props
+ * @param {*} key
+ * @param {string|object} ref
+ * @param {*} owner
+ * @param {*} self A *temporary* helper to detect places where `this` is
+ * different from the `owner` when React.createElement is called, so that we
+ * can warn. We want to get rid of owner and replace string `ref`s with arrow
+ * functions, and as long as `this` and owner are the same, there will be no
+ * change in behavior.
+ * @param {*} source An annotation object (added by a transpiler or otherwise)
+ * indicating filename, line number, and/or other information.
+ * @internal
+ */
+
+
+var ReactElement = function (type, key, ref, self, source, owner, props) {
+  var element = {
+    // This tag allows us to uniquely identify this as a React Element
+    $$typeof: REACT_ELEMENT_TYPE,
+    // Built-in properties that belong on the element
+    type: type,
+    key: key,
+    ref: ref,
+    props: props,
+    // Record the component responsible for creating this element.
+    _owner: owner
+  };
+
+  {
+    // The validation flag is currently mutative. We put it on
+    // an external backing store so that we can freeze the whole object.
+    // This can be replaced with a WeakMap once they are implemented in
+    // commonly used development environments.
+    element._store = {}; // To make comparing ReactElements easier for testing purposes, we make
+    // the validation flag non-enumerable (where possible, which should
+    // include every environment we run tests in), so the test framework
+    // ignores it.
+
+    Object.defineProperty(element._store, 'validated', {
+      configurable: false,
+      enumerable: false,
+      writable: true,
+      value: false
+    }); // self and source are DEV only properties.
+
+    Object.defineProperty(element, '_self', {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: self
+    }); // Two elements created in two different places should be considered
+    // equal for testing purposes and therefore we hide it from enumeration.
+
+    Object.defineProperty(element, '_source', {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: source
+    });
+
+    if (Object.freeze) {
+      Object.freeze(element.props);
+      Object.freeze(element);
+    }
+  }
+
+  return element;
+};
+/**
+ * https://github.com/reactjs/rfcs/pull/107
+ * @param {*} type
+ * @param {object} props
+ * @param {string} key
+ */
+
+function jsxDEV(type, config, maybeKey, source, self) {
+  {
+    var propName; // Reserved names are extracted
+
+    var props = {};
+    var key = null;
+    var ref = null; // Currently, key can be spread in as a prop. This causes a potential
+    // issue if key is also explicitly declared (ie. <div {...props} key="Hi" />
+    // or <div key="Hi" {...props} /> ). We want to deprecate key spread,
+    // but as an intermediary step, we will use jsxDEV for everything except
+    // <div {...props} key="Hi" />, because we aren't currently able to tell if
+    // key is explicitly declared to be undefined or not.
+
+    if (maybeKey !== undefined) {
+      {
+        checkKeyStringCoercion(maybeKey);
+      }
+
+      key = '' + maybeKey;
+    }
+
+    if (hasValidKey(config)) {
+      {
+        checkKeyStringCoercion(config.key);
+      }
+
+      key = '' + config.key;
+    }
+
+    if (hasValidRef(config)) {
+      ref = config.ref;
+      warnIfStringRefCannotBeAutoConverted(config, self);
+    } // Remaining properties are added to a new props object
+
+
+    for (propName in config) {
+      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+        props[propName] = config[propName];
+      }
+    } // Resolve default props
+
+
+    if (type && type.defaultProps) {
+      var defaultProps = type.defaultProps;
+
+      for (propName in defaultProps) {
+        if (props[propName] === undefined) {
+          props[propName] = defaultProps[propName];
+        }
+      }
+    }
+
+    if (key || ref) {
+      var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
+
+      if (key) {
+        defineKeyPropWarningGetter(props, displayName);
+      }
+
+      if (ref) {
+        defineRefPropWarningGetter(props, displayName);
+      }
+    }
+
+    return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
+  }
+}
+
+var ReactCurrentOwner$1 = ReactSharedInternals.ReactCurrentOwner;
+var ReactDebugCurrentFrame$1 = ReactSharedInternals.ReactDebugCurrentFrame;
+
+function setCurrentlyValidatingElement$1(element) {
+  {
+    if (element) {
+      var owner = element._owner;
+      var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
+      ReactDebugCurrentFrame$1.setExtraStackFrame(stack);
+    } else {
+      ReactDebugCurrentFrame$1.setExtraStackFrame(null);
+    }
+  }
+}
+
+var propTypesMisspellWarningShown;
+
+{
+  propTypesMisspellWarningShown = false;
+}
+/**
+ * Verifies the object is a ReactElement.
+ * See https://reactjs.org/docs/react-api.html#isvalidelement
+ * @param {?object} object
+ * @return {boolean} True if `object` is a ReactElement.
+ * @final
+ */
+
+
+function isValidElement(object) {
+  {
+    return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+  }
+}
+
+function getDeclarationErrorAddendum() {
+  {
+    if (ReactCurrentOwner$1.current) {
+      var name = getComponentNameFromType(ReactCurrentOwner$1.current.type);
+
+      if (name) {
+        return '\n\nCheck the render method of `' + name + '`.';
+      }
+    }
+
+    return '';
+  }
+}
+
+function getSourceInfoErrorAddendum(source) {
+  {
+    if (source !== undefined) {
+      var fileName = source.fileName.replace(/^.*[\\\/]/, '');
+      var lineNumber = source.lineNumber;
+      return '\n\nCheck your code at ' + fileName + ':' + lineNumber + '.';
+    }
+
+    return '';
+  }
+}
+/**
+ * Warn if there's no key explicitly set on dynamic arrays of children or
+ * object keys are not valid. This allows us to keep track of children between
+ * updates.
+ */
+
+
+var ownerHasKeyUseWarning = {};
+
+function getCurrentComponentErrorInfo(parentType) {
+  {
+    var info = getDeclarationErrorAddendum();
+
+    if (!info) {
+      var parentName = typeof parentType === 'string' ? parentType : parentType.displayName || parentType.name;
+
+      if (parentName) {
+        info = "\n\nCheck the top-level render call using <" + parentName + ">.";
+      }
+    }
+
+    return info;
+  }
+}
+/**
+ * Warn if the element doesn't have an explicit key assigned to it.
+ * This element is in an array. The array could grow and shrink or be
+ * reordered. All children that haven't already been validated are required to
+ * have a "key" property assigned to it. Error statuses are cached so a warning
+ * will only be shown once.
+ *
+ * @internal
+ * @param {ReactElement} element Element that requires a key.
+ * @param {*} parentType element's parent's type.
+ */
+
+
+function validateExplicitKey(element, parentType) {
+  {
+    if (!element._store || element._store.validated || element.key != null) {
+      return;
+    }
+
+    element._store.validated = true;
+    var currentComponentErrorInfo = getCurrentComponentErrorInfo(parentType);
+
+    if (ownerHasKeyUseWarning[currentComponentErrorInfo]) {
+      return;
+    }
+
+    ownerHasKeyUseWarning[currentComponentErrorInfo] = true; // Usually the current owner is the offender, but if it accepts children as a
+    // property, it may be the creator of the child that's responsible for
+    // assigning it a key.
+
+    var childOwner = '';
+
+    if (element && element._owner && element._owner !== ReactCurrentOwner$1.current) {
+      // Give the component that originally created this child.
+      childOwner = " It was passed a child from " + getComponentNameFromType(element._owner.type) + ".";
+    }
+
+    setCurrentlyValidatingElement$1(element);
+
+    error('Each child in a list should have a unique "key" prop.' + '%s%s See https://reactjs.org/link/warning-keys for more information.', currentComponentErrorInfo, childOwner);
+
+    setCurrentlyValidatingElement$1(null);
+  }
+}
+/**
+ * Ensure that every element either is passed in a static location, in an
+ * array with an explicit keys property defined, or in an object literal
+ * with valid key property.
+ *
+ * @internal
+ * @param {ReactNode} node Statically passed child of any type.
+ * @param {*} parentType node's parent's type.
+ */
+
+
+function validateChildKeys(node, parentType) {
+  {
+    if (typeof node !== 'object') {
+      return;
+    }
+
+    if (isArray(node)) {
+      for (var i = 0; i < node.length; i++) {
+        var child = node[i];
+
+        if (isValidElement(child)) {
+          validateExplicitKey(child, parentType);
+        }
+      }
+    } else if (isValidElement(node)) {
+      // This element was passed in a valid location.
+      if (node._store) {
+        node._store.validated = true;
+      }
+    } else if (node) {
+      var iteratorFn = getIteratorFn(node);
+
+      if (typeof iteratorFn === 'function') {
+        // Entry iterators used to provide implicit keys,
+        // but now we print a separate warning for them later.
+        if (iteratorFn !== node.entries) {
+          var iterator = iteratorFn.call(node);
+          var step;
+
+          while (!(step = iterator.next()).done) {
+            if (isValidElement(step.value)) {
+              validateExplicitKey(step.value, parentType);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/**
+ * Given an element, validate that its props follow the propTypes definition,
+ * provided by the type.
+ *
+ * @param {ReactElement} element
+ */
+
+
+function validatePropTypes(element) {
+  {
+    var type = element.type;
+
+    if (type === null || type === undefined || typeof type === 'string') {
+      return;
+    }
+
+    var propTypes;
+
+    if (typeof type === 'function') {
+      propTypes = type.propTypes;
+    } else if (typeof type === 'object' && (type.$$typeof === REACT_FORWARD_REF_TYPE || // Note: Memo only checks outer props here.
+    // Inner props are checked in the reconciler.
+    type.$$typeof === REACT_MEMO_TYPE)) {
+      propTypes = type.propTypes;
+    } else {
+      return;
+    }
+
+    if (propTypes) {
+      // Intentionally inside to avoid triggering lazy initializers:
+      var name = getComponentNameFromType(type);
+      checkPropTypes(propTypes, element.props, 'prop', name, element);
+    } else if (type.PropTypes !== undefined && !propTypesMisspellWarningShown) {
+      propTypesMisspellWarningShown = true; // Intentionally inside to avoid triggering lazy initializers:
+
+      var _name = getComponentNameFromType(type);
+
+      error('Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?', _name || 'Unknown');
+    }
+
+    if (typeof type.getDefaultProps === 'function' && !type.getDefaultProps.isReactClassApproved) {
+      error('getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
+    }
+  }
+}
+/**
+ * Given a fragment, validate that it can only be provided with fragment props
+ * @param {ReactElement} fragment
+ */
+
+
+function validateFragmentProps(fragment) {
+  {
+    var keys = Object.keys(fragment.props);
+
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+
+      if (key !== 'children' && key !== 'key') {
+        setCurrentlyValidatingElement$1(fragment);
+
+        error('Invalid prop `%s` supplied to `React.Fragment`. ' + 'React.Fragment can only have `key` and `children` props.', key);
+
+        setCurrentlyValidatingElement$1(null);
+        break;
+      }
+    }
+
+    if (fragment.ref !== null) {
+      setCurrentlyValidatingElement$1(fragment);
+
+      error('Invalid attribute `ref` supplied to `React.Fragment`.');
+
+      setCurrentlyValidatingElement$1(null);
+    }
+  }
+}
+
+var didWarnAboutKeySpread = {};
+function jsxWithValidation(type, props, key, isStaticChildren, source, self) {
+  {
+    var validType = isValidElementType(type); // We warn in this case but don't throw. We expect the element creation to
+    // succeed and there will likely be errors in render.
+
+    if (!validType) {
+      var info = '';
+
+      if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+        info += ' You likely forgot to export your component from the file ' + "it's defined in, or you might have mixed up default and named imports.";
+      }
+
+      var sourceInfo = getSourceInfoErrorAddendum(source);
+
+      if (sourceInfo) {
+        info += sourceInfo;
+      } else {
+        info += getDeclarationErrorAddendum();
+      }
+
+      var typeString;
+
+      if (type === null) {
+        typeString = 'null';
+      } else if (isArray(type)) {
+        typeString = 'array';
+      } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
+        typeString = "<" + (getComponentNameFromType(type.type) || 'Unknown') + " />";
+        info = ' Did you accidentally export a JSX literal instead of a component?';
+      } else {
+        typeString = typeof type;
+      }
+
+      error('React.jsx: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+    }
+
+    var element = jsxDEV(type, props, key, source, self); // The result can be nullish if a mock or a custom function is used.
+    // TODO: Drop this when these are no longer allowed as the type argument.
+
+    if (element == null) {
+      return element;
+    } // Skip key warning if the type isn't valid since our key validation logic
+    // doesn't expect a non-string/function type and can throw confusing errors.
+    // We don't want exception behavior to differ between dev and prod.
+    // (Rendering will throw with a helpful message and as soon as the type is
+    // fixed, the key warnings will appear.)
+
+
+    if (validType) {
+      var children = props.children;
+
+      if (children !== undefined) {
+        if (isStaticChildren) {
+          if (isArray(children)) {
+            for (var i = 0; i < children.length; i++) {
+              validateChildKeys(children[i], type);
+            }
+
+            if (Object.freeze) {
+              Object.freeze(children);
+            }
+          } else {
+            error('React.jsx: Static children should always be an array. ' + 'You are likely explicitly calling React.jsxs or React.jsxDEV. ' + 'Use the Babel transform instead.');
+          }
+        } else {
+          validateChildKeys(children, type);
+        }
+      }
+    }
+
+    {
+      if (hasOwnProperty.call(props, 'key')) {
+        var componentName = getComponentNameFromType(type);
+        var keys = Object.keys(props).filter(function (k) {
+          return k !== 'key';
+        });
+        var beforeExample = keys.length > 0 ? '{key: someKey, ' + keys.join(': ..., ') + ': ...}' : '{key: someKey}';
+
+        if (!didWarnAboutKeySpread[componentName + beforeExample]) {
+          var afterExample = keys.length > 0 ? '{' + keys.join(': ..., ') + ': ...}' : '{}';
+
+          error('A props object containing a "key" prop is being spread into JSX:\n' + '  let props = %s;\n' + '  <%s {...props} />\n' + 'React keys must be passed directly to JSX without using spread:\n' + '  let props = %s;\n' + '  <%s key={someKey} {...props} />', beforeExample, componentName, afterExample, componentName);
+
+          didWarnAboutKeySpread[componentName + beforeExample] = true;
+        }
+      }
+    }
+
+    if (type === REACT_FRAGMENT_TYPE) {
+      validateFragmentProps(element);
+    } else {
+      validatePropTypes(element);
+    }
+
+    return element;
+  }
+} // These two functions exist to still get child warnings in dev
+
+var jsxDEV$1 =  jsxWithValidation ;
+
+exports.Fragment = REACT_FRAGMENT_TYPE;
+exports.jsxDEV = jsxDEV$1;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react/jsx-dev-runtime.js":
+/*!***********************************************!*\
+  !*** ./node_modules/react/jsx-dev-runtime.js ***!
+  \***********************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+if (false) // removed by dead control flow
+{} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-jsx-dev-runtime.development.js */ "./node_modules/react/cjs/react-jsx-dev-runtime.development.js");
+}
+
 
 /***/ }),
 
@@ -17414,6 +13966,5570 @@ module.exports = ReactIntl;
 
 module.exports = tinode;
 
+/***/ }),
+
+/***/ "./node_modules/@firebase/app/dist/esm/index.esm.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@firebase/app/dist/esm/index.esm.js ***!
+  \**********************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FirebaseError: function() { return /* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError; },
+/* harmony export */   SDK_VERSION: function() { return /* binding */ SDK_VERSION; },
+/* harmony export */   _DEFAULT_ENTRY_NAME: function() { return /* binding */ DEFAULT_ENTRY_NAME; },
+/* harmony export */   _addComponent: function() { return /* binding */ _addComponent; },
+/* harmony export */   _addOrOverwriteComponent: function() { return /* binding */ _addOrOverwriteComponent; },
+/* harmony export */   _apps: function() { return /* binding */ _apps; },
+/* harmony export */   _clearComponents: function() { return /* binding */ _clearComponents; },
+/* harmony export */   _components: function() { return /* binding */ _components; },
+/* harmony export */   _getProvider: function() { return /* binding */ _getProvider; },
+/* harmony export */   _isFirebaseApp: function() { return /* binding */ _isFirebaseApp; },
+/* harmony export */   _isFirebaseServerApp: function() { return /* binding */ _isFirebaseServerApp; },
+/* harmony export */   _isFirebaseServerAppSettings: function() { return /* binding */ _isFirebaseServerAppSettings; },
+/* harmony export */   _registerComponent: function() { return /* binding */ _registerComponent; },
+/* harmony export */   _removeServiceInstance: function() { return /* binding */ _removeServiceInstance; },
+/* harmony export */   _serverApps: function() { return /* binding */ _serverApps; },
+/* harmony export */   deleteApp: function() { return /* binding */ deleteApp; },
+/* harmony export */   getApp: function() { return /* binding */ getApp; },
+/* harmony export */   getApps: function() { return /* binding */ getApps; },
+/* harmony export */   initializeApp: function() { return /* binding */ initializeApp; },
+/* harmony export */   initializeServerApp: function() { return /* binding */ initializeServerApp; },
+/* harmony export */   onLog: function() { return /* binding */ onLog; },
+/* harmony export */   registerVersion: function() { return /* binding */ registerVersion; },
+/* harmony export */   setLogLevel: function() { return /* binding */ setLogLevel; }
+/* harmony export */ });
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm.js");
+/* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+
+
+
+
+
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class PlatformLoggerServiceImpl {
+    constructor(container) {
+        this.container = container;
+    }
+    // In initial implementation, this will be called by installations on
+    // auth token refresh, and installations will send this string.
+    getPlatformInfoString() {
+        const providers = this.container.getProviders();
+        // Loop through providers and get library/version pairs from any that are
+        // version components.
+        return providers
+            .map(provider => {
+            if (isVersionServiceProvider(provider)) {
+                const service = provider.getImmediate();
+                return `${service.library}/${service.version}`;
+            }
+            else {
+                return null;
+            }
+        })
+            .filter(logString => logString)
+            .join(' ');
+    }
+}
+/**
+ *
+ * @param provider check if this provider provides a VersionService
+ *
+ * NOTE: Using Provider<'app-version'> is a hack to indicate that the provider
+ * provides VersionService. The provider is not necessarily a 'app-version'
+ * provider.
+ */
+function isVersionServiceProvider(provider) {
+    const component = provider.getComponent();
+    return component?.type === "VERSION" /* ComponentType.VERSION */;
+}
+
+const name$q = "@firebase/app";
+const version$1 = "0.15.0";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const logger = new _firebase_logger__WEBPACK_IMPORTED_MODULE_1__.Logger('@firebase/app');
+
+const name$p = "@firebase/app-compat";
+
+const name$o = "@firebase/analytics-compat";
+
+const name$n = "@firebase/analytics";
+
+const name$m = "@firebase/app-check-compat";
+
+const name$l = "@firebase/app-check";
+
+const name$k = "@firebase/auth";
+
+const name$j = "@firebase/auth-compat";
+
+const name$i = "@firebase/database";
+
+const name$h = "@firebase/data-connect";
+
+const name$g = "@firebase/database-compat";
+
+const name$f = "@firebase/functions";
+
+const name$e = "@firebase/functions-compat";
+
+const name$d = "@firebase/installations";
+
+const name$c = "@firebase/installations-compat";
+
+const name$b = "@firebase/messaging";
+
+const name$a = "@firebase/messaging-compat";
+
+const name$9 = "@firebase/performance";
+
+const name$8 = "@firebase/performance-compat";
+
+const name$7 = "@firebase/remote-config";
+
+const name$6 = "@firebase/remote-config-compat";
+
+const name$5 = "@firebase/storage";
+
+const name$4 = "@firebase/storage-compat";
+
+const name$3 = "@firebase/firestore";
+
+const name$2 = "@firebase/ai";
+
+const name$1 = "@firebase/firestore-compat";
+
+const name = "firebase";
+const version = "12.15.0";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * The default app name
+ *
+ * @internal
+ */
+const DEFAULT_ENTRY_NAME = '[DEFAULT]';
+const PLATFORM_LOG_STRING = {
+    [name$q]: 'fire-core',
+    [name$p]: 'fire-core-compat',
+    [name$n]: 'fire-analytics',
+    [name$o]: 'fire-analytics-compat',
+    [name$l]: 'fire-app-check',
+    [name$m]: 'fire-app-check-compat',
+    [name$k]: 'fire-auth',
+    [name$j]: 'fire-auth-compat',
+    [name$i]: 'fire-rtdb',
+    [name$h]: 'fire-data-connect',
+    [name$g]: 'fire-rtdb-compat',
+    [name$f]: 'fire-fn',
+    [name$e]: 'fire-fn-compat',
+    [name$d]: 'fire-iid',
+    [name$c]: 'fire-iid-compat',
+    [name$b]: 'fire-fcm',
+    [name$a]: 'fire-fcm-compat',
+    [name$9]: 'fire-perf',
+    [name$8]: 'fire-perf-compat',
+    [name$7]: 'fire-rc',
+    [name$6]: 'fire-rc-compat',
+    [name$5]: 'fire-gcs',
+    [name$4]: 'fire-gcs-compat',
+    [name$3]: 'fire-fst',
+    [name$1]: 'fire-fst-compat',
+    [name$2]: 'fire-vertex',
+    'fire-js': 'fire-js', // Platform identifier for JS SDK.
+    [name]: 'fire-js-all'
+};
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @internal
+ */
+const _apps = new Map();
+/**
+ * @internal
+ */
+const _serverApps = new Map();
+/**
+ * Registered components.
+ *
+ * @internal
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _components = new Map();
+/**
+ * @param component - the component being added to this app's container
+ *
+ * @internal
+ */
+function _addComponent(app, component) {
+    try {
+        app.container.addComponent(component);
+    }
+    catch (e) {
+        logger.debug(`Component ${component.name} failed to register with FirebaseApp ${app.name}`, e);
+    }
+}
+/**
+ *
+ * @internal
+ */
+function _addOrOverwriteComponent(app, component) {
+    app.container.addOrOverwriteComponent(component);
+}
+/**
+ *
+ * @param component - the component to register
+ * @returns whether or not the component is registered successfully
+ *
+ * @internal
+ */
+function _registerComponent(component) {
+    const componentName = component.name;
+    if (_components.has(componentName)) {
+        logger.debug(`There were multiple attempts to register component ${componentName}.`);
+        return false;
+    }
+    _components.set(componentName, component);
+    // add the component to existing app instances
+    for (const app of _apps.values()) {
+        _addComponent(app, component);
+    }
+    for (const serverApp of _serverApps.values()) {
+        _addComponent(serverApp, component);
+    }
+    return true;
+}
+/**
+ *
+ * @param app - FirebaseApp instance
+ * @param name - service name
+ *
+ * @returns the provider for the service with the matching name
+ *
+ * @internal
+ */
+function _getProvider(app, name) {
+    const heartbeatController = app.container
+        .getProvider('heartbeat')
+        .getImmediate({ optional: true });
+    if (heartbeatController) {
+        void heartbeatController.triggerHeartbeat();
+    }
+    return app.container.getProvider(name);
+}
+/**
+ *
+ * @param app - FirebaseApp instance
+ * @param name - service name
+ * @param instanceIdentifier - service instance identifier in case the service supports multiple instances
+ *
+ * @internal
+ */
+function _removeServiceInstance(app, name, instanceIdentifier = DEFAULT_ENTRY_NAME) {
+    _getProvider(app, name).clearInstance(instanceIdentifier);
+}
+/**
+ *
+ * @param obj - an object of type FirebaseApp, FirebaseOptions or FirebaseAppSettings.
+ *
+ * @returns true if the provide object is of type FirebaseApp.
+ *
+ * @internal
+ */
+function _isFirebaseApp(obj) {
+    return obj.options !== undefined;
+}
+/**
+ *
+ * @param obj - an object of type FirebaseApp, FirebaseOptions or FirebaseAppSettings.
+ *
+ * @returns true if the provided object is of type FirebaseServerAppImpl.
+ *
+ * @internal
+ */
+function _isFirebaseServerAppSettings(obj) {
+    if (_isFirebaseApp(obj)) {
+        return false;
+    }
+    return ('authIdToken' in obj ||
+        'appCheckToken' in obj ||
+        'releaseOnDeref' in obj ||
+        'automaticDataCollectionEnabled' in obj);
+}
+/**
+ *
+ * @param obj - an object of type FirebaseApp.
+ *
+ * @returns true if the provided object is of type FirebaseServerAppImpl.
+ *
+ * @internal
+ */
+function _isFirebaseServerApp(obj) {
+    if (obj === null || obj === undefined) {
+        return false;
+    }
+    return obj.settings !== undefined;
+}
+/**
+ * Test only
+ *
+ * @internal
+ */
+function _clearComponents() {
+    _components.clear();
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const ERRORS = {
+    ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
+        'call initializeApp() first',
+    ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}'",
+    ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
+    ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
+    ["server-app-deleted" /* AppError.SERVER_APP_DELETED */]: 'Firebase Server App has been deleted',
+    ["no-options" /* AppError.NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
+    ["invalid-app-argument" /* AppError.INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
+        'Firebase App instance.',
+    ["invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
+    ["idb-open" /* AppError.IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-get" /* AppError.IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-set" /* AppError.IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-delete" /* AppError.IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.',
+    ["finalization-registry-not-supported" /* AppError.FINALIZATION_REGISTRY_NOT_SUPPORTED */]: 'FirebaseServerApp deleteOnDeref field defined but the JS runtime does not support FinalizationRegistry.',
+    ["invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */]: 'FirebaseServerApp is not for use in browser environments.'
+};
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class FirebaseAppImpl {
+    constructor(options, config, container) {
+        this._isDeleted = false;
+        this._options = { ...options };
+        this._config = { ...config };
+        this._name = config.name;
+        this._automaticDataCollectionEnabled =
+            config.automaticDataCollectionEnabled;
+        this._container = container;
+        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* ComponentType.PUBLIC */));
+    }
+    get automaticDataCollectionEnabled() {
+        this.checkDestroyed();
+        return this._automaticDataCollectionEnabled;
+    }
+    set automaticDataCollectionEnabled(val) {
+        this.checkDestroyed();
+        this._automaticDataCollectionEnabled = val;
+    }
+    get name() {
+        this.checkDestroyed();
+        return this._name;
+    }
+    get options() {
+        this.checkDestroyed();
+        return this._options;
+    }
+    get config() {
+        this.checkDestroyed();
+        return this._config;
+    }
+    get container() {
+        return this._container;
+    }
+    get isDeleted() {
+        return this._isDeleted;
+    }
+    set isDeleted(val) {
+        this._isDeleted = val;
+    }
+    /**
+     * This function will throw an Error if the App has already been deleted -
+     * use before performing API actions on the App.
+     */
+    checkDestroyed() {
+        if (this.isDeleted) {
+            throw ERROR_FACTORY.create("app-deleted" /* AppError.APP_DELETED */, { appName: this._name });
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Parse the token and check to see if the `exp` claim is in the future.
+// Reports an error to the console if the token or claim could not be parsed, or if `exp` is in
+// the past.
+function validateTokenTTL(base64Token, tokenName) {
+    const secondPart = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64Decode)(base64Token.split('.')[1]);
+    if (secondPart === null) {
+        console.error(`FirebaseServerApp ${tokenName} is invalid: second part could not be parsed.`);
+        return;
+    }
+    const expClaim = JSON.parse(secondPart).exp;
+    if (expClaim === undefined) {
+        console.error(`FirebaseServerApp ${tokenName} is invalid: expiration claim could not be parsed`);
+        return;
+    }
+    const exp = JSON.parse(secondPart).exp * 1000;
+    const now = new Date().getTime();
+    const diff = exp - now;
+    if (diff <= 0) {
+        console.error(`FirebaseServerApp ${tokenName} is invalid: the token has expired.`);
+    }
+}
+class FirebaseServerAppImpl extends FirebaseAppImpl {
+    constructor(options, serverConfig, name, container) {
+        // Build configuration parameters for the FirebaseAppImpl base class.
+        const automaticDataCollectionEnabled = serverConfig.automaticDataCollectionEnabled !== undefined
+            ? serverConfig.automaticDataCollectionEnabled
+            : true;
+        // Create the FirebaseAppSettings object for the FirebaseAppImp constructor.
+        const config = {
+            name,
+            automaticDataCollectionEnabled
+        };
+        if (options.apiKey !== undefined) {
+            // Construct the parent FirebaseAppImp object.
+            super(options, config, container);
+        }
+        else {
+            const appImpl = options;
+            super(appImpl.options, config, container);
+        }
+        // Now construct the data for the FirebaseServerAppImpl.
+        this._serverConfig = {
+            automaticDataCollectionEnabled,
+            ...serverConfig
+        };
+        // Ensure that the current time is within the `authIdtoken` window of validity.
+        if (this._serverConfig.authIdToken) {
+            validateTokenTTL(this._serverConfig.authIdToken, 'authIdToken');
+        }
+        // Ensure that the current time is within the `appCheckToken` window of validity.
+        if (this._serverConfig.appCheckToken) {
+            validateTokenTTL(this._serverConfig.appCheckToken, 'appCheckToken');
+        }
+        this._finalizationRegistry = null;
+        if (typeof FinalizationRegistry !== 'undefined') {
+            this._finalizationRegistry = new FinalizationRegistry(() => {
+                this.automaticCleanup();
+            });
+        }
+        this._refCount = 0;
+        this.incRefCount(this._serverConfig.releaseOnDeref);
+        // Do not retain a hard reference to the dref object, otherwise the FinalizationRegistry
+        // will never trigger.
+        this._serverConfig.releaseOnDeref = undefined;
+        serverConfig.releaseOnDeref = undefined;
+        registerVersion(name$q, version$1, 'serverapp');
+    }
+    toJSON() {
+        return undefined;
+    }
+    get refCount() {
+        return this._refCount;
+    }
+    // Increment the reference count of this server app. If an object is provided, register it
+    // with the finalization registry.
+    incRefCount(obj) {
+        if (this.isDeleted) {
+            return;
+        }
+        this._refCount++;
+        if (obj !== undefined && this._finalizationRegistry !== null) {
+            this._finalizationRegistry.register(obj, this);
+        }
+    }
+    // Decrement the reference count.
+    decRefCount() {
+        if (this.isDeleted) {
+            return 0;
+        }
+        return --this._refCount;
+    }
+    // Invoked by the FinalizationRegistry callback to note that this app should go through its
+    // reference counts and delete itself if no reference count remain. The coordinating logic that
+    // handles this is in deleteApp(...).
+    automaticCleanup() {
+        void deleteApp(this);
+    }
+    get settings() {
+        this.checkDestroyed();
+        return this._serverConfig;
+    }
+    /**
+     * This function will throw an Error if the App has already been deleted -
+     * use before performing API actions on the App.
+     */
+    checkDestroyed() {
+        if (this.isDeleted) {
+            throw ERROR_FACTORY.create("server-app-deleted" /* AppError.SERVER_APP_DELETED */);
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * The current SDK version.
+ *
+ * @public
+ */
+const SDK_VERSION = version;
+function initializeApp(_options, rawConfig = {}) {
+    let options = _options;
+    if (typeof rawConfig !== 'object') {
+        const name = rawConfig;
+        rawConfig = { name };
+    }
+    const config = {
+        name: DEFAULT_ENTRY_NAME,
+        automaticDataCollectionEnabled: true,
+        ...rawConfig
+    };
+    const name = config.name;
+    if (typeof name !== 'string' || !name) {
+        throw ERROR_FACTORY.create("bad-app-name" /* AppError.BAD_APP_NAME */, {
+            appName: String(name)
+        });
+    }
+    options || (options = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)());
+    if (!options) {
+        throw ERROR_FACTORY.create("no-options" /* AppError.NO_OPTIONS */);
+    }
+    const existingApp = _apps.get(name);
+    if (existingApp) {
+        // return the existing app if options and config deep equal the ones in the existing app.
+        if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(options, existingApp.options) &&
+            (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(config, existingApp.config)) {
+            return existingApp;
+        }
+        else {
+            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, { appName: name });
+        }
+    }
+    const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(name);
+    for (const component of _components.values()) {
+        container.addComponent(component);
+    }
+    const newApp = new FirebaseAppImpl(options, config, container);
+    _apps.set(name, newApp);
+    return newApp;
+}
+function initializeServerApp(_options, _serverAppConfig = {}) {
+    if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isBrowser)() && !(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isWebWorker)()) {
+        // FirebaseServerApp isn't designed to be run in browsers.
+        throw ERROR_FACTORY.create("invalid-server-app-environment" /* AppError.INVALID_SERVER_APP_ENVIRONMENT */);
+    }
+    let firebaseOptions;
+    let serverAppSettings = _serverAppConfig || {};
+    if (_options) {
+        if (_isFirebaseApp(_options)) {
+            firebaseOptions = _options.options;
+        }
+        else if (_isFirebaseServerAppSettings(_options)) {
+            serverAppSettings = _options;
+        }
+        else {
+            firebaseOptions = _options;
+        }
+    }
+    if (serverAppSettings.automaticDataCollectionEnabled === undefined) {
+        serverAppSettings.automaticDataCollectionEnabled = true;
+    }
+    firebaseOptions || (firebaseOptions = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)());
+    if (!firebaseOptions) {
+        throw ERROR_FACTORY.create("no-options" /* AppError.NO_OPTIONS */);
+    }
+    // Build an app name based on a hash of the configuration options.
+    const nameObj = {
+        ...serverAppSettings,
+        ...firebaseOptions
+    };
+    // However, Do not mangle the name based on releaseOnDeref, since it will vary between the
+    // construction of FirebaseServerApp instances. For example, if the object is the request headers.
+    if (nameObj.releaseOnDeref !== undefined) {
+        delete nameObj.releaseOnDeref;
+    }
+    const hashCode = (s) => {
+        return [...s].reduce((hash, c) => (Math.imul(31, hash) + c.charCodeAt(0)) | 0, 0);
+    };
+    if (serverAppSettings.releaseOnDeref !== undefined) {
+        if (typeof FinalizationRegistry === 'undefined') {
+            throw ERROR_FACTORY.create("finalization-registry-not-supported" /* AppError.FINALIZATION_REGISTRY_NOT_SUPPORTED */, {});
+        }
+    }
+    const nameString = '' + hashCode(JSON.stringify(nameObj));
+    const existingApp = _serverApps.get(nameString);
+    if (existingApp) {
+        existingApp.incRefCount(serverAppSettings.releaseOnDeref);
+        return existingApp;
+    }
+    const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(nameString);
+    for (const component of _components.values()) {
+        container.addComponent(component);
+    }
+    const newApp = new FirebaseServerAppImpl(firebaseOptions, serverAppSettings, nameString, container);
+    _serverApps.set(nameString, newApp);
+    return newApp;
+}
+/**
+ * Retrieves a {@link @firebase/app#FirebaseApp} instance.
+ *
+ * When called with no arguments, the default app is returned. When an app name
+ * is provided, the app corresponding to that name is returned.
+ *
+ * An exception is thrown if the app being retrieved has not yet been
+ * initialized.
+ *
+ * @example
+ * ```javascript
+ * // Return the default app
+ * const app = getApp();
+ * ```
+ *
+ * @example
+ * ```javascript
+ * // Return a named app
+ * const otherApp = getApp("otherApp");
+ * ```
+ *
+ * @param name - Optional name of the app to return. If no name is
+ *   provided, the default is `"[DEFAULT]"`.
+ *
+ * @returns The app corresponding to the provided app name.
+ *   If no app name is provided, the default app is returned.
+ *
+ * @public
+ */
+function getApp(name = DEFAULT_ENTRY_NAME) {
+    const app = _apps.get(name);
+    if (!app && name === DEFAULT_ENTRY_NAME && (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)()) {
+        return initializeApp();
+    }
+    if (!app) {
+        throw ERROR_FACTORY.create("no-app" /* AppError.NO_APP */, { appName: name });
+    }
+    return app;
+}
+/**
+ * A (read-only) array of all initialized apps.
+ * @public
+ */
+function getApps() {
+    return Array.from(_apps.values());
+}
+/**
+ * Renders this app unusable and frees the resources of all associated
+ * services.
+ *
+ * @example
+ * ```javascript
+ * deleteApp(app)
+ *   .then(function() {
+ *     console.log("App deleted successfully");
+ *   })
+ *   .catch(function(error) {
+ *     console.log("Error deleting app:", error);
+ *   });
+ * ```
+ *
+ * @public
+ */
+async function deleteApp(app) {
+    let cleanupProviders = false;
+    const name = app.name;
+    if (_apps.has(name)) {
+        cleanupProviders = true;
+        _apps.delete(name);
+    }
+    else if (_serverApps.has(name)) {
+        const firebaseServerApp = app;
+        if (firebaseServerApp.decRefCount() <= 0) {
+            _serverApps.delete(name);
+            cleanupProviders = true;
+        }
+    }
+    if (cleanupProviders) {
+        await Promise.all(app.container
+            .getProviders()
+            .map(provider => provider.delete()));
+        app.isDeleted = true;
+    }
+}
+/**
+ * Registers a library's name and version for platform logging purposes.
+ * @param library - Name of 1p or 3p library (e.g. firestore, angularfire)
+ * @param version - Current version of that library.
+ * @param variant - Bundle variant, e.g., node, rn, etc.
+ *
+ * @public
+ */
+function registerVersion(libraryKeyOrName, version, variant) {
+    // TODO: We can use this check to whitelist strings when/if we set up
+    // a good whitelist system.
+    let library = PLATFORM_LOG_STRING[libraryKeyOrName] ?? libraryKeyOrName;
+    if (variant) {
+        library += `-${variant}`;
+    }
+    const libraryMismatch = library.match(/\s|\//);
+    const versionMismatch = version.match(/\s|\//);
+    if (libraryMismatch || versionMismatch) {
+        const warning = [
+            `Unable to register library "${library}" with version "${version}":`
+        ];
+        if (libraryMismatch) {
+            warning.push(`library name "${library}" contains illegal characters (whitespace or "/")`);
+        }
+        if (libraryMismatch && versionMismatch) {
+            warning.push('and');
+        }
+        if (versionMismatch) {
+            warning.push(`version name "${version}" contains illegal characters (whitespace or "/")`);
+        }
+        logger.warn(warning.join(' '));
+        return;
+    }
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* ComponentType.VERSION */));
+}
+/**
+ * Sets log handler for all Firebase SDKs.
+ * @param logCallback - An optional custom log handler that executes user code whenever
+ * the Firebase SDK makes a logging call.
+ *
+ * @public
+ */
+function onLog(logCallback, options) {
+    if (logCallback !== null && typeof logCallback !== 'function') {
+        throw ERROR_FACTORY.create("invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */);
+    }
+    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
+}
+/**
+ * Sets log level for all Firebase SDKs.
+ *
+ * All of the log types above the current log level are captured (i.e. if
+ * you set the log level to `info`, errors are logged, but `debug` and
+ * `verbose` logs are not).
+ *
+ * @public
+ */
+function setLogLevel(logLevel) {
+    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setLogLevel)(logLevel);
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DB_NAME = 'firebase-heartbeat-database';
+const DB_VERSION = 1;
+const STORE_NAME = 'firebase-heartbeat-store';
+let dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DB_NAME, DB_VERSION, {
+            upgrade: (db, oldVersion) => {
+                // We don't use 'break' in this switch statement, the fall-through
+                // behavior is what we want, because if there are multiple versions between
+                // the old version and the current version, we want ALL the migrations
+                // that correspond to those versions to run, not only the last one.
+                // eslint-disable-next-line default-case
+                switch (oldVersion) {
+                    case 0:
+                        try {
+                            db.createObjectStore(STORE_NAME);
+                        }
+                        catch (e) {
+                            // Safari/iOS browsers throw occasional exceptions on
+                            // db.createObjectStore() that may be a bug. Avoid blocking
+                            // the rest of the app functionality.
+                            console.warn(e);
+                        }
+                }
+            }
+        }).catch(e => {
+            throw ERROR_FACTORY.create("idb-open" /* AppError.IDB_OPEN */, {
+                originalErrorMessage: e.message
+            });
+        });
+    }
+    return dbPromise;
+}
+async function readHeartbeatsFromIndexedDB(app) {
+    try {
+        const db = await getDbPromise();
+        const tx = db.transaction(STORE_NAME);
+        const result = await tx.objectStore(STORE_NAME).get(computeKey(app));
+        // We already have the value but tx.done can throw,
+        // so we need to await it here to catch errors
+        await tx.done;
+        return result;
+    }
+    catch (e) {
+        if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
+            logger.warn(e.message);
+        }
+        else {
+            const idbGetError = ERROR_FACTORY.create("idb-get" /* AppError.IDB_GET */, {
+                originalErrorMessage: e?.message
+            });
+            logger.warn(idbGetError.message);
+        }
+    }
+}
+async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
+    try {
+        const db = await getDbPromise();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const objectStore = tx.objectStore(STORE_NAME);
+        await objectStore.put(heartbeatObject, computeKey(app));
+        await tx.done;
+    }
+    catch (e) {
+        if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
+            logger.warn(e.message);
+        }
+        else {
+            const idbGetError = ERROR_FACTORY.create("idb-set" /* AppError.IDB_WRITE */, {
+                originalErrorMessage: e?.message
+            });
+            logger.warn(idbGetError.message);
+        }
+    }
+}
+function computeKey(app) {
+    return `${app.name}!${app.options.appId}`;
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const MAX_HEADER_BYTES = 1024;
+const MAX_NUM_STORED_HEARTBEATS = 30;
+class HeartbeatServiceImpl {
+    constructor(container) {
+        this.container = container;
+        /**
+         * In-memory cache for heartbeats, used by getHeartbeatsHeader() to generate
+         * the header string.
+         * Stores one record per date. This will be consolidated into the standard
+         * format of one record per user agent string before being sent as a header.
+         * Populated from indexedDB when the controller is instantiated and should
+         * be kept in sync with indexedDB.
+         * Leave public for easier testing.
+         */
+        this._heartbeatsCache = null;
+        const app = this.container.getProvider('app').getImmediate();
+        this._storage = new HeartbeatStorageImpl(app);
+        this._heartbeatsCachePromise = this._storage.read().then(result => {
+            this._heartbeatsCache = result;
+            return result;
+        });
+    }
+    /**
+     * Called to report a heartbeat. The function will generate
+     * a HeartbeatsByUserAgent object, update heartbeatsCache, and persist it
+     * to IndexedDB.
+     * Note that we only store one heartbeat per day. So if a heartbeat for today is
+     * already logged, subsequent calls to this function in the same day will be ignored.
+     */
+    async triggerHeartbeat() {
+        try {
+            const platformLogger = this.container
+                .getProvider('platform-logger')
+                .getImmediate();
+            // This is the "Firebase user agent" string from the platform logger
+            // service, not the browser user agent.
+            const agent = platformLogger.getPlatformInfoString();
+            const date = getUTCDateString();
+            if (this._heartbeatsCache?.heartbeats == null) {
+                this._heartbeatsCache = await this._heartbeatsCachePromise;
+                // If we failed to construct a heartbeats cache, then return immediately.
+                if (this._heartbeatsCache?.heartbeats == null) {
+                    return;
+                }
+            }
+            // Do not store a heartbeat if one is already stored for this day
+            // or if a header has already been sent today.
+            if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
+                this._heartbeatsCache.heartbeats.some(singleDateHeartbeat => singleDateHeartbeat.date === date)) {
+                return;
+            }
+            else {
+                // There is no entry for this date. Create one.
+                this._heartbeatsCache.heartbeats.push({ date, agent });
+                // If the number of stored heartbeats exceeds the maximum number of stored heartbeats, remove the heartbeat with the earliest date.
+                // Since this is executed each time a heartbeat is pushed, the limit can only be exceeded by one, so only one needs to be removed.
+                if (this._heartbeatsCache.heartbeats.length > MAX_NUM_STORED_HEARTBEATS) {
+                    const earliestHeartbeatIdx = getEarliestHeartbeatIdx(this._heartbeatsCache.heartbeats);
+                    this._heartbeatsCache.heartbeats.splice(earliestHeartbeatIdx, 1);
+                }
+            }
+            return this._storage.overwrite(this._heartbeatsCache);
+        }
+        catch (e) {
+            logger.warn(e);
+        }
+    }
+    /**
+     * Returns a base64 encoded string which can be attached to the heartbeat-specific header directly.
+     * It also clears all heartbeats from memory as well as in IndexedDB.
+     *
+     * NOTE: Consuming product SDKs should not send the header if this method
+     * returns an empty string.
+     */
+    async getHeartbeatsHeader() {
+        try {
+            if (this._heartbeatsCache === null) {
+                await this._heartbeatsCachePromise;
+            }
+            // If it's still null or the array is empty, there is no data to send.
+            if (this._heartbeatsCache?.heartbeats == null ||
+                this._heartbeatsCache.heartbeats.length === 0) {
+                return '';
+            }
+            const date = getUTCDateString();
+            // Extract as many heartbeats from the cache as will fit under the size limit.
+            const { heartbeatsToSend, unsentEntries } = extractHeartbeatsForHeader(this._heartbeatsCache.heartbeats);
+            const headerString = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(JSON.stringify({ version: 2, heartbeats: heartbeatsToSend }));
+            // Store last sent date to prevent another being logged/sent for the same day.
+            this._heartbeatsCache.lastSentHeartbeatDate = date;
+            if (unsentEntries.length > 0) {
+                // Store any unsent entries if they exist.
+                this._heartbeatsCache.heartbeats = unsentEntries;
+                // This seems more likely than emptying the array (below) to lead to some odd state
+                // since the cache isn't empty and this will be called again on the next request,
+                // and is probably safest if we await it.
+                await this._storage.overwrite(this._heartbeatsCache);
+            }
+            else {
+                this._heartbeatsCache.heartbeats = [];
+                // Do not wait for this, to reduce latency.
+                void this._storage.overwrite(this._heartbeatsCache);
+            }
+            return headerString;
+        }
+        catch (e) {
+            logger.warn(e);
+            return '';
+        }
+    }
+}
+function getUTCDateString() {
+    const today = new Date();
+    // Returns date format 'YYYY-MM-DD'
+    return today.toISOString().substring(0, 10);
+}
+function extractHeartbeatsForHeader(heartbeatsCache, maxSize = MAX_HEADER_BYTES) {
+    // Heartbeats grouped by user agent in the standard format to be sent in
+    // the header.
+    const heartbeatsToSend = [];
+    // Single date format heartbeats that are not sent.
+    let unsentEntries = heartbeatsCache.slice();
+    for (const singleDateHeartbeat of heartbeatsCache) {
+        // Look for an existing entry with the same user agent.
+        const heartbeatEntry = heartbeatsToSend.find(hb => hb.agent === singleDateHeartbeat.agent);
+        if (!heartbeatEntry) {
+            // If no entry for this user agent exists, create one.
+            heartbeatsToSend.push({
+                agent: singleDateHeartbeat.agent,
+                dates: [singleDateHeartbeat.date]
+            });
+            if (countBytes(heartbeatsToSend) > maxSize) {
+                // If the header would exceed max size, remove the added heartbeat
+                // entry and stop adding to the header.
+                heartbeatsToSend.pop();
+                break;
+            }
+        }
+        else {
+            heartbeatEntry.dates.push(singleDateHeartbeat.date);
+            // If the header would exceed max size, remove the added date
+            // and stop adding to the header.
+            if (countBytes(heartbeatsToSend) > maxSize) {
+                heartbeatEntry.dates.pop();
+                break;
+            }
+        }
+        // Pop unsent entry from queue. (Skipped if adding the entry exceeded
+        // quota and the loop breaks early.)
+        unsentEntries = unsentEntries.slice(1);
+    }
+    return {
+        heartbeatsToSend,
+        unsentEntries
+    };
+}
+class HeartbeatStorageImpl {
+    constructor(app) {
+        this.app = app;
+        this._canUseIndexedDBPromise = this.runIndexedDBEnvironmentCheck();
+    }
+    async runIndexedDBEnvironmentCheck() {
+        if (!(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)()) {
+            return false;
+        }
+        else {
+            return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)()
+                .then(() => true)
+                .catch(() => false);
+        }
+    }
+    /**
+     * Read all heartbeats.
+     */
+    async read() {
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return { heartbeats: [] };
+        }
+        else {
+            const idbHeartbeatObject = await readHeartbeatsFromIndexedDB(this.app);
+            if (idbHeartbeatObject?.heartbeats) {
+                return idbHeartbeatObject;
+            }
+            else {
+                return { heartbeats: [] };
+            }
+        }
+    }
+    // overwrite the storage with the provided heartbeats
+    async overwrite(heartbeatsObject) {
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return;
+        }
+        else {
+            const existingHeartbeatsObject = await this.read();
+            return writeHeartbeatsToIndexedDB(this.app, {
+                lastSentHeartbeatDate: heartbeatsObject.lastSentHeartbeatDate ??
+                    existingHeartbeatsObject.lastSentHeartbeatDate,
+                heartbeats: heartbeatsObject.heartbeats
+            });
+        }
+    }
+    // add heartbeats
+    async add(heartbeatsObject) {
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return;
+        }
+        else {
+            const existingHeartbeatsObject = await this.read();
+            return writeHeartbeatsToIndexedDB(this.app, {
+                lastSentHeartbeatDate: heartbeatsObject.lastSentHeartbeatDate ??
+                    existingHeartbeatsObject.lastSentHeartbeatDate,
+                heartbeats: [
+                    ...existingHeartbeatsObject.heartbeats,
+                    ...heartbeatsObject.heartbeats
+                ]
+            });
+        }
+    }
+}
+/**
+ * Calculate bytes of a HeartbeatsByUserAgent array after being wrapped
+ * in a platform logging header JSON object, stringified, and converted
+ * to base 64.
+ */
+function countBytes(heartbeatsCache) {
+    // base64 has a restricted set of characters, all of which should be 1 byte.
+    return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(
+    // heartbeatsCache wrapper properties
+    JSON.stringify({ version: 2, heartbeats: heartbeatsCache })).length;
+}
+/**
+ * Returns the index of the heartbeat with the earliest date.
+ * If the heartbeats array is empty, -1 is returned.
+ */
+function getEarliestHeartbeatIdx(heartbeats) {
+    if (heartbeats.length === 0) {
+        return -1;
+    }
+    let earliestHeartbeatIdx = 0;
+    let earliestHeartbeatDate = heartbeats[0].date;
+    for (let i = 1; i < heartbeats.length; i++) {
+        if (heartbeats[i].date < earliestHeartbeatDate) {
+            earliestHeartbeatDate = heartbeats[i].date;
+            earliestHeartbeatIdx = i;
+        }
+    }
+    return earliestHeartbeatIdx;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function registerCoreComponents(variant) {
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
+    // Register `app` package.
+    registerVersion(name$q, version$1, variant);
+    // BUILD_TARGET will be replaced by values like esm, cjs, etc during the compilation
+    registerVersion(name$q, version$1, 'esm2020');
+    // Register platform SDK identifier (no version).
+    registerVersion('fire-js', '');
+}
+
+/**
+ * Firebase App
+ *
+ * @remarks This package coordinates the communication between the different Firebase components
+ * @packageDocumentation
+ */
+registerCoreComponents('');
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/component/dist/esm/index.esm.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@firebase/component/dist/esm/index.esm.js ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Component: function() { return /* binding */ Component; },
+/* harmony export */   ComponentContainer: function() { return /* binding */ ComponentContainer; },
+/* harmony export */   Provider: function() { return /* binding */ Provider; }
+/* harmony export */ });
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm.js");
+
+
+/**
+ * Component for service name T, e.g. `auth`, `auth-internal`
+ */
+class Component {
+    /**
+     *
+     * @param name The public service name, e.g. app, auth, firestore, database
+     * @param instanceFactory Service factory responsible for creating the public interface
+     * @param type whether the service provided by the component is public or private
+     */
+    constructor(name, instanceFactory, type) {
+        this.name = name;
+        this.instanceFactory = instanceFactory;
+        this.type = type;
+        this.multipleInstances = false;
+        /**
+         * Properties to be added to the service namespace
+         */
+        this.serviceProps = {};
+        this.instantiationMode = "LAZY" /* InstantiationMode.LAZY */;
+        this.onInstanceCreated = null;
+    }
+    setInstantiationMode(mode) {
+        this.instantiationMode = mode;
+        return this;
+    }
+    setMultipleInstances(multipleInstances) {
+        this.multipleInstances = multipleInstances;
+        return this;
+    }
+    setServiceProps(props) {
+        this.serviceProps = props;
+        return this;
+    }
+    setInstanceCreatedCallback(callback) {
+        this.onInstanceCreated = callback;
+        return this;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DEFAULT_ENTRY_NAME = '[DEFAULT]';
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Provider for instance for service name T, e.g. 'auth', 'auth-internal'
+ * NameServiceMapping[T] is an alias for the type of the instance
+ */
+class Provider {
+    constructor(name, container) {
+        this.name = name;
+        this.container = container;
+        this.component = null;
+        this.instances = new Map();
+        this.instancesDeferred = new Map();
+        this.instancesOptions = new Map();
+        this.onInitCallbacks = new Map();
+    }
+    /**
+     * @param identifier A provider can provide multiple instances of a service
+     * if this.component.multipleInstances is true.
+     */
+    get(identifier) {
+        // if multipleInstances is not supported, use the default name
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(identifier);
+        if (!this.instancesDeferred.has(normalizedIdentifier)) {
+            const deferred = new _firebase_util__WEBPACK_IMPORTED_MODULE_0__.Deferred();
+            this.instancesDeferred.set(normalizedIdentifier, deferred);
+            if (this.isInitialized(normalizedIdentifier) ||
+                this.shouldAutoInitialize()) {
+                // initialize the service if it can be auto-initialized
+                try {
+                    const instance = this.getOrInitializeService({
+                        instanceIdentifier: normalizedIdentifier
+                    });
+                    if (instance) {
+                        deferred.resolve(instance);
+                    }
+                }
+                catch (e) {
+                    // when the instance factory throws an exception during get(), it should not cause
+                    // a fatal error. We just return the unresolved promise in this case.
+                }
+            }
+        }
+        return this.instancesDeferred.get(normalizedIdentifier).promise;
+    }
+    getImmediate(options) {
+        // if multipleInstances is not supported, use the default name
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(options?.identifier);
+        const optional = options?.optional ?? false;
+        if (this.isInitialized(normalizedIdentifier) ||
+            this.shouldAutoInitialize()) {
+            try {
+                return this.getOrInitializeService({
+                    instanceIdentifier: normalizedIdentifier
+                });
+            }
+            catch (e) {
+                if (optional) {
+                    return null;
+                }
+                else {
+                    throw e;
+                }
+            }
+        }
+        else {
+            // In case a component is not initialized and should/cannot be auto-initialized at the moment, return null if the optional flag is set, or throw
+            if (optional) {
+                return null;
+            }
+            else {
+                throw Error(`Service ${this.name} is not available`);
+            }
+        }
+    }
+    getComponent() {
+        return this.component;
+    }
+    setComponent(component) {
+        if (component.name !== this.name) {
+            throw Error(`Mismatching Component ${component.name} for Provider ${this.name}.`);
+        }
+        if (this.component) {
+            throw Error(`Component for ${this.name} has already been provided`);
+        }
+        this.component = component;
+        // return early without attempting to initialize the component if the component requires explicit initialization (calling `Provider.initialize()`)
+        if (!this.shouldAutoInitialize()) {
+            return;
+        }
+        // if the service is eager, initialize the default instance
+        if (isComponentEager(component)) {
+            try {
+                this.getOrInitializeService({ instanceIdentifier: DEFAULT_ENTRY_NAME });
+            }
+            catch (e) {
+                // when the instance factory for an eager Component throws an exception during the eager
+                // initialization, it should not cause a fatal error.
+                // TODO: Investigate if we need to make it configurable, because some component may want to cause
+                // a fatal error in this case?
+            }
+        }
+        // Create service instances for the pending promises and resolve them
+        // NOTE: if this.multipleInstances is false, only the default instance will be created
+        // and all promises with resolve with it regardless of the identifier.
+        for (const [instanceIdentifier, instanceDeferred] of this.instancesDeferred.entries()) {
+            const normalizedIdentifier = this.normalizeInstanceIdentifier(instanceIdentifier);
+            try {
+                // `getOrInitializeService()` should always return a valid instance since a component is guaranteed. use ! to make typescript happy.
+                const instance = this.getOrInitializeService({
+                    instanceIdentifier: normalizedIdentifier
+                });
+                instanceDeferred.resolve(instance);
+            }
+            catch (e) {
+                // when the instance factory throws an exception, it should not cause
+                // a fatal error. We just leave the promise unresolved.
+            }
+        }
+    }
+    clearInstance(identifier = DEFAULT_ENTRY_NAME) {
+        this.instancesDeferred.delete(identifier);
+        this.instancesOptions.delete(identifier);
+        this.instances.delete(identifier);
+    }
+    // app.delete() will call this method on every provider to delete the services
+    // TODO: should we mark the provider as deleted?
+    async delete() {
+        const services = Array.from(this.instances.values());
+        await Promise.all([
+            ...services
+                .filter(service => 'INTERNAL' in service) // legacy services
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map(service => service.INTERNAL.delete()),
+            ...services
+                .filter(service => '_delete' in service) // modularized services
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map(service => service._delete())
+        ]);
+    }
+    isComponentSet() {
+        return this.component != null;
+    }
+    isInitialized(identifier = DEFAULT_ENTRY_NAME) {
+        return this.instances.has(identifier);
+    }
+    getOptions(identifier = DEFAULT_ENTRY_NAME) {
+        return this.instancesOptions.get(identifier) || {};
+    }
+    initialize(opts = {}) {
+        const { options = {} } = opts;
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(opts.instanceIdentifier);
+        if (this.isInitialized(normalizedIdentifier)) {
+            throw Error(`${this.name}(${normalizedIdentifier}) has already been initialized`);
+        }
+        if (!this.isComponentSet()) {
+            throw Error(`Component ${this.name} has not been registered yet`);
+        }
+        const instance = this.getOrInitializeService({
+            instanceIdentifier: normalizedIdentifier,
+            options
+        });
+        // resolve any pending promise waiting for the service instance
+        for (const [instanceIdentifier, instanceDeferred] of this.instancesDeferred.entries()) {
+            const normalizedDeferredIdentifier = this.normalizeInstanceIdentifier(instanceIdentifier);
+            if (normalizedIdentifier === normalizedDeferredIdentifier) {
+                instanceDeferred.resolve(instance);
+            }
+        }
+        return instance;
+    }
+    /**
+     *
+     * @param callback - a function that will be invoked  after the provider has been initialized by calling provider.initialize().
+     * The function is invoked SYNCHRONOUSLY, so it should not execute any longrunning tasks in order to not block the program.
+     *
+     * @param identifier An optional instance identifier
+     * @returns a function to unregister the callback
+     */
+    onInit(callback, identifier) {
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(identifier);
+        const existingCallbacks = this.onInitCallbacks.get(normalizedIdentifier) ??
+            new Set();
+        existingCallbacks.add(callback);
+        this.onInitCallbacks.set(normalizedIdentifier, existingCallbacks);
+        const existingInstance = this.instances.get(normalizedIdentifier);
+        if (existingInstance) {
+            callback(existingInstance, normalizedIdentifier);
+        }
+        return () => {
+            existingCallbacks.delete(callback);
+        };
+    }
+    /**
+     * Invoke onInit callbacks synchronously
+     * @param instance the service instance`
+     */
+    invokeOnInitCallbacks(instance, identifier) {
+        const callbacks = this.onInitCallbacks.get(identifier);
+        if (!callbacks) {
+            return;
+        }
+        for (const callback of callbacks) {
+            try {
+                callback(instance, identifier);
+            }
+            catch {
+                // ignore errors in the onInit callback
+            }
+        }
+    }
+    getOrInitializeService({ instanceIdentifier, options = {} }) {
+        let instance = this.instances.get(instanceIdentifier);
+        if (!instance && this.component) {
+            instance = this.component.instanceFactory(this.container, {
+                instanceIdentifier: normalizeIdentifierForFactory(instanceIdentifier),
+                options
+            });
+            this.instances.set(instanceIdentifier, instance);
+            this.instancesOptions.set(instanceIdentifier, options);
+            /**
+             * Invoke onInit listeners.
+             * Note this.component.onInstanceCreated is different, which is used by the component creator,
+             * while onInit listeners are registered by consumers of the provider.
+             */
+            this.invokeOnInitCallbacks(instance, instanceIdentifier);
+            /**
+             * Order is important
+             * onInstanceCreated() should be called after this.instances.set(instanceIdentifier, instance); which
+             * makes `isInitialized()` return true.
+             */
+            if (this.component.onInstanceCreated) {
+                try {
+                    this.component.onInstanceCreated(this.container, instanceIdentifier, instance);
+                }
+                catch {
+                    // ignore errors in the onInstanceCreatedCallback
+                }
+            }
+        }
+        return instance || null;
+    }
+    normalizeInstanceIdentifier(identifier = DEFAULT_ENTRY_NAME) {
+        if (this.component) {
+            return this.component.multipleInstances ? identifier : DEFAULT_ENTRY_NAME;
+        }
+        else {
+            return identifier; // assume multiple instances are supported before the component is provided.
+        }
+    }
+    shouldAutoInitialize() {
+        return (!!this.component &&
+            this.component.instantiationMode !== "EXPLICIT" /* InstantiationMode.EXPLICIT */);
+    }
+}
+// undefined should be passed to the service factory for the default instance
+function normalizeIdentifierForFactory(identifier) {
+    return identifier === DEFAULT_ENTRY_NAME ? undefined : identifier;
+}
+function isComponentEager(component) {
+    return component.instantiationMode === "EAGER" /* InstantiationMode.EAGER */;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * ComponentContainer that provides Providers for service name T, e.g. `auth`, `auth-internal`
+ */
+class ComponentContainer {
+    constructor(name) {
+        this.name = name;
+        this.providers = new Map();
+    }
+    /**
+     *
+     * @param component Component being added
+     * @param overwrite When a component with the same name has already been registered,
+     * if overwrite is true: overwrite the existing component with the new component and create a new
+     * provider with the new component. It can be useful in tests where you want to use different mocks
+     * for different tests.
+     * if overwrite is false: throw an exception
+     */
+    addComponent(component) {
+        const provider = this.getProvider(component.name);
+        if (provider.isComponentSet()) {
+            throw new Error(`Component ${component.name} has already been registered with ${this.name}`);
+        }
+        provider.setComponent(component);
+    }
+    addOrOverwriteComponent(component) {
+        const provider = this.getProvider(component.name);
+        if (provider.isComponentSet()) {
+            // delete the existing provider from the container, so we can register the new component
+            this.providers.delete(component.name);
+        }
+        this.addComponent(component);
+    }
+    /**
+     * getProvider provides a type safe interface where it can only be called with a field name
+     * present in NameServiceMapping interface.
+     *
+     * Firebase SDKs providing services should extend NameServiceMapping interface to register
+     * themselves.
+     */
+    getProvider(name) {
+        if (this.providers.has(name)) {
+            return this.providers.get(name);
+        }
+        // create a Provider for a service that hasn't registered with Firebase
+        const provider = new Provider(name, this);
+        this.providers.set(name, provider);
+        return provider;
+    }
+    getProviders() {
+        return Array.from(this.providers.values());
+    }
+}
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/installations/dist/esm/index.esm.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@firebase/installations/dist/esm/index.esm.js ***!
+  \********************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteInstallations: function() { return /* binding */ deleteInstallations; },
+/* harmony export */   getId: function() { return /* binding */ getId; },
+/* harmony export */   getInstallations: function() { return /* binding */ getInstallations; },
+/* harmony export */   getToken: function() { return /* binding */ getToken; },
+/* harmony export */   onIdChange: function() { return /* binding */ onIdChange; }
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm.js");
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+
+
+
+
+
+const name = "@firebase/installations";
+const version = "0.6.22";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const PENDING_TIMEOUT_MS = 10000;
+const PACKAGE_VERSION = `w:${version}`;
+const INTERNAL_AUTH_VERSION = 'FIS_v2';
+const INSTALLATIONS_API_URL = 'https://firebaseinstallations.googleapis.com/v1';
+const TOKEN_EXPIRATION_BUFFER = 60 * 60 * 1000; // One hour
+const SERVICE = 'installations';
+const SERVICE_NAME = 'Installations';
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const ERROR_DESCRIPTION_MAP = {
+    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["not-registered" /* ErrorCode.NOT_REGISTERED */]: 'Firebase Installation is not registered.',
+    ["installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
+    ["request-failed" /* ErrorCode.REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
+    ["app-offline" /* ErrorCode.APP_OFFLINE */]: 'Could not process request. Application offline.',
+    ["delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
+};
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory(SERVICE, SERVICE_NAME, ERROR_DESCRIPTION_MAP);
+/** Returns true if error is a FirebaseError that is based on an error from the server. */
+function isServerError(error) {
+    return (error instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError &&
+        error.code.includes("request-failed" /* ErrorCode.REQUEST_FAILED */));
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function getInstallationsEndpoint({ projectId }) {
+    return `${INSTALLATIONS_API_URL}/projects/${projectId}/installations`;
+}
+function extractAuthTokenInfoFromResponse(response) {
+    return {
+        token: response.token,
+        requestStatus: 2 /* RequestStatus.COMPLETED */,
+        expiresIn: getExpiresInFromResponseExpiresIn(response.expiresIn),
+        creationTime: Date.now()
+    };
+}
+async function getErrorFromResponse(requestName, response) {
+    const responseJson = await response.json();
+    const errorData = responseJson.error;
+    return ERROR_FACTORY.create("request-failed" /* ErrorCode.REQUEST_FAILED */, {
+        requestName,
+        serverCode: errorData.code,
+        serverMessage: errorData.message,
+        serverStatus: errorData.status
+    });
+}
+function getHeaders({ apiKey }) {
+    return new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'x-goog-api-key': apiKey
+    });
+}
+function getHeadersWithAuth(appConfig, { refreshToken }) {
+    const headers = getHeaders(appConfig);
+    headers.append('Authorization', getAuthorizationHeader(refreshToken));
+    return headers;
+}
+/**
+ * Calls the passed in fetch wrapper and returns the response.
+ * If the returned response has a status of 5xx, re-runs the function once and
+ * returns the response.
+ */
+async function retryIfServerError(fn) {
+    const result = await fn();
+    if (result.status >= 500 && result.status < 600) {
+        // Internal Server Error. Retry request.
+        return fn();
+    }
+    return result;
+}
+function getExpiresInFromResponseExpiresIn(responseExpiresIn) {
+    // This works because the server will never respond with fractions of a second.
+    return Number(responseExpiresIn.replace('s', '000'));
+}
+function getAuthorizationHeader(refreshToken) {
+    return `${INTERNAL_AUTH_VERSION} ${refreshToken}`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function createInstallationRequest({ appConfig, heartbeatServiceProvider }, { fid }) {
+    const endpoint = getInstallationsEndpoint(appConfig);
+    const headers = getHeaders(appConfig);
+    // If heartbeat service exists, add the heartbeat string to the header.
+    const heartbeatService = heartbeatServiceProvider.getImmediate({
+        optional: true
+    });
+    if (heartbeatService) {
+        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+        if (heartbeatsHeader) {
+            headers.append('x-firebase-client', heartbeatsHeader);
+        }
+    }
+    const body = {
+        fid,
+        authVersion: INTERNAL_AUTH_VERSION,
+        appId: appConfig.appId,
+        sdkVersion: PACKAGE_VERSION
+    };
+    const request = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    const response = await retryIfServerError(() => fetch(endpoint, request));
+    if (response.ok) {
+        const responseValue = await response.json();
+        const registeredInstallationEntry = {
+            fid: responseValue.fid || fid,
+            registrationStatus: 2 /* RequestStatus.COMPLETED */,
+            refreshToken: responseValue.refreshToken,
+            authToken: extractAuthTokenInfoFromResponse(responseValue.authToken)
+        };
+        return registeredInstallationEntry;
+    }
+    else {
+        throw await getErrorFromResponse('Create Installation', response);
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Returns a promise that resolves after given time passes. */
+function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function bufferToBase64UrlSafe(array) {
+    const b64 = btoa(String.fromCharCode(...array));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const VALID_FID_PATTERN = /^[cdef][\w-]{21}$/;
+const INVALID_FID = '';
+/**
+ * Generates a new FID using random values from Web Crypto API.
+ * Returns an empty string if FID generation fails for any reason.
+ */
+function generateFid() {
+    try {
+        // A valid FID has exactly 22 base64 characters, which is 132 bits, or 16.5
+        // bytes. our implementation generates a 17 byte array instead.
+        const fidByteArray = new Uint8Array(17);
+        const crypto = self.crypto || self.msCrypto;
+        crypto.getRandomValues(fidByteArray);
+        // Replace the first 4 random bits with the constant FID header of 0b0111.
+        fidByteArray[0] = 0b01110000 + (fidByteArray[0] % 0b00010000);
+        const fid = encode(fidByteArray);
+        return VALID_FID_PATTERN.test(fid) ? fid : INVALID_FID;
+    }
+    catch {
+        // FID generation errored
+        return INVALID_FID;
+    }
+}
+/** Converts a FID Uint8Array to a base64 string representation. */
+function encode(fidByteArray) {
+    const b64String = bufferToBase64UrlSafe(fidByteArray);
+    // Remove the 23rd character that was added because of the extra 4 bits at the
+    // end of our 17 byte array, and the '=' padding.
+    return b64String.substr(0, 22);
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Returns a string key that can be used to identify the app. */
+function getKey(appConfig) {
+    return `${appConfig.appName}!${appConfig.appId}`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const fidChangeCallbacks = new Map();
+/**
+ * Calls the onIdChange callbacks with the new FID value, and broadcasts the
+ * change to other tabs.
+ */
+function fidChanged(appConfig, fid) {
+    const key = getKey(appConfig);
+    callFidChangeCallbacks(key, fid);
+    broadcastFidChange(key, fid);
+}
+function addCallback(appConfig, callback) {
+    // Open the broadcast channel if it's not already open,
+    // to be able to listen to change events from other tabs.
+    getBroadcastChannel();
+    const key = getKey(appConfig);
+    let callbackSet = fidChangeCallbacks.get(key);
+    if (!callbackSet) {
+        callbackSet = new Set();
+        fidChangeCallbacks.set(key, callbackSet);
+    }
+    callbackSet.add(callback);
+}
+function removeCallback(appConfig, callback) {
+    const key = getKey(appConfig);
+    const callbackSet = fidChangeCallbacks.get(key);
+    if (!callbackSet) {
+        return;
+    }
+    callbackSet.delete(callback);
+    if (callbackSet.size === 0) {
+        fidChangeCallbacks.delete(key);
+    }
+    // Close broadcast channel if there are no more callbacks.
+    closeBroadcastChannel();
+}
+function callFidChangeCallbacks(key, fid) {
+    const callbacks = fidChangeCallbacks.get(key);
+    if (!callbacks) {
+        return;
+    }
+    for (const callback of callbacks) {
+        callback(fid);
+    }
+}
+function broadcastFidChange(key, fid) {
+    const channel = getBroadcastChannel();
+    if (channel) {
+        channel.postMessage({ key, fid });
+    }
+    closeBroadcastChannel();
+}
+let broadcastChannel = null;
+/** Opens and returns a BroadcastChannel if it is supported by the browser. */
+function getBroadcastChannel() {
+    if (!broadcastChannel && 'BroadcastChannel' in self) {
+        broadcastChannel = new BroadcastChannel('[Firebase] FID Change');
+        broadcastChannel.onmessage = e => {
+            callFidChangeCallbacks(e.data.key, e.data.fid);
+        };
+    }
+    return broadcastChannel;
+}
+function closeBroadcastChannel() {
+    if (fidChangeCallbacks.size === 0 && broadcastChannel) {
+        broadcastChannel.close();
+        broadcastChannel = null;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DATABASE_NAME = 'firebase-installations-database';
+const DATABASE_VERSION = 1;
+const OBJECT_STORE_NAME = 'firebase-installations-store';
+let dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
+            upgrade: (db, oldVersion) => {
+                // We don't use 'break' in this switch statement, the fall-through
+                // behavior is what we want, because if there are multiple versions between
+                // the old version and the current version, we want ALL the migrations
+                // that correspond to those versions to run, not only the last one.
+                // eslint-disable-next-line default-case
+                switch (oldVersion) {
+                    case 0:
+                        db.createObjectStore(OBJECT_STORE_NAME);
+                }
+            }
+        });
+    }
+    return dbPromise;
+}
+/** Assigns or overwrites the record for the given key with the given value. */
+async function set(appConfig, value) {
+    const key = getKey(appConfig);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const objectStore = tx.objectStore(OBJECT_STORE_NAME);
+    const oldValue = (await objectStore.get(key));
+    await objectStore.put(value, key);
+    await tx.done;
+    if (!oldValue || oldValue.fid !== value.fid) {
+        fidChanged(appConfig, value.fid);
+    }
+    return value;
+}
+/** Removes record(s) from the objectStore that match the given key. */
+async function remove(appConfig) {
+    const key = getKey(appConfig);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    await tx.objectStore(OBJECT_STORE_NAME).delete(key);
+    await tx.done;
+}
+/**
+ * Atomically updates a record with the result of updateFn, which gets
+ * called with the current value. If newValue is undefined, the record is
+ * deleted instead.
+ * @return Updated value
+ */
+async function update(appConfig, updateFn) {
+    const key = getKey(appConfig);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(OBJECT_STORE_NAME);
+    const oldValue = (await store.get(key));
+    const newValue = updateFn(oldValue);
+    if (newValue === undefined) {
+        await store.delete(key);
+    }
+    else {
+        await store.put(newValue, key);
+    }
+    await tx.done;
+    if (newValue && (!oldValue || oldValue.fid !== newValue.fid)) {
+        fidChanged(appConfig, newValue.fid);
+    }
+    return newValue;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Updates and returns the InstallationEntry from the database.
+ * Also triggers a registration request if it is necessary and possible.
+ */
+async function getInstallationEntry(installations) {
+    let registrationPromise;
+    const installationEntry = await update(installations.appConfig, oldEntry => {
+        const installationEntry = updateOrCreateInstallationEntry(oldEntry);
+        const entryWithPromise = triggerRegistrationIfNecessary(installations, installationEntry);
+        registrationPromise = entryWithPromise.registrationPromise;
+        return entryWithPromise.installationEntry;
+    });
+    if (installationEntry.fid === INVALID_FID) {
+        // FID generation failed. Waiting for the FID from the server.
+        return { installationEntry: await registrationPromise };
+    }
+    return {
+        installationEntry,
+        registrationPromise
+    };
+}
+/**
+ * Creates a new Installation Entry if one does not exist.
+ * Also clears timed out pending requests.
+ */
+function updateOrCreateInstallationEntry(oldEntry) {
+    const entry = oldEntry || {
+        fid: generateFid(),
+        registrationStatus: 0 /* RequestStatus.NOT_STARTED */
+    };
+    return clearTimedOutRequest(entry);
+}
+/**
+ * If the Firebase Installation is not registered yet, this will trigger the
+ * registration and return an InProgressInstallationEntry.
+ *
+ * If registrationPromise does not exist, the installationEntry is guaranteed
+ * to be registered.
+ */
+function triggerRegistrationIfNecessary(installations, installationEntry) {
+    if (installationEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
+        if (!navigator.onLine) {
+            // Registration required but app is offline.
+            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */));
+            return {
+                installationEntry,
+                registrationPromise: registrationPromiseWithError
+            };
+        }
+        // Try registering. Change status to IN_PROGRESS.
+        const inProgressEntry = {
+            fid: installationEntry.fid,
+            registrationStatus: 1 /* RequestStatus.IN_PROGRESS */,
+            registrationTime: Date.now()
+        };
+        const registrationPromise = registerInstallation(installations, inProgressEntry);
+        return { installationEntry: inProgressEntry, registrationPromise };
+    }
+    else if (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+        return {
+            installationEntry,
+            registrationPromise: waitUntilFidRegistration(installations)
+        };
+    }
+    else {
+        return { installationEntry };
+    }
+}
+/** This will be executed only once for each new Firebase Installation. */
+async function registerInstallation(installations, installationEntry) {
+    try {
+        const registeredInstallationEntry = await createInstallationRequest(installations, installationEntry);
+        return set(installations.appConfig, registeredInstallationEntry);
+    }
+    catch (e) {
+        if (isServerError(e) && e.customData.serverCode === 409) {
+            // Server returned a "FID cannot be used" error.
+            // Generate a new ID next time.
+            await remove(installations.appConfig);
+        }
+        else {
+            // Registration failed. Set FID as not registered.
+            await set(installations.appConfig, {
+                fid: installationEntry.fid,
+                registrationStatus: 0 /* RequestStatus.NOT_STARTED */
+            });
+        }
+        throw e;
+    }
+}
+/** Call if FID registration is pending in another request. */
+async function waitUntilFidRegistration(installations) {
+    // Unfortunately, there is no way of reliably observing when a value in
+    // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
+    // so we need to poll.
+    let entry = await updateInstallationRequest(installations.appConfig);
+    while (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+        // createInstallation request still in progress.
+        await sleep(100);
+        entry = await updateInstallationRequest(installations.appConfig);
+    }
+    if (entry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
+        // The request timed out or failed in a different call. Try again.
+        const { installationEntry, registrationPromise } = await getInstallationEntry(installations);
+        if (registrationPromise) {
+            return registrationPromise;
+        }
+        else {
+            // if there is no registrationPromise, entry is registered.
+            return installationEntry;
+        }
+    }
+    return entry;
+}
+/**
+ * Called only if there is a CreateInstallation request in progress.
+ *
+ * Updates the InstallationEntry in the DB based on the status of the
+ * CreateInstallation request.
+ *
+ * Returns the updated InstallationEntry.
+ */
+function updateInstallationRequest(appConfig) {
+    return update(appConfig, oldEntry => {
+        if (!oldEntry) {
+            throw ERROR_FACTORY.create("installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */);
+        }
+        return clearTimedOutRequest(oldEntry);
+    });
+}
+function clearTimedOutRequest(entry) {
+    if (hasInstallationRequestTimedOut(entry)) {
+        return {
+            fid: entry.fid,
+            registrationStatus: 0 /* RequestStatus.NOT_STARTED */
+        };
+    }
+    return entry;
+}
+function hasInstallationRequestTimedOut(installationEntry) {
+    return (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
+        installationEntry.registrationTime + PENDING_TIMEOUT_MS < Date.now());
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function generateAuthTokenRequest({ appConfig, heartbeatServiceProvider }, installationEntry) {
+    const endpoint = getGenerateAuthTokenEndpoint(appConfig, installationEntry);
+    const headers = getHeadersWithAuth(appConfig, installationEntry);
+    // If heartbeat service exists, add the heartbeat string to the header.
+    const heartbeatService = heartbeatServiceProvider.getImmediate({
+        optional: true
+    });
+    if (heartbeatService) {
+        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+        if (heartbeatsHeader) {
+            headers.append('x-firebase-client', heartbeatsHeader);
+        }
+    }
+    const body = {
+        installation: {
+            sdkVersion: PACKAGE_VERSION,
+            appId: appConfig.appId
+        }
+    };
+    const request = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    const response = await retryIfServerError(() => fetch(endpoint, request));
+    if (response.ok) {
+        const responseValue = await response.json();
+        const completedAuthToken = extractAuthTokenInfoFromResponse(responseValue);
+        return completedAuthToken;
+    }
+    else {
+        throw await getErrorFromResponse('Generate Auth Token', response);
+    }
+}
+function getGenerateAuthTokenEndpoint(appConfig, { fid }) {
+    return `${getInstallationsEndpoint(appConfig)}/${fid}/authTokens:generate`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns a valid authentication token for the installation. Generates a new
+ * token if one doesn't exist, is expired or about to expire.
+ *
+ * Should only be called if the Firebase Installation is registered.
+ */
+async function refreshAuthToken(installations, forceRefresh = false) {
+    let tokenPromise;
+    const entry = await update(installations.appConfig, oldEntry => {
+        if (!isEntryRegistered(oldEntry)) {
+            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
+        }
+        const oldAuthToken = oldEntry.authToken;
+        if (!forceRefresh && isAuthTokenValid(oldAuthToken)) {
+            // There is a valid token in the DB.
+            return oldEntry;
+        }
+        else if (oldAuthToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+            // There already is a token request in progress.
+            tokenPromise = waitUntilAuthTokenRequest(installations, forceRefresh);
+            return oldEntry;
+        }
+        else {
+            // No token or token expired.
+            if (!navigator.onLine) {
+                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
+            }
+            const inProgressEntry = makeAuthTokenRequestInProgressEntry(oldEntry);
+            tokenPromise = fetchAuthTokenFromServer(installations, inProgressEntry);
+            return inProgressEntry;
+        }
+    });
+    const authToken = tokenPromise
+        ? await tokenPromise
+        : entry.authToken;
+    return authToken;
+}
+/**
+ * Call only if FID is registered and Auth Token request is in progress.
+ *
+ * Waits until the current pending request finishes. If the request times out,
+ * tries once in this thread as well.
+ */
+async function waitUntilAuthTokenRequest(installations, forceRefresh) {
+    // Unfortunately, there is no way of reliably observing when a value in
+    // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
+    // so we need to poll.
+    let entry = await updateAuthTokenRequest(installations.appConfig);
+    while (entry.authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+        // generateAuthToken still in progress.
+        await sleep(100);
+        entry = await updateAuthTokenRequest(installations.appConfig);
+    }
+    const authToken = entry.authToken;
+    if (authToken.requestStatus === 0 /* RequestStatus.NOT_STARTED */) {
+        // The request timed out or failed in a different call. Try again.
+        return refreshAuthToken(installations, forceRefresh);
+    }
+    else {
+        return authToken;
+    }
+}
+/**
+ * Called only if there is a GenerateAuthToken request in progress.
+ *
+ * Updates the InstallationEntry in the DB based on the status of the
+ * GenerateAuthToken request.
+ *
+ * Returns the updated InstallationEntry.
+ */
+function updateAuthTokenRequest(appConfig) {
+    return update(appConfig, oldEntry => {
+        if (!isEntryRegistered(oldEntry)) {
+            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
+        }
+        const oldAuthToken = oldEntry.authToken;
+        if (hasAuthTokenRequestTimedOut(oldAuthToken)) {
+            return {
+                ...oldEntry,
+                authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ }
+            };
+        }
+        return oldEntry;
+    });
+}
+async function fetchAuthTokenFromServer(installations, installationEntry) {
+    try {
+        const authToken = await generateAuthTokenRequest(installations, installationEntry);
+        const updatedInstallationEntry = {
+            ...installationEntry,
+            authToken
+        };
+        await set(installations.appConfig, updatedInstallationEntry);
+        return authToken;
+    }
+    catch (e) {
+        if (isServerError(e) &&
+            (e.customData.serverCode === 401 || e.customData.serverCode === 404)) {
+            // Server returned a "FID not found" or a "Invalid authentication" error.
+            // Generate a new ID next time.
+            await remove(installations.appConfig);
+        }
+        else {
+            const updatedInstallationEntry = {
+                ...installationEntry,
+                authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ }
+            };
+            await set(installations.appConfig, updatedInstallationEntry);
+        }
+        throw e;
+    }
+}
+function isEntryRegistered(installationEntry) {
+    return (installationEntry !== undefined &&
+        installationEntry.registrationStatus === 2 /* RequestStatus.COMPLETED */);
+}
+function isAuthTokenValid(authToken) {
+    return (authToken.requestStatus === 2 /* RequestStatus.COMPLETED */ &&
+        !isAuthTokenExpired(authToken));
+}
+function isAuthTokenExpired(authToken) {
+    const now = Date.now();
+    return (now < authToken.creationTime ||
+        authToken.creationTime + authToken.expiresIn < now + TOKEN_EXPIRATION_BUFFER);
+}
+/** Returns an updated InstallationEntry with an InProgressAuthToken. */
+function makeAuthTokenRequestInProgressEntry(oldEntry) {
+    const inProgressAuthToken = {
+        requestStatus: 1 /* RequestStatus.IN_PROGRESS */,
+        requestTime: Date.now()
+    };
+    return {
+        ...oldEntry,
+        authToken: inProgressAuthToken
+    };
+}
+function hasAuthTokenRequestTimedOut(authToken) {
+    return (authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
+        authToken.requestTime + PENDING_TIMEOUT_MS < Date.now());
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Creates a Firebase Installation if there isn't one for the app and
+ * returns the Installation ID.
+ * @param installations - The `Installations` instance.
+ *
+ * @public
+ */
+async function getId(installations) {
+    const installationsImpl = installations;
+    const { installationEntry, registrationPromise } = await getInstallationEntry(installationsImpl);
+    if (registrationPromise) {
+        registrationPromise.catch(console.error);
+    }
+    else {
+        // If the installation is already registered, update the authentication
+        // token if needed.
+        refreshAuthToken(installationsImpl).catch(console.error);
+    }
+    return installationEntry.fid;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns a Firebase Installations auth token, identifying the current
+ * Firebase Installation.
+ * @param installations - The `Installations` instance.
+ * @param forceRefresh - Force refresh regardless of token expiration.
+ *
+ * @public
+ */
+async function getToken(installations, forceRefresh = false) {
+    const installationsImpl = installations;
+    await completeInstallationRegistration(installationsImpl);
+    // At this point we either have a Registered Installation in the DB, or we've
+    // already thrown an error.
+    const authToken = await refreshAuthToken(installationsImpl, forceRefresh);
+    return authToken.token;
+}
+async function completeInstallationRegistration(installations) {
+    const { registrationPromise } = await getInstallationEntry(installations);
+    if (registrationPromise) {
+        // A createInstallation request is in progress. Wait until it finishes.
+        await registrationPromise;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function deleteInstallationRequest(appConfig, installationEntry) {
+    const endpoint = getDeleteEndpoint(appConfig, installationEntry);
+    const headers = getHeadersWithAuth(appConfig, installationEntry);
+    const request = {
+        method: 'DELETE',
+        headers
+    };
+    const response = await retryIfServerError(() => fetch(endpoint, request));
+    if (!response.ok) {
+        throw await getErrorFromResponse('Delete Installation', response);
+    }
+}
+function getDeleteEndpoint(appConfig, { fid }) {
+    return `${getInstallationsEndpoint(appConfig)}/${fid}`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Deletes the Firebase Installation and all associated data.
+ * @param installations - The `Installations` instance.
+ *
+ * @public
+ */
+async function deleteInstallations(installations) {
+    const { appConfig } = installations;
+    const entry = await update(appConfig, oldEntry => {
+        if (oldEntry && oldEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
+            // Delete the unregistered entry without sending a deleteInstallation request.
+            return undefined;
+        }
+        return oldEntry;
+    });
+    if (entry) {
+        if (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+            // Can't delete while trying to register.
+            throw ERROR_FACTORY.create("delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */);
+        }
+        else if (entry.registrationStatus === 2 /* RequestStatus.COMPLETED */) {
+            if (!navigator.onLine) {
+                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
+            }
+            else {
+                await deleteInstallationRequest(appConfig, entry);
+                await remove(appConfig);
+            }
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Sets a new callback that will get called when Installation ID changes.
+ * Returns an unsubscribe function that will remove the callback when called.
+ * @param installations - The `Installations` instance.
+ * @param callback - The callback function that is invoked when FID changes.
+ * @returns A function that can be called to unsubscribe.
+ *
+ * @public
+ */
+function onIdChange(installations, callback) {
+    const { appConfig } = installations;
+    addCallback(appConfig, callback);
+    return () => {
+        removeCallback(appConfig, callback);
+    };
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns an instance of {@link Installations} associated with the given
+ * {@link @firebase/app#FirebaseApp} instance.
+ * @param app - The {@link @firebase/app#FirebaseApp} instance.
+ *
+ * @public
+ */
+function getInstallations(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp)()) {
+    const installationsImpl = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'installations').getImmediate();
+    return installationsImpl;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function extractAppConfig(app) {
+    if (!app || !app.options) {
+        throw getMissingValueError('App Configuration');
+    }
+    if (!app.name) {
+        throw getMissingValueError('App Name');
+    }
+    // Required app config keys
+    const configKeys = [
+        'projectId',
+        'apiKey',
+        'appId'
+    ];
+    for (const keyName of configKeys) {
+        if (!app.options[keyName]) {
+            throw getMissingValueError(keyName);
+        }
+    }
+    return {
+        appName: app.name,
+        projectId: app.options.projectId,
+        apiKey: app.options.apiKey,
+        appId: app.options.appId
+    };
+}
+function getMissingValueError(valueName) {
+    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
+        valueName
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const INSTALLATIONS_NAME = 'installations';
+const INSTALLATIONS_NAME_INTERNAL = 'installations-internal';
+const publicFactory = (container) => {
+    const app = container.getProvider('app').getImmediate();
+    // Throws if app isn't configured properly.
+    const appConfig = extractAppConfig(app);
+    const heartbeatServiceProvider = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'heartbeat');
+    const installationsImpl = {
+        app,
+        appConfig,
+        heartbeatServiceProvider,
+        _delete: () => Promise.resolve()
+    };
+    return installationsImpl;
+};
+const internalFactory = (container) => {
+    const app = container.getProvider('app').getImmediate();
+    // Internal FIS instance relies on public FIS instance.
+    const installations = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, INSTALLATIONS_NAME).getImmediate();
+    const installationsInternal = {
+        getId: () => getId(installations),
+        getToken: (forceRefresh) => getToken(installations, forceRefresh)
+    };
+    return installationsInternal;
+};
+function registerInstallations() {
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* ComponentType.PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
+}
+
+/**
+ * The Firebase Installations Web SDK.
+ * This SDK does not work in a Node.js environment.
+ *
+ * @packageDocumentation
+ */
+registerInstallations();
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version);
+// BUILD_TARGET will be replaced by values like esm, cjs, etc during the compilation
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'esm2020');
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/logger/dist/esm/index.esm.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@firebase/logger/dist/esm/index.esm.js ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogLevel: function() { return /* binding */ LogLevel; },
+/* harmony export */   Logger: function() { return /* binding */ Logger; },
+/* harmony export */   setLogLevel: function() { return /* binding */ setLogLevel; },
+/* harmony export */   setUserLogHandler: function() { return /* binding */ setUserLogHandler; }
+/* harmony export */ });
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * A container for all of the Logger instances
+ */
+const instances = [];
+/**
+ * The JS SDK supports 5 log levels and also allows a user the ability to
+ * silence the logs altogether.
+ *
+ * The order is a follows:
+ * DEBUG < VERBOSE < INFO < WARN < ERROR
+ *
+ * All of the log types above the current log level will be captured (i.e. if
+ * you set the log level to `INFO`, errors will still be logged, but `DEBUG` and
+ * `VERBOSE` logs will not)
+ */
+var LogLevel;
+(function (LogLevel) {
+    LogLevel[LogLevel["DEBUG"] = 0] = "DEBUG";
+    LogLevel[LogLevel["VERBOSE"] = 1] = "VERBOSE";
+    LogLevel[LogLevel["INFO"] = 2] = "INFO";
+    LogLevel[LogLevel["WARN"] = 3] = "WARN";
+    LogLevel[LogLevel["ERROR"] = 4] = "ERROR";
+    LogLevel[LogLevel["SILENT"] = 5] = "SILENT";
+})(LogLevel || (LogLevel = {}));
+const levelStringToEnum = {
+    'debug': LogLevel.DEBUG,
+    'verbose': LogLevel.VERBOSE,
+    'info': LogLevel.INFO,
+    'warn': LogLevel.WARN,
+    'error': LogLevel.ERROR,
+    'silent': LogLevel.SILENT
+};
+/**
+ * The default log level
+ */
+const defaultLogLevel = LogLevel.INFO;
+/**
+ * By default, `console.debug` is not displayed in the developer console (in
+ * chrome). To avoid forcing users to have to opt-in to these logs twice
+ * (i.e. once for firebase, and once in the console), we are sending `DEBUG`
+ * logs to the `console.log` function.
+ */
+const ConsoleMethod = {
+    [LogLevel.DEBUG]: 'log',
+    [LogLevel.VERBOSE]: 'log',
+    [LogLevel.INFO]: 'info',
+    [LogLevel.WARN]: 'warn',
+    [LogLevel.ERROR]: 'error'
+};
+/**
+ * The default log handler will forward DEBUG, VERBOSE, INFO, WARN, and ERROR
+ * messages on to their corresponding console counterparts (if the log method
+ * is supported by the current log level)
+ */
+const defaultLogHandler = (instance, logType, ...args) => {
+    if (logType < instance.logLevel) {
+        return;
+    }
+    const now = new Date().toISOString();
+    const method = ConsoleMethod[logType];
+    if (method) {
+        console[method](`[${now}]  ${instance.name}:`, ...args);
+    }
+    else {
+        throw new Error(`Attempted to log a message with an invalid logType (value: ${logType})`);
+    }
+};
+class Logger {
+    /**
+     * Gives you an instance of a Logger to capture messages according to
+     * Firebase's logging scheme.
+     *
+     * @param name The name that the logs will be associated with
+     */
+    constructor(name) {
+        this.name = name;
+        /**
+         * The log level of the given Logger instance.
+         */
+        this._logLevel = defaultLogLevel;
+        /**
+         * The main (internal) log handler for the Logger instance.
+         * Can be set to a new function in internal package code but not by user.
+         */
+        this._logHandler = defaultLogHandler;
+        /**
+         * The optional, additional, user-defined log handler for the Logger instance.
+         */
+        this._userLogHandler = null;
+        /**
+         * Capture the current instance for later use
+         */
+        instances.push(this);
+    }
+    get logLevel() {
+        return this._logLevel;
+    }
+    set logLevel(val) {
+        if (!(val in LogLevel)) {
+            throw new TypeError(`Invalid value "${val}" assigned to \`logLevel\``);
+        }
+        this._logLevel = val;
+    }
+    // Workaround for setter/getter having to be the same type.
+    setLogLevel(val) {
+        this._logLevel = typeof val === 'string' ? levelStringToEnum[val] : val;
+    }
+    get logHandler() {
+        return this._logHandler;
+    }
+    set logHandler(val) {
+        if (typeof val !== 'function') {
+            throw new TypeError('Value assigned to `logHandler` must be a function');
+        }
+        this._logHandler = val;
+    }
+    get userLogHandler() {
+        return this._userLogHandler;
+    }
+    set userLogHandler(val) {
+        this._userLogHandler = val;
+    }
+    /**
+     * The functions below are all based on the `console` interface
+     */
+    debug(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.DEBUG, ...args);
+        this._logHandler(this, LogLevel.DEBUG, ...args);
+    }
+    log(...args) {
+        this._userLogHandler &&
+            this._userLogHandler(this, LogLevel.VERBOSE, ...args);
+        this._logHandler(this, LogLevel.VERBOSE, ...args);
+    }
+    info(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.INFO, ...args);
+        this._logHandler(this, LogLevel.INFO, ...args);
+    }
+    warn(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.WARN, ...args);
+        this._logHandler(this, LogLevel.WARN, ...args);
+    }
+    error(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.ERROR, ...args);
+        this._logHandler(this, LogLevel.ERROR, ...args);
+    }
+}
+function setLogLevel(level) {
+    instances.forEach(inst => {
+        inst.setLogLevel(level);
+    });
+}
+function setUserLogHandler(logCallback, options) {
+    for (const instance of instances) {
+        let customLogLevel = null;
+        if (options && options.level) {
+            customLogLevel = levelStringToEnum[options.level];
+        }
+        if (logCallback === null) {
+            instance.userLogHandler = null;
+        }
+        else {
+            instance.userLogHandler = (instance, level, ...args) => {
+                const message = args
+                    .map(arg => {
+                    if (arg == null) {
+                        return null;
+                    }
+                    else if (typeof arg === 'string') {
+                        return arg;
+                    }
+                    else if (typeof arg === 'number' || typeof arg === 'boolean') {
+                        return arg.toString();
+                    }
+                    else if (arg instanceof Error) {
+                        return arg.message;
+                    }
+                    else {
+                        try {
+                            return JSON.stringify(arg);
+                        }
+                        catch (ignored) {
+                            return null;
+                        }
+                    }
+                })
+                    .filter(arg => arg)
+                    .join(' ');
+                if (level >= (customLogLevel ?? instance.logLevel)) {
+                    logCallback({
+                        level: LogLevel[level].toLowerCase(),
+                        message,
+                        args,
+                        type: instance.name
+                    });
+                }
+            };
+        }
+    }
+}
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/messaging/dist/esm/index.esm.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@firebase/messaging/dist/esm/index.esm.js ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteToken: function() { return /* binding */ deleteToken; },
+/* harmony export */   getMessaging: function() { return /* binding */ getMessagingInWindow; },
+/* harmony export */   getToken: function() { return /* binding */ getToken; },
+/* harmony export */   isSupported: function() { return /* binding */ isWindowSupported; },
+/* harmony export */   onMessage: function() { return /* binding */ onMessage; },
+/* harmony export */   onRegistered: function() { return /* binding */ onRegistered; },
+/* harmony export */   onUnregistered: function() { return /* binding */ onUnregistered; },
+/* harmony export */   register: function() { return /* binding */ register; },
+/* harmony export */   unregister: function() { return /* binding */ unregister; }
+/* harmony export */ });
+/* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm.js");
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm.js");
+
+
+
+
+
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DEFAULT_SW_PATH = '/firebase-messaging-sw.js';
+const DEFAULT_SW_SCOPE = '/firebase-cloud-messaging-push-scope';
+const DEFAULT_VAPID_KEY = 'BDOU99-h67HcA6JeFXHbSNMu7e2yNNu3RzoMj8TM4W88jITfq7ZmPvIM1Iv-4_l2LxQcYwhqby2xGpWwzjfAnG4';
+const ENDPOINT = 'https://fcmregistrations.googleapis.com/v1';
+const CONSOLE_CAMPAIGN_ID = 'google.c.a.c_id';
+const CONSOLE_CAMPAIGN_NAME = 'google.c.a.c_l';
+const CONSOLE_CAMPAIGN_TIME = 'google.c.a.ts';
+/** Set to '1' if Analytics is enabled for the campaign */
+const CONSOLE_CAMPAIGN_ANALYTICS_ENABLED = 'google.c.a.e';
+const DEFAULT_REGISTRATION_TIMEOUT = 10000;
+var MessageType$1;
+(function (MessageType) {
+    MessageType[MessageType["DATA_MESSAGE"] = 1] = "DATA_MESSAGE";
+    MessageType[MessageType["DISPLAY_NOTIFICATION"] = 3] = "DISPLAY_NOTIFICATION";
+})(MessageType$1 || (MessageType$1 = {}));
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+var MessageType;
+(function (MessageType) {
+    MessageType["PUSH_RECEIVED"] = "push-received";
+    MessageType["NOTIFICATION_CLICKED"] = "notification-clicked";
+    MessageType["FID_REGISTERED"] = "fid-registered";
+})(MessageType || (MessageType = {}));
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function arrayToBase64(array) {
+    const uint8Array = new Uint8Array(array);
+    const base64String = btoa(String.fromCharCode(...uint8Array));
+    return base64String.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+function base64ToArray(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const OLD_DB_NAME = 'fcm_token_details_db';
+/**
+ * The last DB version of 'fcm_token_details_db' was 4. This is one higher, so that the upgrade
+ * callback is called for all versions of the old DB.
+ */
+const OLD_DB_VERSION = 5;
+const OLD_OBJECT_STORE_NAME = 'fcm_token_object_Store';
+async function migrateOldDatabase(senderId) {
+    if ('databases' in indexedDB) {
+        // indexedDb.databases() is an IndexedDB v3 API and does not exist in all browsers. TODO: Remove
+        // typecast when it lands in TS types.
+        const databases = await indexedDB.databases();
+        const dbNames = databases.map(db => db.name);
+        if (!dbNames.includes(OLD_DB_NAME)) {
+            // old DB didn't exist, no need to open.
+            return null;
+        }
+    }
+    let tokenDetails = null;
+    const db = await (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, {
+        upgrade: async (db, oldVersion, newVersion, upgradeTransaction) => {
+            if (oldVersion < 2) {
+                // Database too old, skip migration.
+                return;
+            }
+            if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
+                // Database did not exist. Nothing to do.
+                return;
+            }
+            const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
+            const value = await objectStore.index('fcmSenderId').get(senderId);
+            await objectStore.clear();
+            if (!value) {
+                // No entry in the database, nothing to migrate.
+                return;
+            }
+            if (oldVersion === 2) {
+                const oldDetails = value;
+                if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
+                    return;
+                }
+                tokenDetails = {
+                    token: oldDetails.fcmToken,
+                    createTime: oldDetails.createTime ?? Date.now(),
+                    subscriptionOptions: {
+                        auth: oldDetails.auth,
+                        p256dh: oldDetails.p256dh,
+                        endpoint: oldDetails.endpoint,
+                        swScope: oldDetails.swScope,
+                        vapidKey: typeof oldDetails.vapidKey === 'string'
+                            ? oldDetails.vapidKey
+                            : arrayToBase64(oldDetails.vapidKey)
+                    }
+                };
+            }
+            else if (oldVersion === 3) {
+                const oldDetails = value;
+                tokenDetails = {
+                    token: oldDetails.fcmToken,
+                    createTime: oldDetails.createTime,
+                    subscriptionOptions: {
+                        auth: arrayToBase64(oldDetails.auth),
+                        p256dh: arrayToBase64(oldDetails.p256dh),
+                        endpoint: oldDetails.endpoint,
+                        swScope: oldDetails.swScope,
+                        vapidKey: arrayToBase64(oldDetails.vapidKey)
+                    }
+                };
+            }
+            else if (oldVersion === 4) {
+                const oldDetails = value;
+                tokenDetails = {
+                    token: oldDetails.fcmToken,
+                    createTime: oldDetails.createTime,
+                    subscriptionOptions: {
+                        auth: arrayToBase64(oldDetails.auth),
+                        p256dh: arrayToBase64(oldDetails.p256dh),
+                        endpoint: oldDetails.endpoint,
+                        swScope: oldDetails.swScope,
+                        vapidKey: arrayToBase64(oldDetails.vapidKey)
+                    }
+                };
+            }
+        }
+    });
+    db.close();
+    // Delete all old databases.
+    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
+    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
+    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
+    return checkTokenDetails(tokenDetails) ? tokenDetails : null;
+}
+function checkTokenDetails(tokenDetails) {
+    if (!tokenDetails || !tokenDetails.subscriptionOptions) {
+        return false;
+    }
+    const { subscriptionOptions } = tokenDetails;
+    return (typeof tokenDetails.createTime === 'number' &&
+        tokenDetails.createTime > 0 &&
+        typeof tokenDetails.token === 'string' &&
+        tokenDetails.token.length > 0 &&
+        typeof subscriptionOptions.auth === 'string' &&
+        subscriptionOptions.auth.length > 0 &&
+        typeof subscriptionOptions.p256dh === 'string' &&
+        subscriptionOptions.p256dh.length > 0 &&
+        typeof subscriptionOptions.endpoint === 'string' &&
+        subscriptionOptions.endpoint.length > 0 &&
+        typeof subscriptionOptions.swScope === 'string' &&
+        subscriptionOptions.swScope.length > 0 &&
+        typeof subscriptionOptions.vapidKey === 'string' &&
+        subscriptionOptions.vapidKey.length > 0);
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const ERROR_MAP = {
+    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
+    ["only-available-in-sw" /* ErrorCode.AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
+    ["permission-default" /* ErrorCode.PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
+    ["permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
+    ["unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
+    ["indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
+    ["failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
+    ["token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
+    ["token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
+    ["fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */]: 'A problem occurred while creating an FCM registration via FID: {$errorInfo}',
+    ["fid-unregister-failed" /* ErrorCode.FID_UNREGISTER_FAILED */]: 'A problem occurred while unregistering the FCM registration via FID: {$errorInfo}',
+    ["fid-registration-idb-schema-unavailable" /* ErrorCode.FID_REGISTRATION_IDB_SCHEMA_UNAVAILABLE */]: 'Unable to read or persist FID registration metadata because the messaging ' +
+        'IndexedDB schema is unavailable (for example, the database could not be ' +
+        'upgraded to the latest version).',
+    ["token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
+        'user from FCM: {$errorInfo}',
+    ["token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
+    ["token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
+    ["use-sw-after-get-token" /* ErrorCode.USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
+        'called before calling getToken() to ensure your service worker is used.',
+    ["invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
+    ["invalid-bg-handler" /* ErrorCode.INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
+    ["invalid-vapid-key" /* ErrorCode.INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
+    ["use-vapid-key-after-get-token" /* ErrorCode.USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
+        'called before calling getToken() to ensure your VAPID key is used.',
+    ["invalid-on-registered-handler" /* ErrorCode.INVALID_ON_REGISTERED_HANDLER */]: 'No onRegistered callback handler was provided or registered. Implement onRegistered() before register().'
+};
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DATABASE_NAME = 'firebase-messaging-database';
+const DATABASE_VERSION = 2;
+const TOKEN_OBJECT_STORE_NAME = 'firebase-messaging-store';
+const FID_REGISTRATION_OBJECT_STORE_NAME = 'firebase-messaging-fid-registration-store';
+const defaultIdb = { openDB: idb__WEBPACK_IMPORTED_MODULE_2__.openDB, deleteDB: idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB };
+let idbImpl = defaultIdb;
+// Open v2, but fall back to v1 if upgrade/open fails. Cache as `unknown` and guard store access.
+let dbPromise = null;
+function migrateMessagingDb(upgradeDb, oldVersion, targetSchemaVersion) {
+    // Intentional fall-through for v2: run all intermediate migrations.
+    // eslint-disable-next-line default-case
+    switch (oldVersion) {
+        case 0:
+            upgradeDb.createObjectStore(TOKEN_OBJECT_STORE_NAME);
+            if (targetSchemaVersion === 1) {
+                break;
+            }
+        // fall through
+        case 1:
+            if (targetSchemaVersion === 2) {
+                upgradeDb.createObjectStore(FID_REGISTRATION_OBJECT_STORE_NAME);
+            }
+    }
+}
+function createOpenDbOptions(targetSchemaVersion) {
+    return {
+        upgrade: (upgradeDb, oldVersion) => {
+            migrateMessagingDb(upgradeDb, oldVersion, targetSchemaVersion);
+        },
+        blocked: () => {
+            /* no-op */
+        },
+        blocking: (_currentVersion, _blockedVersion, event) => {
+            dbPromise = null;
+            event.target?.close();
+        },
+        terminated: () => {
+            dbPromise = null;
+        }
+    };
+}
+function getDbPromise() {
+    if (!dbPromise) {
+        const openLatest = idbImpl.openDB(DATABASE_NAME, DATABASE_VERSION, createOpenDbOptions(2));
+        // Assign synchronously to avoid concurrent openDB() calls.
+        dbPromise = openLatest.catch(() => idbImpl.openDB(DATABASE_NAME, DATABASE_VERSION - 1, createOpenDbOptions(1)));
+    }
+    return dbPromise;
+}
+function hasObjectStore(db, storeName) {
+    return db.objectStoreNames.contains(storeName);
+}
+function assertFidRegistrationObjectStore(db) {
+    if (!hasObjectStore(db, FID_REGISTRATION_OBJECT_STORE_NAME)) {
+        throw ERROR_FACTORY.create("fid-registration-idb-schema-unavailable" /* ErrorCode.FID_REGISTRATION_IDB_SCHEMA_UNAVAILABLE */);
+    }
+}
+async function dbGet(firebaseDependencies) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    const tokenDetails = (await db
+        .transaction(TOKEN_OBJECT_STORE_NAME)
+        .objectStore(TOKEN_OBJECT_STORE_NAME)
+        .get(key));
+    if (tokenDetails) {
+        return tokenDetails;
+    }
+    else {
+        const oldTokenDetails = await migrateOldDatabase(firebaseDependencies.appConfig.senderId);
+        if (oldTokenDetails) {
+            await dbSet(firebaseDependencies, oldTokenDetails);
+            return oldTokenDetails;
+        }
+    }
+}
+async function dbSet(firebaseDependencies, tokenDetails) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    const stores = [TOKEN_OBJECT_STORE_NAME];
+    const hasFidStore = hasObjectStore(db, FID_REGISTRATION_OBJECT_STORE_NAME);
+    if (hasFidStore) {
+        stores.push(FID_REGISTRATION_OBJECT_STORE_NAME);
+    }
+    const tx = db.transaction(stores, 'readwrite');
+    await tx.objectStore(TOKEN_OBJECT_STORE_NAME).put(tokenDetails, key);
+    if (hasFidStore) {
+        await tx.objectStore(FID_REGISTRATION_OBJECT_STORE_NAME).delete(key);
+    }
+    await tx.done;
+    return tokenDetails;
+}
+async function dbRemove(firebaseDependencies) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    const tx = db.transaction(TOKEN_OBJECT_STORE_NAME, 'readwrite');
+    await tx.objectStore(TOKEN_OBJECT_STORE_NAME).delete(key);
+    await tx.done;
+}
+async function dbGetFidRegistration(firebaseDependencies) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    assertFidRegistrationObjectStore(db);
+    return (await db
+        .transaction(FID_REGISTRATION_OBJECT_STORE_NAME)
+        .objectStore(FID_REGISTRATION_OBJECT_STORE_NAME)
+        .get(key));
+}
+async function dbSetFidRegistration(firebaseDependencies, details) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    assertFidRegistrationObjectStore(db);
+    const tx = db.transaction([TOKEN_OBJECT_STORE_NAME, FID_REGISTRATION_OBJECT_STORE_NAME], 'readwrite');
+    await tx.objectStore(FID_REGISTRATION_OBJECT_STORE_NAME).put(details, key);
+    await tx.objectStore(TOKEN_OBJECT_STORE_NAME).delete(key);
+    await tx.done;
+    return details;
+}
+async function dbRemoveFidRegistration(firebaseDependencies) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    assertFidRegistrationObjectStore(db);
+    const tx = db.transaction(FID_REGISTRATION_OBJECT_STORE_NAME, 'readwrite');
+    await tx.objectStore(FID_REGISTRATION_OBJECT_STORE_NAME).delete(key);
+    await tx.done;
+}
+function getKey({ appConfig }) {
+    return appConfig.appId;
+}
+
+const name = "@firebase/messaging";
+const version = "0.13.0";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Max attempts (initial fetch + retries) when CreateRegistration `fetch()` throws. */
+const FID_REGISTRATION_FETCH_MAX_ATTEMPTS = 3;
+/** Base delay in ms; backoff is `BASE * 2^attempt` after each failed attempt. */
+const FID_REGISTRATION_FETCH_BASE_BACKOFF_MS = 1000;
+async function requestGetToken(firebaseDependencies, subscriptionOptions) {
+    const headers = await getHeaders(firebaseDependencies);
+    const body = getBody(subscriptionOptions, firebaseDependencies.appConfig.appName, 
+    /* includeSdkVersion= */ false);
+    const subscribeOptions = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    let responseData;
+    try {
+        const response = await fetch(getEndpoint(firebaseDependencies.appConfig), subscribeOptions);
+        responseData = await response.json();
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
+            errorInfo: err?.toString()
+        });
+    }
+    if (responseData.error) {
+        const message = responseData.error.message;
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
+            errorInfo: message
+        });
+    }
+    if (!responseData.token) {
+        throw ERROR_FACTORY.create("token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */);
+    }
+    return responseData.token;
+}
+async function requestCreateRegistration(firebaseDependencies, subscriptionOptions) {
+    const headers = await getHeaders(firebaseDependencies);
+    const body = getBody(subscriptionOptions, firebaseDependencies.appConfig.appName, 
+    /* includeSdkVersion= */ true);
+    const subscribeOptions = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    let response;
+    try {
+        response = await fetchWithExponentialRetry(() => fetch(getEndpoint(firebaseDependencies.appConfig), subscribeOptions), FID_REGISTRATION_FETCH_MAX_ATTEMPTS, FID_REGISTRATION_FETCH_BASE_BACKOFF_MS);
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+            errorInfo: err?.toString()
+        });
+    }
+    if (response.ok) {
+        const responseFid = await parseCreateRegistrationSuccessFid(response);
+        return { responseFid };
+    }
+    // `fetch()` succeeded, but the backend returned a non-2xx response.
+    // Best-effort parse the body to extract `error.message`, but always fail with
+    // `FID_REGISTRATION_FAILED` to keep the error surface uniform.
+    // Best-effort extraction of error details; the main signal is response.ok / status.
+    let responseData;
+    try {
+        responseData = (await response.json());
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+            errorInfo: response.statusText
+        });
+    }
+    const message = responseData.error?.message ?? response.statusText;
+    throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+        errorInfo: message
+    });
+}
+/**
+ * Deletes an FCM Web registration via DeleteRegistration using the Firebase Installation ID (FID).
+ */
+async function requestDeleteRegistration(firebaseDependencies, fid) {
+    const headers = await getHeaders(firebaseDependencies);
+    const options = {
+        method: 'DELETE',
+        headers
+    };
+    let response;
+    try {
+        response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${fid}`, options);
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("fid-unregister-failed" /* ErrorCode.FID_UNREGISTER_FAILED */, {
+            errorInfo: err?.toString()
+        });
+    }
+    if (response.ok) {
+        return;
+    }
+    // Best-effort parse error details; surface uniform error code.
+    try {
+        const responseData = (await response.json());
+        const message = responseData.error?.message ?? response.statusText;
+        throw message;
+    }
+    catch (err) {
+        // If parsing failed, fall back to status text.
+        throw ERROR_FACTORY.create("fid-unregister-failed" /* ErrorCode.FID_UNREGISTER_FAILED */, {
+            errorInfo: (typeof err === 'string' && err) ||
+                response.statusText ||
+                err?.toString()
+        });
+    }
+}
+/**
+ * Parses a successful CreateRegistration body. The backend must return JSON with a non-empty
+ * string `name`: a resource name `projects/{projectId}/registrations/{fid}`
+ */
+async function parseCreateRegistrationSuccessFid(response) {
+    const text = await response.text();
+    if (!text.trim()) {
+        throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+            errorInfo: 'CreateRegistration succeeded but response body is empty'
+        });
+    }
+    let data;
+    try {
+        data = JSON.parse(text);
+    }
+    catch {
+        throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+            errorInfo: 'CreateRegistration succeeded but response body is not valid JSON'
+        });
+    }
+    const name = data.name;
+    if (typeof name !== 'string' || name.length === 0) {
+        throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+            errorInfo: 'CreateRegistration succeeded but response did not include a non-empty name'
+        });
+    }
+    return parseFidFromRegistrationResourceName(name);
+}
+const REGISTRATIONS_NAME_SEGMENT = '/registrations/';
+/** Extracts the Firebase Installation ID from CreateRegistration `name` (resource path). */
+function parseFidFromRegistrationResourceName(name) {
+    const segmentIndex = name.indexOf(REGISTRATIONS_NAME_SEGMENT);
+    if (segmentIndex !== -1) {
+        const fid = name.slice(segmentIndex + REGISTRATIONS_NAME_SEGMENT.length);
+        if (fid.length > 0) {
+            return fid;
+        }
+    }
+    throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+        errorInfo: 'CreateRegistration succeeded but response name is not a valid registration resource name'
+    });
+}
+async function requestUpdateToken(firebaseDependencies, tokenDetails) {
+    const headers = await getHeaders(firebaseDependencies);
+    const body = getBody(tokenDetails.subscriptionOptions, firebaseDependencies.appConfig.appName, 
+    /* includeSdkVersion= */ false);
+    const updateOptions = {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify(body)
+    };
+    let responseData;
+    try {
+        const response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${tokenDetails.token}`, updateOptions);
+        responseData = await response.json();
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
+            errorInfo: err?.toString()
+        });
+    }
+    if (responseData.error) {
+        const message = responseData.error.message;
+        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
+            errorInfo: message
+        });
+    }
+    if (!responseData.token) {
+        throw ERROR_FACTORY.create("token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */);
+    }
+    return responseData.token;
+}
+async function requestDeleteToken(firebaseDependencies, token) {
+    const headers = await getHeaders(firebaseDependencies);
+    const unsubscribeOptions = {
+        method: 'DELETE',
+        headers
+    };
+    try {
+        const response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${token}`, unsubscribeOptions);
+        const responseData = await response.json();
+        if (responseData.error) {
+            const message = responseData.error.message;
+            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
+                errorInfo: message
+            });
+        }
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
+            errorInfo: err?.toString()
+        });
+    }
+}
+/**
+ * Re-runs `operation` when it throws, with exponential backoff between attempts.
+ * Rethrows the last error if all attempts fail.
+ */
+async function fetchWithExponentialRetry(operation, maxAttempts, baseBackoffMs) {
+    let lastError;
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        try {
+            return await operation();
+        }
+        catch (err) {
+            lastError = err;
+            if (attempt < maxAttempts - 1) {
+                const delayMs = baseBackoffMs * Math.pow(2, attempt);
+                await new Promise(resolve => setTimeout(resolve, delayMs));
+            }
+        }
+    }
+    throw lastError;
+}
+function getEndpoint({ projectId }) {
+    return `${ENDPOINT}/projects/${projectId}/registrations`;
+}
+async function getHeaders({ appConfig, installations }) {
+    const authToken = await installations.getToken();
+    return new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'x-goog-api-key': appConfig.apiKey,
+        'x-goog-firebase-installations-auth': `FIS ${authToken}`
+    });
+}
+/**
+ * Hostname for the registering web client (e.g. `www.example.com`), or the app name
+ * (`appNameFallback`) when the scope cannot be resolved (e.g. some test environments).
+ */
+function getRegistrationOrigin(swScope, appNameFallback) {
+    try {
+        if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(swScope)) {
+            return new URL(swScope).host;
+        }
+    }
+    catch {
+        // Fall through to relative-scope handling.
+    }
+    try {
+        if (typeof self !== 'undefined' && self.location?.href) {
+            return new URL(swScope, self.location.origin).host;
+        }
+    }
+    catch {
+        // Fall through.
+    }
+    if (typeof self !== 'undefined' && self.location?.host) {
+        return self.location.host;
+    }
+    return appNameFallback;
+}
+function getBody({ p256dh, auth, endpoint, vapidKey, swScope }, appNameFallback, includeSdkVersion) {
+    const body = {
+        web: {
+            origin: getRegistrationOrigin(swScope, appNameFallback),
+            endpoint,
+            auth,
+            p256dh
+        }
+    };
+    if (includeSdkVersion) {
+        // eslint-disable-next-line camelcase
+        body.fcm_sdk_version = version;
+    }
+    if (vapidKey !== DEFAULT_VAPID_KEY) {
+        body.web.applicationPubKey = vapidKey;
+    }
+    return body;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// UpdateRegistration will be called once every week.
+const TOKEN_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+async function getTokenInternal(messaging) {
+    const pushSubscription = await getPushSubscription$1(messaging.swRegistration, messaging.vapidKey);
+    const subscriptionOptions = {
+        vapidKey: messaging.vapidKey,
+        swScope: messaging.swRegistration.scope,
+        endpoint: pushSubscription.endpoint,
+        auth: arrayToBase64(pushSubscription.getKey('auth')),
+        p256dh: arrayToBase64(pushSubscription.getKey('p256dh'))
+    };
+    const tokenDetails = await dbGet(messaging.firebaseDependencies);
+    if (!tokenDetails) {
+        // No token, get a new one.
+        return getNewToken(messaging.firebaseDependencies, subscriptionOptions);
+    }
+    else if (!isTokenValid(tokenDetails.subscriptionOptions, subscriptionOptions)) {
+        // Invalid token, get a new one.
+        try {
+            await requestDeleteToken(messaging.firebaseDependencies, tokenDetails.token);
+        }
+        catch (e) {
+            // Suppress errors because of #2364
+            console.warn(e);
+        }
+        return getNewToken(messaging.firebaseDependencies, subscriptionOptions);
+    }
+    else if (Date.now() >= tokenDetails.createTime + TOKEN_EXPIRATION_MS) {
+        // Weekly token refresh
+        return updateToken(messaging, {
+            token: tokenDetails.token,
+            createTime: Date.now(),
+            subscriptionOptions
+        });
+    }
+    else {
+        // Valid token, nothing to do.
+        return tokenDetails.token;
+    }
+}
+/**
+ * Legacy getToken() path: there is a token row in IndexedDB. Revoke it with FCM, drop the row, and
+ * clear any leftover FID registration metadata (apps may mix APIs).
+ */
+async function revokeLegacyFcmTokenAndClearCaches(messaging, tokenDetails) {
+    await requestDeleteToken(messaging.firebaseDependencies, tokenDetails.token);
+    await dbRemove(messaging.firebaseDependencies);
+    await removeFidRegistrationBestEffort(messaging.firebaseDependencies);
+}
+/**
+ * No legacy token row: the client may only have FID-based registration (register() flow). If so,
+ * delete that registration on the server, always scrub local FID metadata, then surface
+ * onUnregistered when we actually had an FID.
+ */
+async function revokeFidRegistrationIfStored(messaging) {
+    const stored = await dbGetFidRegistration(messaging.firebaseDependencies).catch(() => undefined);
+    const fid = stored?.fid;
+    if (fid) {
+        await requestDeleteRegistration(messaging.firebaseDependencies, fid);
+    }
+    await removeFidRegistrationBestEffort(messaging.firebaseDependencies);
+    if (fid) {
+        notifyOnUnregistered(messaging, fid);
+    }
+}
+/**
+ * Revokes the app's FCM registration: legacy token (getToken/deleteToken) and/or FID-based
+ * registration (register/unregister), clears local caches, notifies onUnregistered when a stored
+ * FID existed, then unsubscribes the push subscription when present.
+ */
+async function revokeRegistrationInternal(messaging) {
+    const tokenDetails = await dbGet(messaging.firebaseDependencies);
+    if (tokenDetails) {
+        await revokeLegacyFcmTokenAndClearCaches(messaging, tokenDetails);
+    }
+    else {
+        await revokeFidRegistrationIfStored(messaging);
+    }
+    // Unsubscribe from the push subscription.
+    const pushSubscription = await messaging.swRegistration.pushManager.getSubscription();
+    if (pushSubscription) {
+        return pushSubscription.unsubscribe();
+    }
+    // If there's no SW, consider it a success.
+    return true;
+}
+async function updateToken(messaging, tokenDetails) {
+    try {
+        const updatedToken = await requestUpdateToken(messaging.firebaseDependencies, tokenDetails);
+        const updatedTokenDetails = {
+            ...tokenDetails,
+            token: updatedToken,
+            createTime: Date.now()
+        };
+        await dbSet(messaging.firebaseDependencies, updatedTokenDetails);
+        return updatedToken;
+    }
+    catch (e) {
+        throw e;
+    }
+}
+async function getNewToken(firebaseDependencies, subscriptionOptions) {
+    const token = await requestGetToken(firebaseDependencies, subscriptionOptions);
+    const tokenDetails = {
+        token,
+        createTime: Date.now(),
+        subscriptionOptions
+    };
+    await dbSet(firebaseDependencies, tokenDetails);
+    return tokenDetails.token;
+}
+/**
+ * Gets a PushSubscription for the current user.
+ */
+async function getPushSubscription$1(swRegistration, vapidKey) {
+    const subscription = await swRegistration.pushManager.getSubscription();
+    if (subscription) {
+        return subscription;
+    }
+    return swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        // Chrome <= 75 doesn't support base64-encoded VAPID key. For backward compatibility, VAPID key
+        // submitted to pushManager#subscribe must be of type Uint8Array.
+        applicationServerKey: base64ToArray(vapidKey)
+    });
+}
+/**
+ * Checks if the saved tokenDetails object matches the configuration provided.
+ */
+function isTokenValid(dbOptions, currentOptions) {
+    const isVapidKeyEqual = currentOptions.vapidKey === dbOptions.vapidKey;
+    const isEndpointEqual = currentOptions.endpoint === dbOptions.endpoint;
+    const isAuthEqual = currentOptions.auth === dbOptions.auth;
+    const isP256dhEqual = currentOptions.p256dh === dbOptions.p256dh;
+    return isVapidKeyEqual && isEndpointEqual && isAuthEqual && isP256dhEqual;
+}
+/** Clears FID registration metadata; apps may mix legacy getToken() with FID register/unregister. */
+async function removeFidRegistrationBestEffort(firebaseDependencies) {
+    try {
+        await dbRemoveFidRegistration(firebaseDependencies);
+    }
+    catch {
+        // Ignore.
+    }
+}
+function notifyOnRegistered(messaging, fid) {
+    const handler = messaging.onRegisteredHandler;
+    if (!handler) {
+        return;
+    }
+    if (typeof handler === 'function') {
+        handler(fid);
+    }
+    else {
+        handler.next(fid);
+    }
+}
+function notifyOnUnregistered(messaging, fid) {
+    const handler = messaging.onUnregisteredHandler;
+    if (!handler) {
+        return;
+    }
+    if (typeof handler === 'function') {
+        handler(fid);
+    }
+    else {
+        handler.next(fid);
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function registerDefaultSw(messaging) {
+    try {
+        messaging.swRegistration = await navigator.serviceWorker.register(DEFAULT_SW_PATH, {
+            scope: DEFAULT_SW_SCOPE
+        });
+        // The timing when browser updates sw when sw has an update is unreliable from experiment. It
+        // leads to version conflict when the SDK upgrades to a newer version in the main page, but sw
+        // is stuck with the old version. For example,
+        // https://github.com/firebase/firebase-js-sdk/issues/2590 The following line reliably updates
+        // sw if there was an update.
+        messaging.swRegistration.update().catch(() => {
+            /* it is non blocking and we don't care if it failed */
+        });
+        await waitForRegistrationActive(messaging.swRegistration);
+    }
+    catch (e) {
+        throw ERROR_FACTORY.create("failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */, {
+            browserErrorMessage: e?.message
+        });
+    }
+}
+/**
+ * Waits for registration to become active. MDN documentation claims that
+ * a service worker registration should be ready to use after awaiting
+ * navigator.serviceWorker.register() but that doesn't seem to be the case in
+ * practice, causing the SDK to throw errors when calling
+ * swRegistration.pushManager.subscribe() too soon after register(). The only
+ * solution seems to be waiting for the service worker registration `state`
+ * to become "active".
+ */
+async function waitForRegistrationActive(registration) {
+    return new Promise((resolve, reject) => {
+        const rejectTimeout = setTimeout(() => reject(new Error(`Service worker not registered after ${DEFAULT_REGISTRATION_TIMEOUT} ms`)), DEFAULT_REGISTRATION_TIMEOUT);
+        const incomingSw = registration.installing || registration.waiting;
+        if (registration.active) {
+            clearTimeout(rejectTimeout);
+            resolve();
+        }
+        else if (incomingSw) {
+            incomingSw.onstatechange = ev => {
+                if (ev.target?.state === 'activated') {
+                    incomingSw.onstatechange = null;
+                    clearTimeout(rejectTimeout);
+                    resolve();
+                }
+            };
+        }
+        else {
+            clearTimeout(rejectTimeout);
+            reject(new Error('No incoming service worker found.'));
+        }
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function updateSwReg(messaging, swRegistration) {
+    if (!swRegistration && !messaging.swRegistration) {
+        await registerDefaultSw(messaging);
+    }
+    if (!swRegistration && !!messaging.swRegistration) {
+        return;
+    }
+    if (!(swRegistration instanceof ServiceWorkerRegistration)) {
+        throw ERROR_FACTORY.create("invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */);
+    }
+    messaging.swRegistration = swRegistration;
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function updateVapidKey(messaging, vapidKey) {
+    if (!!vapidKey) {
+        messaging.vapidKey = vapidKey;
+    }
+    else if (!messaging.vapidKey) {
+        messaging.vapidKey = DEFAULT_VAPID_KEY;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Retries when CreateRegistration echoes an FID that does not match Installations.getId(). */
+const FID_REGISTRATION_FID_MATCH_MAX_ATTEMPTS = 3;
+/**
+ * For the new FID-based register path:
+ * - Create (or refresh) an FCM Web registration in the backend via CreateRegistration.
+ * - Use the FIS auth token produced by the installations instance (implicitly associated with FID).
+ * - CreateRegistration must echo the installation in `name` (e.g.
+ *   `projects/{projectId}/registrations/{fid}`); it must match `expectedFid` from
+ *   Installations.getId(). On mismatch we refresh the auth token and retry, then fail with
+ *   `fid-registration-failed`.
+ */
+async function registerFcmRegistrationWithFid(messaging, expectedFid) {
+    const pushSubscription = await getPushSubscription(messaging.swRegistration, messaging.vapidKey);
+    const subscriptionOptions = {
+        vapidKey: messaging.vapidKey,
+        swScope: messaging.swRegistration.scope,
+        endpoint: pushSubscription.endpoint,
+        auth: arrayToBase64(pushSubscription.getKey('auth')),
+        p256dh: arrayToBase64(pushSubscription.getKey('p256dh'))
+    };
+    const installations = messaging.firebaseDependencies.installations;
+    for (let attempt = 0; attempt < FID_REGISTRATION_FID_MATCH_MAX_ATTEMPTS; attempt++) {
+        const { responseFid } = await requestCreateRegistration(messaging.firebaseDependencies, subscriptionOptions);
+        if (responseFid === expectedFid) {
+            return;
+        }
+        // If CreateRegistration echoes an unexpected FID, the FIS auth token used for the request may
+        // be stale relative to the installation the backend associates with the call. Force-refresh
+        // the token before retrying so the next attempt uses credentials aligned with Installations.
+        if (attempt < FID_REGISTRATION_FID_MATCH_MAX_ATTEMPTS - 1) {
+            await installations.getToken(true);
+        }
+    }
+    throw ERROR_FACTORY.create("fid-registration-failed" /* ErrorCode.FID_REGISTRATION_FAILED */, {
+        errorInfo: 'CreateRegistration response FID does not match Firebase Installation ID'
+    });
+}
+async function getPushSubscription(swRegistration, vapidKey) {
+    const subscription = await swRegistration.pushManager.getSubscription();
+    if (subscription) {
+        return subscription;
+    }
+    // Chrome/Firefox require applicationServerKey to be of type Uint8Array.
+    return swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        // `PushManager.subscribe` expects a `BufferSource`; `base64ToArray` produces a typed array.
+        // Cast to satisfy the lib typing differences across TS DOM versions.
+        applicationServerKey: base64ToArray(vapidKey)
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const FID_REGISTRATION_REFRESH_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+/**
+ * Registers the app instance with FCM using its Firebase Installation ID (FID). The FID is
+ * delivered via the `onRegistered` callback. Call this to establish an FID-based identity.
+ * Once `onRegistered` provides an FID, instruct your backend to remove any legacy token
+ * previously associated with this instance. The backend send API supports FID as a target.
+ *
+ * When called multiple times, `onRegistered` is invoked on each call with the current FID.
+ * Backend registration sync runs on first register, when the FID changes, or on weekly refresh.
+ *
+ * @param messaging - The MessagingService instance.
+ * @param options - Optional. Same options as getToken (vapidKey, serviceWorkerRegistration).
+ */
+async function register$1(messaging, options) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+    }
+    if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+    }
+    if (Notification.permission !== 'granted') {
+        throw ERROR_FACTORY.create("permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */);
+    }
+    if (!messaging.onRegisteredHandler) {
+        throw ERROR_FACTORY.create("invalid-on-registered-handler" /* ErrorCode.INVALID_ON_REGISTERED_HANDLER */);
+    }
+    await updateVapidKey(messaging, options?.vapidKey);
+    await updateSwReg(messaging, options?.serviceWorkerRegistration);
+    // Keep the queue alive after a failed register() so future calls can retry.
+    const prev = messaging._registerNotifyChain.catch(() => { });
+    messaging._registerNotifyChain = prev.then(async () => {
+        const fid = await messaging.firebaseDependencies.installations.getId();
+        const stored = await dbGetFidRegistration(messaging.firebaseDependencies);
+        const now = Date.now();
+        const shouldRefresh = !stored ||
+            stored.fid !== fid ||
+            now >= stored.lastRegisterTime + FID_REGISTRATION_REFRESH_MS;
+        if (shouldRefresh) {
+            await registerFcmRegistrationWithFid(messaging, fid);
+            await dbSetFidRegistration(messaging.firebaseDependencies, {
+                fid,
+                lastRegisterTime: now,
+                vapidKey: messaging.vapidKey
+            });
+        }
+        const handler = messaging.onRegisteredHandler;
+        if (!handler) {
+            throw ERROR_FACTORY.create("invalid-on-registered-handler" /* ErrorCode.INVALID_ON_REGISTERED_HANDLER */);
+        }
+        notifyOnRegistered(messaging, fid);
+    });
+    return messaging._registerNotifyChain;
+}
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * When the Firebase Installation ID changes, re-run `register()` so FCM registration and
+ * onRegistered run for the new FID. No-op if no onRegistered handler is set or the app
+ * instance was never registered with FCM.
+ */
+function subscribeFidChangeRegistration(messaging, installations) {
+    return (0,_firebase_installations__WEBPACK_IMPORTED_MODULE_0__.onIdChange)(installations, () => {
+        void (async () => {
+            if (!messaging.onRegisteredHandler) {
+                return;
+            }
+            const stored = await dbGetFidRegistration(messaging.firebaseDependencies);
+            if (!stored) {
+                return;
+            }
+            await register$1(messaging).catch(() => {
+                // Best-effort: permission may be revoked or SW unavailable after FID rotation.
+            });
+        })();
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function externalizePayload(internalPayload) {
+    const payload = {
+        from: internalPayload.from,
+        // eslint-disable-next-line camelcase
+        collapseKey: internalPayload.collapse_key,
+        // eslint-disable-next-line camelcase
+        messageId: internalPayload.fcmMessageId
+    };
+    propagateNotificationPayload(payload, internalPayload);
+    propagateDataPayload(payload, internalPayload);
+    propagateFcmOptions(payload, internalPayload);
+    return payload;
+}
+function propagateNotificationPayload(payload, messagePayloadInternal) {
+    if (!messagePayloadInternal.notification) {
+        return;
+    }
+    payload.notification = {};
+    const title = messagePayloadInternal.notification.title;
+    if (!!title) {
+        payload.notification.title = title;
+    }
+    const body = messagePayloadInternal.notification.body;
+    if (!!body) {
+        payload.notification.body = body;
+    }
+    const image = messagePayloadInternal.notification.image;
+    if (!!image) {
+        payload.notification.image = image;
+    }
+    const icon = messagePayloadInternal.notification.icon;
+    if (!!icon) {
+        payload.notification.icon = icon;
+    }
+}
+function propagateDataPayload(payload, messagePayloadInternal) {
+    if (!messagePayloadInternal.data) {
+        return;
+    }
+    payload.data = messagePayloadInternal.data;
+}
+function propagateFcmOptions(payload, messagePayloadInternal) {
+    // fcmOptions.link value is written into notification.click_action. see more in b/232072111
+    if (!messagePayloadInternal.fcmOptions &&
+        !messagePayloadInternal.notification?.click_action) {
+        return;
+    }
+    payload.fcmOptions = {};
+    const link = messagePayloadInternal.fcmOptions?.link ??
+        messagePayloadInternal.notification?.click_action;
+    if (!!link) {
+        payload.fcmOptions.link = link;
+    }
+    // eslint-disable-next-line camelcase
+    const analyticsLabel = messagePayloadInternal.fcmOptions?.analytics_label;
+    if (!!analyticsLabel) {
+        payload.fcmOptions.analyticsLabel = analyticsLabel;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function isConsoleMessage(data) {
+    // This message has a campaign ID, meaning it was sent using the Firebase Console.
+    return typeof data === 'object' && !!data && CONSOLE_CAMPAIGN_ID in data;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+_mergeStrings('AzSCbw63g1R0nCw85jG8', 'Iaya3yLKwmgvh7cF0q4');
+function _mergeStrings(s1, s2) {
+    const resultArray = [];
+    for (let i = 0; i < s1.length; i++) {
+        resultArray.push(s1.charAt(i));
+        if (i < s2.length) {
+            resultArray.push(s2.charAt(i));
+        }
+    }
+    return resultArray.join('');
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function extractAppConfig(app) {
+    if (!app || !app.options) {
+        throw getMissingValueError('App Configuration Object');
+    }
+    if (!app.name) {
+        throw getMissingValueError('App Name');
+    }
+    // Required app config keys
+    const configKeys = [
+        'projectId',
+        'apiKey',
+        'appId',
+        'messagingSenderId'
+    ];
+    const { options } = app;
+    for (const keyName of configKeys) {
+        if (!options[keyName]) {
+            throw getMissingValueError(keyName);
+        }
+    }
+    return {
+        appName: app.name,
+        projectId: options.projectId,
+        apiKey: options.apiKey,
+        appId: options.appId,
+        senderId: options.messagingSenderId
+    };
+}
+function getMissingValueError(valueName) {
+    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
+        valueName
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class MessagingService {
+    constructor(app, installations, analyticsProvider) {
+        // logging is only done with end user consent. Default to false.
+        this.deliveryMetricsExportedToBigQueryEnabled = false;
+        this.onBackgroundMessageHandler = null;
+        this.onMessageHandler = null;
+        /** Observer for the event that the app instance is registered with FCM via Firebase Installation ID (FID). */
+        this.onRegisteredHandler = null;
+        /** Observer for the event that the app instance is unregistered from FCM (FID no longer active). */
+        this.onUnregisteredHandler = null;
+        /**
+         * Serializes the FID get + compare + notify step so concurrent register() calls
+         * do not race each other.
+         */
+        this._registerNotifyChain = Promise.resolve();
+        /** Unsubscribe from Installations `onIdChange` when messaging is deleted. */
+        this._fidChangeUnsubscribe = null;
+        this.logEvents = [];
+        /**
+         * Single source of truth for the logging loop lifecycle.
+         *
+         * `scheduled` holds the active timer id; `flushing` indicates an async dispatch
+         * is in progress (prevents duplicate starts); `stopped` means idle.
+         */
+        this.logQueue = { state: 'stopped' };
+        const appConfig = extractAppConfig(app);
+        this.firebaseDependencies = {
+            app,
+            appConfig,
+            installations,
+            analyticsProvider
+        };
+    }
+    _delete() {
+        if (this._fidChangeUnsubscribe) {
+            this._fidChangeUnsubscribe();
+            this._fidChangeUnsubscribe = null;
+        }
+        if (this.logQueue.state === 'scheduled') {
+            clearTimeout(this.logQueue.timerId);
+        }
+        this.logQueue = { state: 'stopped' };
+        return Promise.resolve();
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function getToken$1(messaging, options) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+    }
+    if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+    }
+    if (Notification.permission !== 'granted') {
+        throw ERROR_FACTORY.create("permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */);
+    }
+    await updateVapidKey(messaging, options?.vapidKey);
+    await updateSwReg(messaging, options?.serviceWorkerRegistration);
+    return getTokenInternal(messaging);
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function logToScion(messaging, messageType, data) {
+    const eventType = getEventType(messageType);
+    const analytics = await messaging.firebaseDependencies.analyticsProvider.get();
+    analytics.logEvent(eventType, {
+        /* eslint-disable camelcase */
+        message_id: data[CONSOLE_CAMPAIGN_ID],
+        message_name: data[CONSOLE_CAMPAIGN_NAME],
+        message_time: data[CONSOLE_CAMPAIGN_TIME],
+        message_device_time: Math.floor(Date.now() / 1000)
+        /* eslint-enable camelcase */
+    });
+}
+function getEventType(messageType) {
+    switch (messageType) {
+        case MessageType.NOTIFICATION_CLICKED:
+            return 'notification_open';
+        case MessageType.PUSH_RECEIVED:
+            return 'notification_foreground';
+        default:
+            throw new Error();
+    }
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function messageEventListener(messaging, event) {
+    const internalPayload = event.data;
+    if (!internalPayload.isFirebaseMessaging) {
+        return;
+    }
+    if (messaging.onMessageHandler &&
+        internalPayload.messageType === MessageType.PUSH_RECEIVED) {
+        if (typeof messaging.onMessageHandler === 'function') {
+            messaging.onMessageHandler(externalizePayload(internalPayload));
+        }
+        else {
+            messaging.onMessageHandler.next(externalizePayload(internalPayload));
+        }
+    }
+    if (messaging.onRegisteredHandler &&
+        internalPayload.messageType === MessageType.FID_REGISTERED) {
+        const fid = internalPayload.fid;
+        if (typeof messaging.onRegisteredHandler === 'function') {
+            messaging.onRegisteredHandler(fid);
+        }
+        else {
+            messaging.onRegisteredHandler.next(fid);
+        }
+    }
+    // Log to Scion if applicable
+    const dataPayload = internalPayload.data;
+    if (isConsoleMessage(dataPayload) &&
+        dataPayload[CONSOLE_CAMPAIGN_ANALYTICS_ENABLED] === '1') {
+        await logToScion(messaging, internalPayload.messageType, dataPayload);
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const WindowMessagingFactory = (container) => {
+    const messaging = new MessagingService(container.getProvider('app').getImmediate(), container.getProvider('installations-internal').getImmediate(), container.getProvider('analytics-internal'));
+    navigator.serviceWorker.addEventListener('message', e => messageEventListener(messaging, e));
+    messaging._fidChangeUnsubscribe = subscribeFidChangeRegistration(messaging, container.getProvider('installations').getImmediate());
+    return messaging;
+};
+const WindowMessagingInternalFactory = (container) => {
+    const messaging = container
+        .getProvider('messaging')
+        .getImmediate();
+    const messagingInternal = {
+        getToken: (options) => getToken$1(messaging, options),
+        register: (options) => register$1(messaging, options)
+    };
+    return messagingInternal;
+};
+function registerMessagingInWindow() {
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* ComponentType.PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
+    // BUILD_TARGET will be replaced by values like esm, cjs, etc during the compilation
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2020');
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Checks if all required APIs exist in the browser.
+ * @returns a Promise that resolves to a boolean.
+ *
+ * @public
+ */
+async function isWindowSupported() {
+    try {
+        // This throws if open() is unsupported, so adding it to the conditional
+        // statement below can cause an uncaught error.
+        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.validateIndexedDBOpenable)();
+    }
+    catch (e) {
+        return false;
+    }
+    // firebase-js-sdk/issues/2393 reveals that idb#open in Safari iframe and Firefox private browsing
+    // might be prohibited to run. In these contexts, an error would be thrown during the messaging
+    // instantiating phase, informing the developers to import/call isSupported for special handling.
+    return (typeof window !== 'undefined' &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.isIndexedDBAvailable)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.areCookiesEnabled)() &&
+        'serviceWorker' in navigator &&
+        'PushManager' in window &&
+        'Notification' in window &&
+        'fetch' in window &&
+        ServiceWorkerRegistration.prototype.hasOwnProperty('showNotification') &&
+        PushSubscription.prototype.hasOwnProperty('getKey'));
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function deleteToken$1(messaging) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+    }
+    if (!messaging.swRegistration) {
+        await registerDefaultSw(messaging);
+    }
+    return revokeRegistrationInternal(messaging);
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function onMessage$1(messaging, nextOrObserver) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+    }
+    messaging.onMessageHandler = nextOrObserver;
+    return () => {
+        messaging.onMessageHandler = null;
+    };
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Subscribes to an event that the app instance is registered with FCM via Firebase Installation ID (FID).
+ * Use the FID passed to the callback to upload it to your application server.
+ *
+ * @param messaging - The {@link MessagingService} instance.
+ * @param nextOrObserver - A function or observer object called when an FID is registered.
+ * @returns Unsubscribe function to stop listening.
+ */
+function onRegistered$1(messaging, nextOrObserver) {
+    messaging.onRegisteredHandler = nextOrObserver;
+    return () => {
+        if (messaging.onRegisteredHandler === nextOrObserver) {
+            messaging.onRegisteredHandler = null;
+        }
+    };
+}
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Subscribes to an event that the app instance is unregistered from FCM so the FID is no longer active.
+ * Use this to notify your backend to remove this FID to prevent 404 errors on send.
+ *
+ * @param messaging - The {@link MessagingService} instance.
+ * @param nextOrObserver - A function or observer object called with the unregistered FID.
+ * @returns Unsubscribe function to stop listening.
+ */
+function onUnregistered$1(messaging, nextOrObserver) {
+    messaging.onUnregisteredHandler = nextOrObserver;
+    return () => {
+        if (messaging.onUnregisteredHandler === nextOrObserver) {
+            messaging.onUnregisteredHandler = null;
+        }
+    };
+}
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Unregisters the app instance from FCM by deleting its FID-based registration.
+ *
+ * On success, triggers the `onUnregistered` callback (if set) with the unregistered FID.
+ *
+ * @param messaging - The MessagingService instance.
+ */
+async function unregister$1(messaging) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+    }
+    // Prefer the last successfully registered FID from local metadata when available.
+    const stored = await dbGetFidRegistration(messaging.firebaseDependencies).catch(() => undefined);
+    const fid = stored?.fid ?? (await messaging.firebaseDependencies.installations.getId());
+    await requestDeleteRegistration(messaging.firebaseDependencies, fid);
+    // Best-effort local cleanup; still resolve even if schema is unavailable.
+    try {
+        await dbRemoveFidRegistration(messaging.firebaseDependencies);
+    }
+    catch {
+        // Ignore.
+    }
+    // Best-effort cleanup of legacy token details created via getToken().
+    try {
+        await dbRemove(messaging.firebaseDependencies);
+    }
+    catch {
+        // Ignore.
+    }
+    const handler = messaging.onUnregisteredHandler;
+    if (!handler) {
+        return;
+    }
+    if (typeof handler === 'function') {
+        handler(fid);
+    }
+    else {
+        handler.next(fid);
+    }
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Retrieves a Firebase Cloud Messaging instance.
+ *
+ * @returns The Firebase Cloud Messaging instance associated with the provided firebase app.
+ *
+ * @public
+ */
+function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.getApp)()) {
+    // Conscious decision to make this async check non-blocking during the messaging instance
+    // initialization phase for performance consideration. An error would be thrown latter for
+    // developer's information. Developers can then choose to import and call `isSupported` for
+    // special handling.
+    isWindowSupported().then(isSupported => {
+        // If `isWindowSupported()` resolved, but returned false.
+        if (!isSupported) {
+            throw ERROR_FACTORY.create("unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */);
+        }
+    }, _ => {
+        // If `isWindowSupported()` rejected.
+        throw ERROR_FACTORY.create("indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */);
+    });
+    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
+}
+/**
+ * Subscribes the {@link Messaging} instance to push notifications. Returns a Firebase Cloud
+ * Messaging registration token that can be used to send push messages to that {@link Messaging}
+ * instance.
+ *
+ * If notification permission isn't already granted, this method asks the user for permission. The
+ * returned promise rejects if the user does not allow the app to show notifications.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param options - Provides an optional vapid key and an optional service worker registration.
+ *
+ * @returns The promise resolves with an FCM registration token.
+ *
+ * @deprecated Use {@link register} together with {@link onRegistered} for Firebase
+ * Installation ID-based messaging instead of retrieving an FCM registration token with this API.
+ *
+ * @public
+ */
+async function getToken(messaging, options) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return getToken$1(messaging, options);
+}
+/**
+ * Deletes the registration token associated with this {@link Messaging} instance and unsubscribes
+ * the {@link Messaging} instance from the push subscription.
+ *
+ * If there is no legacy registration token but the client has FID-based registration metadata
+ * (from {@link register}), this deletes that registration on the server, clears local metadata, and
+ * invokes {@link onUnregistered} with the removed FID when successful.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ *
+ * @returns The promise resolves when the token has been successfully deleted.
+ *
+ * @deprecated Use {@link onUnregistered} to observe when the client is no longer
+ * registered and update your backend accordingly, instead of explicitly deleting the
+ * registration token with this API.
+ *
+ * @public
+ */
+function deleteToken(messaging) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return deleteToken$1(messaging);
+}
+/**
+ * When a push message is received and the user is currently on a page for your origin, the
+ * message is passed to the page and an `onMessage()` event is dispatched with the payload of
+ * the push message.
+ *
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param nextOrObserver - This function, or observer object with `next` defined,
+ *     is called when a message is received and the user is currently viewing your page.
+ * @returns To stop listening for messages execute this returned function.
+ *
+ * @public
+ */
+function onMessage(messaging, nextOrObserver) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return onMessage$1(messaging, nextOrObserver);
+}
+/**
+ * Registers the app instance with FCM using its Firebase Installation ID (FID). The FID is
+ * delivered via the {@link onRegistered} callback, not as a return value. Call this to establish
+ * an FID-based identity; once {@link onRegistered} provides an FID, instruct your backend to
+ * remove any legacy token previously associated with this instance. The backend send API
+ * supports FID as a target.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param options - Optional. VAPID key and/or service worker registration (same as getToken).
+ * @returns Promise that resolves when registration has been initiated; FID is delivered via onRegistered.
+ *
+ * @public
+ */
+async function register(messaging, options) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return register$1(messaging, options);
+}
+/**
+ * Unregisters the app instance from FCM by deleting its FID-based registration.
+ * On success, triggers {@link onUnregistered} (if registered) with the unregistered FID.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ *
+ * @public
+ */
+async function unregister(messaging) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return unregister$1(messaging);
+}
+/**
+ * Subscribes to an event that the app instance is registered with FCM via Firebase Installation ID (FID).
+ * Use the FID passed to the callback to upload it to your application server. When you receive an FID
+ * after calling {@link register}, instruct your backend to remove any legacy token for this instance.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param nextOrObserver - A function or observer object called when an FID is registered.
+ * @returns Unsubscribe function to stop listening.
+ *
+ * @public
+ */
+function onRegistered(messaging, nextOrObserver) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return onRegistered$1(messaging, nextOrObserver);
+}
+/**
+ * Subscribes to an event that the app instance is unregistered from FCM (FID no longer active).
+ * Use this to notify your backend to remove this FID to prevent 404 errors on send.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param nextOrObserver - A function or observer object called with the unregistered FID.
+ * @returns Unsubscribe function to stop listening.
+ *
+ * @public
+ */
+function onUnregistered(messaging, nextOrObserver) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    return onUnregistered$1(messaging, nextOrObserver);
+}
+
+/**
+ * The Firebase Cloud Messaging Web SDK.
+ * This SDK does not work in a Node.js environment.
+ *
+ * @packageDocumentation
+ */
+registerMessagingInWindow();
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/util/dist/postinstall.mjs":
+/*!**********************************************************!*\
+  !*** ./node_modules/@firebase/util/dist/postinstall.mjs ***!
+  \**********************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDefaultsFromPostinstall: function() { return /* binding */ getDefaultsFromPostinstall; }
+/* harmony export */ });
+const getDefaultsFromPostinstall = () => (undefined);
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FirebaseError: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError; },
+/* harmony export */   SDK_VERSION: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION; },
+/* harmony export */   _DEFAULT_ENTRY_NAME: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME; },
+/* harmony export */   _addComponent: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent; },
+/* harmony export */   _addOrOverwriteComponent: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent; },
+/* harmony export */   _apps: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps; },
+/* harmony export */   _clearComponents: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents; },
+/* harmony export */   _components: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components; },
+/* harmony export */   _getProvider: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider; },
+/* harmony export */   _isFirebaseApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseApp; },
+/* harmony export */   _isFirebaseServerApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseServerApp; },
+/* harmony export */   _isFirebaseServerAppSettings: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._isFirebaseServerAppSettings; },
+/* harmony export */   _registerComponent: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent; },
+/* harmony export */   _removeServiceInstance: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance; },
+/* harmony export */   _serverApps: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._serverApps; },
+/* harmony export */   deleteApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp; },
+/* harmony export */   getApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp; },
+/* harmony export */   getApps: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps; },
+/* harmony export */   initializeApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp; },
+/* harmony export */   initializeServerApp: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeServerApp; },
+/* harmony export */   onLog: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog; },
+/* harmony export */   registerVersion: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion; },
+/* harmony export */   setLogLevel: function() { return /* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel; }
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm.js");
+
+
+
+var name = "firebase";
+var version = "12.15.0";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
+  \***************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteToken: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken; },
+/* harmony export */   getMessaging: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging; },
+/* harmony export */   getToken: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken; },
+/* harmony export */   isSupported: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported; },
+/* harmony export */   onMessage: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage; },
+/* harmony export */   onRegistered: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onRegistered; },
+/* harmony export */   onUnregistered: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onUnregistered; },
+/* harmony export */   register: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.register; },
+/* harmony export */   unregister: function() { return /* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.unregister; }
+/* harmony export */ });
+/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm.js");
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteDB: function() { return /* binding */ deleteDB; },
+/* harmony export */   openDB: function() { return /* binding */ openDB; },
+/* harmony export */   unwrap: function() { return /* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u; },
+/* harmony export */   wrap: function() { return /* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w; }
+/* harmony export */ });
+/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
+
+
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction), event);
+        });
+    }
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event.newVersion, event));
+    }
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking) {
+            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
+        }
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event));
+    }
+    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/wrap-idb-value.js":
+/*!**************************************************!*\
+  !*** ./node_modules/idb/build/wrap-idb-value.js ***!
+  \**************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   a: function() { return /* binding */ reverseTransformCache; },
+/* harmony export */   i: function() { return /* binding */ instanceOfAny; },
+/* harmony export */   r: function() { return /* binding */ replaceTraps; },
+/* harmony export */   u: function() { return /* binding */ unwrap; },
+/* harmony export */   w: function() { return /* binding */ wrap; }
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const cursorRequestMap = new WeakMap();
+const transactionDoneMap = new WeakMap();
+const transactionStoreNamesMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    promise
+        .then((value) => {
+        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
+        // (see wrapFunction).
+        if (value instanceof IDBCursor) {
+            cursorRequestMap.set(value, request);
+        }
+        // Catching to avoid "Uncaught Promise exceptions"
+    })
+        .catch(() => { });
+    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Polyfill for objectStoreNames because of Edge.
+            if (prop === 'objectStoreNames') {
+                return target.objectStoreNames || transactionStoreNamesMap.get(target);
+            }
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
+    if (func === IDBDatabase.prototype.transaction &&
+        !('objectStoreNames' in IDBTransaction.prototype)) {
+        return function (storeNames, ...args) {
+            const tx = func.call(unwrap(this), storeNames, ...args);
+            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
+            return wrap(tx);
+        };
+    }
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(cursorRequestMap.get(this));
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+
+
+
+/***/ }),
+
+/***/ "./img/bkg/index.json":
+/*!****************************!*\
+  !*** ./img/bkg/index.json ***!
+  \****************************/
+/***/ (function(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200},{"name":"a01.jpg","size":384},{"name":"a02.jpg","size":384},{"name":"a03.jpg","size":384},{"name":"a04.png","size":400},{"name":"a05.jpg","size":400},{"name":"a06.jpg","size":256},{"name":"a07.jpg","size":384},{"name":"a08.jpg","size":384},{"name":"a09.jpg","size":400},{"name":"a10.jpg","size":256},{"name":"a11.png","size":200}],"img":[{"name":"w01.jpg","pr":"p01.jpg"},{"name":"w02.jpg","pr":"p02.jpg"},{"name":"w03.jpg","pr":"p03.jpg"},{"name":"w04.jpg","pr":"p04.jpg"},{"name":"w05.jpg","pr":"p05.jpg"},{"name":"w06.jpg","pr":"p06.jpg"},{"name":"w07.jpg","pr":"p07.jpg"},{"name":"w08.jpg","pr":"p08.jpg"},{"name":"w09.jpg","pr":"p09.jpg"},{"name":"w10.jpg","pr":"p10.jpg"},{"name":"w11.jpg","pr":"p11.jpg"},{"name":"w12.jpg","pr":"p12.jpg"},{"name":"w13.jpg","pr":"p13.jpg"},{"name":"w14.jpg","pr":"p14.jpg"},{"name":"w15.jpg","pr":"p15.jpg"},{"name":"w16.jpg","pr":"p16.jpg"},{"name":"w17.jpg","pr":"p17.jpg"},{"name":"w18.jpg","pr":"p18.jpg"},{"name":"w19.jpg","pr":"p19.jpg"},{"name":"w20.jpg","pr":"p20.jpg"},{"name":"w21.jpg","pr":"p21.jpg"},{"name":"w22.jpg","pr":"p22.jpg"},{"name":"w23.jpg","pr":"p23.jpg"},{"name":"w24.jpg","pr":"p24.jpg"}]}');
+
 /***/ })
 
 /******/ 	});
@@ -17428,12 +19544,6 @@ module.exports = tinode;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -17442,6 +19552,12 @@ module.exports = tinode;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -17496,11 +19612,26 @@ module.exports = tinode;
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = function(exports, definition) {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -17598,6 +19729,14 @@ module.exports = tinode;
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/set anonymous default export name */
+/******/ 	!function() {
+/******/ 		// set .name for anonymous default exports per ES spec
+/******/ 		__webpack_require__.dn = function(x) {
+/******/ 			(Object.getOwnPropertyDescriptor(x, "name") || {}).writable || Object.defineProperty(x, "name", { value: "default", configurable: true });
 /******/ 		};
 /******/ 	}();
 /******/ 	

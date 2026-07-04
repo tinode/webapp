@@ -18,6 +18,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -25,27 +27,33 @@ __webpack_require__.r(__webpack_exports__);
 class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const version = _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary() + ')';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "dummy-view"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "https://github.com/tinode/chat/"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      id: "logo",
-      alt: "logo",
-      src: "img/logo.svg"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Tinode Web")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_client",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Client:"
-      }]
-    }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_server",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Server:"
-      }]
-    }), " ", this.props.serverVersion, " (", this.props.serverAddress, ")")));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+      id: "dummy-view",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("div", {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("a", {
+          href: "https://github.com/tinode/chat/",
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("img", {
+            id: "logo",
+            alt: "logo",
+            src: "img/logo.svg"
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("h2", {
+            children: "Tinode Web"
+          }, void 0, false)]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("p", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_client",
+            defaultMessage: "Client:",
+            description: "Label for a client version"
+          }, void 0, false), " ", version]
+        }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("p", {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "label_server",
+            defaultMessage: "Server:",
+            description: "Label for a server version"
+          }, void 0, false), " ", this.props.serverVersion, " (", this.props.serverAddress, ")"]
+        }, void 0, true)]
+      }, void 0, true)
+    }, void 0, false);
   }
 }
 ;
@@ -84,6 +92,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
 
 
 
@@ -108,236 +117,70 @@ const VideoPreview = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __we
 
 
 
+
 const NOTIFICATION_EXEC_INTERVAL = 300;
 const SHOW_GO_TO_LAST_DIST = 100;
 const FETCH_PAGE_TRIGGER = 40;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   online_now: {
-    id: "online_now",
-    defaultMessage: [{
-      "type": 0,
-      "value": "online now"
-    }]
+    id: 'online_now',
+    defaultMessage: 'online now',
+    description: 'Indicator that the user or topic is currently online'
   },
   last_seen: {
-    id: "last_seen_timestamp",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Last seen: "
-    }, {
-      "type": 1,
-      "value": "timestamp"
-    }]
+    id: 'last_seen_timestamp',
+    defaultMessage: 'Last seen: {timestamp}',
+    description: 'Label for the timestamp of when the user or topic was last online'
   },
   not_found: {
-    id: "title_not_found",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Not found"
-    }]
+    id: 'title_not_found',
+    defaultMessage: 'Not found',
+    description: 'Title shown when topic is not found'
   },
   channel: {
-    id: "channel",
-    defaultMessage: [{
-      "type": 0,
-      "value": "channel"
-    }]
+    id: 'channel',
+    defaultMessage: 'channel',
+    description: 'Subtitle shown for channels in MessagesView instead of last seen'
   },
   file_attachment_too_large: {
-    id: "file_attachment_too_large",
-    defaultMessage: [{
-      "type": 0,
-      "value": "The file size "
-    }, {
-      "type": 1,
-      "value": "size"
-    }, {
-      "type": 0,
-      "value": " exceeds the "
-    }, {
-      "type": 1,
-      "value": "limit"
-    }, {
-      "type": 0,
-      "value": " limit."
-    }]
+    id: 'file_attachment_too_large',
+    defaultMessage: 'The file size {size} exceeds the {limit} limit.',
+    description: 'Error message when attachment is too large'
   },
   invalid_content: {
-    id: "invalid_content",
-    defaultMessage: [{
-      "type": 0,
-      "value": "invalid content"
-    }]
+    id: 'invalid_content',
+    defaultMessage: 'invalid content',
+    description: 'Shown when the message is unreadable'
   },
   editing_message: {
-    id: "editing_message",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Editing"
-    }]
+    id: 'editing_message',
+    defaultMessage: 'Editing',
+    description: 'Title over message editing preview'
   },
   drag_file: {
-    id: "drag_file",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Drag file here"
-    }]
+    id: 'drag_file',
+    defaultMessage: 'Drag file here',
+    description: 'Prompt on the file drag-n-drop overlay banner'
   },
   self_topic_name: {
-    id: "self_topic_name",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Saved messages"
-    }]
+    id: 'self_topic_name',
+    defaultMessage: 'Saved messages',
+    description: 'Name of self topic for UI'
   },
   subscriber_count: {
-    id: "subscriber_count",
-    defaultMessage: [{
-      "type": 6,
-      "value": "count",
-      "options": {
-        "one": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscriber"
-          }]
-        },
-        "two": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "three": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "few": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "many": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        },
-        "other": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " subscribers"
-          }]
-        }
-      },
-      "offset": 0,
-      "pluralType": "cardinal"
-    }]
+    id: 'subscriber_count',
+    defaultMessage: '{count, plural, ' + 'one {{count, number} subscriber} ' + 'two {{count, number} subscribers} ' + 'three {{count, number} subscribers} ' + 'few {{count, number} subscribers} ' + 'many {{count, number} subscribers} ' + 'other {{count, number} subscribers}}',
+    description: 'Count of channel subscribers'
   },
   member_count: {
-    id: "member_count",
-    defaultMessage: [{
-      "type": 6,
-      "value": "count",
-      "options": {
-        "one": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " member"
-          }]
-        },
-        "two": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "three": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "few": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "many": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        },
-        "other": {
-          "value": [{
-            "type": 2,
-            "value": "count",
-            "style": null
-          }, {
-            "type": 0,
-            "value": " members"
-          }]
-        }
-      },
-      "offset": 0,
-      "pluralType": "cardinal"
-    }]
+    id: 'member_count',
+    defaultMessage: '{count, plural, ' + 'one {{count, number} member} ' + 'two {{count, number} members} ' + 'three {{count, number} members} ' + 'few {{count, number} members} ' + 'many {{count, number} members} ' + 'other {{count, number} members}}',
+    description: 'Count of group topic members'
   },
   cannot_parse_vcard: {
-    id: "cannot_parse_vcard",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Cannot parse vCard file."
-    }]
+    id: 'cannot_parse_vcard',
+    defaultMessage: 'Cannot parse vCard file.',
+    description: 'Error message when vCard file cannot be parsed'
   }
 });
 function isUnconfirmed(acs) {
@@ -1604,137 +1447,144 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const {
       formatMessage
     } = this.props.intl;
-    const overlay = this.state.rtcPanel && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(CallPanel, {
-      topic: this.state.topic,
-      seq: this.props.callSeq,
-      callState: this.props.callState,
-      callAudioOnly: this.props.callAudioOnly,
-      tinode: this.props.tinode,
-      title: this.state.title,
-      avatar: this.state.avatar || true,
-      minimized: this.state.minimizedCallPanel,
-      onError: this.props.onError,
-      onHangup: this.handleCallHangup,
-      onToggleMinimize: this.handleCallPanelToggle,
-      onInvite: this.props.onCallInvite,
-      onSendOffer: this.props.onCallSendOffer,
-      onIceCandidate: this.props.onCallIceCandidate,
-      onSendAnswer: this.props.onCallSendAnswer
-    }));
+    const overlay = this.state.rtcPanel && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "loading_note",
+          defaultMessage: "Loading...",
+          description: "Message shown when component is loading"
+        }, void 0, false)
+      }, void 0, false),
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(CallPanel, {
+        topic: this.state.topic,
+        seq: this.props.callSeq,
+        callState: this.props.callState,
+        callAudioOnly: this.props.callAudioOnly,
+        tinode: this.props.tinode,
+        title: this.state.title,
+        avatar: this.state.avatar || true,
+        minimized: this.state.minimizedCallPanel,
+        onError: this.props.onError,
+        onHangup: this.handleCallHangup,
+        onToggleMinimize: this.handleCallPanelToggle,
+        onInvite: this.props.onCallInvite,
+        onSendOffer: this.props.onCallSendOffer,
+        onIceCandidate: this.props.onCallIceCandidate,
+        onSendAnswer: this.props.onCallSendAnswer
+      }, void 0, false)
+    }, void 0, false);
     let component;
     if (!this.state.topic) {
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      component = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
         serverVersion: this.props.serverVersion,
         serverAddress: this.props.serverAddress
-      });
+      }, void 0, false);
     } else {
       let component2;
       if (this.state.imagePreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-          fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-            id: "loading_note",
-            defaultMessage: [{
-              "type": 0,
-              "value": "Loading..."
-            }]
-          }))
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ImagePreview, {
-          content: this.state.imagePreview,
-          tinode: this.props.tinode,
-          reply: this.state.reply,
-          onCancelReply: this.handleCancelReply,
-          onClose: this.handleClosePreview,
-          onSendMessage: this.sendImageAttachment
-        }));
+        component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+          fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "loading_note",
+              defaultMessage: "Loading...",
+              description: "Message shown when component is loading"
+            }, void 0, false)
+          }, void 0, false),
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(ImagePreview, {
+            content: this.state.imagePreview,
+            tinode: this.props.tinode,
+            reply: this.state.reply,
+            onCancelReply: this.handleCancelReply,
+            onClose: this.handleClosePreview,
+            onSendMessage: this.sendImageAttachment
+          }, void 0, false)
+        }, void 0, false);
       } else if (this.state.videoPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-          fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-            id: "loading_note",
-            defaultMessage: [{
-              "type": 0,
-              "value": "Loading..."
-            }]
-          }))
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(VideoPreview, {
-          content: this.state.videoPreview,
-          tinode: this.props.tinode,
-          reply: this.state.reply,
-          onError: this.props.onError,
-          onCancelReply: this.handleCancelReply,
-          onClose: this.handleClosePreview,
-          onSendMessage: this.sendVideoAttachment
-        }));
+        component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+          fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "loading_note",
+              defaultMessage: "Loading...",
+              description: "Message shown when component is loading"
+            }, void 0, false)
+          }, void 0, false),
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(VideoPreview, {
+            content: this.state.videoPreview,
+            tinode: this.props.tinode,
+            reply: this.state.reply,
+            onError: this.props.onError,
+            onCancelReply: this.handleCancelReply,
+            onClose: this.handleClosePreview,
+            onSendMessage: this.sendVideoAttachment
+          }, void 0, false)
+        }, void 0, false);
       } else if (this.state.imagePostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-          fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-            id: "loading_note",
-            defaultMessage: [{
-              "type": 0,
-              "value": "Loading..."
-            }]
-          }))
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ImagePreview, {
-          content: this.state.imagePostview,
-          onClose: this.handleClosePreview
-        }));
+        component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+          fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "loading_note",
+              defaultMessage: "Loading...",
+              description: "Message shown when component is loading"
+            }, void 0, false)
+          }, void 0, false),
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(ImagePreview, {
+            content: this.state.imagePostview,
+            onClose: this.handleClosePreview
+          }, void 0, false)
+        }, void 0, false);
       } else if (this.state.videoPostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-          fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-            id: "loading_note",
-            defaultMessage: [{
-              "type": 0,
-              "value": "Loading..."
-            }]
-          }))
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(VideoPreview, {
-          content: this.state.videoPostview,
-          tinode: this.props.tinode,
-          onError: this.props.onError,
-          onClose: this.handleClosePreview
-        }));
+        component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+          fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "loading_note",
+              defaultMessage: "Loading...",
+              description: "Message shown when component is loading"
+            }, void 0, false)
+          }, void 0, false),
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(VideoPreview, {
+            content: this.state.videoPostview,
+            tinode: this.props.tinode,
+            onError: this.props.onError,
+            onClose: this.handleClosePreview
+          }, void 0, false)
+        }, void 0, false);
       } else if (this.state.docPreview) {
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.isFileSupported(this.state.docPreview.type, this.state.docPreview.name) || this.state.docPreview.type == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.TheCard.contentType) {
-          component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-            fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-              id: "loading_note",
-              defaultMessage: [{
-                "type": 0,
-                "value": "Loading..."
-              }]
-            }))
-          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(TheCardPreview, {
-            content: this.state.docPreview,
-            tinode: this.props.tinode,
-            reply: this.state.reply,
-            onCancelReply: this.handleCancelReply,
-            onClose: this.handleClosePreview,
-            onSendMessage: this.sendFileAttachment
-          }));
+          component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+            fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "loading_note",
+                defaultMessage: "Loading...",
+                description: "Message shown when component is loading"
+              }, void 0, false)
+            }, void 0, false),
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(TheCardPreview, {
+              content: this.state.docPreview,
+              tinode: this.props.tinode,
+              reply: this.state.reply,
+              onCancelReply: this.handleCancelReply,
+              onClose: this.handleClosePreview,
+              onSendMessage: this.sendFileAttachment
+            }, void 0, false)
+          }, void 0, false);
         } else {
-          component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-            fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-              id: "loading_note",
-              defaultMessage: [{
-                "type": 0,
-                "value": "Loading..."
-              }]
-            }))
-          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(DocPreview, {
-            content: this.state.docPreview,
-            tinode: this.props.tinode,
-            reply: this.state.reply,
-            onCancelReply: this.handleCancelReply,
-            onClose: this.handleClosePreview,
-            onSendMessage: this.sendFileAttachment
-          }));
+          component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+            fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "loading_note",
+                defaultMessage: "Loading...",
+                description: "Message shown when component is loading"
+              }, void 0, false)
+            }, void 0, false),
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(DocPreview, {
+              content: this.state.docPreview,
+              tinode: this.props.tinode,
+              reply: this.state.reply,
+              onCancelReply: this.handleCancelReply,
+              onClose: this.handleClosePreview,
+              onSendMessage: this.sendFileAttachment
+            }, void 0, false)
+          }, void 0, false);
         }
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
@@ -1798,21 +1648,19 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             replyToSeq = null;
           }
           if (msg.hi) {
-            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-              deleted: true,
-              key: msg.seq
-            }));
+            messageNodes.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+              deleted: true
+            }, msg.seq, false));
           } else {
             const thisDate = new Date(msg.ts);
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
-              messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+              messageNodes.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
                 date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.relativeDateFormat)(msg.ts),
-                locale: this.props.intl.locale,
-                key: 'date-' + msg.seq
-              }));
+                locale: this.props.intl.locale
+              }, 'date-' + msg.seq, false));
               prevDate = thisDate;
             }
-            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            messageNodes.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
               tinode: this.props.tinode,
               topic: this.state.topic,
               content: msg.content,
@@ -1851,9 +1699,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               onToggleReactionPicker: this.handleToggleReactionPicker,
               myUserId: this.props.myUserId,
               parentRef: this.messagesScroller,
-              ref: ref,
-              key: msg.seq
-            }));
+              ref: ref
+            }, msg.seq, false));
           }
         });
         let lastSeen = null;
@@ -1887,156 +1734,179 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         const online = this.state.deleted || topic.isSelfType() ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
         const darkModeClass = this.props.colorSchema == 'dark' ? 'dark' : '';
-        let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-container",
-          className: darkModeClass
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-          id: "go-to-latest",
-          className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
-          onClick: this.goToLatestMessage
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon"
-        }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-panel",
-          ref: this.handleScrollReference
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-          id: "scroller",
-          className: chatBoxClass
-        }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "write-only-background"
-        }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "write-only-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "messages_not_readable",
-          defaultMessage: [{
-            "type": 0,
-            "value": "no access to messages"
-          }]
-        })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "peer-messaging-disabled-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon secondary"
-        }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "peers_messaging_disabled",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Peer's messaging is disabled."
-          }]
-        }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          onClick: this.handleEnablePeer
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "enable_peers_messaging",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Enable"
-          }]
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
-          tinode: this.props.tinode,
-          topicName: this.state.topic,
-          noInput: !!this.props.forwardMessage,
-          disabled: !this.state.isWriter || this.state.deleted,
-          reply: this.state.reply,
-          initMessage: this.state.contentToEdit,
-          sendOnEnter: this.props.sendOnEnter,
-          onKeyPress: this.sendKeyPress,
-          onRecordingProgress: this.sendKeyPress,
-          onSendMessage: this.sendMessage,
-          onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
-          onAttachImage: this.props.forwardMessage ? null : this.handleAttachImageOrVideo,
-          onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
-          onError: this.props.onError,
-          onQuoteClick: this.handleQuoteClick,
-          onCancelReply: this.handleCancelReply
-        }));
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-caption-panel",
-          className: "caption-panel"
-        }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          id: "hide-message-view",
-          onClick: e => {
-            e.preventDefault();
-            this.leave(this.state.topic);
-            this.props.onHideMessagesView();
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon"
-        }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-          authorizeURL: this.props.tinode.authorizeURL,
-          avatar: avatar,
-          topic: this.state.topic,
-          title: this.state.title,
-          deleted: this.state.deleted
-        }), !isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-          className: online
-        }) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-title-group"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-title",
-          className: titleClass
-        }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "unnamed_topic",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Unnamed"
-          }]
-        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          badges: icon_badges
-        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "topic-last-seen"
-        }, lastSeen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          style: {
-            marginLeft: 'auto'
-          }
-        }), !this.props.displayMobile && this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
-          tinode: this.props.tinode,
-          pins: this.state.pins,
-          messages: pinnedMessages,
-          selected: this.state.selectedPin,
-          isAdmin: this.state.isAdmin,
-          setSelected: index => this.setState({
-            selectedPin: index
-          }),
-          onSelected: this.handleQuoteClick,
-          onCancel: this.handleUnpinMessage
-        }) : null, groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-          tinode: this.props.tinode,
-          subscribers: this.state.onlineSubs
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          onClick: this.handleContextClick
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "m-icon"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.pins.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
-          tinode: this.props.tinode,
-          pins: this.state.pins,
-          messages: pinnedMessages,
-          selected: this.state.selectedPin,
-          isAdmin: this.state.isAdmin,
-          setSelected: index => this.setState({
-            selectedPin: index
-          }),
-          onSelected: this.handleQuoteClick,
-          onCancel: this.handleUnpinMessage
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          level: this.props.errorLevel,
-          text: this.props.errorText,
-          onClearError: this.props.onError
-        })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          show: this.state.fetchingMessages
-        }), messagesComponent, this.state.dragging && this.isDragEnabled() ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: "drag-n-drop"
-        }, formatMessage(messages.drag_file)) : null);
+        let messagesComponent = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            id: "messages-container",
+            className: darkModeClass,
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("button", {
+              id: "go-to-latest",
+              className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
+              onClick: this.goToLatestMessage,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("i", {
+                className: "m-icon",
+                children: "arrow_downward"
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              id: "messages-panel",
+              ref: this.handleScrollReference,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("ul", {
+                id: "scroller",
+                className: chatBoxClass,
+                children: messageNodes
+              }, void 0, false)
+            }, void 0, false), !this.state.isReader ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              id: "write-only-background",
+              children: this.state.readingBlocked ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+                id: "write-only-note",
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                  id: "messages_not_readable",
+                  defaultMessage: "no access to messages",
+                  description: "Message shown in topic without the read access"
+                }, void 0, false)
+              }, void 0, false) : null
+            }, void 0, false) : null]
+          }, void 0, true), this.state.peerMessagingDisabled && !this.state.unconfirmed ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            id: "peer-messaging-disabled-note",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("i", {
+              className: "m-icon secondary",
+              children: "block"
+            }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "peers_messaging_disabled",
+              defaultMessage: "Peer's messaging is disabled.",
+              description: "Shown when the p2p peer's messaging is disabled"
+            }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("a", {
+              href: "#",
+              onClick: this.handleEnablePeer,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "enable_peers_messaging",
+                defaultMessage: "Enable",
+                description: "Call to action to enable peer's messaging"
+              }, void 0, false)
+            }, void 0, false), "."]
+          }, void 0, true) : null, this.state.unconfirmed ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+            onAction: this.handleNewChatAcceptance
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+            tinode: this.props.tinode,
+            topicName: this.state.topic,
+            noInput: !!this.props.forwardMessage,
+            disabled: !this.state.isWriter || this.state.deleted,
+            reply: this.state.reply,
+            initMessage: this.state.contentToEdit,
+            sendOnEnter: this.props.sendOnEnter,
+            onKeyPress: this.sendKeyPress,
+            onRecordingProgress: this.sendKeyPress,
+            onSendMessage: this.sendMessage,
+            onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
+            onAttachImage: this.props.forwardMessage ? null : this.handleAttachImageOrVideo,
+            onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
+            onError: this.props.onError,
+            onQuoteClick: this.handleQuoteClick,
+            onCancelReply: this.handleCancelReply
+          }, void 0, false)]
+        }, void 0, true);
+        component2 = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.Fragment, {
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            id: "topic-caption-panel",
+            className: "caption-panel",
+            children: [this.props.displayMobile ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("a", {
+              href: "#",
+              id: "hide-message-view",
+              onClick: e => {
+                e.preventDefault();
+                this.leave(this.state.topic);
+                this.props.onHideMessagesView();
+              },
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("i", {
+                className: "m-icon",
+                children: "arrow_back"
+              }, void 0, false)
+            }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              className: "avatar-box",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                authorizeURL: this.props.tinode.authorizeURL,
+                avatar: avatar,
+                topic: this.state.topic,
+                title: this.state.title,
+                deleted: this.state.deleted
+              }, void 0, false), !isChannel ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("span", {
+                className: online
+              }, void 0, false) : null]
+            }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              id: "topic-title-group",
+              children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+                id: "topic-title",
+                className: titleClass,
+                children: [this.state.title || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("i", {
+                  children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                    id: "unnamed_topic",
+                    defaultMessage: "Unnamed",
+                    description: "Title shown when the topic has no name"
+                  }, void 0, false)
+                }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                  badges: icon_badges
+                }, void 0, false)]
+              }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+                id: "topic-last-seen",
+                children: lastSeen
+              }, void 0, false)]
+            }, void 0, true), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              style: {
+                marginLeft: 'auto'
+              }
+            }, void 0, false), !this.props.displayMobile && this.state.pins.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+              tinode: this.props.tinode,
+              pins: this.state.pins,
+              messages: pinnedMessages,
+              selected: this.state.selectedPin,
+              isAdmin: this.state.isAdmin,
+              setSelected: index => this.setState({
+                selectedPin: index
+              }),
+              onSelected: this.handleQuoteClick,
+              onCancel: this.handleUnpinMessage
+            }, void 0, false) : null, groupTopic ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              tinode: this.props.tinode,
+              subscribers: this.state.onlineSubs
+            }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("a", {
+                href: "#",
+                onClick: this.handleContextClick,
+                children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("i", {
+                  className: "m-icon",
+                  children: "more_vert"
+                }, void 0, false)
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true), this.props.displayMobile ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.Fragment, {
+            children: [this.state.pins.length > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+              tinode: this.props.tinode,
+              pins: this.state.pins,
+              messages: pinnedMessages,
+              selected: this.state.selectedPin,
+              isAdmin: this.state.isAdmin,
+              setSelected: index => this.setState({
+                selectedPin: index
+              }),
+              onSelected: this.handleQuoteClick,
+              onCancel: this.handleUnpinMessage
+            }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+              level: this.props.errorLevel,
+              text: this.props.errorText,
+              onClearError: this.props.onError
+            }, void 0, false)]
+          }, void 0, true) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            show: this.state.fetchingMessages
+          }, void 0, false), messagesComponent, this.state.dragging && this.isDragEnabled() ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
+            className: "drag-n-drop",
+            children: formatMessage(messages.drag_file)
+          }, void 0, false) : null]
+        }, void 0, true);
       }
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      component = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__.jsxDEV)("div", {
         id: "topic-view",
-        ref: this.mountComponentEvents
-      }, component2, overlay);
+        ref: this.mountComponentEvents,
+        children: [component2, overlay]
+      }, void 0, true);
     }
     return component;
   }
@@ -2064,6 +1934,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -2115,9 +1987,10 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     if (filename.length > 36) {
       filename = filename.substr(0, 16) + '...' + filename.substr(-16);
     }
-    let size = this.props.size > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "small gray"
-    }, "(", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.size), ")") : null;
+    let size = this.props.size > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("span", {
+      className: "small gray",
+      children: ["(", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.size), ")"]
+    }, void 0, true) : null;
     let url, helperFunc;
     if (!this.props.uploading && !this.state.downloader && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.isUrlRelative)(this.props.downloadUrl)) {
       url = '#';
@@ -2129,31 +2002,43 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       url = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.sanitizeUrl)(this.props.downloadUrl);
       helperFunc = null;
     }
-    const downloadWidget = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "save_attachment",
-      defaultMessage: [{
-        "type": 0,
-        "value": "save"
-      }]
-    }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "attachment"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon big gray thin"
-    }, "draft")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, filename, " ", size), this.props.uploading || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      progress: this.props.uploading ? this.props.progress : this.state.progress,
-      onCancel: this.handleCancel
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, url ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: url,
-      download: this.props.filename,
-      onClick: helperFunc
-    }, downloadWidget) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "light-gray"
-    }, downloadWidget))));
+    const downloadWidget = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+        className: "m-icon",
+        children: "file_download"
+      }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "save_attachment",
+        defaultMessage: "save",
+        description: "Call to save an attachment"
+      }, void 0, false)]
+    }, void 0, true);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+      className: "attachment",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+          className: "m-icon big gray thin",
+          children: "draft"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "flex-column",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          children: [filename, " ", size]
+        }, void 0, true), this.props.uploading || this.state.downloader ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          progress: this.props.uploading ? this.props.progress : this.state.progress,
+          onCancel: this.handleCancel
+        }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+          children: url ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+            href: url,
+            download: this.props.filename,
+            onClick: helperFunc,
+            children: downloadWidget
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("span", {
+            className: "light-gray",
+            children: downloadWidget
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -2181,7 +2066,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./reaction-picker.jsx */ "./src/widgets/reaction-picker.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -2397,7 +2283,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isFormResponseType(att.mime)) {
           return;
         }
-        attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        attachments.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
           tinode: this.props.tinode,
           downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getDownloadUrl(att),
           filename: att.name,
@@ -2406,9 +2292,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           size: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getEntitySize(att),
           progress: this.state.progress,
           onCancelUpload: this.handleCancelUpload,
-          onError: this.props.onError,
-          key: i
-        }));
+          onError: this.props.onError
+        }, i, false));
       }, this);
       const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.fullFormatter, this.formatterContext);
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
@@ -2417,87 +2302,101 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         textSizeClass += ' emoji-' + (content || '').match(/(?:👨🏻‍❤️‍💋‍👨🏻|👨🏻‍❤️‍💋‍👨🏼|👨🏻‍❤️‍💋‍👨🏽|👨🏻‍❤️‍💋‍👨🏾|👨🏻‍❤️‍💋‍👨🏿|👨🏼‍❤️‍💋‍👨🏻|👨🏼‍❤️‍💋‍👨🏼|👨🏼‍❤️‍💋‍👨🏽|👨🏼‍❤️‍💋‍👨🏾|👨🏼‍❤️‍💋‍👨🏿|👨🏽‍❤️‍💋‍👨🏻|👨🏽‍❤️‍💋‍👨🏼|👨🏽‍❤️‍💋‍👨🏽|👨🏽‍❤️‍💋‍👨🏾|👨🏽‍❤️‍💋‍👨🏿|👨🏾‍❤️‍💋‍👨🏻|👨🏾‍❤️‍💋‍👨🏼|👨🏾‍❤️‍💋‍👨🏽|👨🏾‍❤️‍💋‍👨🏾|👨🏾‍❤️‍💋‍👨🏿|👨🏿‍❤️‍💋‍👨🏻|👨🏿‍❤️‍💋‍👨🏼|👨🏿‍❤️‍💋‍👨🏽|👨🏿‍❤️‍💋‍👨🏾|👨🏿‍❤️‍💋‍👨🏿|👩🏻‍❤️‍💋‍👨🏻|👩🏻‍❤️‍💋‍👨🏼|👩🏻‍❤️‍💋‍👨🏽|👩🏻‍❤️‍💋‍👨🏾|👩🏻‍❤️‍💋‍👨🏿|👩🏻‍❤️‍💋‍👩🏻|👩🏻‍❤️‍💋‍👩🏼|👩🏻‍❤️‍💋‍👩🏽|👩🏻‍❤️‍💋‍👩🏾|👩🏻‍❤️‍💋‍👩🏿|👩🏼‍❤️‍💋‍👨🏻|👩🏼‍❤️‍💋‍👨🏼|👩🏼‍❤️‍💋‍👨🏽|👩🏼‍❤️‍💋‍👨🏾|👩🏼‍❤️‍💋‍👨🏿|👩🏼‍❤️‍💋‍👩🏻|👩🏼‍❤️‍💋‍👩🏼|👩🏼‍❤️‍💋‍👩🏽|👩🏼‍❤️‍💋‍👩🏾|👩🏼‍❤️‍💋‍👩🏿|👩🏽‍❤️‍💋‍👨🏻|👩🏽‍❤️‍💋‍👨🏼|👩🏽‍❤️‍💋‍👨🏽|👩🏽‍❤️‍💋‍👨🏾|👩🏽‍❤️‍💋‍👨🏿|👩🏽‍❤️‍💋‍👩🏻|👩🏽‍❤️‍💋‍👩🏼|👩🏽‍❤️‍💋‍👩🏽|👩🏽‍❤️‍💋‍👩🏾|👩🏽‍❤️‍💋‍👩🏿|👩🏾‍❤️‍💋‍👨🏻|👩🏾‍❤️‍💋‍👨🏼|👩🏾‍❤️‍💋‍👨🏽|👩🏾‍❤️‍💋‍👨🏾|👩🏾‍❤️‍💋‍👨🏿|👩🏾‍❤️‍💋‍👩🏻|👩🏾‍❤️‍💋‍👩🏼|👩🏾‍❤️‍💋‍👩🏽|👩🏾‍❤️‍💋‍👩🏾|👩🏾‍❤️‍💋‍👩🏿|👩🏿‍❤️‍💋‍👨🏻|👩🏿‍❤️‍💋‍👨🏼|👩🏿‍❤️‍💋‍👨🏽|👩🏿‍❤️‍💋‍👨🏾|👩🏿‍❤️‍💋‍👨🏿|👩🏿‍❤️‍💋‍👩🏻|👩🏿‍❤️‍💋‍👩🏼|👩🏿‍❤️‍💋‍👩🏽|👩🏿‍❤️‍💋‍👩🏾|👩🏿‍❤️‍💋‍👩🏿|🧑🏻‍❤️‍💋‍🧑🏼|🧑🏻‍❤️‍💋‍🧑🏽|🧑🏻‍❤️‍💋‍🧑🏾|🧑🏻‍❤️‍💋‍🧑🏿|🧑🏼‍❤️‍💋‍🧑🏻|🧑🏼‍❤️‍💋‍🧑🏽|🧑🏼‍❤️‍💋‍🧑🏾|🧑🏼‍❤️‍💋‍🧑🏿|🧑🏽‍❤️‍💋‍🧑🏻|🧑🏽‍❤️‍💋‍🧑🏼|🧑🏽‍❤️‍💋‍🧑🏾|🧑🏽‍❤️‍💋‍🧑🏿|🧑🏾‍❤️‍💋‍🧑🏻|🧑🏾‍❤️‍💋‍🧑🏼|🧑🏾‍❤️‍💋‍🧑🏽|🧑🏾‍❤️‍💋‍🧑🏿|🧑🏿‍❤️‍💋‍🧑🏻|🧑🏿‍❤️‍💋‍🧑🏼|🧑🏿‍❤️‍💋‍🧑🏽|🧑🏿‍❤️‍💋‍🧑🏾|🏴󠁧󠁢󠁥󠁮󠁧󠁿|🏴󠁧󠁢󠁳󠁣󠁴󠁿|🏴󠁧󠁢󠁷󠁬󠁳󠁿|👨🏻‍❤️‍👨🏻|👨🏻‍❤️‍👨🏼|👨🏻‍❤️‍👨🏽|👨🏻‍❤️‍👨🏾|👨🏻‍❤️‍👨🏿|👨🏻‍🐰‍👨🏼|👨🏻‍🐰‍👨🏽|👨🏻‍🐰‍👨🏾|👨🏻‍🐰‍👨🏿|👨🏻‍🤝‍👨🏼|👨🏻‍🤝‍👨🏽|👨🏻‍🤝‍👨🏾|👨🏻‍🤝‍👨🏿|👨🏻‍🫯‍👨🏼|👨🏻‍🫯‍👨🏽|👨🏻‍🫯‍👨🏾|👨🏻‍🫯‍👨🏿|👨🏼‍❤️‍👨🏻|👨🏼‍❤️‍👨🏼|👨🏼‍❤️‍👨🏽|👨🏼‍❤️‍👨🏾|👨🏼‍❤️‍👨🏿|👨🏼‍🐰‍👨🏻|👨🏼‍🐰‍👨🏽|👨🏼‍🐰‍👨🏾|👨🏼‍🐰‍👨🏿|👨🏼‍🤝‍👨🏻|👨🏼‍🤝‍👨🏽|👨🏼‍🤝‍👨🏾|👨🏼‍🤝‍👨🏿|👨🏼‍🫯‍👨🏻|👨🏼‍🫯‍👨🏽|👨🏼‍🫯‍👨🏾|👨🏼‍🫯‍👨🏿|👨🏽‍❤️‍👨🏻|👨🏽‍❤️‍👨🏼|👨🏽‍❤️‍👨🏽|👨🏽‍❤️‍👨🏾|👨🏽‍❤️‍👨🏿|👨🏽‍🐰‍👨🏻|👨🏽‍🐰‍👨🏼|👨🏽‍🐰‍👨🏾|👨🏽‍🐰‍👨🏿|👨🏽‍🤝‍👨🏻|👨🏽‍🤝‍👨🏼|👨🏽‍🤝‍👨🏾|👨🏽‍🤝‍👨🏿|👨🏽‍🫯‍👨🏻|👨🏽‍🫯‍👨🏼|👨🏽‍🫯‍👨🏾|👨🏽‍🫯‍👨🏿|👨🏾‍❤️‍👨🏻|👨🏾‍❤️‍👨🏼|👨🏾‍❤️‍👨🏽|👨🏾‍❤️‍👨🏾|👨🏾‍❤️‍👨🏿|👨🏾‍🐰‍👨🏻|👨🏾‍🐰‍👨🏼|👨🏾‍🐰‍👨🏽|👨🏾‍🐰‍👨🏿|👨🏾‍🤝‍👨🏻|👨🏾‍🤝‍👨🏼|👨🏾‍🤝‍👨🏽|👨🏾‍🤝‍👨🏿|👨🏾‍🫯‍👨🏻|👨🏾‍🫯‍👨🏼|👨🏾‍🫯‍👨🏽|👨🏾‍🫯‍👨🏿|👨🏿‍❤️‍👨🏻|👨🏿‍❤️‍👨🏼|👨🏿‍❤️‍👨🏽|👨🏿‍❤️‍👨🏾|👨🏿‍❤️‍👨🏿|👨🏿‍🐰‍👨🏻|👨🏿‍🐰‍👨🏼|👨🏿‍🐰‍👨🏽|👨🏿‍🐰‍👨🏾|👨🏿‍🤝‍👨🏻|👨🏿‍🤝‍👨🏼|👨🏿‍🤝‍👨🏽|👨🏿‍🤝‍👨🏾|👨🏿‍🫯‍👨🏻|👨🏿‍🫯‍👨🏼|👨🏿‍🫯‍👨🏽|👨🏿‍🫯‍👨🏾|👩🏻‍❤️‍👨🏻|👩🏻‍❤️‍👨🏼|👩🏻‍❤️‍👨🏽|👩🏻‍❤️‍👨🏾|👩🏻‍❤️‍👨🏿|👩🏻‍❤️‍👩🏻|👩🏻‍❤️‍👩🏼|👩🏻‍❤️‍👩🏽|👩🏻‍❤️‍👩🏾|👩🏻‍❤️‍👩🏿|👩🏻‍🐰‍👩🏼|👩🏻‍🐰‍👩🏽|👩🏻‍🐰‍👩🏾|👩🏻‍🐰‍👩🏿|👩🏻‍🤝‍👨🏼|👩🏻‍🤝‍👨🏽|👩🏻‍🤝‍👨🏾|👩🏻‍🤝‍👨🏿|👩🏻‍🤝‍👩🏼|👩🏻‍🤝‍👩🏽|👩🏻‍🤝‍👩🏾|👩🏻‍🤝‍👩🏿|👩🏻‍🫯‍👩🏼|👩🏻‍🫯‍👩🏽|👩🏻‍🫯‍👩🏾|👩🏻‍🫯‍👩🏿|👩🏼‍❤️‍👨🏻|👩🏼‍❤️‍👨🏼|👩🏼‍❤️‍👨🏽|👩🏼‍❤️‍👨🏾|👩🏼‍❤️‍👨🏿|👩🏼‍❤️‍👩🏻|👩🏼‍❤️‍👩🏼|👩🏼‍❤️‍👩🏽|👩🏼‍❤️‍👩🏾|👩🏼‍❤️‍👩🏿|👩🏼‍🐰‍👩🏻|👩🏼‍🐰‍👩🏽|👩🏼‍🐰‍👩🏾|👩🏼‍🐰‍👩🏿|👩🏼‍🤝‍👨🏻|👩🏼‍🤝‍👨🏽|👩🏼‍🤝‍👨🏾|👩🏼‍🤝‍👨🏿|👩🏼‍🤝‍👩🏻|👩🏼‍🤝‍👩🏽|👩🏼‍🤝‍👩🏾|👩🏼‍🤝‍👩🏿|👩🏼‍🫯‍👩🏻|👩🏼‍🫯‍👩🏽|👩🏼‍🫯‍👩🏾|👩🏼‍🫯‍👩🏿|👩🏽‍❤️‍👨🏻|👩🏽‍❤️‍👨🏼|👩🏽‍❤️‍👨🏽|👩🏽‍❤️‍👨🏾|👩🏽‍❤️‍👨🏿|👩🏽‍❤️‍👩🏻|👩🏽‍❤️‍👩🏼|👩🏽‍❤️‍👩🏽|👩🏽‍❤️‍👩🏾|👩🏽‍❤️‍👩🏿|👩🏽‍🐰‍👩🏻|👩🏽‍🐰‍👩🏼|👩🏽‍🐰‍👩🏾|👩🏽‍🐰‍👩🏿|👩🏽‍🤝‍👨🏻|👩🏽‍🤝‍👨🏼|👩🏽‍🤝‍👨🏾|👩🏽‍🤝‍👨🏿|👩🏽‍🤝‍👩🏻|👩🏽‍🤝‍👩🏼|👩🏽‍🤝‍👩🏾|👩🏽‍🤝‍👩🏿|👩🏽‍🫯‍👩🏻|👩🏽‍🫯‍👩🏼|👩🏽‍🫯‍👩🏾|👩🏽‍🫯‍👩🏿|👩🏾‍❤️‍👨🏻|👩🏾‍❤️‍👨🏼|👩🏾‍❤️‍👨🏽|👩🏾‍❤️‍👨🏾|👩🏾‍❤️‍👨🏿|👩🏾‍❤️‍👩🏻|👩🏾‍❤️‍👩🏼|👩🏾‍❤️‍👩🏽|👩🏾‍❤️‍👩🏾|👩🏾‍❤️‍👩🏿|👩🏾‍🐰‍👩🏻|👩🏾‍🐰‍👩🏼|👩🏾‍🐰‍👩🏽|👩🏾‍🐰‍👩🏿|👩🏾‍🤝‍👨🏻|👩🏾‍🤝‍👨🏼|👩🏾‍🤝‍👨🏽|👩🏾‍🤝‍👨🏿|👩🏾‍🤝‍👩🏻|👩🏾‍🤝‍👩🏼|👩🏾‍🤝‍👩🏽|👩🏾‍🤝‍👩🏿|👩🏾‍🫯‍👩🏻|👩🏾‍🫯‍👩🏼|👩🏾‍🫯‍👩🏽|👩🏾‍🫯‍👩🏿|👩🏿‍❤️‍👨🏻|👩🏿‍❤️‍👨🏼|👩🏿‍❤️‍👨🏽|👩🏿‍❤️‍👨🏾|👩🏿‍❤️‍👨🏿|👩🏿‍❤️‍👩🏻|👩🏿‍❤️‍👩🏼|👩🏿‍❤️‍👩🏽|👩🏿‍❤️‍👩🏾|👩🏿‍❤️‍👩🏿|👩🏿‍🐰‍👩🏻|👩🏿‍🐰‍👩🏼|👩🏿‍🐰‍👩🏽|👩🏿‍🐰‍👩🏾|👩🏿‍🤝‍👨🏻|👩🏿‍🤝‍👨🏼|👩🏿‍🤝‍👨🏽|👩🏿‍🤝‍👨🏾|👩🏿‍🤝‍👩🏻|👩🏿‍🤝‍👩🏼|👩🏿‍🤝‍👩🏽|👩🏿‍🤝‍👩🏾|👩🏿‍🫯‍👩🏻|👩🏿‍🫯‍👩🏼|👩🏿‍🫯‍👩🏽|👩🏿‍🫯‍👩🏾|🧑🏻‍❤️‍🧑🏼|🧑🏻‍❤️‍🧑🏽|🧑🏻‍❤️‍🧑🏾|🧑🏻‍❤️‍🧑🏿|🧑🏻‍🐰‍🧑🏼|🧑🏻‍🐰‍🧑🏽|🧑🏻‍🐰‍🧑🏾|🧑🏻‍🐰‍🧑🏿|🧑🏻‍🤝‍🧑🏻|🧑🏻‍🤝‍🧑🏼|🧑🏻‍🤝‍🧑🏽|🧑🏻‍🤝‍🧑🏾|🧑🏻‍🤝‍🧑🏿|🧑🏻‍🫯‍🧑🏼|🧑🏻‍🫯‍🧑🏽|🧑🏻‍🫯‍🧑🏾|🧑🏻‍🫯‍🧑🏿|🧑🏼‍❤️‍🧑🏻|🧑🏼‍❤️‍🧑🏽|🧑🏼‍❤️‍🧑🏾|🧑🏼‍❤️‍🧑🏿|🧑🏼‍🐰‍🧑🏻|🧑🏼‍🐰‍🧑🏽|🧑🏼‍🐰‍🧑🏾|🧑🏼‍🐰‍🧑🏿|🧑🏼‍🤝‍🧑🏻|🧑🏼‍🤝‍🧑🏼|🧑🏼‍🤝‍🧑🏽|🧑🏼‍🤝‍🧑🏾|🧑🏼‍🤝‍🧑🏿|🧑🏼‍🫯‍🧑🏻|🧑🏼‍🫯‍🧑🏽|🧑🏼‍🫯‍🧑🏾|🧑🏼‍🫯‍🧑🏿|🧑🏽‍❤️‍🧑🏻|🧑🏽‍❤️‍🧑🏼|🧑🏽‍❤️‍🧑🏾|🧑🏽‍❤️‍🧑🏿|🧑🏽‍🐰‍🧑🏻|🧑🏽‍🐰‍🧑🏼|🧑🏽‍🐰‍🧑🏾|🧑🏽‍🐰‍🧑🏿|🧑🏽‍🤝‍🧑🏻|🧑🏽‍🤝‍🧑🏼|🧑🏽‍🤝‍🧑🏽|🧑🏽‍🤝‍🧑🏾|🧑🏽‍🤝‍🧑🏿|🧑🏽‍🫯‍🧑🏻|🧑🏽‍🫯‍🧑🏼|🧑🏽‍🫯‍🧑🏾|🧑🏽‍🫯‍🧑🏿|🧑🏾‍❤️‍🧑🏻|🧑🏾‍❤️‍🧑🏼|🧑🏾‍❤️‍🧑🏽|🧑🏾‍❤️‍🧑🏿|🧑🏾‍🐰‍🧑🏻|🧑🏾‍🐰‍🧑🏼|🧑🏾‍🐰‍🧑🏽|🧑🏾‍🐰‍🧑🏿|🧑🏾‍🤝‍🧑🏻|🧑🏾‍🤝‍🧑🏼|🧑🏾‍🤝‍🧑🏽|🧑🏾‍🤝‍🧑🏾|🧑🏾‍🤝‍🧑🏿|🧑🏾‍🫯‍🧑🏻|🧑🏾‍🫯‍🧑🏼|🧑🏾‍🫯‍🧑🏽|🧑🏾‍🫯‍🧑🏿|🧑🏿‍❤️‍🧑🏻|🧑🏿‍❤️‍🧑🏼|🧑🏿‍❤️‍🧑🏽|🧑🏿‍❤️‍🧑🏾|🧑🏿‍🐰‍🧑🏻|🧑🏿‍🐰‍🧑🏼|🧑🏿‍🐰‍🧑🏽|🧑🏿‍🐰‍🧑🏾|🧑🏿‍🤝‍🧑🏻|🧑🏿‍🤝‍🧑🏼|🧑🏿‍🤝‍🧑🏽|🧑🏿‍🤝‍🧑🏾|🧑🏿‍🤝‍🧑🏿|🧑🏿‍🫯‍🧑🏻|🧑🏿‍🫯‍🧑🏼|🧑🏿‍🫯‍🧑🏽|🧑🏿‍🫯‍🧑🏾|👨‍❤️‍💋‍👨|👨‍👨‍👦‍👦|👨‍👨‍👧‍👦|👨‍👨‍👧‍👧|👨‍👩‍👦‍👦|👨‍👩‍👧‍👦|👨‍👩‍👧‍👧|👩‍❤️‍💋‍👨|👩‍❤️‍💋‍👩|👩‍👩‍👦‍👦|👩‍👩‍👧‍👦|👩‍👩‍👧‍👧|🧑‍🧑‍🧒‍🧒|🏃🏻‍♀️‍➡️|🏃🏻‍♂️‍➡️|🏃🏼‍♀️‍➡️|🏃🏼‍♂️‍➡️|🏃🏽‍♀️‍➡️|🏃🏽‍♂️‍➡️|🏃🏾‍♀️‍➡️|🏃🏾‍♂️‍➡️|🏃🏿‍♀️‍➡️|🏃🏿‍♂️‍➡️|👨🏻‍🦯‍➡️|👨🏻‍🦼‍➡️|👨🏻‍🦽‍➡️|👨🏼‍🦯‍➡️|👨🏼‍🦼‍➡️|👨🏼‍🦽‍➡️|👨🏽‍🦯‍➡️|👨🏽‍🦼‍➡️|👨🏽‍🦽‍➡️|👨🏾‍🦯‍➡️|👨🏾‍🦼‍➡️|👨🏾‍🦽‍➡️|👨🏿‍🦯‍➡️|👨🏿‍🦼‍➡️|👨🏿‍🦽‍➡️|👩🏻‍🦯‍➡️|👩🏻‍🦼‍➡️|👩🏻‍🦽‍➡️|👩🏼‍🦯‍➡️|👩🏼‍🦼‍➡️|👩🏼‍🦽‍➡️|👩🏽‍🦯‍➡️|👩🏽‍🦼‍➡️|👩🏽‍🦽‍➡️|👩🏾‍🦯‍➡️|👩🏾‍🦼‍➡️|👩🏾‍🦽‍➡️|👩🏿‍🦯‍➡️|👩🏿‍🦼‍➡️|👩🏿‍🦽‍➡️|🚶🏻‍♀️‍➡️|🚶🏻‍♂️‍➡️|🚶🏼‍♀️‍➡️|🚶🏼‍♂️‍➡️|🚶🏽‍♀️‍➡️|🚶🏽‍♂️‍➡️|🚶🏾‍♀️‍➡️|🚶🏾‍♂️‍➡️|🚶🏿‍♀️‍➡️|🚶🏿‍♂️‍➡️|🧎🏻‍♀️‍➡️|🧎🏻‍♂️‍➡️|🧎🏼‍♀️‍➡️|🧎🏼‍♂️‍➡️|🧎🏽‍♀️‍➡️|🧎🏽‍♂️‍➡️|🧎🏾‍♀️‍➡️|🧎🏾‍♂️‍➡️|🧎🏿‍♀️‍➡️|🧎🏿‍♂️‍➡️|🧑🏻‍🦯‍➡️|🧑🏻‍🦼‍➡️|🧑🏻‍🦽‍➡️|🧑🏼‍🦯‍➡️|🧑🏼‍🦼‍➡️|🧑🏼‍🦽‍➡️|🧑🏽‍🦯‍➡️|🧑🏽‍🦼‍➡️|🧑🏽‍🦽‍➡️|🧑🏾‍🦯‍➡️|🧑🏾‍🦼‍➡️|🧑🏾‍🦽‍➡️|🧑🏿‍🦯‍➡️|🧑🏿‍🦼‍➡️|🧑🏿‍🦽‍➡️|🫱🏻‍🫲🏼|🫱🏻‍🫲🏽|🫱🏻‍🫲🏾|🫱🏻‍🫲🏿|🫱🏼‍🫲🏻|🫱🏼‍🫲🏽|🫱🏼‍🫲🏾|🫱🏼‍🫲🏿|🫱🏽‍🫲🏻|🫱🏽‍🫲🏼|🫱🏽‍🫲🏾|🫱🏽‍🫲🏿|🫱🏾‍🫲🏻|🫱🏾‍🫲🏼|🫱🏾‍🫲🏽|🫱🏾‍🫲🏿|🫱🏿‍🫲🏻|🫱🏿‍🫲🏼|🫱🏿‍🫲🏽|🫱🏿‍🫲🏾|🏃‍♀️‍➡️|🏃‍♂️‍➡️|👨‍❤️‍👨|👨‍👦‍👦|👨‍👧‍👦|👨‍👧‍👧|👨‍👨‍👦|👨‍👨‍👧|👨‍👩‍👦|👨‍👩‍👧|👨‍🦯‍➡️|👨‍🦼‍➡️|👨‍🦽‍➡️|👩‍❤️‍👨|👩‍❤️‍👩|👩‍👦‍👦|👩‍👧‍👦|👩‍👧‍👧|👩‍👩‍👦|👩‍👩‍👧|👩‍🦯‍➡️|👩‍🦼‍➡️|👩‍🦽‍➡️|🚶‍♀️‍➡️|🚶‍♂️‍➡️|🧎‍♀️‍➡️|🧎‍♂️‍➡️|🧑‍🤝‍🧑|🧑‍🦯‍➡️|🧑‍🦼‍➡️|🧑‍🦽‍➡️|🧑‍🧑‍🧒|🧑‍🧒‍🧒|🏃🏻‍♀️|🏃🏻‍♂️|🏃🏻‍➡️|🏃🏼‍♀️|🏃🏼‍♂️|🏃🏼‍➡️|🏃🏽‍♀️|🏃🏽‍♂️|🏃🏽‍➡️|🏃🏾‍♀️|🏃🏾‍♂️|🏃🏾‍➡️|🏃🏿‍♀️|🏃🏿‍♂️|🏃🏿‍➡️|🏄🏻‍♀️|🏄🏻‍♂️|🏄🏼‍♀️|🏄🏼‍♂️|🏄🏽‍♀️|🏄🏽‍♂️|🏄🏾‍♀️|🏄🏾‍♂️|🏄🏿‍♀️|🏄🏿‍♂️|🏊🏻‍♀️|🏊🏻‍♂️|🏊🏼‍♀️|🏊🏼‍♂️|🏊🏽‍♀️|🏊🏽‍♂️|🏊🏾‍♀️|🏊🏾‍♂️|🏊🏿‍♀️|🏊🏿‍♂️|🏋🏻‍♀️|🏋🏻‍♂️|🏋🏼‍♀️|🏋🏼‍♂️|🏋🏽‍♀️|🏋🏽‍♂️|🏋🏾‍♀️|🏋🏾‍♂️|🏋🏿‍♀️|🏋🏿‍♂️|🏌🏻‍♀️|🏌🏻‍♂️|🏌🏼‍♀️|🏌🏼‍♂️|🏌🏽‍♀️|🏌🏽‍♂️|🏌🏾‍♀️|🏌🏾‍♂️|🏌🏿‍♀️|🏌🏿‍♂️|👁️‍🗨️|👨🏻‍⚕️|👨🏻‍⚖️|👨🏻‍✈️|👨🏻‍🌾|👨🏻‍🍳|👨🏻‍🍼|👨🏻‍🎓|👨🏻‍🎤|👨🏻‍🎨|👨🏻‍🏫|👨🏻‍🏭|👨🏻‍💻|👨🏻‍💼|👨🏻‍🔧|👨🏻‍🔬|👨🏻‍🚀|👨🏻‍🚒|👨🏻‍🦯|👨🏻‍🦰|👨🏻‍🦱|👨🏻‍🦲|👨🏻‍🦳|👨🏻‍🦼|👨🏻‍🦽|👨🏼‍⚕️|👨🏼‍⚖️|👨🏼‍✈️|👨🏼‍🌾|👨🏼‍🍳|👨🏼‍🍼|👨🏼‍🎓|👨🏼‍🎤|👨🏼‍🎨|👨🏼‍🏫|👨🏼‍🏭|👨🏼‍💻|👨🏼‍💼|👨🏼‍🔧|👨🏼‍🔬|👨🏼‍🚀|👨🏼‍🚒|👨🏼‍🦯|👨🏼‍🦰|👨🏼‍🦱|👨🏼‍🦲|👨🏼‍🦳|👨🏼‍🦼|👨🏼‍🦽|👨🏽‍⚕️|👨🏽‍⚖️|👨🏽‍✈️|👨🏽‍🌾|👨🏽‍🍳|👨🏽‍🍼|👨🏽‍🎓|👨🏽‍🎤|👨🏽‍🎨|👨🏽‍🏫|👨🏽‍🏭|👨🏽‍💻|👨🏽‍💼|👨🏽‍🔧|👨🏽‍🔬|👨🏽‍🚀|👨🏽‍🚒|👨🏽‍🦯|👨🏽‍🦰|👨🏽‍🦱|👨🏽‍🦲|👨🏽‍🦳|👨🏽‍🦼|👨🏽‍🦽|👨🏾‍⚕️|👨🏾‍⚖️|👨🏾‍✈️|👨🏾‍🌾|👨🏾‍🍳|👨🏾‍🍼|👨🏾‍🎓|👨🏾‍🎤|👨🏾‍🎨|👨🏾‍🏫|👨🏾‍🏭|👨🏾‍💻|👨🏾‍💼|👨🏾‍🔧|👨🏾‍🔬|👨🏾‍🚀|👨🏾‍🚒|👨🏾‍🦯|👨🏾‍🦰|👨🏾‍🦱|👨🏾‍🦲|👨🏾‍🦳|👨🏾‍🦼|👨🏾‍🦽|👨🏿‍⚕️|👨🏿‍⚖️|👨🏿‍✈️|👨🏿‍🌾|👨🏿‍🍳|👨🏿‍🍼|👨🏿‍🎓|👨🏿‍🎤|👨🏿‍🎨|👨🏿‍🏫|👨🏿‍🏭|👨🏿‍💻|👨🏿‍💼|👨🏿‍🔧|👨🏿‍🔬|👨🏿‍🚀|👨🏿‍🚒|👨🏿‍🦯|👨🏿‍🦰|👨🏿‍🦱|👨🏿‍🦲|👨🏿‍🦳|👨🏿‍🦼|👨🏿‍🦽|👩🏻‍⚕️|👩🏻‍⚖️|👩🏻‍✈️|👩🏻‍🌾|👩🏻‍🍳|👩🏻‍🍼|👩🏻‍🎓|👩🏻‍🎤|👩🏻‍🎨|👩🏻‍🏫|👩🏻‍🏭|👩🏻‍💻|👩🏻‍💼|👩🏻‍🔧|👩🏻‍🔬|👩🏻‍🚀|👩🏻‍🚒|👩🏻‍🦯|👩🏻‍🦰|👩🏻‍🦱|👩🏻‍🦲|👩🏻‍🦳|👩🏻‍🦼|👩🏻‍🦽|👩🏼‍⚕️|👩🏼‍⚖️|👩🏼‍✈️|👩🏼‍🌾|👩🏼‍🍳|👩🏼‍🍼|👩🏼‍🎓|👩🏼‍🎤|👩🏼‍🎨|👩🏼‍🏫|👩🏼‍🏭|👩🏼‍💻|👩🏼‍💼|👩🏼‍🔧|👩🏼‍🔬|👩🏼‍🚀|👩🏼‍🚒|👩🏼‍🦯|👩🏼‍🦰|👩🏼‍🦱|👩🏼‍🦲|👩🏼‍🦳|👩🏼‍🦼|👩🏼‍🦽|👩🏽‍⚕️|👩🏽‍⚖️|👩🏽‍✈️|👩🏽‍🌾|👩🏽‍🍳|👩🏽‍🍼|👩🏽‍🎓|👩🏽‍🎤|👩🏽‍🎨|👩🏽‍🏫|👩🏽‍🏭|👩🏽‍💻|👩🏽‍💼|👩🏽‍🔧|👩🏽‍🔬|👩🏽‍🚀|👩🏽‍🚒|👩🏽‍🦯|👩🏽‍🦰|👩🏽‍🦱|👩🏽‍🦲|👩🏽‍🦳|👩🏽‍🦼|👩🏽‍🦽|👩🏾‍⚕️|👩🏾‍⚖️|👩🏾‍✈️|👩🏾‍🌾|👩🏾‍🍳|👩🏾‍🍼|👩🏾‍🎓|👩🏾‍🎤|👩🏾‍🎨|👩🏾‍🏫|👩🏾‍🏭|👩🏾‍💻|👩🏾‍💼|👩🏾‍🔧|👩🏾‍🔬|👩🏾‍🚀|👩🏾‍🚒|👩🏾‍🦯|👩🏾‍🦰|👩🏾‍🦱|👩🏾‍🦲|👩🏾‍🦳|👩🏾‍🦼|👩🏾‍🦽|👩🏿‍⚕️|👩🏿‍⚖️|👩🏿‍✈️|👩🏿‍🌾|👩🏿‍🍳|👩🏿‍🍼|👩🏿‍🎓|👩🏿‍🎤|👩🏿‍🎨|👩🏿‍🏫|👩🏿‍🏭|👩🏿‍💻|👩🏿‍💼|👩🏿‍🔧|👩🏿‍🔬|👩🏿‍🚀|👩🏿‍🚒|👩🏿‍🦯|👩🏿‍🦰|👩🏿‍🦱|👩🏿‍🦲|👩🏿‍🦳|👩🏿‍🦼|👩🏿‍🦽|👮🏻‍♀️|👮🏻‍♂️|👮🏼‍♀️|👮🏼‍♂️|👮🏽‍♀️|👮🏽‍♂️|👮🏾‍♀️|👮🏾‍♂️|👮🏿‍♀️|👮🏿‍♂️|👯🏻‍♀️|👯🏻‍♂️|👯🏼‍♀️|👯🏼‍♂️|👯🏽‍♀️|👯🏽‍♂️|👯🏾‍♀️|👯🏾‍♂️|👯🏿‍♀️|👯🏿‍♂️|👰🏻‍♀️|👰🏻‍♂️|👰🏼‍♀️|👰🏼‍♂️|👰🏽‍♀️|👰🏽‍♂️|👰🏾‍♀️|👰🏾‍♂️|👰🏿‍♀️|👰🏿‍♂️|👱🏻‍♀️|👱🏻‍♂️|👱🏼‍♀️|👱🏼‍♂️|👱🏽‍♀️|👱🏽‍♂️|👱🏾‍♀️|👱🏾‍♂️|👱🏿‍♀️|👱🏿‍♂️|👳🏻‍♀️|👳🏻‍♂️|👳🏼‍♀️|👳🏼‍♂️|👳🏽‍♀️|👳🏽‍♂️|👳🏾‍♀️|👳🏾‍♂️|👳🏿‍♀️|👳🏿‍♂️|👷🏻‍♀️|👷🏻‍♂️|👷🏼‍♀️|👷🏼‍♂️|👷🏽‍♀️|👷🏽‍♂️|👷🏾‍♀️|👷🏾‍♂️|👷🏿‍♀️|👷🏿‍♂️|💁🏻‍♀️|💁🏻‍♂️|💁🏼‍♀️|💁🏼‍♂️|💁🏽‍♀️|💁🏽‍♂️|💁🏾‍♀️|💁🏾‍♂️|💁🏿‍♀️|💁🏿‍♂️|💂🏻‍♀️|💂🏻‍♂️|💂🏼‍♀️|💂🏼‍♂️|💂🏽‍♀️|💂🏽‍♂️|💂🏾‍♀️|💂🏾‍♂️|💂🏿‍♀️|💂🏿‍♂️|💆🏻‍♀️|💆🏻‍♂️|💆🏼‍♀️|💆🏼‍♂️|💆🏽‍♀️|💆🏽‍♂️|💆🏾‍♀️|💆🏾‍♂️|💆🏿‍♀️|💆🏿‍♂️|💇🏻‍♀️|💇🏻‍♂️|💇🏼‍♀️|💇🏼‍♂️|💇🏽‍♀️|💇🏽‍♂️|💇🏾‍♀️|💇🏾‍♂️|💇🏿‍♀️|💇🏿‍♂️|🕵🏻‍♀️|🕵🏻‍♂️|🕵🏼‍♀️|🕵🏼‍♂️|🕵🏽‍♀️|🕵🏽‍♂️|🕵🏾‍♀️|🕵🏾‍♂️|🕵🏿‍♀️|🕵🏿‍♂️|🙅🏻‍♀️|🙅🏻‍♂️|🙅🏼‍♀️|🙅🏼‍♂️|🙅🏽‍♀️|🙅🏽‍♂️|🙅🏾‍♀️|🙅🏾‍♂️|🙅🏿‍♀️|🙅🏿‍♂️|🙆🏻‍♀️|🙆🏻‍♂️|🙆🏼‍♀️|🙆🏼‍♂️|🙆🏽‍♀️|🙆🏽‍♂️|🙆🏾‍♀️|🙆🏾‍♂️|🙆🏿‍♀️|🙆🏿‍♂️|🙇🏻‍♀️|🙇🏻‍♂️|🙇🏼‍♀️|🙇🏼‍♂️|🙇🏽‍♀️|🙇🏽‍♂️|🙇🏾‍♀️|🙇🏾‍♂️|🙇🏿‍♀️|🙇🏿‍♂️|🙋🏻‍♀️|🙋🏻‍♂️|🙋🏼‍♀️|🙋🏼‍♂️|🙋🏽‍♀️|🙋🏽‍♂️|🙋🏾‍♀️|🙋🏾‍♂️|🙋🏿‍♀️|🙋🏿‍♂️|🙍🏻‍♀️|🙍🏻‍♂️|🙍🏼‍♀️|🙍🏼‍♂️|🙍🏽‍♀️|🙍🏽‍♂️|🙍🏾‍♀️|🙍🏾‍♂️|🙍🏿‍♀️|🙍🏿‍♂️|🙎🏻‍♀️|🙎🏻‍♂️|🙎🏼‍♀️|🙎🏼‍♂️|🙎🏽‍♀️|🙎🏽‍♂️|🙎🏾‍♀️|🙎🏾‍♂️|🙎🏿‍♀️|🙎🏿‍♂️|🚣🏻‍♀️|🚣🏻‍♂️|🚣🏼‍♀️|🚣🏼‍♂️|🚣🏽‍♀️|🚣🏽‍♂️|🚣🏾‍♀️|🚣🏾‍♂️|🚣🏿‍♀️|🚣🏿‍♂️|🚴🏻‍♀️|🚴🏻‍♂️|🚴🏼‍♀️|🚴🏼‍♂️|🚴🏽‍♀️|🚴🏽‍♂️|🚴🏾‍♀️|🚴🏾‍♂️|🚴🏿‍♀️|🚴🏿‍♂️|🚵🏻‍♀️|🚵🏻‍♂️|🚵🏼‍♀️|🚵🏼‍♂️|🚵🏽‍♀️|🚵🏽‍♂️|🚵🏾‍♀️|🚵🏾‍♂️|🚵🏿‍♀️|🚵🏿‍♂️|🚶🏻‍♀️|🚶🏻‍♂️|🚶🏻‍➡️|🚶🏼‍♀️|🚶🏼‍♂️|🚶🏼‍➡️|🚶🏽‍♀️|🚶🏽‍♂️|🚶🏽‍➡️|🚶🏾‍♀️|🚶🏾‍♂️|🚶🏾‍➡️|🚶🏿‍♀️|🚶🏿‍♂️|🚶🏿‍➡️|🤦🏻‍♀️|🤦🏻‍♂️|🤦🏼‍♀️|🤦🏼‍♂️|🤦🏽‍♀️|🤦🏽‍♂️|🤦🏾‍♀️|🤦🏾‍♂️|🤦🏿‍♀️|🤦🏿‍♂️|🤵🏻‍♀️|🤵🏻‍♂️|🤵🏼‍♀️|🤵🏼‍♂️|🤵🏽‍♀️|🤵🏽‍♂️|🤵🏾‍♀️|🤵🏾‍♂️|🤵🏿‍♀️|🤵🏿‍♂️|🤷🏻‍♀️|🤷🏻‍♂️|🤷🏼‍♀️|🤷🏼‍♂️|🤷🏽‍♀️|🤷🏽‍♂️|🤷🏾‍♀️|🤷🏾‍♂️|🤷🏿‍♀️|🤷🏿‍♂️|🤸🏻‍♀️|🤸🏻‍♂️|🤸🏼‍♀️|🤸🏼‍♂️|🤸🏽‍♀️|🤸🏽‍♂️|🤸🏾‍♀️|🤸🏾‍♂️|🤸🏿‍♀️|🤸🏿‍♂️|🤹🏻‍♀️|🤹🏻‍♂️|🤹🏼‍♀️|🤹🏼‍♂️|🤹🏽‍♀️|🤹🏽‍♂️|🤹🏾‍♀️|🤹🏾‍♂️|🤹🏿‍♀️|🤹🏿‍♂️|🤼🏻‍♀️|🤼🏻‍♂️|🤼🏼‍♀️|🤼🏼‍♂️|🤼🏽‍♀️|🤼🏽‍♂️|🤼🏾‍♀️|🤼🏾‍♂️|🤼🏿‍♀️|🤼🏿‍♂️|🤽🏻‍♀️|🤽🏻‍♂️|🤽🏼‍♀️|🤽🏼‍♂️|🤽🏽‍♀️|🤽🏽‍♂️|🤽🏾‍♀️|🤽🏾‍♂️|🤽🏿‍♀️|🤽🏿‍♂️|🤾🏻‍♀️|🤾🏻‍♂️|🤾🏼‍♀️|🤾🏼‍♂️|🤾🏽‍♀️|🤾🏽‍♂️|🤾🏾‍♀️|🤾🏾‍♂️|🤾🏿‍♀️|🤾🏿‍♂️|🦸🏻‍♀️|🦸🏻‍♂️|🦸🏼‍♀️|🦸🏼‍♂️|🦸🏽‍♀️|🦸🏽‍♂️|🦸🏾‍♀️|🦸🏾‍♂️|🦸🏿‍♀️|🦸🏿‍♂️|🦹🏻‍♀️|🦹🏻‍♂️|🦹🏼‍♀️|🦹🏼‍♂️|🦹🏽‍♀️|🦹🏽‍♂️|🦹🏾‍♀️|🦹🏾‍♂️|🦹🏿‍♀️|🦹🏿‍♂️|🧍🏻‍♀️|🧍🏻‍♂️|🧍🏼‍♀️|🧍🏼‍♂️|🧍🏽‍♀️|🧍🏽‍♂️|🧍🏾‍♀️|🧍🏾‍♂️|🧍🏿‍♀️|🧍🏿‍♂️|🧎🏻‍♀️|🧎🏻‍♂️|🧎🏻‍➡️|🧎🏼‍♀️|🧎🏼‍♂️|🧎🏼‍➡️|🧎🏽‍♀️|🧎🏽‍♂️|🧎🏽‍➡️|🧎🏾‍♀️|🧎🏾‍♂️|🧎🏾‍➡️|🧎🏿‍♀️|🧎🏿‍♂️|🧎🏿‍➡️|🧏🏻‍♀️|🧏🏻‍♂️|🧏🏼‍♀️|🧏🏼‍♂️|🧏🏽‍♀️|🧏🏽‍♂️|🧏🏾‍♀️|🧏🏾‍♂️|🧏🏿‍♀️|🧏🏿‍♂️|🧑🏻‍⚕️|🧑🏻‍⚖️|🧑🏻‍✈️|🧑🏻‍🌾|🧑🏻‍🍳|🧑🏻‍🍼|🧑🏻‍🎄|🧑🏻‍🎓|🧑🏻‍🎤|🧑🏻‍🎨|🧑🏻‍🏫|🧑🏻‍🏭|🧑🏻‍💻|🧑🏻‍💼|🧑🏻‍🔧|🧑🏻‍🔬|🧑🏻‍🚀|🧑🏻‍🚒|🧑🏻‍🦯|🧑🏻‍🦰|🧑🏻‍🦱|🧑🏻‍🦲|🧑🏻‍🦳|🧑🏻‍🦼|🧑🏻‍🦽|🧑🏻‍🩰|🧑🏼‍⚕️|🧑🏼‍⚖️|🧑🏼‍✈️|🧑🏼‍🌾|🧑🏼‍🍳|🧑🏼‍🍼|🧑🏼‍🎄|🧑🏼‍🎓|🧑🏼‍🎤|🧑🏼‍🎨|🧑🏼‍🏫|🧑🏼‍🏭|🧑🏼‍💻|🧑🏼‍💼|🧑🏼‍🔧|🧑🏼‍🔬|🧑🏼‍🚀|🧑🏼‍🚒|🧑🏼‍🦯|🧑🏼‍🦰|🧑🏼‍🦱|🧑🏼‍🦲|🧑🏼‍🦳|🧑🏼‍🦼|🧑🏼‍🦽|🧑🏼‍🩰|🧑🏽‍⚕️|🧑🏽‍⚖️|🧑🏽‍✈️|🧑🏽‍🌾|🧑🏽‍🍳|🧑🏽‍🍼|🧑🏽‍🎄|🧑🏽‍🎓|🧑🏽‍🎤|🧑🏽‍🎨|🧑🏽‍🏫|🧑🏽‍🏭|🧑🏽‍💻|🧑🏽‍💼|🧑🏽‍🔧|🧑🏽‍🔬|🧑🏽‍🚀|🧑🏽‍🚒|🧑🏽‍🦯|🧑🏽‍🦰|🧑🏽‍🦱|🧑🏽‍🦲|🧑🏽‍🦳|🧑🏽‍🦼|🧑🏽‍🦽|🧑🏽‍🩰|🧑🏾‍⚕️|🧑🏾‍⚖️|🧑🏾‍✈️|🧑🏾‍🌾|🧑🏾‍🍳|🧑🏾‍🍼|🧑🏾‍🎄|🧑🏾‍🎓|🧑🏾‍🎤|🧑🏾‍🎨|🧑🏾‍🏫|🧑🏾‍🏭|🧑🏾‍💻|🧑🏾‍💼|🧑🏾‍🔧|🧑🏾‍🔬|🧑🏾‍🚀|🧑🏾‍🚒|🧑🏾‍🦯|🧑🏾‍🦰|🧑🏾‍🦱|🧑🏾‍🦲|🧑🏾‍🦳|🧑🏾‍🦼|🧑🏾‍🦽|🧑🏾‍🩰|🧑🏿‍⚕️|🧑🏿‍⚖️|🧑🏿‍✈️|🧑🏿‍🌾|🧑🏿‍🍳|🧑🏿‍🍼|🧑🏿‍🎄|🧑🏿‍🎓|🧑🏿‍🎤|🧑🏿‍🎨|🧑🏿‍🏫|🧑🏿‍🏭|🧑🏿‍💻|🧑🏿‍💼|🧑🏿‍🔧|🧑🏿‍🔬|🧑🏿‍🚀|🧑🏿‍🚒|🧑🏿‍🦯|🧑🏿‍🦰|🧑🏿‍🦱|🧑🏿‍🦲|🧑🏿‍🦳|🧑🏿‍🦼|🧑🏿‍🦽|🧑🏿‍🩰|🧔🏻‍♀️|🧔🏻‍♂️|🧔🏼‍♀️|🧔🏼‍♂️|🧔🏽‍♀️|🧔🏽‍♂️|🧔🏾‍♀️|🧔🏾‍♂️|🧔🏿‍♀️|🧔🏿‍♂️|🧖🏻‍♀️|🧖🏻‍♂️|🧖🏼‍♀️|🧖🏼‍♂️|🧖🏽‍♀️|🧖🏽‍♂️|🧖🏾‍♀️|🧖🏾‍♂️|🧖🏿‍♀️|🧖🏿‍♂️|🧗🏻‍♀️|🧗🏻‍♂️|🧗🏼‍♀️|🧗🏼‍♂️|🧗🏽‍♀️|🧗🏽‍♂️|🧗🏾‍♀️|🧗🏾‍♂️|🧗🏿‍♀️|🧗🏿‍♂️|🧘🏻‍♀️|🧘🏻‍♂️|🧘🏼‍♀️|🧘🏼‍♂️|🧘🏽‍♀️|🧘🏽‍♂️|🧘🏾‍♀️|🧘🏾‍♂️|🧘🏿‍♀️|🧘🏿‍♂️|🧙🏻‍♀️|🧙🏻‍♂️|🧙🏼‍♀️|🧙🏼‍♂️|🧙🏽‍♀️|🧙🏽‍♂️|🧙🏾‍♀️|🧙🏾‍♂️|🧙🏿‍♀️|🧙🏿‍♂️|🧚🏻‍♀️|🧚🏻‍♂️|🧚🏼‍♀️|🧚🏼‍♂️|🧚🏽‍♀️|🧚🏽‍♂️|🧚🏾‍♀️|🧚🏾‍♂️|🧚🏿‍♀️|🧚🏿‍♂️|🧛🏻‍♀️|🧛🏻‍♂️|🧛🏼‍♀️|🧛🏼‍♂️|🧛🏽‍♀️|🧛🏽‍♂️|🧛🏾‍♀️|🧛🏾‍♂️|🧛🏿‍♀️|🧛🏿‍♂️|🧜🏻‍♀️|🧜🏻‍♂️|🧜🏼‍♀️|🧜🏼‍♂️|🧜🏽‍♀️|🧜🏽‍♂️|🧜🏾‍♀️|🧜🏾‍♂️|🧜🏿‍♀️|🧜🏿‍♂️|🧝🏻‍♀️|🧝🏻‍♂️|🧝🏼‍♀️|🧝🏼‍♂️|🧝🏽‍♀️|🧝🏽‍♂️|🧝🏾‍♀️|🧝🏾‍♂️|🧝🏿‍♀️|🧝🏿‍♂️|⛹🏻‍♀️|⛹🏻‍♂️|⛹🏼‍♀️|⛹🏼‍♂️|⛹🏽‍♀️|⛹🏽‍♂️|⛹🏾‍♀️|⛹🏾‍♂️|⛹🏿‍♀️|⛹🏿‍♂️|🏋️‍♀️|🏋️‍♂️|🏌️‍♀️|🏌️‍♂️|🏳️‍⚧️|🏳️‍🌈|🕵️‍♀️|🕵️‍♂️|😶‍🌫️|⛓️‍💥|⛹️‍♀️|⛹️‍♂️|❤️‍🔥|❤️‍🩹|🍄‍🟫|🍋‍🟩|🏃‍♀️|🏃‍♂️|🏃‍➡️|🏄‍♀️|🏄‍♂️|🏊‍♀️|🏊‍♂️|🏴‍☠️|🐕‍🦺|🐦‍🔥|🐻‍❄️|👨‍⚕️|👨‍⚖️|👨‍✈️|👨‍🌾|👨‍🍳|👨‍🍼|👨‍🎓|👨‍🎤|👨‍🎨|👨‍🏫|👨‍🏭|👨‍👦|👨‍👧|👨‍💻|👨‍💼|👨‍🔧|👨‍🔬|👨‍🚀|👨‍🚒|👨‍🦯|👨‍🦰|👨‍🦱|👨‍🦲|👨‍🦳|👨‍🦼|👨‍🦽|👩‍⚕️|👩‍⚖️|👩‍✈️|👩‍🌾|👩‍🍳|👩‍🍼|👩‍🎓|👩‍🎤|👩‍🎨|👩‍🏫|👩‍🏭|👩‍👦|👩‍👧|👩‍💻|👩‍💼|👩‍🔧|👩‍🔬|👩‍🚀|👩‍🚒|👩‍🦯|👩‍🦰|👩‍🦱|👩‍🦲|👩‍🦳|👩‍🦼|👩‍🦽|👮‍♀️|👮‍♂️|👯‍♀️|👯‍♂️|👰‍♀️|👰‍♂️|👱‍♀️|👱‍♂️|👳‍♀️|👳‍♂️|👷‍♀️|👷‍♂️|💁‍♀️|💁‍♂️|💂‍♀️|💂‍♂️|💆‍♀️|💆‍♂️|💇‍♀️|💇‍♂️|😮‍💨|😵‍💫|🙂‍↔️|🙂‍↕️|🙅‍♀️|🙅‍♂️|🙆‍♀️|🙆‍♂️|🙇‍♀️|🙇‍♂️|🙋‍♀️|🙋‍♂️|🙍‍♀️|🙍‍♂️|🙎‍♀️|🙎‍♂️|🚣‍♀️|🚣‍♂️|🚴‍♀️|🚴‍♂️|🚵‍♀️|🚵‍♂️|🚶‍♀️|🚶‍♂️|🚶‍➡️|🤦‍♀️|🤦‍♂️|🤵‍♀️|🤵‍♂️|🤷‍♀️|🤷‍♂️|🤸‍♀️|🤸‍♂️|🤹‍♀️|🤹‍♂️|🤼‍♀️|🤼‍♂️|🤽‍♀️|🤽‍♂️|🤾‍♀️|🤾‍♂️|🦸‍♀️|🦸‍♂️|🦹‍♀️|🦹‍♂️|🧍‍♀️|🧍‍♂️|🧎‍♀️|🧎‍♂️|🧎‍➡️|🧏‍♀️|🧏‍♂️|🧑‍⚕️|🧑‍⚖️|🧑‍✈️|🧑‍🌾|🧑‍🍳|🧑‍🍼|🧑‍🎄|🧑‍🎓|🧑‍🎤|🧑‍🎨|🧑‍🏫|🧑‍🏭|🧑‍💻|🧑‍💼|🧑‍🔧|🧑‍🔬|🧑‍🚀|🧑‍🚒|🧑‍🦯|🧑‍🦰|🧑‍🦱|🧑‍🦲|🧑‍🦳|🧑‍🦼|🧑‍🦽|🧑‍🧒|🧑‍🩰|🧔‍♀️|🧔‍♂️|🧖‍♀️|🧖‍♂️|🧗‍♀️|🧗‍♂️|🧘‍♀️|🧘‍♂️|🧙‍♀️|🧙‍♂️|🧚‍♀️|🧚‍♂️|🧛‍♀️|🧛‍♂️|🧜‍♀️|🧜‍♂️|🧝‍♀️|🧝‍♂️|🧞‍♀️|🧞‍♂️|🧟‍♀️|🧟‍♂️|\*️⃣|🇦🇨|🇦🇩|🇦🇪|🇦🇫|🇦🇬|🇦🇮|🇦🇱|🇦🇲|🇦🇴|🇦🇶|🇦🇷|🇦🇸|🇦🇹|🇦🇺|🇦🇼|🇦🇽|🇦🇿|🇧🇦|🇧🇧|🇧🇩|🇧🇪|🇧🇫|🇧🇬|🇧🇭|🇧🇮|🇧🇯|🇧🇱|🇧🇲|🇧🇳|🇧🇴|🇧🇶|🇧🇷|🇧🇸|🇧🇹|🇧🇻|🇧🇼|🇧🇾|🇧🇿|🇨🇦|🇨🇨|🇨🇩|🇨🇫|🇨🇬|🇨🇭|🇨🇮|🇨🇰|🇨🇱|🇨🇲|🇨🇳|🇨🇴|🇨🇵|🇨🇶|🇨🇷|🇨🇺|🇨🇻|🇨🇼|🇨🇽|🇨🇾|🇨🇿|🇩🇪|🇩🇬|🇩🇯|🇩🇰|🇩🇲|🇩🇴|🇩🇿|🇪🇦|🇪🇨|🇪🇪|🇪🇬|🇪🇭|🇪🇷|🇪🇸|🇪🇹|🇪🇺|🇫🇮|🇫🇯|🇫🇰|🇫🇲|🇫🇴|🇫🇷|🇬🇦|🇬🇧|🇬🇩|🇬🇪|🇬🇫|🇬🇬|🇬🇭|🇬🇮|🇬🇱|🇬🇲|🇬🇳|🇬🇵|🇬🇶|🇬🇷|🇬🇸|🇬🇹|🇬🇺|🇬🇼|🇬🇾|🇭🇰|🇭🇲|🇭🇳|🇭🇷|🇭🇹|🇭🇺|🇮🇨|🇮🇩|🇮🇪|🇮🇱|🇮🇲|🇮🇳|🇮🇴|🇮🇶|🇮🇷|🇮🇸|🇮🇹|🇯🇪|🇯🇲|🇯🇴|🇯🇵|🇰🇪|🇰🇬|🇰🇭|🇰🇮|🇰🇲|🇰🇳|🇰🇵|🇰🇷|🇰🇼|🇰🇾|🇰🇿|🇱🇦|🇱🇧|🇱🇨|🇱🇮|🇱🇰|🇱🇷|🇱🇸|🇱🇹|🇱🇺|🇱🇻|🇱🇾|🇲🇦|🇲🇨|🇲🇩|🇲🇪|🇲🇫|🇲🇬|🇲🇭|🇲🇰|🇲🇱|🇲🇲|🇲🇳|🇲🇴|🇲🇵|🇲🇶|🇲🇷|🇲🇸|🇲🇹|🇲🇺|🇲🇻|🇲🇼|🇲🇽|🇲🇾|🇲🇿|🇳🇦|🇳🇨|🇳🇪|🇳🇫|🇳🇬|🇳🇮|🇳🇱|🇳🇴|🇳🇵|🇳🇷|🇳🇺|🇳🇿|🇴🇲|🇵🇦|🇵🇪|🇵🇫|🇵🇬|🇵🇭|🇵🇰|🇵🇱|🇵🇲|🇵🇳|🇵🇷|🇵🇸|🇵🇹|🇵🇼|🇵🇾|🇶🇦|🇷🇪|🇷🇴|🇷🇸|🇷🇺|🇷🇼|🇸🇦|🇸🇧|🇸🇨|🇸🇩|🇸🇪|🇸🇬|🇸🇭|🇸🇮|🇸🇯|🇸🇰|🇸🇱|🇸🇲|🇸🇳|🇸🇴|🇸🇷|🇸🇸|🇸🇹|🇸🇻|🇸🇽|🇸🇾|🇸🇿|🇹🇦|🇹🇨|🇹🇩|🇹🇫|🇹🇬|🇹🇭|🇹🇯|🇹🇰|🇹🇱|🇹🇲|🇹🇳|🇹🇴|🇹🇷|🇹🇹|🇹🇻|🇹🇼|🇹🇿|🇺🇦|🇺🇬|🇺🇲|🇺🇳|🇺🇸|🇺🇾|🇺🇿|🇻🇦|🇻🇨|🇻🇪|🇻🇬|🇻🇮|🇻🇳|🇻🇺|🇼🇫|🇼🇸|🇽🇰|🇾🇪|🇾🇹|🇿🇦|🇿🇲|🇿🇼|🎅🏻|🎅🏼|🎅🏽|🎅🏾|🎅🏿|🏂🏻|🏂🏼|🏂🏽|🏂🏾|🏂🏿|🏃🏻|🏃🏼|🏃🏽|🏃🏾|🏃🏿|🏄🏻|🏄🏼|🏄🏽|🏄🏾|🏄🏿|🏇🏻|🏇🏼|🏇🏽|🏇🏾|🏇🏿|🏊🏻|🏊🏼|🏊🏽|🏊🏾|🏊🏿|🏋🏻|🏋🏼|🏋🏽|🏋🏾|🏋🏿|🏌🏻|🏌🏼|🏌🏽|🏌🏾|🏌🏿|🐈‍⬛|🐦‍⬛|👂🏻|👂🏼|👂🏽|👂🏾|👂🏿|👃🏻|👃🏼|👃🏽|👃🏾|👃🏿|👆🏻|👆🏼|👆🏽|👆🏾|👆🏿|👇🏻|👇🏼|👇🏽|👇🏾|👇🏿|👈🏻|👈🏼|👈🏽|👈🏾|👈🏿|👉🏻|👉🏼|👉🏽|👉🏾|👉🏿|👊🏻|👊🏼|👊🏽|👊🏾|👊🏿|👋🏻|👋🏼|👋🏽|👋🏾|👋🏿|👌🏻|👌🏼|👌🏽|👌🏾|👌🏿|👍🏻|👍🏼|👍🏽|👍🏾|👍🏿|👎🏻|👎🏼|👎🏽|👎🏾|👎🏿|👏🏻|👏🏼|👏🏽|👏🏾|👏🏿|👐🏻|👐🏼|👐🏽|👐🏾|👐🏿|👦🏻|👦🏼|👦🏽|👦🏾|👦🏿|👧🏻|👧🏼|👧🏽|👧🏾|👧🏿|👨🏻|👨🏼|👨🏽|👨🏾|👨🏿|👩🏻|👩🏼|👩🏽|👩🏾|👩🏿|👫🏻|👫🏼|👫🏽|👫🏾|👫🏿|👬🏻|👬🏼|👬🏽|👬🏾|👬🏿|👭🏻|👭🏼|👭🏽|👭🏾|👭🏿|👮🏻|👮🏼|👮🏽|👮🏾|👮🏿|👯🏻|👯🏼|👯🏽|👯🏾|👯🏿|👰🏻|👰🏼|👰🏽|👰🏾|👰🏿|👱🏻|👱🏼|👱🏽|👱🏾|👱🏿|👲🏻|👲🏼|👲🏽|👲🏾|👲🏿|👳🏻|👳🏼|👳🏽|👳🏾|👳🏿|👴🏻|👴🏼|👴🏽|👴🏾|👴🏿|👵🏻|👵🏼|👵🏽|👵🏾|👵🏿|👶🏻|👶🏼|👶🏽|👶🏾|👶🏿|👷🏻|👷🏼|👷🏽|👷🏾|👷🏿|👸🏻|👸🏼|👸🏽|👸🏾|👸🏿|👼🏻|👼🏼|👼🏽|👼🏾|👼🏿|💁🏻|💁🏼|💁🏽|💁🏾|💁🏿|💂🏻|💂🏼|💂🏽|💂🏾|💂🏿|💃🏻|💃🏼|💃🏽|💃🏾|💃🏿|💅🏻|💅🏼|💅🏽|💅🏾|💅🏿|💆🏻|💆🏼|💆🏽|💆🏾|💆🏿|💇🏻|💇🏼|💇🏽|💇🏾|💇🏿|💏🏻|💏🏼|💏🏽|💏🏾|💏🏿|💑🏻|💑🏼|💑🏽|💑🏾|💑🏿|💪🏻|💪🏼|💪🏽|💪🏾|💪🏿|🕴🏻|🕴🏼|🕴🏽|🕴🏾|🕴🏿|🕵🏻|🕵🏼|🕵🏽|🕵🏾|🕵🏿|🕺🏻|🕺🏼|🕺🏽|🕺🏾|🕺🏿|🖐🏻|🖐🏼|🖐🏽|🖐🏾|🖐🏿|🖕🏻|🖕🏼|🖕🏽|🖕🏾|🖕🏿|🖖🏻|🖖🏼|🖖🏽|🖖🏾|🖖🏿|🙅🏻|🙅🏼|🙅🏽|🙅🏾|🙅🏿|🙆🏻|🙆🏼|🙆🏽|🙆🏾|🙆🏿|🙇🏻|🙇🏼|🙇🏽|🙇🏾|🙇🏿|🙋🏻|🙋🏼|🙋🏽|🙋🏾|🙋🏿|🙌🏻|🙌🏼|🙌🏽|🙌🏾|🙌🏿|🙍🏻|🙍🏼|🙍🏽|🙍🏾|🙍🏿|🙎🏻|🙎🏼|🙎🏽|🙎🏾|🙎🏿|🙏🏻|🙏🏼|🙏🏽|🙏🏾|🙏🏿|🚣🏻|🚣🏼|🚣🏽|🚣🏾|🚣🏿|🚴🏻|🚴🏼|🚴🏽|🚴🏾|🚴🏿|🚵🏻|🚵🏼|🚵🏽|🚵🏾|🚵🏿|🚶🏻|🚶🏼|🚶🏽|🚶🏾|🚶🏿|🛀🏻|🛀🏼|🛀🏽|🛀🏾|🛀🏿|🛌🏻|🛌🏼|🛌🏽|🛌🏾|🛌🏿|🤌🏻|🤌🏼|🤌🏽|🤌🏾|🤌🏿|🤏🏻|🤏🏼|🤏🏽|🤏🏾|🤏🏿|🤘🏻|🤘🏼|🤘🏽|🤘🏾|🤘🏿|🤙🏻|🤙🏼|🤙🏽|🤙🏾|🤙🏿|🤚🏻|🤚🏼|🤚🏽|🤚🏾|🤚🏿|🤛🏻|🤛🏼|🤛🏽|🤛🏾|🤛🏿|🤜🏻|🤜🏼|🤜🏽|🤜🏾|🤜🏿|🤝🏻|🤝🏼|🤝🏽|🤝🏾|🤝🏿|🤞🏻|🤞🏼|🤞🏽|🤞🏾|🤞🏿|🤟🏻|🤟🏼|🤟🏽|🤟🏾|🤟🏿|🤦🏻|🤦🏼|🤦🏽|🤦🏾|🤦🏿|🤰🏻|🤰🏼|🤰🏽|🤰🏾|🤰🏿|🤱🏻|🤱🏼|🤱🏽|🤱🏾|🤱🏿|🤲🏻|🤲🏼|🤲🏽|🤲🏾|🤲🏿|🤳🏻|🤳🏼|🤳🏽|🤳🏾|🤳🏿|🤴🏻|🤴🏼|🤴🏽|🤴🏾|🤴🏿|🤵🏻|🤵🏼|🤵🏽|🤵🏾|🤵🏿|🤶🏻|🤶🏼|🤶🏽|🤶🏾|🤶🏿|🤷🏻|🤷🏼|🤷🏽|🤷🏾|🤷🏿|🤸🏻|🤸🏼|🤸🏽|🤸🏾|🤸🏿|🤹🏻|🤹🏼|🤹🏽|🤹🏾|🤹🏿|🤼🏻|🤼🏼|🤼🏽|🤼🏾|🤼🏿|🤽🏻|🤽🏼|🤽🏽|🤽🏾|🤽🏿|🤾🏻|🤾🏼|🤾🏽|🤾🏾|🤾🏿|🥷🏻|🥷🏼|🥷🏽|🥷🏾|🥷🏿|🦵🏻|🦵🏼|🦵🏽|🦵🏾|🦵🏿|🦶🏻|🦶🏼|🦶🏽|🦶🏾|🦶🏿|🦸🏻|🦸🏼|🦸🏽|🦸🏾|🦸🏿|🦹🏻|🦹🏼|🦹🏽|🦹🏾|🦹🏿|🦻🏻|🦻🏼|🦻🏽|🦻🏾|🦻🏿|🧍🏻|🧍🏼|🧍🏽|🧍🏾|🧍🏿|🧎🏻|🧎🏼|🧎🏽|🧎🏾|🧎🏿|🧏🏻|🧏🏼|🧏🏽|🧏🏾|🧏🏿|🧑🏻|🧑🏼|🧑🏽|🧑🏾|🧑🏿|🧒🏻|🧒🏼|🧒🏽|🧒🏾|🧒🏿|🧓🏻|🧓🏼|🧓🏽|🧓🏾|🧓🏿|🧔🏻|🧔🏼|🧔🏽|🧔🏾|🧔🏿|🧕🏻|🧕🏼|🧕🏽|🧕🏾|🧕🏿|🧖🏻|🧖🏼|🧖🏽|🧖🏾|🧖🏿|🧗🏻|🧗🏼|🧗🏽|🧗🏾|🧗🏿|🧘🏻|🧘🏼|🧘🏽|🧘🏾|🧘🏿|🧙🏻|🧙🏼|🧙🏽|🧙🏾|🧙🏿|🧚🏻|🧚🏼|🧚🏽|🧚🏾|🧚🏿|🧛🏻|🧛🏼|🧛🏽|🧛🏾|🧛🏿|🧜🏻|🧜🏼|🧜🏽|🧜🏾|🧜🏿|🧝🏻|🧝🏼|🧝🏽|🧝🏾|🧝🏿|🫃🏻|🫃🏼|🫃🏽|🫃🏾|🫃🏿|🫄🏻|🫄🏼|🫄🏽|🫄🏾|🫄🏿|🫅🏻|🫅🏼|🫅🏽|🫅🏾|🫅🏿|🫰🏻|🫰🏼|🫰🏽|🫰🏾|🫰🏿|🫱🏻|🫱🏼|🫱🏽|🫱🏾|🫱🏿|🫲🏻|🫲🏼|🫲🏽|🫲🏾|🫲🏿|🫳🏻|🫳🏼|🫳🏽|🫳🏾|🫳🏿|🫴🏻|🫴🏼|🫴🏽|🫴🏾|🫴🏿|🫵🏻|🫵🏼|🫵🏽|🫵🏾|🫵🏿|🫶🏻|🫶🏼|🫶🏽|🫶🏾|🫶🏿|🫷🏻|🫷🏼|🫷🏽|🫷🏾|🫷🏿|🫸🏻|🫸🏼|🫸🏽|🫸🏾|🫸🏿|#️⃣|0️⃣|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|☝🏻|☝🏼|☝🏽|☝🏾|☝🏿|⛹🏻|⛹🏼|⛹🏽|⛹🏾|⛹🏿|✊🏻|✊🏼|✊🏽|✊🏾|✊🏿|✋🏻|✋🏼|✋🏽|✋🏾|✋🏿|✌🏻|✌🏼|✌🏽|✌🏾|✌🏿|✍🏻|✍🏼|✍🏽|✍🏾|✍🏿|🅰️|🅱️|🅾️|🅿️|🈂️|🈷️|🌡️|🌤️|🌥️|🌦️|🌧️|🌨️|🌩️|🌪️|🌫️|🌬️|🌶️|🍽️|🎖️|🎗️|🎙️|🎚️|🎛️|🎞️|🎟️|🏋️|🏌️|🏍️|🏎️|🏔️|🏕️|🏖️|🏗️|🏘️|🏙️|🏚️|🏛️|🏜️|🏝️|🏞️|🏟️|🏳️|🏵️|🏷️|🐿️|👁️|📽️|🕉️|🕊️|🕯️|🕰️|🕳️|🕴️|🕵️|🕶️|🕷️|🕸️|🕹️|🖇️|🖊️|🖋️|🖌️|🖍️|🖐️|🖥️|🖨️|🖱️|🖲️|🖼️|🗂️|🗃️|🗄️|🗑️|🗒️|🗓️|🗜️|🗝️|🗞️|🗡️|🗣️|🗨️|🗯️|🗳️|🗺️|🛋️|🛍️|🛎️|🛏️|🛠️|🛡️|🛢️|🛣️|🛤️|🛥️|🛩️|🛰️|🛳️|©️|®️|‼️|⁉️|™️|ℹ️|↔️|↕️|↖️|↗️|↘️|↙️|↩️|↪️|⌨️|⏏️|⏭️|⏮️|⏯️|⏱️|⏲️|⏸️|⏹️|⏺️|Ⓜ️|▪️|▫️|▶️|◀️|◻️|◼️|☀️|☁️|☂️|☃️|☄️|☎️|☑️|☘️|☝️|☠️|☢️|☣️|☦️|☪️|☮️|☯️|☸️|☹️|☺️|♀️|♂️|♟️|♠️|♣️|♥️|♦️|♨️|♻️|♾️|⚒️|⚔️|⚕️|⚖️|⚗️|⚙️|⚛️|⚜️|⚠️|⚧️|⚰️|⚱️|⛈️|⛏️|⛑️|⛓️|⛩️|⛰️|⛱️|⛴️|⛷️|⛸️|⛹️|✂️|✈️|✉️|✌️|✍️|✏️|✒️|✔️|✖️|✝️|✡️|✳️|✴️|❄️|❇️|❣️|❤️|➡️|⤴️|⤵️|⬅️|⬆️|⬇️|〰️|〽️|㊗️|㊙️|[\u231A\u231B\u23E9-\u23EC\u23F0\u23F3\u25FD\u25FE\u2614\u2615\u2648-\u2653\u267F\u2693\u26A1\u26AA\u26AB\u26BD\u26BE\u26C4\u26C5\u26CE\u26D4\u26EA\u26F2\u26F3\u26F5\u26FA\u26FD\u2705\u270A\u270B\u2728\u274C\u274E\u2753-\u2755\u2757\u2795-\u2797\u27B0\u27BF\u2B1B\u2B1C\u2B50\u2B55\u{1F004}\u{1F0CF}\u{1F18E}\u{1F191}-\u{1F19A}\u{1F201}\u{1F21A}\u{1F22F}\u{1F232}-\u{1F236}\u{1F238}-\u{1F23A}\u{1F250}\u{1F251}\u{1F300}-\u{1F320}\u{1F32D}-\u{1F335}\u{1F337}-\u{1F37C}\u{1F37E}-\u{1F393}\u{1F3A0}-\u{1F3CA}\u{1F3CF}-\u{1F3D3}\u{1F3E0}-\u{1F3F0}\u{1F3F4}\u{1F3F8}-\u{1F43E}\u{1F440}\u{1F442}-\u{1F4FC}\u{1F4FF}-\u{1F53D}\u{1F54B}-\u{1F54E}\u{1F550}-\u{1F567}\u{1F57A}\u{1F595}\u{1F596}\u{1F5A4}\u{1F5FB}-\u{1F64F}\u{1F680}-\u{1F6C5}\u{1F6CC}\u{1F6D0}-\u{1F6D2}\u{1F6D5}-\u{1F6D8}\u{1F6DC}-\u{1F6DF}\u{1F6EB}\u{1F6EC}\u{1F6F4}-\u{1F6FC}\u{1F7E0}-\u{1F7EB}\u{1F7F0}\u{1F90C}-\u{1F93A}\u{1F93C}-\u{1F945}\u{1F947}-\u{1F9FF}\u{1FA70}-\u{1FA7C}\u{1FA80}-\u{1FA8A}\u{1FA8E}-\u{1FAC6}\u{1FAC8}\u{1FACD}-\u{1FADC}\u{1FADF}-\u{1FAEA}\u{1FAEF}-\u{1FAF8}])/ug).length;
       }
     } else {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "m-icon gray"
-      }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "gray"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "invalid_content",
-        defaultMessage: [{
-          "type": 0,
-          "value": "invalid content"
-        }]
-      })));
+      content = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.Fragment, {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("i", {
+          className: "m-icon gray",
+          children: "warning_amber"
+        }, void 0, false), " ", (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("i", {
+          className: "gray",
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "invalid_content",
+            defaultMessage: "invalid content",
+            description: "Shown when the message is unreadable"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true);
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("li", {
       ref: this.props.innerRef,
-      className: sideClass
-    }, this.props.isGroup && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      authorizeURL: this.props.tinode.authorizeURL,
-      topic: this.props.userFrom,
-      title: this.props.userName,
-      avatar: avatar
-    }) : null) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: bubbleClass
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "content-meta"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: textSizeClass
-    }, content, attachments), this.props.reactionList ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      reactions: this.props.reactions,
-      reactionList: this.props.reactionList,
-      maxReactions: this.props.maxReactions,
-      myUserId: this.props.myUserId,
-      pickerShown: this.props.showPicker,
-      onTogglePicker: this.handleTogglePicker,
-      onReactionSelected: this.handleReactionSelected
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      style: {
-        height: '0.25rem'
-      }
-    }), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      edited: this.props.edited,
-      timestamp: this.props.timestamp,
-      received: this.props.received,
-      style: {
-        marginBottom: this.props.reactionList ? 'unset' : '0.25rem'
-      }
-    }) : null), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleContextClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more"))) : null), this.props.showPicker ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      reactions: this.props.reactions,
-      reactionList: this.props.reactionList,
-      maxReactions: this.props.maxReactions,
-      myUserId: this.props.myUserId,
-      leftBubble: this.props.response,
-      anchor: this.state.pickerAnchor,
-      viewportBounds: this.state.parentBounds,
-      onSelect: emo => this.handleReactionSelected(null, emo),
-      onClose: () => this.props.onToggleReactionPicker(-1),
-      dataTestPrefix: "reaction-picker"
-    }) : null, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "author"
-    }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "user_not_found",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Not found"
-      }]
-    }))) : null));
+      className: sideClass,
+      children: [this.props.isGroup && this.props.response ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+        className: "avatar-box",
+        children: fullDisplay ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          authorizeURL: this.props.tinode.authorizeURL,
+          topic: this.props.userFrom,
+          title: this.props.userName,
+          avatar: avatar
+        }, void 0, false) : null
+      }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+          className: bubbleClass,
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+            className: "content-meta",
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+              className: textSizeClass,
+              children: [content, attachments]
+            }, void 0, true), this.props.reactionList ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_reaction_strip_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+              reactions: this.props.reactions,
+              reactionList: this.props.reactionList,
+              maxReactions: this.props.maxReactions,
+              myUserId: this.props.myUserId,
+              pickerShown: this.props.showPicker,
+              onTogglePicker: this.handleTogglePicker,
+              onReactionSelected: this.handleReactionSelected
+            }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+              style: {
+                height: '0.25rem'
+              }
+            }, void 0, false), this.props.timestamp ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              edited: this.props.edited,
+              timestamp: this.props.timestamp,
+              received: this.props.received,
+              style: {
+                marginBottom: this.props.reactionList ? 'unset' : '0.25rem'
+              }
+            }, void 0, false) : null]
+          }, void 0, true), this.props.showContextMenu ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("span", {
+            className: "menuTrigger",
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("a", {
+              href: "#",
+              onClick: this.handleContextClick,
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("i", {
+                className: "m-icon",
+                children: "expand_more"
+              }, void 0, false)
+            }, void 0, false)
+          }, void 0, false) : null]
+        }, void 0, true), this.props.showPicker ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(_reaction_picker_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          reactions: this.props.reactions,
+          reactionList: this.props.reactionList,
+          maxReactions: this.props.maxReactions,
+          myUserId: this.props.myUserId,
+          leftBubble: this.props.response,
+          anchor: this.state.pickerAnchor,
+          viewportBounds: this.state.parentBounds,
+          onSelect: emo => this.handleReactionSelected(null, emo),
+          onClose: () => this.props.onToggleReactionPicker(-1),
+          dataTestPrefix: "reaction-picker"
+        }, void 0, false) : null, fullDisplay ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("div", {
+          className: "author",
+          children: this.props.userName || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)("i", {
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+              id: "user_not_found",
+              defaultMessage: "Not found",
+              description: "In place of a user's full name when the user is not found."
+            }, void 0, false)
+          }, void 0, false)
+        }, void 0, false) : null]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
 const IntlChatMessage = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(BaseChatMessage);
-const ChatMessage = react__WEBPACK_IMPORTED_MODULE_0___default().forwardRef((props, ref) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(IntlChatMessage, _extends({
-  innerRef: ref
-}, props)));
+const ChatMessage = react__WEBPACK_IMPORTED_MODULE_0___default().forwardRef((props, ref) => (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxDEV)(IntlChatMessage, {
+  innerRef: ref,
+  ...props
+}, void 0, false));
 /* harmony default export */ __webpack_exports__["default"] = (ChatMessage);
 
 /***/ }),
@@ -2519,6 +2418,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -2533,38 +2434,33 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const totalCount = (this.props.subscribers || []).length;
     const countToShow = Math.min(_config_js__WEBPACK_IMPORTED_MODULE_2__.MAX_ONLINE_IN_TOPIC, totalCount);
     (this.props.subscribers || []).some(sub => {
-      usersOnline.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      usersOnline.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
         className: "avatar-box",
-        key: sub.user
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        authorizeURL: this.props.tinode.authorizeURL,
-        topic: sub.user,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
-        title: sub.public ? sub.public.fn : null
-      })));
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          authorizeURL: this.props.tinode.authorizeURL,
+          topic: sub.user,
+          avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
+          title: sub.public ? sub.public.fn : null
+        }, void 0, false)
+      }, sub.user, false));
       return usersOnline.length == countToShow;
     });
     if (usersOnline.length == 0) {
       return null;
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "topic-users"
-    }, usersOnline, " ", totalCount > countToShow ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "more_online_members",
-      defaultMessage: [{
-        "type": 0,
-        "value": "+"
-      }, {
-        "type": 1,
-        "value": "overflow"
-      }, {
-        "type": 0,
-        "value": " more"
-      }],
-      values: {
-        overflow: totalCount - countToShow
-      }
-    })) : null);
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+      id: "topic-users",
+      children: [usersOnline, " ", totalCount > countToShow ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("span", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "more_online_members",
+          defaultMessage: "+{overflow} more",
+          description: "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+          values: {
+            overflow: totalCount - countToShow
+          }
+        }, void 0, false)
+      }, void 0, false) : null]
+    }, void 0, true);
   }
 }
 ;
@@ -2585,6 +2481,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -2597,52 +2495,50 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     this.props.onAction(data);
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "accept-invite-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation",
-      defaultMessage: [{
-        "type": 0,
-        "value": "You are invited to start a new chat. What would you like to do?"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "primary",
-      onClick: event => {
-        this.handleButtonAction(event, "accept");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation_accept",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Accept"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: event => {
-        this.handleButtonAction(event, "delete");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation_ignore",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Ignore"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "secondary",
-      onClick: event => {
-        this.handleButtonAction(event, "block");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "chat_invitation_block",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Block"
-      }]
-    }))));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "accept-invite-panel",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "title",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "chat_invitation",
+          defaultMessage: "You are invited to start a new chat. What would you like to do?",
+          description: "New chat invitation message: [Accept] [Ignore] [Block]."
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: "footer",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+          className: "primary",
+          onClick: event => {
+            this.handleButtonAction(event, "accept");
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "chat_invitation_accept",
+            defaultMessage: "Accept",
+            description: "Action [Accept] for chat invitation."
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: event => {
+            this.handleButtonAction(event, "delete");
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "chat_invitation_ignore",
+            defaultMessage: "Ignore",
+            description: "Action [Ignore] for chat invitation."
+          }, void 0, false)
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("button", {
+          className: "secondary",
+          onClick: event => {
+            this.handleButtonAction(event, "block");
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "chat_invitation_block",
+            defaultMessage: "Block",
+            description: "Action [Block] for chat invitation."
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 ;
@@ -2661,6 +2557,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -2670,19 +2568,26 @@ class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     let content = null;
     let bubbleClass = 'bubble';
     if (this.props.date) {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.date);
+      content = (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+        children: this.props.date
+      }, void 0, false);
       bubbleClass += ' date';
     }
     if (!content) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, null);
+      return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+        children: null
+      }, void 0, false);
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: "meta"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: bubbleClass
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "message-content"
-    }, content)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("li", {
+      className: "meta",
+      children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+        className: bubbleClass,
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("div", {
+          className: "message-content",
+          children: content
+        }, void 0, false)
+      }, void 0, false)
+    }, void 0, false);
   }
 }
 ;
@@ -2704,6 +2609,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -2711,18 +2618,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   message_not_found: {
-    id: "message_not_found",
-    defaultMessage: [{
-      "type": 0,
-      "value": "message not found"
-    }]
+    id: 'message_not_found',
+    defaultMessage: 'message not found',
+    description: 'Pinned message is not found'
   },
   message_deleted: {
-    id: "message_deleted",
-    defaultMessage: [{
-      "type": 0,
-      "value": "message deleted"
-    }]
+    id: 'message_deleted',
+    defaultMessage: 'message deleted',
+    description: 'Pinned message is deleted'
   }
 });
 class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -2813,56 +2716,75 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   render() {
     const selected = this.getSelectedIndex();
     let messageShown = (this.props.messages || [])[selected];
-    messageShown = messageShown ? messageShown._deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "gray"
-    }, this.props.intl.formatMessage(messages.message_deleted)) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(messageShown.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__.previewFormatter, {
+    messageShown = messageShown ? messageShown._deleted ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+      className: "gray",
+      children: this.props.intl.formatMessage(messages.message_deleted)
+    }, void 0, false) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(messageShown.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__.previewFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "gray"
-    }, this.props.intl.formatMessage(messages.message_not_found));
+    }) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+      className: "gray",
+      children: this.props.intl.formatMessage(messages.message_not_found)
+    }, void 0, false);
     const dots = [];
     this.props.pins.forEach(seq => {
       const cn = dots.length == selected ? 'adot' : 'dot';
-      dots.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: seq,
+      dots.push((0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
         className: cn
-      }));
+      }, seq, false));
     });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
       id: "pinned-wrapper",
-      ref: this.touchSurface
-    }, this.props.isAdmin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cancel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleCancel
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "push_pin")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "pinned-scroll"
-    }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "pinned",
-      onClick: this.handleSelected
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, messageShown)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "pinned-menu"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger upper"
-    }, selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleMovePrev
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_less")) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger lower"
-    }, this.props.selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleMoveNext
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more")) : null)));
+      ref: this.touchSurface,
+      children: [this.props.isAdmin ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "cancel",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+          href: "#",
+          onClick: this.handleCancel,
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+            className: "m-icon gray",
+            children: "close"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+          className: "m-icon gray",
+          children: "push_pin"
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "pinned-scroll",
+        children: dots
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "pinned",
+        onClick: this.handleSelected,
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("p", {
+          children: messageShown
+        }, void 0, false)
+      }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("div", {
+        className: "pinned-menu",
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("span", {
+          className: "menuTrigger upper",
+          children: selected > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+            href: "#",
+            onClick: this.handleMovePrev,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+              className: "m-icon",
+              children: "expand_less"
+            }, void 0, false)
+          }, void 0, false) : null
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("span", {
+          className: "menuTrigger lower",
+          children: this.props.selected > 0 ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("a", {
+            href: "#",
+            onClick: this.handleMoveNext,
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxDEV)("i", {
+              className: "m-icon",
+              children: "expand_more"
+            }, void 0, false)
+          }, void 0, false) : null
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PinnedMessages));
@@ -2880,6 +2802,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/utils */ "./src/lib/utils.js");
 /* harmony import */ var _count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./count-badge.jsx */ "./src/widgets/count-badge.jsx");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
@@ -3067,55 +2991,60 @@ class ReactionPicker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       style['--tip-left'] = 'unset';
       style['--tip-top'] = this.state.tipTop;
     }
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
       ref: this.rootRef,
       className: `reaction-picker ${this.state.placeAbove}${this.state.expanded ? ' expanded' : ''} `,
       role: "dialog",
       "aria-label": "emoji picker",
-      style: style
-    }, (this.props.reactionList || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => {
-      const applied = (this.props.reactions || []).find(r => r.val == emo);
-      const count = applied && applied.count > 1 ? applied.count | 0 : false;
-      const mine = applied && applied.users.includes(this.props.myUserId);
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: emo,
-        ref: el => this.emojiRefs[i] = el,
-        className: `reaction-picker-btn${mine ? ' mine' : applied ? ' applied' : ''}`,
-        "data-testid": `${prefix}-${emo}`,
-        onClick: () => {
-          this.selectEmoji(emo);
-        },
-        onKeyDown: e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
+      style: style,
+      children: [(this.props.reactionList || []).slice(0, this.state.expanded ? MAX_EMOJIS : REACTIONS_COLLAPSED_COUNT).map((emo, i) => {
+        const applied = (this.props.reactions || []).find(r => r.val == emo);
+        const count = applied && applied.count > 1 ? applied.count | 0 : false;
+        const mine = applied && applied.users.includes(this.props.myUserId);
+        return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+          ref: el => this.emojiRefs[i] = el,
+          className: `reaction-picker-btn${mine ? ' mine' : applied ? ' applied' : ''}`,
+          "data-testid": `${prefix}-${emo}`,
+          onClick: () => {
             this.selectEmoji(emo);
-          }
-        },
-        role: "button",
-        tabIndex: 0,
-        "aria-label": `react ${emo}`
-      }, emo, count && react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        rect: true,
-        count: count,
-        size: "medium",
-        style: {
-          position: 'absolute',
-          right: '-2px',
-          bottom: '-2px'
-        }
-      }));
-    }), !this.state.expanded && (this.props.reactionList || []).length > REACTIONS_COLLAPSED_COUNT && react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "divider"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reaction-picker-btn",
-      role: "button",
-      "data-testid": "reaction-expand",
-      onClick: () => this.setState({
-        expanded: true
-      }, () => this.updatePosition())
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, "expand_more"))));
+          },
+          onKeyDown: e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.selectEmoji(emo);
+            }
+          },
+          role: "button",
+          tabIndex: 0,
+          "aria-label": `react ${emo}`,
+          children: [emo, count && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(_count_badge_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            rect: true,
+            count: count,
+            size: "medium",
+            style: {
+              position: 'absolute',
+              right: '-2px',
+              bottom: '-2px'
+            }
+          }, void 0, false)]
+        }, emo, true);
+      }), !this.state.expanded && (this.props.reactionList || []).length > REACTIONS_COLLAPSED_COUNT && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+        children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+          className: "divider"
+        }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("div", {
+          className: "reaction-picker-btn",
+          role: "button",
+          "data-testid": "reaction-expand",
+          onClick: () => this.setState({
+            expanded: true
+          }, () => this.updatePosition()),
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxDEV)("i", {
+            className: "m-icon",
+            children: "expand_more"
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (ReactionPicker);
@@ -3132,41 +3061,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 class ReactionStrip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const more = this.props.reactions.length - this.props.maxReactions;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reactions"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      style: {
-        opacity: 0,
-        userSelect: 'none',
-        width: '0.01rem'
-      }
-    }, "0"), this.props.reactions.slice(0, this.props.maxReactions).map(r => {
-      const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: r.val,
-        "data-testid": `reaction-${r.val}`,
-        className: 'reaction' + (you ? ' active' : ''),
-        onClick: e => this.props.onReactionSelected(e, r.val)
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "emoji"
-      }, r.val), r.count > 1 && react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "count"
-      }, (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.shortenCount)(r.count)));
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: `reaction-add${this.props.pickerShown || more > 0 ? ' active' : ''}`,
-      "data-testid": "reaction-add",
-      onMouseDown: e => {
-        e.stopPropagation();
-      },
-      onClick: this.props.onTogglePicker
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon"
-    }, more > 0 ? 'more_horiz' : 'thumb_up_off_alt')));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+      className: "reactions",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        style: {
+          opacity: 0,
+          userSelect: 'none',
+          width: '0.01rem'
+        },
+        children: "0"
+      }, void 0, false), this.props.reactions.slice(0, this.props.maxReactions).map(r => {
+        const you = r.users && this.props.myUserId && r.users.includes(this.props.myUserId);
+        return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+          "data-testid": `reaction-${r.val}`,
+          className: 'reaction' + (you ? ' active' : ''),
+          onClick: e => this.props.onReactionSelected(e, r.val),
+          children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+            className: "emoji",
+            children: r.val
+          }, void 0, false), r.count > 1 && (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("span", {
+            className: "count",
+            children: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.shortenCount)(r.count)
+          }, void 0, false)]
+        }, r.val, true);
+      }), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("div", {
+        className: `reaction-add${this.props.pickerShown || more > 0 ? ' active' : ''}`,
+        "data-testid": "reaction-add",
+        onMouseDown: e => {
+          e.stopPropagation();
+        },
+        onClick: this.props.onTogglePicker,
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxDEV)("i", {
+          className: "m-icon",
+          children: more > 0 ? 'more_horiz' : 'thumb_up_off_alt'
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (ReactionStrip);
@@ -3187,31 +3124,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+
 
 
 
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   message_sending: {
-    id: "message_sending",
-    defaultMessage: [{
-      "type": 0,
-      "value": "sending..."
-    }]
+    id: 'message_sending',
+    defaultMessage: 'sending...',
+    description: 'Message being sent, in place of time stamp'
   },
   message_sending_failed: {
-    id: "message_sending_failed",
-    defaultMessage: [{
-      "type": 0,
-      "value": "failed"
-    }]
+    id: 'message_sending_failed',
+    defaultMessage: 'failed',
+    description: 'Failed to send message, in place of time stamp'
   },
   message_edited_marker: {
-    id: "message_edited_marker",
-    defaultMessage: [{
-      "type": 0,
-      "value": ", edited"
-    }]
+    id: 'message_edited_marker',
+    defaultMessage: ', edited',
+    description: 'Marker indicating that the message was edited'
   }
 });
 class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -3230,14 +3163,16 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       });
     }
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.deliveryMarker)(this.props.received);
-    const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: 'm-icon small ' + icon.color
-    }, icon.name) : null;
+    const marker = icon ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
+      className: 'm-icon small ' + icon.color,
+      children: icon.name
+    }, void 0, false) : null;
     const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("span", {
       className: "timestamp",
-      style: this.props.style
-    }, timestamp, edited, '\u00a0', marker);
+      style: this.props.style,
+      children: [timestamp, edited, '\u00a0', marker]
+    }, void 0, true);
   }
 }
 ;
@@ -3261,6 +3196,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
 
 
 
@@ -3268,81 +3204,52 @@ const AudioRecorder = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Pro
 
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   messaging_disabled: {
-    id: "messaging_disabled_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Messaging disabled"
-    }]
+    id: 'messaging_disabled_prompt',
+    defaultMessage: 'Messaging disabled',
+    description: 'Prompt in SendMessage in read-only topic'
   },
   type_new_message: {
-    id: "new_message_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "New message"
-    }]
+    id: 'new_message_prompt',
+    defaultMessage: 'New message',
+    description: 'Prompt in send message field'
   },
   add_image_caption: {
-    id: "image_caption_prompt",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Image caption"
-    }]
+    id: 'image_caption_prompt',
+    defaultMessage: 'Image caption',
+    description: 'Prompt in SendMessage for attached image'
   },
   file_attachment_too_large: {
-    id: "file_attachment_too_large",
-    defaultMessage: [{
-      "type": 0,
-      "value": "The file size "
-    }, {
-      "type": 1,
-      "value": "size"
-    }, {
-      "type": 0,
-      "value": " exceeds the "
-    }, {
-      "type": 1,
-      "value": "limit"
-    }, {
-      "type": 0,
-      "value": " limit."
-    }]
+    id: 'file_attachment_too_large',
+    defaultMessage: 'The file size {size} exceeds the {limit} limit.',
+    description: 'Error message when attachment is too large'
   },
   cannot_initiate_upload: {
-    id: "cannot_initiate_file_upload",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Cannot initiate file upload."
-    }]
+    id: 'cannot_initiate_file_upload',
+    defaultMessage: 'Cannot initiate file upload.',
+    description: 'Generic error messagewhen attachment fails'
   },
   icon_title_record_voice: {
-    id: "icon_title_record_voice",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Record voice message"
-    }]
+    id: 'icon_title_record_voice',
+    defaultMessage: 'Record voice message',
+    description: 'Icon tool tip for recording a voice message'
   },
   icon_title_attach_file: {
-    id: "icon_title_attach_file",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Attach file"
-    }]
+    id: 'icon_title_attach_file',
+    defaultMessage: 'Attach file',
+    description: 'Icon tool tip for attaching a file'
   },
   icon_title_add_image: {
-    id: "icon_title_add_image",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Add image"
-    }]
+    id: 'icon_title_add_image',
+    defaultMessage: 'Add image',
+    description: 'Icon tool tip for attaching an image'
   },
   icon_title_send: {
-    id: "icon_title_send",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Send message"
-    }]
+    id: 'icon_title_send',
+    defaultMessage: 'Send message',
+    description: 'Icon tool tip for sending a message'
   }
 });
 class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -3510,106 +3417,126 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
     const sendIcon = this.props.reply && this.props.reply.editing ? 'check_circle' : 'send';
-    const quote = this.state.quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "reply-quote-preview"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "cancel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onCancelReply();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon gray"
-    }, "close"))), this.state.quote) : null;
+    const quote = this.state.quote ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+      id: "reply-quote-preview",
+      children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        className: "cancel",
+        children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+          href: "#",
+          onClick: e => {
+            e.preventDefault();
+            this.props.onCancelReply();
+          },
+          children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+            className: "m-icon gray",
+            children: "close"
+          }, void 0, false)
+        }, void 0, false)
+      }, void 0, false), this.state.quote]
+    }, void 0, true) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "send-message-wrapper"
-    }, !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "send-message-panel"
-    }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile && !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.attachImage.click();
-      },
-      title: formatMessage(messages.icon_title_add_image)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon secondary"
-    }, "photo")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.attachFile.click();
-      },
-      title: formatMessage(messages.icon_title_attach_file)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon secondary"
-    }, "attach_file"))) : null, this.props.noInput ? quote || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr thin"
-    }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "loading_note",
-        defaultMessage: [{
-          "type": 0,
-          "value": "Loading..."
-        }]
-      }))
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AudioRecorder, {
-      onRecordingProgress: _ => this.props.onKeyPress(true),
-      onDeleted: _ => this.setState({
-        audioRec: false
-      }),
-      onFinished: this.handleAttachAudio
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-      id: "send-message-input",
-      placeholder: prompt,
-      value: this.state.message,
-      onChange: this.handleMessageTyping,
-      onKeyDown: this.handleKeyPress,
-      ref: ref => {
-        this.messageEditArea = ref;
-      }
-    }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleSend,
-      title: formatMessage(messages.icon_title_send)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon fill"
-    }, sendIcon)) : !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.setState({
-          audioRec: true
-        });
-      },
-      title: formatMessage(messages.icon_title_record_voice)
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "m-icon fill"
-    }, "mic")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "file",
-      ref: ref => {
-        this.attachFile = ref;
-      },
-      onChange: this.handleAttachFile,
-      style: {
-        display: 'none'
-      }
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "file",
-      ref: ref => {
-        this.attachImage = ref;
-      },
-      accept: "image/*, video/*",
-      onChange: this.handleAttachImage,
-      style: {
-        display: 'none'
-      }
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "writing-disabled"
-    }, prompt)));
+    return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+      id: "send-message-wrapper",
+      children: [!this.props.noInput ? quote : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+        id: "send-message-panel",
+        children: !this.props.disabled ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+          children: [this.props.onAttachFile && !this.state.audioRec ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+              href: "#",
+              onClick: e => {
+                e.preventDefault();
+                this.attachImage.click();
+              },
+              title: formatMessage(messages.icon_title_add_image),
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+                className: "m-icon secondary",
+                children: "photo"
+              }, void 0, false)
+            }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+              href: "#",
+              onClick: e => {
+                e.preventDefault();
+                this.attachFile.click();
+              },
+              title: formatMessage(messages.icon_title_attach_file),
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+                className: "m-icon secondary",
+                children: "attach_file"
+              }, void 0, false)
+            }, void 0, false)]
+          }, void 0, true) : null, this.props.noInput ? quote || (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+            className: "hr thin"
+          }, void 0, false) : this.state.audioRec ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+            fallback: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+              children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+                id: "loading_note",
+                defaultMessage: "Loading...",
+                description: "Message shown when component is loading"
+              }, void 0, false)
+            }, void 0, false),
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)(AudioRecorder, {
+              onRecordingProgress: _ => this.props.onKeyPress(true),
+              onDeleted: _ => this.setState({
+                audioRec: false
+              }),
+              onFinished: this.handleAttachAudio
+            }, void 0, false)
+          }, void 0, false) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("textarea", {
+            id: "send-message-input",
+            placeholder: prompt,
+            value: this.state.message,
+            onChange: this.handleMessageTyping,
+            onKeyDown: this.handleKeyPress,
+            ref: ref => {
+              this.messageEditArea = ref;
+            }
+          }, void 0, false), this.state.message || !audioEnabled ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+            href: "#",
+            onClick: this.handleSend,
+            title: formatMessage(messages.icon_title_send),
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+              className: "m-icon fill",
+              children: sendIcon
+            }, void 0, false)
+          }, void 0, false) : !this.state.audioRec ? (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("a", {
+            href: "#",
+            onClick: e => {
+              e.preventDefault();
+              this.setState({
+                audioRec: true
+              });
+            },
+            title: formatMessage(messages.icon_title_record_voice),
+            children: (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("i", {
+              className: "m-icon fill",
+              children: "mic"
+            }, void 0, false)
+          }, void 0, false) : null, (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("input", {
+            type: "file",
+            ref: ref => {
+              this.attachFile = ref;
+            },
+            onChange: this.handleAttachFile,
+            style: {
+              display: 'none'
+            }
+          }, void 0, false), (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("input", {
+            type: "file",
+            ref: ref => {
+              this.attachImage = ref;
+            },
+            accept: "image/*, video/*",
+            onChange: this.handleAttachImage,
+            style: {
+              display: 'none'
+            }
+          }, void 0, false)]
+        }, void 0, true) : (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxDEV)("div", {
+          id: "writing-disabled",
+          children: prompt
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true);
   }
 }
 ;

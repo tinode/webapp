@@ -1,7 +1,9 @@
 import { PACKAGE_VERSION } from './version.js';
 
+// Version-independent name of this application, used for Firebase app name.
+export const BASE_APP_NAME = 'TinodeWeb';
 // Name of this application, used in the User-Agent.
-export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.24');
+export const APP_NAME = BASE_APP_NAME + '/' + (PACKAGE_VERSION || '0.25');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
