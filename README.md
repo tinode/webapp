@@ -48,6 +48,7 @@ The app is currently available in the following languages:
  * German
  * Italian
  * Korean
+ * Portuguese
  * Romanian
  * Russian
  * Spanish
