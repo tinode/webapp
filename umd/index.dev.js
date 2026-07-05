@@ -4214,6 +4214,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
           href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_CONTACT_US,
           className: "flat-button",
           target: "_blank",
+          rel: "noopener noreferrer",
           children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
             className: "material-icons",
             children: "email"
@@ -4226,6 +4227,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
           href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_TERMS_OF_SERVICE,
           className: "flat-button",
           target: "_blank",
+          rel: "noopener noreferrer",
           children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
             className: "material-icons",
             children: "description"
@@ -4238,6 +4240,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
           href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_PRIVACY_POLICY,
           className: "flat-button",
           target: "_blank",
+          rel: "noopener noreferrer",
           children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
             className: "material-icons",
             children: "policy"
@@ -5634,6 +5637,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       }).then(reg => {
         (reg.active || reg.installing).postMessage(JSON.stringify({
+          type: 'config',
           locale: locale,
           version: _version_js__WEBPACK_IMPORTED_MODULE_12__.PACKAGE_VERSION
         }));
@@ -6679,6 +6683,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
+    if (navigator.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage(JSON.stringify({
+        type: 'clear-caches'
+      }));
+    }
     if (this.state.firebaseToken && this.fcm) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.warn('Failed to delete FCM token on logout', err);

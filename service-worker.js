@@ -121,6 +121,14 @@ self.addEventListener('install', _ => {
   self.skipWaiting();
 });
 
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key != PACKAGE_VERSION).map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
+});
+
 // This code handles a click on notification: takes
 // the user to the browser tab with the chat or opens a new tab.
 self.addEventListener('notificationclick', event => {
@@ -173,33 +181,74 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  event.respondWith((async _ => {
-    //  Try to find the response in the cache.
-    const cache = await caches.open(PACKAGE_VERSION);
+  // Bypass caching for the service worker file itself to prevent update loops.
+  if (event.request.url.includes('service-worker.js')) {
+    return;
+  }
 
+  event.respondWith((async () => {
+    const cache = await caches.open(PACKAGE_VERSION);
     const reqUrl = new URL(event.request.url);
-    // Using ignoreSearch=true to read cached images and docs despite different auth signatures.
-    const cachedResponse = await cache.match(event.request, { ignoreSearch: (self.location.origin == reqUrl.origin) });
-    if (cachedResponse) {
-      return cachedResponse;
+
+    // Cache handling strategy: for navigation requests (index.html, index-dev.html)
+    // use network-first strategy, for all other requests use cache-first strategy.
+
+    if (event.request.mode == 'navigate') {
+      // Network-First Strategy
+      event.respondWith(
+        fetchAndCache(event.request, cache, reqUrl)
+          .catch(() => getFromCache(event.request, cache, reqUrl))
+          .catch(() => new Response('Offline text fallback', { status: 503 }))
+      );
+    } else {
+      // Cache-First Strategy
+      event.respondWith(
+        getFromCache(event.request, cache, reqUrl)
+          .catch(() => fetchAndCache(event.request, cache, reqUrl))
+          .catch(() => new Response('', { status: 404 }))
+      );
     }
-    // Not found in cache.
-    const response = await fetch(event.request);
-    if (!response || response.status != 200 || response.type != 'basic') {
-      return response;
-    }
-    if (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:') {
-      await cache.put(event.request, response.clone());
-    }
-    return response;
   })());
 });
 
+/**
+ * Read from cache. Throw an error if item is missing (cache miss).
+ */
+async function getFromCache(request, cache, reqUrl) {
+  // Using ignoreSearch=true to read cached attachments despite different auth signatures.
+  const match = await cache.match(request, { ignoreSearch: (self.location.origin == reqUrl.origin) });
+  if (!match) {
+    throw new Error('Cache miss'); // Rejects the promise to trigger the .catch() block
+  }
+  return match;
+}
+
+/**
+ * Fetch from network and silently save copy to a specific cache bucket.
+ */
+async function fetchAndCache(request, cache, reqUrl) {
+  const response = await fetch(request);
+  if (!response || response.status != 200 || response.type != 'basic') {
+    return response;
+  }
+
+  if (reqUrl && (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:')) {
+    cache.put(request, response.clone());
+  }
+  return response;
+}
+
 // This code gets the human language from the webapp.
 self.addEventListener('message', event => {
-  const data = JSON.parse(event.data);
+  const data = (typeof event.data == 'string') ?
+    JSON.parse(event.data) : event.data;
 
-  // The locale is used for selecting strings in an appropriate language.
-  self.locale = data.locale || '';
-  self.baseLocale = self.locale.toLowerCase().split(/[-_]/)[0];
+  if (data.type == 'clear-caches') {
+    const keys = await caches.keys();
+    event.waitUntil(Promise.all(keys.map(key => caches.delete(key))));
+  } else if (data.type == 'config') {
+    // The locale is used for selecting strings in an appropriate language.
+    self.locale = data.locale || '';
+    self.baseLocale = self.locale.toLowerCase().split(/[-_]/)[0];
+  }
 });

@@ -449,7 +449,11 @@ class TinodeWeb extends React.Component {
         });
       }).then(reg => {
         // Pass locale and version config to the service worker.
-        (reg.active || reg.installing).postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
+        (reg.active || reg.installing).postMessage(JSON.stringify({
+          type: 'config',
+          locale: locale,
+          version: PACKAGE_VERSION
+        }));
         // Request token.
         return TinodeWeb.requestFCMToken(this.fcm, reg);
       }).then(token => {
@@ -1604,6 +1608,10 @@ class TinodeWeb extends React.Component {
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
+    if (navigator.serviceWorker?.controller) {
+      // Clear caches in the service worker. This is needed to remove cached images and other attachments.
+      navigator.serviceWorker.controller.postMessage(JSON.stringify({type: 'clear-caches'}));
+    }
     if (this.state.firebaseToken && this.fcm) {
       // Unsubscribe failures (e.g. 403 token-unsubscribe-failed) should not block logout.
       firebaseDelToken(this.fcm).catch(err => {
