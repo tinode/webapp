@@ -26,6 +26,7 @@ import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
+import { clearStoredAuthToken, getStoredAuthToken, setStoredAuthToken } from '../lib/auth-token-storage.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
 import { secondsToTime } from '../lib/strformat.js'
@@ -97,7 +98,6 @@ const messages = defineMessages({
   }
 });
 
-const AUTH_TOKEN_STORAGE_KEY = 'auth-token';
 const FIREBASE_TOKEN_STORAGE_KEY = 'firebase-token';
 
 class TinodeWeb extends React.Component {
@@ -207,16 +207,15 @@ class TinodeWeb extends React.Component {
   }
 
   static getStoredAuthToken() {
-    return LocalStorageUtil.getObject(AUTH_TOKEN_STORAGE_KEY, false);
+    return getStoredAuthToken();
   }
 
   static setStoredAuthToken(token) {
-    LocalStorageUtil.setObject(AUTH_TOKEN_STORAGE_KEY, token, false);
+    setStoredAuthToken(token);
   }
 
   static clearStoredAuthToken() {
-    LocalStorageUtil.removeItem(AUTH_TOKEN_STORAGE_KEY, false);
-    LocalStorageUtil.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    clearStoredAuthToken();
   }
 
   static clearServiceWorkerCaches() {
@@ -332,8 +331,6 @@ class TinodeWeb extends React.Component {
   }
 
   componentDidMount() {
-    LocalStorageUtil.removeItem(AUTH_TOKEN_STORAGE_KEY);
-
     window.addEventListener('resize', this.handleResize);
     this.handleOnlineOn = _ => { this.handleOnline(true); }
     window.addEventListener('online', this.handleOnlineOn);
