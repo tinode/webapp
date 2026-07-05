@@ -929,7 +929,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       params.set('uid', this.props.myUserId);
       params.set('topic', this.state.topic);
       url.search = params;
-      window.open(url, '_blank');
+      window.open(url, '_blank', 'noopener,noreferrer');
     } else {
       console.info("Unknown action in form", action);
     }

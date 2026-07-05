@@ -3344,19 +3344,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ LocalStorageUtil; }
 /* harmony export */ });
 class LocalStorageUtil {
-  static setObject(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+  static storage(persistent = true) {
+    return persistent ? localStorage : sessionStorage;
   }
-  static getObject(key) {
-    const value = localStorage.getItem(key);
+  static setObject(key, value, persistent = true) {
+    this.storage(persistent).setItem(key, JSON.stringify(value));
+  }
+  static getObject(key, persistent = true) {
+    const value = this.storage(persistent).getItem(key);
     return value && JSON.parse(value);
   }
-  static updateObject(key, value) {
-    const oldVal = this.getObject(key);
-    this.setObject(key, Object.assign(oldVal || {}, value));
+  static updateObject(key, value, persistent = true) {
+    const oldVal = this.getObject(key, persistent);
+    this.setObject(key, Object.assign(oldVal || {}, value), persistent);
   }
-  static removeItem(key) {
-    localStorage.removeItem(key);
+  static removeItem(key, persistent = true) {
+    this.storage(persistent).removeItem(key);
   }
 }
 
@@ -4214,6 +4217,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
           href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_CONTACT_US,
           className: "flat-button",
           target: "_blank",
+          rel: "noopener noreferrer",
           children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
             className: "material-icons",
             children: "email"
@@ -4226,6 +4230,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
           href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_TERMS_OF_SERVICE,
           className: "flat-button",
           target: "_blank",
+          rel: "noopener noreferrer",
           children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
             className: "material-icons",
             children: "description"
@@ -4238,6 +4243,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
           href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_PRIVACY_POLICY,
           className: "flat-button",
           target: "_blank",
+          rel: "noopener noreferrer",
           children: [(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxDEV)("i", {
             className: "material-icons",
             children: "policy"
@@ -5344,6 +5350,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     description: 'Placeholder for the country selector'
   }
 });
+const AUTH_TOKEN_STORAGE_KEY = 'auth-token';
+const FIREBASE_TOKEN_STORAGE_KEY = 'firebase-token';
 class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -5439,6 +5447,23 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
     this.callTimeoutTimer = null;
   }
+  static getStoredAuthToken() {
+    return _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject(AUTH_TOKEN_STORAGE_KEY, false);
+  }
+  static setStoredAuthToken(token) {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject(AUTH_TOKEN_STORAGE_KEY, token, false);
+  }
+  static clearStoredAuthToken() {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].removeItem(AUTH_TOKEN_STORAGE_KEY, false);
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].removeItem(AUTH_TOKEN_STORAGE_KEY);
+  }
+  static clearServiceWorkerCaches() {
+    if (navigator.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage(JSON.stringify({
+        type: 'clear-caches'
+      }));
+    }
+  }
   getBlankState() {
     const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('settings') || {};
     const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
@@ -5467,7 +5492,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       sendOnEnter: settings.sendOnEnter || 'plain',
       desktopAlerts: persist && !!settings.desktopAlerts,
       desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('firebase-token') : null,
+      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject(FIREBASE_TOKEN_STORAGE_KEY) : null,
       applicationVisible: !document.hidden,
       errorText: '',
       errorLevel: null,
@@ -5515,6 +5540,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
   }
   componentDidMount() {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].removeItem(AUTH_TOKEN_STORAGE_KEY);
     window.addEventListener('resize', this.handleResize);
     this.handleOnlineOn = _ => {
       this.handleOnline(true);
@@ -5561,7 +5587,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.initFCMessaging().catch(_ => {});
       }
       this.resetContactList();
-      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('auth-token') : undefined;
+      const token = this.state.persist ? TinodeWeb.getStoredAuthToken() : undefined;
       if (token) {
         this.setState({
           autoLogin: true
@@ -5643,7 +5669,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         if (token != this.state.firebaseToken) {
           this.tinode.setDeviceToken(token);
           if (persist) {
-            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('firebase-token', token);
+            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject(FIREBASE_TOKEN_STORAGE_KEY, token);
           }
         }
         this.setState({
@@ -5855,6 +5881,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (persist) {
       this.tinode.initStorage().then(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', true);
+        if (this.tinode.getAuthToken()) {
+          TinodeWeb.setStoredAuthToken(this.tinode.getAuthToken());
+        }
         this.setState({
           persist: true
         });
@@ -5862,6 +5891,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       this.tinode.clearStorage().then(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', false);
+        TinodeWeb.clearStoredAuthToken();
         this.setState({
           persist: false
         });
@@ -5998,7 +6028,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleLoginSuccessful() {
     this.handleError();
     if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('auth-token', this.tinode.getAuthToken());
+      TinodeWeb.setStoredAuthToken(this.tinode.getAuthToken());
+    } else {
+      TinodeWeb.clearStoredAuthToken();
     }
     const goToTopic = this.state.requestedTopic || this.state.topicSelected;
     const me = this.tinode.getMeTopic();
@@ -6016,7 +6048,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
     me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build()).catch(err => {
       this.tinode.disconnect();
-      localStorage.removeItem('auth-token');
+      TinodeWeb.clearStoredAuthToken();
       this.handleError(err.message, 'err');
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
     }).finally(_ => {
@@ -6478,7 +6510,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
           desktopAlerts: false
         });
-        localStorage.removeItem('firebase-token');
+        localStorage.removeItem(FIREBASE_TOKEN_STORAGE_KEY);
         this.setState({
           desktopAlerts: false,
           firebaseToken: null
@@ -6676,9 +6708,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handleLogout() {
     (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.updateFavicon)(0);
-    localStorage.removeItem('auth-token');
-    localStorage.removeItem('firebase-token');
+    TinodeWeb.clearStoredAuthToken();
+    localStorage.removeItem(FIREBASE_TOKEN_STORAGE_KEY);
     localStorage.removeItem('settings');
+    TinodeWeb.clearServiceWorkerCaches();
     if (this.state.firebaseToken && this.fcm) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.warn('Failed to delete FCM token on logout', err);
