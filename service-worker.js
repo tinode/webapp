@@ -1,6 +1,6 @@
 // Must be located at the root.
-importScripts('https://cdn.jsdelivr.net/npm/firebase@9.14.0/firebase-app-compat.js');
-importScripts('https://cdn.jsdelivr.net/npm/firebase@9.14.0/firebase-messaging-compat.js');
+importScripts('/umd/firebase-app-compat.js');
+importScripts('/umd/firebase-messaging-compat.js');
 importScripts('firebase-init.js');
 importScripts('version.js');
 
@@ -86,6 +86,35 @@ self.i18nMessage = function (id) {
 firebase.initializeApp(FIREBASE_INIT);
 const fbMessaging = firebase.messaging();
 
+async function clearCaches() {
+  const keys = await caches.keys();
+  await Promise.all(keys.map(key => caches.delete(key)));
+}
+
+function shouldCacheRequest(request, reqUrl) {
+  if (reqUrl.origin != self.location.origin) {
+    return false;
+  }
+  if (reqUrl.search) {
+    return false;
+  }
+  return ['document', 'font', 'image', 'manifest', 'script', 'style', 'worker'].includes(request.destination);
+}
+
+function parseMessageData(data) {
+  if (!data) {
+    return {};
+  }
+  if (typeof data == 'string') {
+    try {
+      return JSON.parse(data);
+    } catch {
+      return {};
+    }
+  }
+  return data;
+}
+
 // This method shows the push notifications while the window is in background.
 fbMessaging.onBackgroundMessage(payload => {
   // Notify webapp that a message was received.
@@ -119,6 +148,14 @@ fbMessaging.onBackgroundMessage(payload => {
 // and all other active clients.
 self.addEventListener('install', _ => {
   self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key != PACKAGE_VERSION).map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
 
 // This code handles a click on notification: takes
@@ -174,21 +211,22 @@ self.addEventListener('fetch', event => {
   }
 
   event.respondWith((async _ => {
-    //  Try to find the response in the cache.
-    const cache = await caches.open(PACKAGE_VERSION);
-
     const reqUrl = new URL(event.request.url);
-    // Using ignoreSearch=true to read cached images and docs despite different auth signatures.
-    const cachedResponse = await cache.match(event.request, { ignoreSearch: (self.location.origin == reqUrl.origin) });
-    if (cachedResponse) {
-      return cachedResponse;
+    const cacheable = shouldCacheRequest(event.request, reqUrl);
+    if (cacheable) {
+      const cache = await caches.open(PACKAGE_VERSION);
+      const cachedResponse = await cache.match(event.request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
     }
     // Not found in cache.
     const response = await fetch(event.request);
     if (!response || response.status != 200 || response.type != 'basic') {
       return response;
     }
-    if (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:') {
+    if (cacheable && (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:')) {
+      const cache = await caches.open(PACKAGE_VERSION);
       await cache.put(event.request, response.clone());
     }
     return response;
@@ -197,7 +235,12 @@ self.addEventListener('fetch', event => {
 
 // This code gets the human language from the webapp.
 self.addEventListener('message', event => {
-  const data = JSON.parse(event.data);
+  const data = parseMessageData(event.data);
+
+  if (data.type == 'clear-caches') {
+    event.waitUntil(clearCaches());
+    return;
+  }
 
   // The locale is used for selecting strings in an appropriate language.
   self.locale = data.locale || '';
