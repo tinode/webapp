@@ -95,10 +95,16 @@ function shouldCacheRequest(request, reqUrl) {
   if (reqUrl.origin != self.location.origin) {
     return false;
   }
-  if (reqUrl.search) {
-    return false;
-  }
   return ['document', 'font', 'image', 'manifest', 'script', 'style', 'worker'].includes(request.destination);
+}
+
+function shouldBypassCache(request) {
+  if (['no-cache', 'no-store', 'reload'].includes(request.cache)) {
+    return true;
+  }
+  const cacheControl = request.headers.get('Cache-Control') || '';
+  const pragma = request.headers.get('Pragma') || '';
+  return /\bno-cache\b|\bno-store\b/i.test(cacheControl) || /\bno-cache\b/i.test(pragma);
 }
 
 function parseMessageData(data) {
@@ -213,9 +219,10 @@ self.addEventListener('fetch', event => {
   event.respondWith((async _ => {
     const reqUrl = new URL(event.request.url);
     const cacheable = shouldCacheRequest(event.request, reqUrl);
-    if (cacheable) {
+    const bypassCache = shouldBypassCache(event.request);
+    if (cacheable && !bypassCache) {
       const cache = await caches.open(PACKAGE_VERSION);
-      const cachedResponse = await cache.match(event.request);
+      const cachedResponse = await cache.match(event.request, { ignoreSearch: true });
       if (cachedResponse) {
         return cachedResponse;
       }
@@ -225,7 +232,7 @@ self.addEventListener('fetch', event => {
     if (!response || response.status != 200 || response.type != 'basic') {
       return response;
     }
-    if (cacheable && (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:')) {
+    if (cacheable && !bypassCache && (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:')) {
       const cache = await caches.open(PACKAGE_VERSION);
       await cache.put(event.request, response.clone());
     }
