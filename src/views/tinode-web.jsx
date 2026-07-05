@@ -26,6 +26,7 @@ import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
+import { clearStoredAuthToken, getStoredAuthToken, setStoredAuthToken } from '../lib/auth-token-storage.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
 import { secondsToTime } from '../lib/strformat.js'
@@ -96,6 +97,8 @@ const messages = defineMessages({
     description: 'Placeholder for the country selector'
   }
 });
+
+const FIREBASE_TOKEN_STORAGE_KEY = 'firebase-token';
 
 class TinodeWeb extends React.Component {
   constructor(props) {
@@ -203,6 +206,18 @@ class TinodeWeb extends React.Component {
     this.callTimeoutTimer = null;
   }
 
+  static getStoredAuthToken() {
+    return getStoredAuthToken();
+  }
+
+  static setStoredAuthToken(token) {
+    setStoredAuthToken(token);
+  }
+
+  static clearStoredAuthToken() {
+    clearStoredAuthToken();
+  }
+
   getBlankState() {
     const settings = LocalStorageUtil.getObject('settings') || {};
     const persist = !!LocalStorageUtil.getObject('keep-logged-in');
@@ -243,7 +258,7 @@ class TinodeWeb extends React.Component {
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
         (typeof firebaseInitApp != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
-      firebaseToken: persist ? LocalStorageUtil.getObject('firebase-token') : null,
+      firebaseToken: persist ? LocalStorageUtil.getObject(FIREBASE_TOKEN_STORAGE_KEY) : null,
 
       applicationVisible: !document.hidden,
 
@@ -376,7 +391,7 @@ class TinodeWeb extends React.Component {
       // Read contacts from cache.
       this.resetContactList();
 
-      const token = this.state.persist ? LocalStorageUtil.getObject('auth-token') : undefined;
+      const token = this.state.persist ? TinodeWeb.getStoredAuthToken() : undefined;
       if (token) {
         this.setState({autoLogin: true});
 
@@ -457,7 +472,7 @@ class TinodeWeb extends React.Component {
         if (token != this.state.firebaseToken) {
           this.tinode.setDeviceToken(token);
           if (persist) {
-            LocalStorageUtil.setObject('firebase-token', token);
+            LocalStorageUtil.setObject(FIREBASE_TOKEN_STORAGE_KEY, token);
           }
         }
         this.setState({firebaseToken: token, desktopAlerts: true});
@@ -685,11 +700,15 @@ class TinodeWeb extends React.Component {
     if (persist) {
       this.tinode.initStorage().then(_ => {
         LocalStorageUtil.setObject('keep-logged-in', true);
+        if (this.tinode.getAuthToken()) {
+          TinodeWeb.setStoredAuthToken(this.tinode.getAuthToken());
+        }
         this.setState({persist: true});
       });
     } else {
       this.tinode.clearStorage().then(_ => {
         LocalStorageUtil.setObject('keep-logged-in', false);
+        TinodeWeb.clearStoredAuthToken();
         this.setState({persist: false});
       });
     }
@@ -850,7 +869,9 @@ class TinodeWeb extends React.Component {
 
     // Refresh authentication token.
     if (LocalStorageUtil.getObject('keep-logged-in')) {
-      LocalStorageUtil.setObject('auth-token', this.tinode.getAuthToken());
+      TinodeWeb.setStoredAuthToken(this.tinode.getAuthToken());
+    } else {
+      TinodeWeb.clearStoredAuthToken();
     }
 
     // On reconnect, requestedTopic is undefined but topicSelected may still be set.
@@ -880,7 +901,7 @@ class TinodeWeb extends React.Component {
         build()
       ).catch(err => {
         this.tinode.disconnect();
-        localStorage.removeItem('auth-token');
+        TinodeWeb.clearStoredAuthToken();
         this.handleError(err.message, 'err');
         HashNavigation.navigateTo('');
       }).finally(_ => {
@@ -1414,7 +1435,7 @@ class TinodeWeb extends React.Component {
         console.error("Unable to delete token.", err);
       }).finally(_ => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
-        localStorage.removeItem('firebase-token');
+        localStorage.removeItem(FIREBASE_TOKEN_STORAGE_KEY);
         this.setState({desktopAlerts: false, firebaseToken: null});
         // Inform the server that the token was deleted.
         this.tinode.setDeviceToken(null);
@@ -1601,8 +1622,8 @@ class TinodeWeb extends React.Component {
     updateFavicon(0);
 
     // Remove stored data.
-    localStorage.removeItem('auth-token');
-    localStorage.removeItem('firebase-token');
+    TinodeWeb.clearStoredAuthToken();
+    localStorage.removeItem(FIREBASE_TOKEN_STORAGE_KEY);
     localStorage.removeItem('settings');
     if (this.state.firebaseToken && this.fcm) {
       // Unsubscribe failures (e.g. 403 token-unsubscribe-failed) should not block logout.
