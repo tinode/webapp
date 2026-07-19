@@ -244,8 +244,9 @@ self.addEventListener('message', event => {
     JSON.parse(event.data) : event.data;
 
   if (data.type == 'clear-caches') {
-    const keys = await caches.keys();
-    event.waitUntil(Promise.all(keys.map(key => caches.delete(key))));
+    event.waitUntil(
+      caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key))))
+    );
   } else if (data.type == 'config') {
     // The locale is used for selecting strings in an appropriate language.
     self.locale = data.locale || '';
