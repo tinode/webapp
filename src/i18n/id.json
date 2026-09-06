@@ -1,0 +1,1966 @@
+{
+  "action_block_contact": {
+    "translation": "Blokir kontak",
+    "defaultMessage": "Block Contact",
+    "description": "Flat button [Block Contact]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_cancel": {
+    "translation": "batal",
+    "defaultMessage": "cancel",
+    "description": "Call to action [cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_clear_messages": {
+    "translation": "Hapus pesan",
+    "defaultMessage": "Clear Messages",
+    "description": "Flat button [Clear Messages] (soft-delete messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_delete_messages": {
+    "translation": "Hapus pesan untuk semua",
+    "defaultMessage": "Clear Messages for All",
+    "description": "Flat button [Clear for All] (hard-delete all messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_leave_chat": {
+    "translation": "Keluar dari percakapan",
+    "defaultMessage": "Leave Conversation",
+    "description": "Flat button [Leave Conversation]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_report_chat": {
+    "translation": "Laporkan percakapan",
+    "defaultMessage": "Report Conversation",
+    "description": "Flat button [Report Group]",
+    "missing": false,
+    "obsolete": false
+  },
+  "archived_contacts": {
+    "translation": "Chat yang diarsipkan ({count})",
+    "defaultMessage": "Archived contacts ({count})",
+    "description": "Label for archived chats",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_danger": {
+    "translation": "Tidak tepercaya",
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_owner": {
+    "translation": "pemilik",
+    "defaultMessage": "owner",
+    "description": "Badge for indicating the owner",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_staff": {
+    "translation": "Dikelola staf",
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_verified": {
+    "translation": "Terverifikasi/resmi",
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_you": {
+    "translation": "Anda",
+    "defaultMessage": "you",
+    "description": "Badge for indicating the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "block_contact_warning": {
+    "translation": "Anda yakin ingin memblokir kontak ini?",
+    "defaultMessage": "Are you sure you want to block this contact?",
+    "description": "Alert dialog warning when blocking a contact.",
+    "missing": false,
+    "obsolete": false
+  },
+  "blocked_contacts_link": {
+    "translation": "Kontak yang diblokir ({count})",
+    "defaultMessage": "Blocked contacts ({count})",
+    "description": "Blocked contacts link",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_members": {
+    "translation": "Tambah anggota",
+    "defaultMessage": "Add members",
+    "description": "Flat button [Add members] (to topic)",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_cancel": {
+    "translation": "Batal",
+    "defaultMessage": "Cancel",
+    "description": "Button [Cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_confirm": {
+    "translation": "Konfirmasi",
+    "defaultMessage": "Confirm",
+    "description": "Button [Confirm]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_create": {
+    "translation": "Buat",
+    "defaultMessage": "Create",
+    "description": "Button [Create]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_delete_account": {
+    "translation": "Hapus akun",
+    "defaultMessage": "Delete account",
+    "description": "Button [Delete account]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_edit": {
+    "translation": "Edit",
+    "defaultMessage": "Edit",
+    "description": "Call to action [Edit]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_logout": {
+    "translation": "Keluar",
+    "defaultMessage": "Logout",
+    "description": "Button [Logout]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_ok": {
+    "translation": "OK",
+    "defaultMessage": "OK",
+    "description": "Button [OK]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_reset": {
+    "translation": "Atur ulang",
+    "defaultMessage": "Reset",
+    "description": "Button [Reset]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_send_request": {
+    "translation": "Kirim permintaan",
+    "defaultMessage": "Send request",
+    "description": "Button [Send request]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_in": {
+    "translation": "Masuk",
+    "defaultMessage": "Sign in",
+    "description": "Button [Sign In]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_up": {
+    "translation": "Daftar",
+    "defaultMessage": "Sign up",
+    "description": "Create account button [Sign Up]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_subscribe": {
+    "translation": "Ikuti",
+    "defaultMessage": "Subscribe",
+    "description": "Button [Subscribe]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_update": {
+    "translation": "Perbarui",
+    "defaultMessage": "Update",
+    "description": "Button [Update]",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_initiate_file_upload": {
+    "translation": "Tidak dapat memulai pengunggahan file.",
+    "defaultMessage": "Cannot initiate file upload.",
+    "description": "Generic error messagewhen attachment fails",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel": {
+    "translation": "saluran",
+    "defaultMessage": "channel",
+    "description": "Subtitle shown for channels in MessagesView instead of last seen",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel_prompt": {
+    "translation": "Ini adalah saluran",
+    "defaultMessage": "This is a channel",
+    "description": "Checkbox label when creating a channel",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation": {
+    "translation": "Anda diundang untuk memulai chat baru. Apa yang ingin Anda lakukan?",
+    "defaultMessage": "You are invited to start a new chat. What would you like to do?",
+    "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_accept": {
+    "translation": "Terima",
+    "defaultMessage": "Accept",
+    "description": "Action [Accept] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_block": {
+    "translation": "Blokir",
+    "defaultMessage": "Block",
+    "description": "Action [Block] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_ignore": {
+    "translation": "Abaikan",
+    "defaultMessage": "Ignore",
+    "description": "Action [Ignore] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "clear_messages_warning": {
+    "translation": "Anda yakin ingin menghapus semua pesan? Tindakan ini tidak dapat dibatalkan.",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
+    "description": "Alert dialog warning when deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "code_doesnot_match": {
+    "translation": "Kode tidak cocok",
+    "defaultMessage": "Code does not match",
+    "description": "Error message when the credential validation code is incorrect.",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found": {
+    "translation": "Anda belum memiliki chat\n¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats\\n¯∖_(ツ)_/¯",
+    "description": "HTML message shown in ContactList when no contacts are found",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found_short": {
+    "translation": "Tidak ada kontak yang cocok dengan ''{query}''",
+    "defaultMessage": "No contacts match ''{query}''",
+    "description": "Shown in ContactsView when search returned no results",
+    "missing": false,
+    "obsolete": false
+  },
+  "credential_email_prompt": {
+    "translation": "Email pendaftaran Anda",
+    "defaultMessage": "Your registration email",
+    "description": "Placeholder for entering email",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account": {
+    "translation": "Hapus akun",
+    "defaultMessage": "Delete account",
+    "description": "Title for delete account warning",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account_warning": {
+    "translation": "Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan.",
+    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+    "description": "Warning message when deleting an account",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_messages_warning": {
+    "translation": "Anda yakin ingin menghapus semua pesan untuk semua orang? Tindakan ini tidak dapat dibatalkan.",
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+    "description": "Alert dialog warning when hard-deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "download_action": {
+    "translation": "unduh",
+    "defaultMessage": "download",
+    "description": "Call to action [download]",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_attachment": {
+    "translation": "Lampiran",
+    "defaultMessage": "Attachment",
+    "description": "Comment for attachment in Drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_form": {
+    "translation": "Formulir:",
+    "defaultMessage": "Form:",
+    "description": "Comment for form in Drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_image": {
+    "translation": "Gambar",
+    "defaultMessage": "Picture",
+    "description": "Comment for embedded images in Drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_dative": {
+    "translation": "email",
+    "defaultMessage": "email",
+    "description": "Dative case of 'email', i.e. 'email' in 'by email'",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_prompt": {
+    "translation": "Email, mis. jdoe@example.com",
+    "defaultMessage": "Email, e.g. jdoe@example.com",
+    "description": "Input placeholder for email entry",
+    "missing": false,
+    "obsolete": false
+  },
+  "enable_peers_messaging": {
+    "translation": "Aktifkan",
+    "defaultMessage": "Enable",
+    "description": "Call to action to enable peer's messaging",
+    "missing": false,
+    "obsolete": false
+  },
+  "enter_confirmation_code_prompt": {
+    "translation": "Kode konfirmasi",
+    "defaultMessage": "Confirmation code",
+    "description": "Request to enter confirmation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "error_invalid_id": {
+    "translation": "ID tidak valid",
+    "defaultMessage": "Invalid ID",
+    "description": "Error message",
+    "missing": false,
+    "obsolete": false
+  },
+  "file_attachment_too_large": {
+    "translation": "Ukuran file {size} melebihi batas {limit}.",
+    "defaultMessage": "The file size {size} exceeds the {limit} limit.",
+    "description": "Error message when attachment is too large",
+    "missing": false,
+    "obsolete": false
+  },
+  "forgot_password_link": {
+    "translation": "Lupa kata sandi?",
+    "defaultMessage": "Forgot password?",
+    "description": "Link to Reset password form",
+    "missing": false,
+    "obsolete": false
+  },
+  "full_name_prompt": {
+    "translation": "Nama lengkap, mis. John Doe",
+    "defaultMessage": "Full name, e.g. John Doe",
+    "description": "Input placeholder for person's full name",
+    "missing": false,
+    "obsolete": false
+  },
+  "granted_permissions": {
+    "translation": "Diberikan",
+    "defaultMessage": "Granted",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_has_no_members": {
+    "translation": "Belum ada anggota",
+    "defaultMessage": "No members",
+    "description": "Shown in place of group members",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_user_id_prompt": {
+    "translation": "ID grup atau pengguna",
+    "defaultMessage": "Group or User ID",
+    "description": "Prompt for entering user or group ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "image_caption_prompt": {
+    "translation": "Keterangan gambar",
+    "defaultMessage": "Image caption",
+    "description": "Prompt in SendMessage for attached image",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_content": {
+    "translation": "konten tidak valid",
+    "defaultMessage": "invalid content",
+    "description": "Shown when the message is unreadable",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_security_token": {
+    "translation": "Token keamanan tidak valid",
+    "defaultMessage": "Invalid security token",
+    "description": "Error message when resetting password.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_client": {
+    "translation": "Klien:",
+    "defaultMessage": "Client:",
+    "description": "Label for a client version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_content_type": {
+    "translation": "Jenis konten:",
+    "defaultMessage": "Content type:",
+    "description": "Label for file content type (mime)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access_mode": {
+    "translation": "Mode akses default:",
+    "defaultMessage": "Default access mode:",
+    "description": "Label for default access mode",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_file_name": {
+    "translation": "Nama file:",
+    "defaultMessage": "File name:",
+    "description": "Label for a file name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_group_members": {
+    "translation": "Anggota grup:",
+    "defaultMessage": "Group members:",
+    "description": "Section title or label",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_incognito_mode": {
+    "translation": "Mode samaran:",
+    "defaultMessage": "Incognito mode:",
+    "description": "Label for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_message_sound": {
+    "translation": "Suara pesan:",
+    "defaultMessage": "Message sound:",
+    "description": "Label for message sounds toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_muting_topic": {
+    "translation": "Dibisukan:",
+    "defaultMessage": "Muted:",
+    "description": "Label for Muting/unmuting the topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_other_user": {
+    "translation": "Pengguna lain",
+    "defaultMessage": "Other",
+    "description": "Label for the other user when the user is unnamed",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_password": {
+    "translation": "Kata sandi",
+    "defaultMessage": "Password",
+    "description": "Label for password editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_permissions": {
+    "translation": "Izin:",
+    "defaultMessage": "Permissions:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_private": {
+    "translation": "Catatan pribadi",
+    "defaultMessage": "Private comment",
+    "description": "Label for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications": {
+    "translation": "Notifikasi:",
+    "defaultMessage": "Notification alerts:",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications_disabled": {
+    "translation": "Notifikasi (memerlukan HTTPS):",
+    "defaultMessage": "Notification alerts (requires HTTPS):",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reset_password": {
+    "translation": "Kirim email atur ulang kata sandi:",
+    "defaultMessage": "Send a password reset email",
+    "description": "Label for password reset field",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_sdk": {
+    "translation": "SDK:",
+    "defaultMessage": "SDK:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server": {
+    "translation": "Server:",
+    "defaultMessage": "Server:",
+    "description": "Label for a server version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_address": {
+    "translation": "Alamat server:",
+    "defaultMessage": "Server address:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_to_use": {
+    "translation": "Server yang digunakan:",
+    "defaultMessage": "Server to use:",
+    "description": "Label for server selector in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_size": {
+    "translation": "Ukuran:",
+    "defaultMessage": "Size:",
+    "description": "Label for file size",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_topic_name": {
+    "translation": "Nama",
+    "defaultMessage": "Name",
+    "description": "Label for editing topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_contacts": {
+    "translation": "Kontak",
+    "defaultMessage": "Contacts",
+    "description": "Label for user contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_id": {
+    "translation": "ID:",
+    "defaultMessage": "ID:",
+    "description": "Label for user address (ID)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_wire_transport": {
+    "translation": "Transport jaringan:",
+    "defaultMessage": "Wire transport:",
+    "description": "Label for wire transport selection in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_you": {
+    "translation": "Anda:",
+    "defaultMessage": "You:",
+    "description": "Label for the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_name": {
+    "translation": "Nama Anda",
+    "defaultMessage": "Your name",
+    "description": "Label for full name editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_permissions": {
+    "translation": "Izin Anda:",
+    "defaultMessage": "Your permissions:",
+    "description": "Label for current user permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "last_seen_timestamp": {
+    "translation": "Terakhir dilihat",
+    "defaultMessage": "Last seen: {timestamp}",
+    "description": "Label for the timestamp of when the user or topic was last online",
+    "missing": false,
+    "obsolete": false
+  },
+  "leave_chat_warning": {
+    "translation": "Anda yakin ingin keluar dari percakapan ini?",
+    "defaultMessage": "Are you sure you want to leave this conversation?",
+    "description": "Alert dialog warning when unsubscribing from a chat.",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_contact_us": {
+    "translation": "Hubungi kami",
+    "defaultMessage": "Contact Us",
+    "description": "Ancor text for contacting us by email",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_privacy_policy": {
+    "translation": "Kebijakan privasi",
+    "defaultMessage": "Privacy Policy",
+    "description": "Ancor text for privacy policy link",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_terms_of_service": {
+    "translation": "Ketentuan layanan",
+    "defaultMessage": "Terms of Service",
+    "description": "Ancor text for terms of service link",
+    "missing": false,
+    "obsolete": false
+  },
+  "login_prompt": {
+    "translation": "Nama pengguna",
+    "defaultMessage": "Login",
+    "description": "Placeholer for username/login",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_archive_topic": {
+    "translation": "Arsipkan",
+    "defaultMessage": "Archive",
+    "description": "Move topic from the list of active chats to archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_block": {
+    "translation": "Blokir",
+    "defaultMessage": "Block",
+    "description": "Block topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages": {
+    "translation": "Hapus pesan",
+    "defaultMessage": "Clear messages",
+    "description": "Delete all messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages_for_all": {
+    "translation": "Hapus untuk semua",
+    "defaultMessage": "Clear for All",
+    "description": "Delete all message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete": {
+    "translation": "Hapus",
+    "defaultMessage": "Delete",
+    "description": "Delete selected messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_for_all": {
+    "translation": "Hapus untuk semua",
+    "defaultMessage": "Delete for All",
+    "description": "Delete selected message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_topic": {
+    "translation": "Hapus",
+    "defaultMessage": "Delete",
+    "description": "Delete entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit_permissions": {
+    "translation": "Edit izin",
+    "defaultMessage": "Edit permissions",
+    "description": "Menu item [Edit permissions]",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_info": {
+    "translation": "Info",
+    "defaultMessage": "Info",
+    "description": "Show extended topic information",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_member_delete": {
+    "translation": "Keluarkan",
+    "defaultMessage": "Remove",
+    "description": "Remove user from topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_mute": {
+    "translation": "Bisukan notifikasi",
+    "defaultMessage": "Mute",
+    "description": "Turn off notifications",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_reply": {
+    "translation": "Balas",
+    "defaultMessage": "Reply",
+    "description": "Reply to message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_restore_topic": {
+    "translation": "Pulihkan",
+    "defaultMessage": "Restore",
+    "description": "Restore topic from archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_send_retry": {
+    "translation": "Coba lagi",
+    "defaultMessage": "Retry",
+    "description": "Retry sending message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unblock": {
+    "translation": "Buka blokir",
+    "defaultMessage": "Unblock",
+    "description": "Unblock topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unmute": {
+    "translation": "Aktifkan notifikasi",
+    "defaultMessage": "Unmute",
+    "description": "Turn notifications on",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending": {
+    "translation": "mengirim...",
+    "defaultMessage": "sending...",
+    "description": "Message being sent, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending_failed": {
+    "translation": "gagal",
+    "defaultMessage": "failed",
+    "description": "Failed to send message, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "messages_not_readable": {
+    "translation": "tidak dapat mengakses pesan",
+    "defaultMessage": "no access to messages",
+    "description": "Message shown in topic without the read access",
+    "missing": false,
+    "obsolete": false
+  },
+  "messaging_disabled_prompt": {
+    "translation": "Pengiriman pesan dinonaktifkan",
+    "defaultMessage": "Messaging disabled",
+    "description": "Prompt in SendMessage in read-only topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "more_online_members": {
+    "translation": "+{overflow} lainnya",
+    "defaultMessage": "+{overflow} more",
+    "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_message_prompt": {
+    "translation": "Pesan baru",
+    "defaultMessage": "New message",
+    "description": "Prompt in send message field",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_password_placeholder": {
+    "translation": "Masukkan kata sandi baru",
+    "defaultMessage": "Enter new password",
+    "description": "Placeholder for entering new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_connection": {
+    "translation": "Tidak ada koneksi",
+    "defaultMessage": "No connection",
+    "description": "Warning that the user is offline.",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_contacts": {
+    "translation": "Anda belum memiliki kontak :-(",
+    "defaultMessage": "You have no contacts :-(",
+    "description": "Shown in ContactsView when the user has no contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "numeric_confirmation_code_prompt": {
+    "translation": "Hanya angka",
+    "defaultMessage": "Numbers only",
+    "description": "Prompt for numeric conformation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "online_now": {
+    "translation": "sedang online",
+    "defaultMessage": "online now",
+    "description": "Indicator that the user or topic is currently online",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_prompt": {
+    "translation": "Kata sandi",
+    "defaultMessage": "Password",
+    "description": "Placeholder/prompt for entering password",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_unchanged_prompt": {
+    "translation": "Tidak diubah",
+    "defaultMessage": "Unchanged",
+    "description": "Message in editor while password is unchanged",
+    "missing": false,
+    "obsolete": false
+  },
+  "peers_messaging_disabled": {
+    "translation": "Fitur pesan pengguna ini dinonaktifkan.",
+    "defaultMessage": "Peer's messaging is disabled.",
+    "description": "Shown when the p2p peer's messaging is disabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_admin": {
+    "translation": "Setujui ({val})",
+    "defaultMessage": "Approve ({val})",
+    "description": "Name of A permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_delete": {
+    "translation": "Hapus ({val})",
+    "defaultMessage": "Delete ({val})",
+    "description": "Name of D permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_join": {
+    "translation": "Bergabung ({val})",
+    "defaultMessage": "Join ({val})",
+    "description": "Name of J permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_owner": {
+    "translation": "Pemilik ({val})",
+    "defaultMessage": "Owner ({val})",
+    "description": "Name of O permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_pres": {
+    "translation": "Terima notifikasi ({val})",
+    "defaultMessage": "Get notified ({val})",
+    "description": "Name of P permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_read": {
+    "translation": "Baca ({val})",
+    "defaultMessage": "Read ({val})",
+    "description": "Name of R permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_share": {
+    "translation": "Bagikan ({val})",
+    "defaultMessage": "Share ({val})",
+    "description": "Name of S permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_write": {
+    "translation": "Tulis ({val})",
+    "defaultMessage": "Write ({val})",
+    "description": "Name of W permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "phone_dative": {
+    "translation": "telepon",
+    "defaultMessage": "phone",
+    "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'",
+    "missing": false,
+    "obsolete": false
+  },
+  "private_editing_placeholder": {
+    "translation": "Hanya dapat dilihat oleh Anda",
+    "defaultMessage": "Visible to you only",
+    "description": "Placeholder for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "push_init_failed": {
+    "translation": "Gagal mengaktifkan notifikasi push",
+    "defaultMessage": "Failed to initialize push notifications",
+    "description": "Error message when push notifications have failed to initialize.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_countdown": {
+    "translation": "Koneksi terputus. Menghubungkan kembali dalam {seconds}…",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_now": {
+    "translation": "Coba sekarang",
+    "defaultMessage": "Try now",
+    "description": "Prompt for reconnecting now",
+    "missing": false,
+    "obsolete": false
+  },
+  "reload_update": {
+    "translation": "Muat ulang",
+    "defaultMessage": "Reload",
+    "description": "Call to action to reload application when update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "report_chat_warning": {
+    "translation": "Anda yakin ingin memblokir dan melaporkan percakapan ini?",
+    "defaultMessage": "Are you sure you want to block and report this conversation?",
+    "description": "Alert dialog warning when reporting a conversation for abuse",
+    "missing": false,
+    "obsolete": false
+  },
+  "requested_permissions": {
+    "translation": "Diminta",
+    "defaultMessage": "Requested",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_attachment": {
+    "translation": "simpan",
+    "defaultMessage": "save",
+    "description": "Call to save an attachment",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_for_contacts": {
+    "translation": "Gunakan pencarian untuk menemukan kontak",
+    "defaultMessage": "Use search to find contacts",
+    "description": "Text shown in contacts view when user entered no search query.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_no_results": {
+    "translation": "Tidak ada hasil pencarian",
+    "defaultMessage": "Search returned no results",
+    "description": "Text shown in contacts view when query returned no results.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_placeholder": {
+    "translation": "Contoh: email:alice@example.com, tel:17025550003...",
+    "defaultMessage": "List like alice@example.com, +17025550003...",
+    "description": "Placeholder in contacts search field",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_notifications": {
+    "translation": "Notifikasi",
+    "defaultMessage": "Notifications",
+    "description": "Sidepanel title for AccNotificationsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_support": {
+    "translation": "Dukungan",
+    "defaultMessage": "Support",
+    "description": "Sidepanel title for AccSupportView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_account_settings": {
+    "translation": "Pengaturan akun",
+    "defaultMessage": "Account Settings",
+    "description": "Sidepanel title for AccountSettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_archive": {
+    "translation": "Chat yang diarsipkan",
+    "defaultMessage": "Archived Chats",
+    "description": "Sidepanel title for ContactsView-Archive.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_blocked": {
+    "translation": "Chat yang diblokir",
+    "defaultMessage": "Blocked Chats",
+    "description": "Sidepanel title for ContactsView-Blocked.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_cred": {
+    "translation": "Konfirmasi Kredensial",
+    "defaultMessage": "Confirm Credentials",
+    "description": "Sidepanel title for ValidationView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_login": {
+    "translation": "Masuk",
+    "defaultMessage": "Sign In",
+    "description": "Sidepanel title for LoginView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_newtpk": {
+    "translation": "Mulai chat baru",
+    "defaultMessage": "Start New Chat",
+    "description": "Sidepanel title for NewTopicView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_register": {
+    "translation": "Buat akun",
+    "defaultMessage": "Create Account",
+    "description": "Sidepanel title for CreateAccountView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_reset": {
+    "translation": "Atur ulang kata sandi",
+    "defaultMessage": "Reset Password",
+    "description": "Sidepanel title for PasswordResetView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_settings": {
+    "translation": "Pengaturan",
+    "defaultMessage": "Settings",
+    "description": "Sidepanel title for SettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "stay_logged_in": {
+    "translation": "Tetap masuk",
+    "defaultMessage": "Stay logged in",
+    "description": "Label for a checkbox",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_find_user": {
+    "translation": "cari",
+    "defaultMessage": "find",
+    "description": "Tab title Find",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_group_by_id": {
+    "translation": "berdasarkan ID",
+    "defaultMessage": "by id",
+    "description": "Tab title Find topic by ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_new_group": {
+    "translation": "grup baru",
+    "defaultMessage": "new group",
+    "description": "Tab title New Group",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_editor_no_tags": {
+    "translation": "Tambahkan beberapa tag",
+    "defaultMessage": "Add some tags",
+    "description": "Tag editor prompt when no tags are found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_not_found": {
+    "translation": "Belum ada tag. Tambahkan beberapa.",
+    "defaultMessage": "No tags defined. Add some.",
+    "description": "",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_all_contacts": {
+    "translation": "Semua kontak",
+    "defaultMessage": "All Contacts",
+    "description": "Section title [All Contacts]",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_group_members": {
+    "translation": "Anggota grup",
+    "defaultMessage": "Group Members",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_manage_tags": {
+    "translation": "Kelola",
+    "defaultMessage": "Manage",
+    "description": "Section title for the list of tags",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_not_found": {
+    "translation": "Tidak ditemukan",
+    "defaultMessage": "Not found",
+    "description": "Title shown when topic is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_permissions": {
+    "translation": "Izin",
+    "defaultMessage": "Permissions",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_tag_manager": {
+    "translation": "Tag (pencarian & penemuan)",
+    "defaultMessage": "Tags (search & discovery)",
+    "description": "Section title for TagManager",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_block_warning": {
+    "translation": "Anda yakin ingin memblokir percakapan ini?",
+    "defaultMessage": "Are you sure you want to block this conversation?",
+    "description": "Alert warning when blocking a topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete_warning": {
+    "translation": "Anda yakin ingin menghapus percakapan ini?",
+    "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
+    "description": "Alert warning when deleting entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_name_editing_placeholder": {
+    "translation": "Nama grup",
+    "defaultMessage": "Freeform name of the group",
+    "description": "Prompt for entering topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "unnamed_topic": {
+    "translation": "Tanpa nama",
+    "defaultMessage": "Unnamed",
+    "description": "Title shown when the topic has no name",
+    "missing": false,
+    "obsolete": false
+  },
+  "update_available": {
+    "translation": "Pembaruan tersedia.",
+    "defaultMessage": "Update available.",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "upload_finishing": {
+    "translation": "sedang menyelesaikan...",
+    "defaultMessage": "finishing...",
+    "description": "Notification that upload is finishing",
+    "missing": false,
+    "obsolete": false
+  },
+  "user_not_found": {
+    "translation": "Tidak ditemukan",
+    "defaultMessage": "Not found",
+    "description": "In place of a user's full name when the user is not found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "description_editing_placeholder": {
+    "translation": "Deskripsi (opsional)",
+    "defaultMessage": "Description (optional)",
+    "description": "Placeholder for editing topic description",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_description": {
+    "translation": "Deskripsi",
+    "defaultMessage": "Description",
+    "description": "Label for description of user or topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_security": {
+    "translation": "Keamanan",
+    "defaultMessage": "Security",
+    "description": "Navigaton button for security panel.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_crop": {
+    "translation": "Seret untuk menyesuaikan",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Title for AvatarCropView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_general": {
+    "translation": "Umum",
+    "defaultMessage": "General",
+    "description": "Title for TopicCommon.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_members": {
+    "translation": "Anggota",
+    "defaultMessage": "Members",
+    "description": "Title for managing group members view.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_security": {
+    "translation": "Keamanan",
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirity and AccSecurity.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_info": {
+    "translation": "Info",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_anonymous": {
+    "translation": "Anonim",
+    "defaultMessage": "Anonymous",
+    "description": "Title for editing default anonymous permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_authenticated": {
+    "translation": "Terautentikasi",
+    "defaultMessage": "Authenticated",
+    "description": "Title for editing default authenticated permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete": {
+    "translation": "Hapus percakapan",
+    "defaultMessage": "Delete Conversation",
+    "description": "Alert title when deleting the topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_user": {
+    "translation": "Izin pengguna",
+    "defaultMessage": "User's Permissions",
+    "description": "Title for editing user's permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_email_sent": {
+    "translation": "Email berisi kode keamanan telah dikirim.",
+    "defaultMessage": "An email with security code has been sent.",
+    "description": "Notification that the email with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_unarchive_topic": {
+    "translation": "Diarsipkan:",
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_forward": {
+    "translation": "Teruskan",
+    "defaultMessage": "Forward",
+    "description": "Forward message",
+    "missing": false,
+    "obsolete": false
+  },
+  "forward_to": {
+    "translation": "Teruskan ke",
+    "defaultMessage": "Forward to",
+    "missing": false,
+    "obsolete": false
+  },
+  "forward_to_search_placeholder": {
+    "translation": "Cari kontak",
+    "defaultMessage": "Search contacts",
+    "description": "Contact search prompt when forwarding a message.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_new_password": {
+    "translation": "Kata sandi baru",
+    "defaultMessage": "New password",
+    "description": "Label for entering a new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_unknown": {
+    "translation": "Tidak didukung",
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "calls_incoming": {
+    "translation": "Panggilan masuk",
+    "defaultMessage": "Incoming call",
+    "description": "Incoming call label",
+    "missing": false,
+    "obsolete": false
+  },
+  "calls_outgoing": {
+    "translation": "Panggilan keluar",
+    "defaultMessage": "Outgoing call",
+    "description": "Outgoing call label",
+    "missing": false,
+    "obsolete": false
+  },
+  "calls_you_label": {
+    "translation": "Anda",
+    "defaultMessage": "You",
+    "description": "Shown over the local video screen",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_video_call": {
+    "translation": "Panggilan video",
+    "defaultMessage": "Video call",
+    "description": "Start video call",
+    "missing": false,
+    "obsolete": false
+  },
+  "already_in_call": {
+    "translation": "Anda sudah berada dalam panggilan!",
+    "defaultMessage": "You already in an ongoing call!",
+    "description": "Error message when the user tried to accept a new call without finishing pervious one",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_cancelled": {
+    "translation": "dibatalkan",
+    "defaultMessage": "cancelled",
+    "description": "Label for cancelled outgoing call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_missed": {
+    "translation": "tidak terjawab",
+    "defaultMessage": "missed",
+    "description": "Label for missed incoming call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_declined": {
+    "translation": "ditolak",
+    "defaultMessage": "declined",
+    "description": "Label for declined call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_disconnected": {
+    "translation": "terputus",
+    "defaultMessage": "disconnected",
+    "description": "Label for disconnected call",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_use_secure_connection": {
+    "translation": "Gunakan koneksi aman",
+    "defaultMessage": "Use secure connection",
+    "description": "Label for WS/WSS connection type in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "cred_confirmed_successfully": {
+    "translation": "Kredensial berhasil dikonfirmasi",
+    "defaultMessage": "Confirmed successfully",
+    "description": "Notification message that the credential was successfully validated.",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit": {
+    "translation": "Edit",
+    "defaultMessage": "Edit",
+    "description": "Edit message",
+    "missing": false,
+    "obsolete": false
+  },
+  "editing_message": {
+    "translation": "Sedang mengedit",
+    "defaultMessage": "Editing",
+    "description": "Title over message editing preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_edited_marker": {
+    "translation": ", diedit",
+    "defaultMessage": ", edited",
+    "description": "Marker indicating that the message was edited",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_add_image": {
+    "translation": "Tambahkan gambar",
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_attach_file": {
+    "translation": "Lampirkan file",
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_delete": {
+    "translation": "Hapus rekaman",
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_pause": {
+    "translation": "Jeda pemutaran",
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_play": {
+    "translation": "Putar rekaman",
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_record_voice": {
+    "translation": "Rekam pesan suara",
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_resume": {
+    "translation": "Lanjutkan pemutaran",
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_send": {
+    "translation": "Kirim pesan",
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message",
+    "missing": false,
+    "obsolete": false
+  },
+  "drag_file": {
+    "translation": "Seret file ke sini",
+    "defaultMessage": "Drag file here",
+    "description": "Prompt on the file drag-n-drop overlay banner",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_video": {
+    "translation": "Rekaman video",
+    "defaultMessage": "Video recording",
+    "description": "Comment for videos embedded in Drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_in_progress": {
+    "translation": "sedang berlangsung",
+    "defaultMessage": "in progress",
+    "description": "Label for call in progress",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_audio_call": {
+    "translation": "Panggilan suara",
+    "defaultMessage": "Call",
+    "description": "Start audio call",
+    "missing": false,
+    "obsolete": false
+  },
+  "unrecognized_video_format": {
+    "translation": "Format video ini tidak dikenali",
+    "defaultMessage": "Format of this video is not recognized",
+    "description": "Error message when uploaded video is invalid",
+    "missing": false,
+    "obsolete": false
+  },
+  "loading_note": {
+    "translation": "Memuat...",
+    "defaultMessage": "Loading...",
+    "description": "Message shown when component is loading",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_i_have_code": {
+    "translation": "Saya punya kode",
+    "defaultMessage": "I have code",
+    "description": "Call to open field to enter password reset code",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reset_password_tel": {
+    "translation": "Kirim SMS atur ulang kata sandi:",
+    "defaultMessage": "Send SMS to reset password",
+    "description": "Label for password reset field by phone",
+    "missing": false,
+    "obsolete": false
+  },
+  "mobile_phone_number": {
+    "translation": "Nomor ponsel",
+    "defaultMessage": "Mobile phone number",
+    "description": "Prompt for entering a mobile phone number",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_sms_sent": {
+    "translation": "SMS berisi kode keamanan telah dikirim.",
+    "defaultMessage": "A text message with security code has been sent.",
+    "description": "Notification that the SMS with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
+  },
+  "mobile_number_required": {
+    "translation": "Nomor ponsel wajib diisi",
+    "defaultMessage": "Mobile phone number required",
+    "description": "Error message",
+    "missing": false,
+    "obsolete": false
+  },
+  "current_email": {
+    "translation": "Email saat ini",
+    "defaultMessage": "Current email",
+    "description": "Label for old email",
+    "missing": false,
+    "obsolete": false
+  },
+  "current_phone": {
+    "translation": "Nomor telepon saat ini",
+    "defaultMessage": "Current phone number",
+    "description": "Label for old phone",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_email": {
+    "translation": "Email baru",
+    "defaultMessage": "New email",
+    "description": "Prompt for entering a new email",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_phone_number": {
+    "translation": "Nomor telepon baru",
+    "defaultMessage": "New phone number",
+    "description": "Prompt for entering a new telephone number",
+    "missing": false,
+    "obsolete": false
+  },
+  "change_email": {
+    "translation": "Ubah email",
+    "defaultMessage": "Change email",
+    "description": "Prompt to change current email",
+    "missing": false,
+    "obsolete": false
+  },
+  "change_phone": {
+    "translation": "Ubah nomor telepon",
+    "defaultMessage": "Change phone number",
+    "description": "Prompt to change current phone number",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_busy": {
+    "translation": "sibuk",
+    "defaultMessage": "busy",
+    "description": "Label for busy call line",
+    "missing": false,
+    "obsolete": false
+  },
+  "failed_to_init_audio": {
+    "translation": "Gagal memulai perekaman audio",
+    "defaultMessage": "Failed to initialize audio recording",
+    "description": "Error message when audio is not available",
+    "missing": false,
+    "obsolete": false
+  },
+  "pin_message": {
+    "translation": "Sematkan",
+    "defaultMessage": "Pin",
+    "description": "Menu item [Pin] for pinning message to the top.",
+    "missing": false,
+    "obsolete": false
+  },
+  "unpin_message": {
+    "translation": "Lepas sematan",
+    "defaultMessage": "Unpin",
+    "description": "Menu item [Unpin] for un-pinning the message.",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_success": {
+    "translation": "Kata sandi berhasil diatur ulang",
+    "defaultMessage": "Password reset successfully",
+    "description": "Notification message that the password was successfully reset.",
+    "missing": false,
+    "obsolete": false
+  },
+  "scan_qr_code": {
+    "translation": "Pindai kode QR",
+    "defaultMessage": "Scan QR Code",
+    "description": "Title for scanning QR code",
+    "missing": false,
+    "obsolete": false
+  },
+  "self_topic_comment": {
+    "translation": "Catatan, pesan, tautan, dan file yang disimpan untuk nanti",
+    "defaultMessage": "Notes, messages, links, files saved for posterity",
+    "description": "Comment for self topic for UI",
+    "missing": false,
+    "obsolete": false
+  },
+  "self_topic_name": {
+    "translation": "Pesan tersimpan",
+    "defaultMessage": "Saved messages",
+    "description": "Name of self topic for UI",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_not_found": {
+    "translation": "pesan tidak ditemukan",
+    "defaultMessage": "message not found",
+    "description": "Pinned message is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_deleted": {
+    "translation": "pesan dihapus",
+    "defaultMessage": "message deleted",
+    "description": "Pinned message is deleted",
+    "missing": false,
+    "obsolete": false
+  },
+  "alias_editing_placeholder": {
+    "translation": "Alias (opsional)",
+    "defaultMessage": "Alias (optional)",
+    "description": "Placeholder for editing user or topic alias",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_alias": {
+    "translation": "Alias:",
+    "defaultMessage": "Alias:",
+    "description": "Label for user or topic alias",
+    "missing": false,
+    "obsolete": false
+  },
+  "alias_already_taken": {
+    "translation": "(sudah digunakan)",
+    "defaultMessage": "(already taken)",
+    "description": "Error message for alias already taken",
+    "missing": false,
+    "obsolete": false
+  },
+  "alias_invalid": {
+    "translation": "(tidak valid)",
+    "defaultMessage": "(invalid)",
+    "description": "Error message for invalid alias",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_alias_edit": {
+    "translation": "Alias",
+    "defaultMessage": "Alias",
+    "description": "Label for editing user or topic alias",
+    "missing": false,
+    "obsolete": false
+  },
+  "select_country": {
+    "translation": "Pilih negara",
+    "defaultMessage": "Select country",
+    "description": "Placeholder for the country selector",
+    "missing": false,
+    "obsolete": false
+  },
+  "text_copied": {
+    "translation": "Disalin ke papan klip",
+    "defaultMessage": "Copied to clipboard",
+    "description": "Notification that text has been copied to clipboard",
+    "missing": false,
+    "obsolete": false
+  },
+  "color_schema_dark": {
+    "translation": "Gelap",
+    "defaultMessage": "Dark",
+    "description": "Name of the color schema",
+    "missing": false,
+    "obsolete": false
+  },
+  "color_schema_light": {
+    "translation": "Terang",
+    "defaultMessage": "Light",
+    "description": "Name of the color schema",
+    "missing": false,
+    "obsolete": false
+  },
+  "color_schema_system": {
+    "translation": "Bawaan sistem",
+    "defaultMessage": "System default",
+    "description": "Name of the color schema",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_color_schema": {
+    "translation": "Tema:",
+    "defaultMessage": "Theme:",
+    "description": "Label for selecting color scheme (dark, light) in Settings",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_text_size": {
+    "translation": "Ukuran teks:",
+    "defaultMessage": "Text size:",
+    "description": "Label adjusting text size",
+    "missing": false,
+    "obsolete": false
+  },
+  "incognito_mode_description": {
+    "translation": "Sembunyikan status online dan indikator saat Anda mengetik.",
+    "defaultMessage": "Hide your online status and typing indicators.",
+    "description": "Description for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command": {
+    "translation": "Kirim dengan {key}",
+    "defaultMessage": "Send on {key}",
+    "description": "Config option to send message on hitting CTRL(or Cmd)-Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_command_explained": {
+    "translation": "Tekan Enter untuk membuat baris baru",
+    "defaultMessage": "Press Enter for new line",
+    "description": "Explanation how to enter newline when [Send on CTRL-Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain": {
+    "translation": "Kirim dengan Enter",
+    "defaultMessage": "Send on Enter",
+    "description": "Config option to send message on hitting Enter",
+    "missing": false,
+    "obsolete": false
+  },
+  "send_plain_explained": {
+    "translation": "Tekan Shift + Enter untuk membuat baris baru",
+    "defaultMessage": "Press Shift + Enter for new line",
+    "description": "Explanation how to enter newline when [Send on Enter] is enabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "Umum",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for AccGeneralView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_keyboard": {
+    "translation": "Keyboard:",
+    "defaultMessage": "Keyboard:",
+    "description": "Label for send on enter settings",
+    "missing": false,
+    "obsolete": false
+  },
+  "pin_chat": {
+    "translation": "Sematkan",
+    "defaultMessage": "Pin",
+    "description": "Menu item [Pin] for pinning chat to the top.",
+    "missing": false,
+    "obsolete": false
+  },
+  "unpin_chat": {
+    "translation": "Lepas sematan",
+    "defaultMessage": "Unpin",
+    "description": "Menu item [Unpin] for un-pinning the chat.",
+    "missing": false,
+    "obsolete": false
+  },
+  "subscriber_count": {
+    "translation": "{count, plural, other {{count, number} pengikut}}",
+    "defaultMessage": "{count, plural, one {{count, number} subscriber} two {{count, number} subscribers} three {{count, number} subscribers} few {{count, number} subscribers} many {{count, number} subscribers} other {{count, number} subscribers}}",
+    "description": "Count of channel subscribers",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_member_count": {
+    "translation": "Anggota:",
+    "defaultMessage": "Members:",
+    "description": "Label for the count of group topic members",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_subscriber_count": {
+    "translation": "Pengikut:",
+    "defaultMessage": "Subscribers:",
+    "description": "Label for the count of channel subscribers",
+    "missing": false,
+    "obsolete": false
+  },
+  "member_count": {
+    "translation": "{count, plural, other {{count, number} anggota}}",
+    "defaultMessage": "{count, plural, one {{count, number} member} two {{count, number} members} three {{count, number} members} few {{count, number} members} many {{count, number} members} other {{count, number} members}}",
+    "description": "Count of group topic members",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_image": {
+    "translation": "gambar",
+    "defaultMessage": "image",
+    "description": "Tab title Image",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_pattern": {
+    "translation": "pola",
+    "defaultMessage": "pattern",
+    "description": "Tab title Pattern",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_restore": {
+    "translation": "Pulihkan default",
+    "defaultMessage": "Restore default",
+    "description": "Reset setting to default",
+    "missing": false,
+    "obsolete": false
+  },
+  "wallpapers": {
+    "translation": "Wallpaper",
+    "defaultMessage": "Wallpapers",
+    "description": "Link or title for working with wallpapers.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_blur_wallpaper": {
+    "translation": "Keburaman:",
+    "defaultMessage": "Blur:",
+    "description": "Label adjusting blur amount",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_scan_id": {
+    "translation": "Pindai ID saya:",
+    "defaultMessage": "Scan my ID:",
+    "description": "Label [Scan my ID:]",
+    "missing": false,
+    "obsolete": false
+  },
+  "unknown_name": {
+    "translation": "Tidak diketahui",
+    "defaultMessage": "Unknown",
+    "description": "Name to show when the name is missing",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_action": {
+    "translation": "Simpan",
+    "defaultMessage": "Save",
+    "description": "Label for Save button",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_parse_vcard": {
+    "translation": "Tidak dapat memproses file vCard.",
+    "defaultMessage": "Cannot parse vCard file.",
+    "description": "Error message when vCard file cannot be parsed",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_now": {
+    "translation": "Chat",
+    "defaultMessage": "Chat",
+    "description": "Label for message button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "find_user": {
+    "translation": "Cari",
+    "defaultMessage": "Find",
+    "description": "Label for search button in contact card",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contact_card": {
+    "translation": "Kartu kontak",
+    "defaultMessage": "Contact Card",
+    "description": "Label for contact card preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_contacts": {
+    "translation": "Kontak",
+    "defaultMessage": "Contacts",
+    "description": "Label for contact information",
+    "missing": false,
+    "obsolete": false
+  },
+  "add_members_prompt": {
+    "translation": "tambahkan anggota",
+    "defaultMessage": "add members",
+    "description": "Placeholder in group members input field",
+    "missing": false,
+    "obsolete": false
+  }
+}
