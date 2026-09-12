@@ -1,18 +1,17 @@
-"use strict";
-(self["webpackChunktinode_webapp"] = self["webpackChunktinode_webapp"] || []).push([["src_views_account-settings-view_jsx"],{
+export const __webpack_esm_ids__ = ["src_views_account-settings-view_jsx"];
+export const __webpack_esm_modules__ = {
 
-/***/ "./src/views/account-settings-view.jsx":
+/***/ "./src/views/account-settings-view.jsx"
 /*!*********************************************!*\
   !*** ./src/views/account-settings-view.jsx ***!
   \*********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ AccountSettingsView; }
+/* harmony export */   "default": () => (/* binding */ AccountSettingsView)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/parsePhoneNumberWithError.js");
 /* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
@@ -35,7 +34,7 @@ __webpack_require__.r(__webpack_exports__);
 function _clip(str, length) {
   return (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_7__.truncateString)(str, length);
 }
-class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class AccountSettingsView extends react__WEBPACK_IMPORTED_MODULE_0__["default"].Component {
   constructor(props) {
     super(props);
     const me = this.props.tinode.getMeTopic();
@@ -290,17 +289,19 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
 }
 ;
 
-/***/ }),
+/***/ },
 
-/***/ "./src/widgets/credential-edit.jsx":
+/***/ "./src/widgets/credential-edit.jsx"
 /*!*****************************************!*\
   !*** ./src/widgets/credential-edit.jsx ***!
   \*****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _phone_edit_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./phone-edit.jsx */ "./src/widgets/phone-edit.jsx");
 /* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/parsePhoneNumberWithError.js");
@@ -322,7 +323,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     description: 'Notification that the SMS with password reset instructions has been sent'
   }
 });
-class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class CredentialEdit extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -533,9 +534,10 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, void 0, true);
   }
 }
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CredentialEdit));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CredentialEdit));
 
-/***/ })
+/***/ }
 
-}]);
+};
+
 //# sourceMappingURL=src_views_account-settings-view_jsx.dev.js.map

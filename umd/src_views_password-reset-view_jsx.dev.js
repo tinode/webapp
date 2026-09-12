@@ -1,15 +1,17 @@
-"use strict";
-(self["webpackChunktinode_webapp"] = self["webpackChunktinode_webapp"] || []).push([["src_views_password-reset-view_jsx"],{
+export const __webpack_esm_ids__ = ["src_views_password-reset-view_jsx"];
+export const __webpack_esm_modules__ = {
 
-/***/ "./src/views/password-reset-view.jsx":
+/***/ "./src/views/password-reset-view.jsx"
 /*!*******************************************!*\
   !*** ./src/views/password-reset-view.jsx ***!
   \*******************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _widgets_phone_edit_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx");
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
@@ -33,7 +35,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     description: 'Notification that the SMS with password reset instructions has been sent'
   }
 });
-class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class PasswordResetView extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -267,9 +269,10 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     }, void 0, true);
   }
 }
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PasswordResetView));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PasswordResetView));
 
-/***/ })
+/***/ }
 
-}]);
+};
+
 //# sourceMappingURL=src_views_password-reset-view_jsx.dev.js.map

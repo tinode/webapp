@@ -31,6 +31,15 @@
     <link rel="stylesheet" href="css/base.css" />
     <!-- Polyfill Intl.Segmenter for Firefox 124 and earlier. This can be safely removed in the end of 2024. -->
     <script crossorigin="anonymous" src="https://polyfill-fastly.io/v3/polyfill.min.js?features=Intl.Segmenter"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.3.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.3.0/client?external=react",
+        "react-intl-original": "https://esm.sh/react-intl@10.2.2?external=react"
+      }
+    }
+    </script>
     <!-- Displaying QR code with ID of the topic -->
     <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.js"></script>
   </head>
@@ -45,7 +54,7 @@
     <div id="mountPoint"></div>
     <script src="firebase-init.js"></script>
     <script src="umd/tinode.dev.js"></script>
-    <script src="umd/runtime.dev.js"></script>
-    <script src="umd/index.dev.js"></script>
+    <script type="module" src="umd/runtime.dev.js"></script>
+    <script type="module" src="umd/index.dev.js"></script>
   </body>
 </html>

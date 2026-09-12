@@ -1,18 +1,17 @@
-"use strict";
-(self["webpackChunktinode_webapp"] = self["webpackChunktinode_webapp"] || []).push([["src_views_wallpapers_jsx"],{
+export const __webpack_esm_ids__ = ["src_views_wallpapers_jsx"];
+export const __webpack_esm_modules__ = {
 
-/***/ "./src/views/wallpapers.jsx":
+/***/ "./src/views/wallpapers.jsx"
 /*!**********************************!*\
   !*** ./src/views/wallpapers.jsx ***!
   \**********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ WallpapersView; }
+/* harmony export */   "default": () => (/* binding */ WallpapersView)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
@@ -26,7 +25,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class WallpapersView extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
   constructor(props) {
     super(props);
     const type = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.wallpaperTypeFromUrl)(this.props.wallpaper);
@@ -206,7 +205,8 @@ class WallpapersView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
 }
 
-/***/ })
+/***/ }
 
-}]);
+};
+
 //# sourceMappingURL=src_views_wallpapers_jsx.dev.js.map

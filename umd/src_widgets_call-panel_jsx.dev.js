@@ -1,15 +1,17 @@
-"use strict";
-(self["webpackChunktinode_webapp"] = self["webpackChunktinode_webapp"] || []).push([["src_widgets_call-panel_jsx"],{
+export const __webpack_esm_ids__ = ["src_widgets_call-panel_jsx"];
+export const __webpack_esm_modules__ = {
 
-/***/ "./src/widgets/call-panel.jsx":
+/***/ "./src/widgets/call-panel.jsx"
 /*!************************************!*\
   !*** ./src/widgets/call-panel.jsx ***!
   \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
@@ -37,7 +39,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     description: 'Error message when the user tried to accept a new call without finishing pervious one'
   }
 });
-class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class CallPanel extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,9 +59,9 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       video: !props.callAudioOnly
     };
     this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED;
-    this.containerRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.containerRef = react__WEBPACK_IMPORTED_MODULE_0__["default"].createRef();
+    this.localRef = react__WEBPACK_IMPORTED_MODULE_0__["default"].createRef();
+    this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0__["default"].createRef();
     this.remoteIceCandidatesCache = [];
     this.onInfo = this.onInfo.bind(this);
     this.start = this.start.bind(this);
@@ -674,9 +676,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 }
 ;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CallPanel));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CallPanel));
 
-/***/ })
+/***/ }
 
-}]);
+};
+
 //# sourceMappingURL=src_widgets_call-panel_jsx.dev.js.map

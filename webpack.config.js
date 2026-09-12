@@ -5,6 +5,7 @@ module.exports = (env, argv) => {
   const mode = argv.mode === 'production' ? 'prod' : 'dev';
   const maxAssetSize = mode === 'prod' ? 360000 : 1512000;
   return {
+    target: ['web', 'es2020'],
     entry: {
       index: path.resolve(__dirname, 'src/index.js'),
     },
@@ -34,7 +35,11 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, 'umd'),
       filename: `[name].${mode}.js`,
-      publicPath: '/umd/'
+      publicPath: '/umd/',
+      module: true
+    },
+    experiments: {
+      outputModule: true,
     },
     optimization: {
       runtimeChunk: 'single',
@@ -60,10 +65,14 @@ module.exports = (env, argv) => {
         ],
       }),
     ],
+    externalsType: 'module',
     externals: {
-      'livekit-client': 'LivekitClient',
-      'qrcodejs': 'QRCode',
-      'tinode-sdk': 'tinode',
+      'livekit-client': 'var LivekitClient',
+      'qrcodejs': 'var QRCode',
+      'react': 'react',
+      'react-dom/client': 'react-dom/client',
+      'react-intl-original': 'react-intl-original',
+      'tinode-sdk': 'var tinode',
     },
   };
 }

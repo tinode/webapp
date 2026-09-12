@@ -1,15 +1,17 @@
-"use strict";
-(self["webpackChunktinode_webapp"] = self["webpackChunktinode_webapp"] || []).push([["src_widgets_audio-recorder_jsx"],{
+export const __webpack_esm_ids__ = ["src_widgets_audio-recorder_jsx"];
+export const __webpack_esm_modules__ = {
 
-/***/ "./src/widgets/audio-recorder.jsx":
+/***/ "./src/widgets/audio-recorder.jsx"
 /*!****************************************!*\
   !*** ./src/widgets/audio-recorder.jsx ***!
   \****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _audio_player_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./audio-player.jsx */ "./src/widgets/audio-player.jsx");
 /* harmony import */ var webm_duration_fix__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! webm-duration-fix */ "./node_modules/webm-duration-fix/lib/index.js");
@@ -65,7 +67,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     description: 'Error message when audio is not available'
   }
 });
-class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+class AudioRecorder extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,7 +91,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.durationMillis = 0;
     this.startedOn = null;
     this.viewBuffer = [];
-    this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0__["default"].createRef();
     this.recordingTimestamp = 0;
   }
   componentDidMount() {
@@ -383,9 +385,10 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }, void 0, true);
   }
 }
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AudioRecorder));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AudioRecorder));
 
-/***/ })
+/***/ }
 
-}]);
+};
+
 //# sourceMappingURL=src_widgets_audio-recorder_jsx.dev.js.map
