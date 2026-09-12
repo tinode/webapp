@@ -195,18 +195,14 @@ self.addEventListener('fetch', event => {
 
     if (event.request.mode == 'navigate') {
       // Network-First Strategy
-      event.respondWith(
-        fetchAndCache(event.request, cache, reqUrl)
-          .catch(() => getFromCache(event.request, cache, reqUrl))
-          .catch(() => new Response('Offline text fallback', { status: 503 }))
-      );
+      return fetchAndCache(event.request, cache, reqUrl)
+        .catch(() => getFromCache(event.request, cache, reqUrl))
+        .catch(() => new Response('Offline text fallback', { status: 503 }));
     } else {
       // Cache-First Strategy
-      event.respondWith(
-        getFromCache(event.request, cache, reqUrl)
-          .catch(() => fetchAndCache(event.request, cache, reqUrl))
-          .catch(() => new Response('', { status: 404 }))
-      );
+      return getFromCache(event.request, cache, reqUrl)
+        .catch(() => fetchAndCache(event.request, cache, reqUrl))
+        .catch(() => new Response('', { status: 404 }));
     }
   })());
 });
