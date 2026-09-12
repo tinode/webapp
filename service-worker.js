@@ -229,7 +229,7 @@ async function fetchAndCache(request, cache, reqUrl) {
   }
 
   if (reqUrl && (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:')) {
-    cache.put(request, response.clone());
+    await cache.put(request, response.clone());
   }
   return response;
 }
