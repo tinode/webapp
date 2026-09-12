@@ -26,6 +26,10 @@ const i18n = {
     'new_message': "Nouveau message",
     'new_chat': "Nouvelle conversation",
   },
+  'id': {
+    'new_message': "Pesan baru",
+    'new_chat': "Chat baru",
+  },
   'es': {
     'new_message': "Nuevo mensaje",
     'new_chat': "Nueva conversación",

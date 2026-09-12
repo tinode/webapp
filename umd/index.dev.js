@@ -14027,7 +14027,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$q = "@firebase/app";
-const version$1 = "0.16.1";
+const version$1 = "0.16.2";
 
 /**
  * @license
@@ -14098,7 +14098,7 @@ const name$2 = "@firebase/ai";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "12.18.0";
+const version = "12.19.0";
 
 /**
  * @license
@@ -17541,7 +17541,7 @@ function getKey({ appConfig }) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.13.2";
+const version = "0.13.3";
 
 /**
  * @license
@@ -19172,7 +19172,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "12.18.0";
+var version = "12.19.0";
 
 /**
  * @license
@@ -19857,6 +19857,7 @@ const messageLoader = {
   'en': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_en_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19)),
   'es': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_es_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/es.json */ "./src/i18n.min/es.json", 19)),
   'fr': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_fr_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/fr.json */ "./src/i18n.min/fr.json", 19)),
+  'id': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_id_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/id.json */ "./src/i18n.min/id.json", 19)),
   'it': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_it_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/it.json */ "./src/i18n.min/it.json", 19)),
   'ko': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ko_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19)),
   'pt': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_pt_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/pt.json */ "./src/i18n.min/pt.json", 19)),
