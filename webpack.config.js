@@ -8,6 +8,12 @@ module.exports = (env, argv) => {
     entry: {
       index: path.resolve(__dirname, 'src/index.js'),
     },
+    resolve: {
+      alias: {
+        'react-intl$': path.resolve(__dirname, 'src/lib/react-intl-compat.js'),
+        'react-intl-original$': path.resolve(__dirname, 'node_modules/react-intl'),
+      },
+    },
     devtool: 'source-map',
     module: {
       rules: [
@@ -31,6 +37,7 @@ module.exports = (env, argv) => {
       publicPath: '/umd/'
     },
     optimization: {
+      runtimeChunk: 'single',
       minimize: (mode === 'prod'),
       minimizer: ['...']
     },
@@ -56,9 +63,6 @@ module.exports = (env, argv) => {
     externals: {
       'livekit-client': 'LivekitClient',
       'qrcodejs': 'QRCode',
-      'react': 'React',
-      'react-dom': 'ReactDOM',
-      'react-intl': 'ReactIntl',
       'tinode-sdk': 'tinode',
     },
   };
