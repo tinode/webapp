@@ -1063,7 +1063,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendTheCard(null, file.object));
       return true;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.importVCard)(file).then(card => {
+    ;(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.importVCard)(file).then(card => {
       this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendTheCard(null, card));
     }).catch(err => {
       this.props.onError(this.props.intl.formatMessage(messages.cannot_parse_vcard, {
@@ -1134,7 +1134,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }).catch(err => this.props.onError(err, 'err'));
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob).then(b64 => {
+    ;(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob).then(b64 => {
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
         bits: b64.bits,
@@ -1228,7 +1228,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
+    ;(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),

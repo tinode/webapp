@@ -1105,12 +1105,34 @@ class ErrorFactory {
     }
 }
 function replaceTemplate(template, data) {
-    return template.replace(PATTERN, (_, key) => {
-        const value = data[key];
-        return value != null ? String(value) : `<${key}?>`;
-    });
+    try {
+        let ptr = 0;
+        let result = '';
+        while (ptr < template.length) {
+            const start = template.indexOf('{$', ptr);
+            if (start === -1) {
+                result += template.substring(ptr);
+                break;
+            }
+            const end = template.indexOf('}', start + 2);
+            if (end === -1) {
+                result += template.substring(ptr);
+                break;
+            }
+            const key = template.substring(start + 2, end);
+            const value = data[key];
+            result +=
+                template.substring(ptr, start) +
+                    (value != null ? String(value) : `<${key}?>`);
+            ptr = end + 1;
+        }
+        return result;
+    }
+    catch (e) {
+        // Should never happen, but fallback just in case
+        return template;
+    }
 }
-const PATTERN = /\{\$([^}]+)}/g;
 
 /**
  * @license
@@ -3821,7 +3843,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.3";
+const PACKAGE_VERSION = "0.25.4";
 
 /***/ }),
 
@@ -5659,7 +5681,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             desktopAlerts: true
           });
         }
-        (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.onMessage)(this.fcm, payload => {
+        ;(0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.onMessage)(this.fcm, payload => {
           this.handlePushMessage(payload);
         });
       }).catch(err => {
@@ -6679,7 +6701,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleLogout() {
-    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.updateFavicon)(0);
+    ;(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.updateFavicon)(0);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
@@ -7953,7 +7975,7 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     });
   }
   handleSubmit() {
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.imageCrop)(this.props.mime, this.props.avatar, this.state.left, this.state.top, this.state.width, this.state.height, this.state.scale).then(img => {
+    ;(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.imageCrop)(this.props.mime, this.props.avatar, this.state.left, this.state.top, this.state.width, this.state.height, this.state.scale).then(img => {
       this.props.onSubmit(img.mime, img.blob, img.width, img.height);
     }).catch(err => {
       this.props.onError(err);
@@ -14005,7 +14027,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$q = "@firebase/app";
-const version$1 = "0.15.0";
+const version$1 = "0.16.1";
 
 /**
  * @license
@@ -14076,7 +14098,7 @@ const name$2 = "@firebase/ai";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "12.15.0";
+const version = "12.18.0";
 
 /**
  * @license
@@ -14305,7 +14327,8 @@ const ERRORS = {
     ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
         'call initializeApp() first',
     ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}'",
-    ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
+    ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different {$mismatchedParam}." +
+        " Existing: '{$oldValue}'. New: '{$newValue}'.",
     ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
     ["server-app-deleted" /* AppError.SERVER_APP_DELETED */]: 'Firebase Server App has been deleted',
     ["no-options" /* AppError.NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
@@ -14562,12 +14585,24 @@ function initializeApp(_options, rawConfig = {}) {
     const existingApp = _apps.get(name);
     if (existingApp) {
         // return the existing app if options and config deep equal the ones in the existing app.
-        if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(options, existingApp.options) &&
-            (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(config, existingApp.config)) {
-            return existingApp;
+        if (!(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(options, existingApp.options)) {
+            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, {
+                appName: name,
+                mismatchedParam: 'options',
+                oldValue: JSON.stringify(existingApp.options),
+                newValue: JSON.stringify(options)
+            });
+        }
+        else if (!(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(config, existingApp.config)) {
+            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, {
+                appName: name,
+                mismatchedParam: 'config',
+                oldValue: JSON.stringify(existingApp.config),
+                newValue: JSON.stringify(config)
+            });
         }
         else {
-            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, { appName: name });
+            return existingApp;
         }
     }
     const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(name);
@@ -14765,7 +14800,7 @@ function onLog(logCallback, options) {
     if (logCallback !== null && typeof logCallback !== 'function') {
         throw ERROR_FACTORY.create("invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */);
     }
-    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
+    ;(0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
 }
 /**
  * Sets log level for all Firebase SDKs.
@@ -14777,7 +14812,7 @@ function onLog(logCallback, options) {
  * @public
  */
 function setLogLevel(logLevel) {
-    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setLogLevel)(logLevel);
+    ;(0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setLogLevel)(logLevel);
 }
 
 /**
@@ -15177,6 +15212,22 @@ function registerCoreComponents(variant) {
  *
  * @remarks This package coordinates the communication between the different Firebase components
  * @packageDocumentation
+ */
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 registerCoreComponents('');
 
@@ -15635,7 +15686,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.22";
+const version = "0.6.24";
 
 /**
  * @license
@@ -16789,6 +16840,22 @@ function registerInstallations() {
  *
  * @packageDocumentation
  */
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 registerInstallations();
 (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version);
 // BUILD_TARGET will be replaced by values like esm, cjs, etc during the compilation
@@ -17474,7 +17541,7 @@ function getKey({ appConfig }) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.13.0";
+const version = "0.13.2";
 
 /**
  * @license
@@ -18371,34 +18438,6 @@ function isConsoleMessage(data) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-_mergeStrings('AzSCbw63g1R0nCw85jG8', 'Iaya3yLKwmgvh7cF0q4');
-function _mergeStrings(s1, s2) {
-    const resultArray = [];
-    for (let i = 0; i < s1.length; i++) {
-        resultArray.push(s1.charAt(i));
-        if (i < s2.length) {
-            resultArray.push(s2.charAt(i));
-        }
-    }
-    return resultArray.join('');
-}
-
-/**
- * @license
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 function extractAppConfig(app) {
     if (!app || !app.options) {
         throw getMissingValueError('App Configuration Object');
@@ -19038,6 +19077,22 @@ function onUnregistered(messaging, nextOrObserver) {
  *
  * @packageDocumentation
  */
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 registerMessagingInWindow();
 
 
@@ -19056,7 +19111,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getDefaultsFromPostinstall: function() { return /* binding */ getDefaultsFromPostinstall; }
 /* harmony export */ });
-const getDefaultsFromPostinstall = () => (undefined);
+/**
+ * @license
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// This value is retrieved and hardcoded by the NPM postinstall script
+const getDefaultsFromPostinstall = () => undefined;
+
+
 
 
 /***/ }),
@@ -19098,7 +19172,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "12.15.0";
+var version = "12.18.0";
 
 /**
  * @license
@@ -19249,7 +19323,7 @@ function getMethod(target, prop) {
     cachedMethods.set(prop, method);
     return method;
 }
-(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
+;(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
     ...oldTraps,
     get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
     has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
@@ -19510,20 +19584,18 @@ module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200}
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				function() { return module['default']; } :
-/******/ 				function() { return module; };
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	}();
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function() { return module['default']; } :
+/******/ 			function() { return module; };
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	!function() {
-/******/ 		var getProto = Object.getPrototypeOf ? function(obj) { return Object.getPrototypeOf(obj); } : function(obj) { return obj.__proto__; };
+/******/ 		var getProto = Object.getPrototypeOf;
 /******/ 		var leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
@@ -19552,70 +19624,42 @@ module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200}
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
-/******/ 		// define getter/value functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
-/******/ 			if(Array.isArray(definition)) {
-/******/ 				var i = 0;
-/******/ 				while(i < definition.length) {
-/******/ 					var key = definition[i++];
-/******/ 					var binding = definition[i++];
-/******/ 					if(!__webpack_require__.o(exports, key)) {
-/******/ 						if(binding === 0) {
-/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 						} else {
-/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 						}
-/******/ 					} else if(binding === 0) { i++; }
-/******/ 				}
-/******/ 			} else {
-/******/ 				for(var key in definition) {
-/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 					}
-/******/ 				}
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = function(exports, definition) {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
-/******/ 		};
-/******/ 	}();
+/******/ 		}
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = function(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	}();
+/******/ 	__webpack_require__.f = {};
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function(chunkId) {
+/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
+/******/ 			__webpack_require__.f[key](chunkId, promises);
+/******/ 			return promises;
+/******/ 		}, []));
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = function(chunkId) {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".dev.js";
-/******/ 		};
-/******/ 	}();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.u = function(chunkId) { return chunkId + ".dev.js"; };
 /******/ 	
 /******/ 	/* webpack/runtime/global */
-/******/ 	!function() {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	}();
+/******/ 	__webpack_require__.g = (function() {
+/******/ 		if (typeof globalThis === 'object') return globalThis;
+/******/ 		try {
+/******/ 			return this || new Function('return this')();
+/******/ 		} catch (e) {
+/******/ 			if (typeof window === 'object') return window;
+/******/ 		}
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); };
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	!function() {
@@ -19663,28 +19707,25 @@ module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200}
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/set anonymous default export name */
-/******/ 	!function() {
-/******/ 		// set .name for anonymous default exports per ES spec
-/******/ 		__webpack_require__.dn = function(x) {
-/******/ 			(Object.getOwnPropertyDescriptor(x, "name") || {}).writable || Object.defineProperty(x, "name", { value: "default", configurable: true });
-/******/ 		};
-/******/ 	}();
+/******/ 	// set .name for anonymous default exports per ES spec
+/******/ 	// skipped when the property is non-configurable (pre-ES2015 engines),
+/******/ 	// where Object.defineProperty would throw
+/******/ 	__webpack_require__.dn = function(x) {
+/******/ 		var descriptor = Object.getOwnPropertyDescriptor(x, "name");
+/******/ 		if (!descriptor || (!descriptor.writable && descriptor.configurable)) Object.defineProperty(x, "name", { value: "default", configurable: true });
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
-/******/ 		__webpack_require__.p = "/umd/";
-/******/ 	}();
+/******/ 	__webpack_require__.p = "/umd/";
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	!function() {
@@ -19711,8 +19752,6 @@ module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200}
 /******/ 							var promise = new Promise(function(resolve, reject) { installedChunkData = installedChunks[chunkId] = [resolve, reject]; });
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							var loadingEnded = function(event) {
@@ -19726,11 +19765,12 @@ module.exports = /*#__PURE__*/JSON.parse('{"patt":[{"name":"a00.png","size":200}
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -19819,6 +19859,7 @@ const messageLoader = {
   'fr': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_fr_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/fr.json */ "./src/i18n.min/fr.json", 19)),
   'it': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_it_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/it.json */ "./src/i18n.min/it.json", 19)),
   'ko': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ko_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19)),
+  'pt': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_pt_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/pt.json */ "./src/i18n.min/pt.json", 19)),
   'ro': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ro_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ro.json */ "./src/i18n.min/ro.json", 19)),
   'ru': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ru_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ru.json */ "./src/i18n.min/ru.json", 19)),
   'th': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_th_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/th.json */ "./src/i18n.min/th.json", 19)),
