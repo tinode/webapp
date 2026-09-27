@@ -4969,20 +4969,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.ei("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js", () => (import("/umd/vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js.dev.js"))), __webpack_require__.ei("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54", () => (import("/umd/vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54.dev.js"))), __webpack_require__.ei("src_widgets_phone-edit_jsx", () => (import("/umd/src_widgets_phone-edit_jsx.dev.js"))), __webpack_require__.ei("src_views_account-settings-view_jsx", () => (import("/umd/src_views_account-settings-view_jsx.dev.js")))]).then(() => (__webpack_require__(/*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx"))));
+const AccountSettingsView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_widgets_phone-edit_jsx"), __webpack_require__.e("src_views_account-settings-view_jsx")]).then(() => (__webpack_require__(/*! ./account-settings-view.jsx */ "./src/views/account-settings-view.jsx"))));
 
-const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.ei("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js", () => (import("/umd/vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js.dev.js"))), __webpack_require__.ei("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54", () => (import("/umd/vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54.dev.js"))), __webpack_require__.ei("src_widgets_phone-edit_jsx", () => (import("/umd/src_widgets_phone-edit_jsx.dev.js"))), __webpack_require__.ei("src_views_create-account-view_jsx", () => (import("/umd/src_views_create-account-view_jsx.dev.js")))]).then(() => (__webpack_require__(/*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx"))));
-
-
-const AccSecurityView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_views_acc-security-view_jsx", () => (import(/*! import() */ "/umd/src_views_acc-security-view_jsx.dev.js"))).then(() => (__webpack_require__(/*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx"))));
+const CreateAccountView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_widgets_phone-edit_jsx"), __webpack_require__.e("src_views_create-account-view_jsx")]).then(() => (__webpack_require__(/*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx"))));
 
 
-
-const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.ei("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js", () => (import("/umd/vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js.dev.js"))), __webpack_require__.ei("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54", () => (import("/umd/vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54.dev.js"))), __webpack_require__.ei("src_widgets_phone-edit_jsx", () => (import("/umd/src_widgets_phone-edit_jsx.dev.js"))), __webpack_require__.ei("src_views_password-reset-view_jsx", () => (import("/umd/src_views_password-reset-view_jsx.dev.js")))]).then(() => (__webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx"))));
+const AccSecurityView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_views_acc-security-view_jsx").then(() => (__webpack_require__(/*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx"))));
 
 
 
-const WallpapersView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_views_wallpapers_jsx", () => (import(/*! import() */ "/umd/src_views_wallpapers_jsx.dev.js"))).then(() => (__webpack_require__(/*! ./wallpapers.jsx */ "./src/views/wallpapers.jsx"))));
+const PasswordResetView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54"), __webpack_require__.e("src_widgets_phone-edit_jsx"), __webpack_require__.e("src_views_password-reset-view_jsx")]).then(() => (__webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx"))));
+
+
+
+const WallpapersView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_views_wallpapers_jsx").then(() => (__webpack_require__(/*! ./wallpapers.jsx */ "./src/views/wallpapers.jsx"))));
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   login: {
     id: 'sidepanel_title_login',
@@ -5315,9 +5315,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PhoneCountrySelector = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_widgets_phone-country-selector_jsx", () => (import(/*! import() */ "/umd/src_widgets_phone-country-selector_jsx.dev.js"))).then(() => (__webpack_require__(/*! ../widgets/phone-country-selector.jsx */ "./src/widgets/phone-country-selector.jsx"))));
-const InfoView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_views_info-view_jsx", () => (import(/*! import() */ "/umd/src_views_info-view_jsx.dev.js"))).then(() => (__webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx"))));
-const MessagesView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_views_messages-view_jsx", () => (import(/*! import() */ "/umd/src_views_messages-view_jsx.dev.js"))).then(() => (__webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx"))));
+const PhoneCountrySelector = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_phone-country-selector_jsx").then(() => (__webpack_require__(/*! ../widgets/phone-country-selector.jsx */ "./src/widgets/phone-country-selector.jsx"))));
+const InfoView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_views_info-view_jsx").then(() => (__webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx"))));
+const MessagesView = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_views_messages-view_jsx").then(() => (__webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx"))));
 
 
 
@@ -18572,22 +18572,22 @@ if (typeof FIREBASE_INIT != 'undefined' && FIREBASE_INIT && FIREBASE_INIT.measur
   gtag('config', FIREBASE_INIT.measurementId);
 }
 const messageLoader = {
-  'ar': _ => __webpack_require__.ei("src_i18n_min_ar_json", () => (import(/*! import() */ "/umd/src_i18n_min_ar_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/ar.json */ "./src/i18n.min/ar.json", 19))),
-  'de': _ => __webpack_require__.ei("src_i18n_min_de_json", () => (import(/*! import() */ "/umd/src_i18n_min_de_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/de.json */ "./src/i18n.min/de.json", 19))),
-  'en': _ => __webpack_require__.ei("src_i18n_min_en_json", () => (import(/*! import() */ "/umd/src_i18n_min_en_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19))),
-  'es': _ => __webpack_require__.ei("src_i18n_min_es_json", () => (import(/*! import() */ "/umd/src_i18n_min_es_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/es.json */ "./src/i18n.min/es.json", 19))),
-  'fr': _ => __webpack_require__.ei("src_i18n_min_fr_json", () => (import(/*! import() */ "/umd/src_i18n_min_fr_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/fr.json */ "./src/i18n.min/fr.json", 19))),
-  'id': _ => __webpack_require__.ei("src_i18n_min_id_json", () => (import(/*! import() */ "/umd/src_i18n_min_id_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/id.json */ "./src/i18n.min/id.json", 19))),
-  'it': _ => __webpack_require__.ei("src_i18n_min_it_json", () => (import(/*! import() */ "/umd/src_i18n_min_it_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/it.json */ "./src/i18n.min/it.json", 19))),
-  'ko': _ => __webpack_require__.ei("src_i18n_min_ko_json", () => (import(/*! import() */ "/umd/src_i18n_min_ko_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19))),
-  'pt': _ => __webpack_require__.ei("src_i18n_min_pt_json", () => (import(/*! import() */ "/umd/src_i18n_min_pt_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/pt.json */ "./src/i18n.min/pt.json", 19))),
-  'ro': _ => __webpack_require__.ei("src_i18n_min_ro_json", () => (import(/*! import() */ "/umd/src_i18n_min_ro_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/ro.json */ "./src/i18n.min/ro.json", 19))),
-  'ru': _ => __webpack_require__.ei("src_i18n_min_ru_json", () => (import(/*! import() */ "/umd/src_i18n_min_ru_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/ru.json */ "./src/i18n.min/ru.json", 19))),
-  'th': _ => __webpack_require__.ei("src_i18n_min_th_json", () => (import(/*! import() */ "/umd/src_i18n_min_th_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/th.json */ "./src/i18n.min/th.json", 19))),
-  'uk': _ => __webpack_require__.ei("src_i18n_min_uk_json", () => (import(/*! import() */ "/umd/src_i18n_min_uk_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/uk.json */ "./src/i18n.min/uk.json", 19))),
-  'vi': _ => __webpack_require__.ei("src_i18n_min_vi_json", () => (import(/*! import() */ "/umd/src_i18n_min_vi_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/vi.json */ "./src/i18n.min/vi.json", 19))),
-  'zh': _ => __webpack_require__.ei("src_i18n_min_zh_json", () => (import(/*! import() */ "/umd/src_i18n_min_zh_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/zh.json */ "./src/i18n.min/zh.json", 19))),
-  'zh-TW': _ => __webpack_require__.ei("src_i18n_min_zh-TW_json", () => (import(/*! import() */ "/umd/src_i18n_min_zh-TW_json.dev.js"))).then(() => (__webpack_require__.t(/*! ./i18n.min/zh-TW.json */ "./src/i18n.min/zh-TW.json", 19)))
+  'ar': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ar_json").then(() => (__webpack_require__.t(/*! ./i18n.min/ar.json */ "./src/i18n.min/ar.json", 19))),
+  'de': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_de_json").then(() => (__webpack_require__.t(/*! ./i18n.min/de.json */ "./src/i18n.min/de.json", 19))),
+  'en': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_en_json").then(() => (__webpack_require__.t(/*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19))),
+  'es': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_es_json").then(() => (__webpack_require__.t(/*! ./i18n.min/es.json */ "./src/i18n.min/es.json", 19))),
+  'fr': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_fr_json").then(() => (__webpack_require__.t(/*! ./i18n.min/fr.json */ "./src/i18n.min/fr.json", 19))),
+  'id': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_id_json").then(() => (__webpack_require__.t(/*! ./i18n.min/id.json */ "./src/i18n.min/id.json", 19))),
+  'it': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_it_json").then(() => (__webpack_require__.t(/*! ./i18n.min/it.json */ "./src/i18n.min/it.json", 19))),
+  'ko': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ko_json").then(() => (__webpack_require__.t(/*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19))),
+  'pt': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_pt_json").then(() => (__webpack_require__.t(/*! ./i18n.min/pt.json */ "./src/i18n.min/pt.json", 19))),
+  'ro': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ro_json").then(() => (__webpack_require__.t(/*! ./i18n.min/ro.json */ "./src/i18n.min/ro.json", 19))),
+  'ru': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ru_json").then(() => (__webpack_require__.t(/*! ./i18n.min/ru.json */ "./src/i18n.min/ru.json", 19))),
+  'th': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_th_json").then(() => (__webpack_require__.t(/*! ./i18n.min/th.json */ "./src/i18n.min/th.json", 19))),
+  'uk': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_uk_json").then(() => (__webpack_require__.t(/*! ./i18n.min/uk.json */ "./src/i18n.min/uk.json", 19))),
+  'vi': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_vi_json").then(() => (__webpack_require__.t(/*! ./i18n.min/vi.json */ "./src/i18n.min/vi.json", 19))),
+  'zh': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh_json").then(() => (__webpack_require__.t(/*! ./i18n.min/zh.json */ "./src/i18n.min/zh.json", 19))),
+  'zh-TW': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh-TW_json").then(() => (__webpack_require__.t(/*! ./i18n.min/zh-TW.json */ "./src/i18n.min/zh-TW.json", 19)))
 };
 const rtl = ['ar', 'fa', 'he', 'ur'];
 const {

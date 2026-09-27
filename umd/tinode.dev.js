@@ -9,7 +9,7 @@
 		root["tinode"] = factory();
 })(this, function() {
 return /******/ (function() { // webpackBootstrap
-/******/ 	"use strict";
+/******/ 	// runtime can't be in strict mode because 'output.globalObject' reads 'this'.
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/access-mode.js":
@@ -18,6 +18,7 @@ return /******/ (function() { // webpackBootstrap
   \****************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ AccessMode; }
@@ -229,6 +230,7 @@ AccessMode._INVALID = 0x100000;
   \************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ CBuffer; }
@@ -353,6 +355,7 @@ class CBuffer {
   \***************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ CommError; }
@@ -374,6 +377,7 @@ class CommError extends Error {
   \***********************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   BACKOFF_BASE: function() { return /* binding */ BACKOFF_BASE; },
@@ -460,6 +464,7 @@ const BACKOFF_JITTER = 0.3;
   \***************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ Connection; }
@@ -790,6 +795,7 @@ Connection.NETWORK_USER_TEXT = NETWORK_USER_TEXT;
   \*******************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ DB; }
@@ -1411,6 +1417,7 @@ class DB {
   \***********************/
 /***/ (function(module) {
 
+"use strict";
 /**
  * @copyright 2015-2026 Tinode LLC.
  * @summary Minimally rich text representation and formatting for Tinode.
@@ -1654,6 +1661,18 @@ function base64toDataUrl(b64, contentType) {
   contentType = contentType || 'image/jpeg';
   return 'data:' + contentType + ';base64,' + b64;
 }
+function sanitizeUrl(url) {
+  if (!url || typeof url != 'string') {
+    return url;
+  }
+  if (!/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url)) {
+    return url;
+  }
+  if (/^(https?|ftp):\/\//i.test(url)) {
+    return url;
+  }
+  return null;
+}
 const DECORATORS = {
   ST: {
     open: _ => '<b>',
@@ -1690,8 +1709,9 @@ const DECORATORS = {
     close: _ => '</a>',
     props: data => {
       return data ? {
-        href: data.url,
-        target: '_blank'
+        href: sanitizeUrl(data.url),
+        target: '_blank',
+        rel: 'noopener noreferrer'
       } : null;
     }
   },
@@ -1725,7 +1745,7 @@ const DECORATORS = {
         'data-act': data.act,
         'data-val': data.val,
         'data-name': data.name,
-        'data-ref': data.ref
+        'data-ref': sanitizeUrl(data.ref)
       } : null;
     }
   },
@@ -1737,9 +1757,10 @@ const DECORATORS = {
     close: _ => '</audio>',
     props: data => {
       if (!data) return null;
+      const safeRef = sanitizeUrl(data.ref);
       return {
-        src: data.ref || base64toObjectUrl(data.val, data.mime, Drafty.logger),
-        'data-preload': data.ref ? 'metadata' : 'auto',
+        src: safeRef || base64toObjectUrl(data.val, data.mime, Drafty.logger),
+        'data-preload': safeRef ? 'metadata' : 'auto',
         'data-duration': data.duration,
         'data-name': data.name,
         'data-size': data.val ? data.val.length * 0.75 | 0 : data.size | 0,
@@ -1760,7 +1781,7 @@ const DECORATORS = {
     props: data => {
       if (!data) return null;
       return {
-        src: base64toDataUrl(data._tempPreview, data.mime) || data.ref || base64toObjectUrl(data.val, data.mime, Drafty.logger),
+        src: base64toDataUrl(data._tempPreview, data.mime) || sanitizeUrl(data.ref) || base64toObjectUrl(data.val, data.mime, Drafty.logger),
         title: data.name,
         alt: data.name,
         'data-width': data.width,
@@ -1817,13 +1838,15 @@ const DECORATORS = {
     close: _ => '',
     props: data => {
       if (!data) return null;
-      const poster = data.preref || base64toObjectUrl(data.preview, data.premime || 'image/jpeg', Drafty.logger);
+      const safePreref = sanitizeUrl(data.preref);
+      const safeRef = sanitizeUrl(data.ref);
+      const poster = safePreref || base64toObjectUrl(data.preview, data.premime || 'image/jpeg', Drafty.logger);
       return {
         src: poster,
-        'data-src': data.ref || base64toObjectUrl(data.val, data.mime, Drafty.logger),
+        'data-src': safeRef || base64toObjectUrl(data.val, data.mime, Drafty.logger),
         'data-width': data.width,
         'data-height': data.height,
-        'data-preload': data.ref ? 'metadata' : 'auto',
+        'data-preload': safeRef ? 'metadata' : 'auto',
         'data-preview': poster,
         'data-duration': data.duration | 0,
         'data-name': data.name,
@@ -2591,7 +2614,7 @@ Drafty.getDownloadUrl = function (entData) {
   if (!Drafty.isFormResponseType(entData.mime) && entData.val) {
     url = base64toObjectUrl(entData.val, entData.mime, Drafty.logger);
   } else if (typeof entData.ref == 'string') {
-    url = entData.ref;
+    url = sanitizeUrl(entData.ref);
   }
   return url;
 };
@@ -3208,6 +3231,7 @@ if (true) {
   \**************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ TopicFnd; }
@@ -3289,6 +3313,7 @@ class TopicFnd extends _topic_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
   \***************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ LargeFileHelper; }
@@ -3525,6 +3550,7 @@ class LargeFileHelper {
   \*************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ TopicMe; }
@@ -3847,6 +3873,7 @@ class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
   \*****************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ MetaGetBuilder; }
@@ -3983,6 +4010,7 @@ class MetaGetBuilder {
   \*************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ TheCard; }
@@ -4521,6 +4549,7 @@ function clearComm(card, proto, value, type) {
   \**********************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ Topic; }
@@ -5605,7 +5634,7 @@ class Topic {
       delete desc.defacs;
       this._tinode._db.updUser(this.name, desc.public);
     }
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this, desc);
+    ;(0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this, desc);
     this._tinode._db.updTopic(this);
     if (this.name !== _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME && !desc._noForwarding) {
       const me = this._tinode.getMeTopic();
@@ -5790,6 +5819,7 @@ class Topic {
   \**********************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clipInRange: function() { return /* binding */ clipInRange; },
@@ -5861,15 +5891,16 @@ function mergeObj(dst, src) {
     return src;
   }
   if (!dst || dst === _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR) {
-    dst = src.constructor();
+    dst = {};
   }
-  for (let prop in src) {
-    if (src.hasOwnProperty(prop) && prop != '_noForwarding') {
-      try {
-        dst[prop] = mergeObj(dst[prop], src[prop]);
-      } catch (err) {
-        console.warn("Error merging property:", prop, err);
-      }
+  for (const prop of Object.keys(src)) {
+    if (prop === '__proto__' || prop === 'constructor' || prop === '_noForwarding') {
+      continue;
+    }
+    try {
+      dst[prop] = mergeObj(dst[prop], src[prop]);
+    } catch (err) {
+      console.warn("Error merging property:", prop, err);
     }
   }
   return dst;
@@ -6032,11 +6063,12 @@ function clipInRange(src, clip) {
   \********************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PACKAGE_VERSION: function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.25.3";
+const PACKAGE_VERSION = "0.25.4";
 
 /***/ })
 
@@ -6074,76 +6106,52 @@ const PACKAGE_VERSION = "0.25.3";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				function() { return module['default']; } :
-/******/ 				function() { return module; };
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	}();
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function() { return module['default']; } :
+/******/ 			function() { return module; };
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
-/******/ 		// define getter/value functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
-/******/ 			if(Array.isArray(definition)) {
-/******/ 				var i = 0;
-/******/ 				while(i < definition.length) {
-/******/ 					var key = definition[i++];
-/******/ 					var binding = definition[i++];
-/******/ 					if(!__webpack_require__.o(exports, key)) {
-/******/ 						if(binding === 0) {
-/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 						} else {
-/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 						}
-/******/ 					} else if(binding === 0) { i++; }
-/******/ 				}
-/******/ 			} else {
-/******/ 				for(var key in definition) {
-/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 					}
-/******/ 				}
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = function(exports, definition) {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
-/******/ 		};
-/******/ 	}();
+/******/ 		}
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/global */
-/******/ 	!function() {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	}();
+/******/ 	__webpack_require__.g = (function() {
+/******/ 		if (typeof globalThis === 'object') return globalThis;
+/******/ 		try {
+/******/ 			return this || new Function('return this')();
+/******/ 		} catch (e) {
+/******/ 			if (typeof window === 'object') return window;
+/******/ 		}
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); };
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 !function() {
+"use strict";
 /*!***********************!*\
   !*** ./src/tinode.js ***!
   \***********************/

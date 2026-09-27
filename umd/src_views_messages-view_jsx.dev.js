@@ -92,22 +92,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const CallPanel = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_widgets_call-panel_jsx", () => (import(/*! import() */ "/umd/src_widgets_call-panel_jsx.dev.js"))).then(() => (__webpack_require__(/*! ../widgets/call-panel.jsx */ "./src/widgets/call-panel.jsx"))));
+const CallPanel = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_call-panel_jsx").then(() => (__webpack_require__(/*! ../widgets/call-panel.jsx */ "./src/widgets/call-panel.jsx"))));
 
 
-const DocPreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_widgets_doc-preview_jsx", () => (import(/*! import() */ "/umd/src_widgets_doc-preview_jsx.dev.js"))).then(() => (__webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx"))));
+const DocPreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_doc-preview_jsx").then(() => (__webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx"))));
 
 
-const ImagePreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_widgets_image-preview_jsx", () => (import(/*! import() */ "/umd/src_widgets_image-preview_jsx.dev.js"))).then(() => (__webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx"))));
-
-
-
+const ImagePreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_image-preview_jsx").then(() => (__webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx"))));
 
 
 
 
-const TheCardPreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.ei("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js", () => (import("/umd/vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js.dev.js"))), __webpack_require__.ei("src_widgets_the-card-preview_jsx", () => (import("/umd/src_widgets_the-card-preview_jsx.dev.js")))]).then(() => (__webpack_require__(/*! ../widgets/the-card-preview.jsx */ "./src/widgets/the-card-preview.jsx"))));
-const VideoPreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.ei("src_widgets_video-preview_jsx", () => (import(/*! import() */ "/umd/src_widgets_video-preview_jsx.dev.js"))).then(() => (__webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx"))));
+
+
+
+const TheCardPreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js"), __webpack_require__.e("src_widgets_the-card-preview_jsx")]).then(() => (__webpack_require__(/*! ../widgets/the-card-preview.jsx */ "./src/widgets/the-card-preview.jsx"))));
+const VideoPreview = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_video-preview_jsx").then(() => (__webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx"))));
 
 
 
@@ -2774,7 +2774,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const AudioRecorder = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.ei("vendors-node_modules_webm-duration-fix_lib_index_js", () => (import("/umd/vendors-node_modules_webm-duration-fix_lib_index_js.dev.js"))), __webpack_require__.ei("src_widgets_audio-recorder_jsx", () => (import("/umd/src_widgets_audio-recorder_jsx.dev.js")))]).then(() => (__webpack_require__(/*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx"))));
+const AudioRecorder = react__WEBPACK_IMPORTED_MODULE_0__["default"].lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_webm-duration-fix_lib_index_js"), __webpack_require__.e("src_widgets_audio-recorder_jsx")]).then(() => (__webpack_require__(/*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx"))));
 
 
 

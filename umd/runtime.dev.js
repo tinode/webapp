@@ -84,6 +84,16 @@
 /******/ 	}
 /******/ };
 /******/ 
+/******/ /* webpack/runtime/ensure chunk */
+/******/ __webpack_require__.f = {};
+/******/ // This file contains only the entry chunk.
+/******/ // The chunk loading function for additional chunks
+/******/ __webpack_require__.e = (chunkId) => {
+/******/ 	const promises = [];
+/******/ 	__webpack_require__.f.j(chunkId, promises);
+/******/ 	return Promise.all(promises);
+/******/ };
+/******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 
@@ -109,6 +119,43 @@
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
 /******/ 	// no baseURI
+/******/ 	
+/******/ 	const chunkImports = {
+/******/ 		"src_i18n_min_ar_json": () => (import("/umd/src_i18n_min_ar_json.dev.js")),
+/******/ 		"src_i18n_min_de_json": () => (import("/umd/src_i18n_min_de_json.dev.js")),
+/******/ 		"src_i18n_min_en_json": () => (import("/umd/src_i18n_min_en_json.dev.js")),
+/******/ 		"src_i18n_min_es_json": () => (import("/umd/src_i18n_min_es_json.dev.js")),
+/******/ 		"src_i18n_min_fr_json": () => (import("/umd/src_i18n_min_fr_json.dev.js")),
+/******/ 		"src_i18n_min_id_json": () => (import("/umd/src_i18n_min_id_json.dev.js")),
+/******/ 		"src_i18n_min_it_json": () => (import("/umd/src_i18n_min_it_json.dev.js")),
+/******/ 		"src_i18n_min_ko_json": () => (import("/umd/src_i18n_min_ko_json.dev.js")),
+/******/ 		"src_i18n_min_pt_json": () => (import("/umd/src_i18n_min_pt_json.dev.js")),
+/******/ 		"src_i18n_min_ro_json": () => (import("/umd/src_i18n_min_ro_json.dev.js")),
+/******/ 		"src_i18n_min_ru_json": () => (import("/umd/src_i18n_min_ru_json.dev.js")),
+/******/ 		"src_i18n_min_th_json": () => (import("/umd/src_i18n_min_th_json.dev.js")),
+/******/ 		"src_i18n_min_uk_json": () => (import("/umd/src_i18n_min_uk_json.dev.js")),
+/******/ 		"src_i18n_min_vi_json": () => (import("/umd/src_i18n_min_vi_json.dev.js")),
+/******/ 		"src_i18n_min_zh_json": () => (import("/umd/src_i18n_min_zh_json.dev.js")),
+/******/ 		"src_i18n_min_zh-TW_json": () => (import("/umd/src_i18n_min_zh-TW_json.dev.js")),
+/******/ 		"src_widgets_phone-country-selector_jsx": () => (import("/umd/src_widgets_phone-country-selector_jsx.dev.js")),
+/******/ 		"src_views_info-view_jsx": () => (import("/umd/src_views_info-view_jsx.dev.js")),
+/******/ 		"src_views_messages-view_jsx": () => (import("/umd/src_views_messages-view_jsx.dev.js")),
+/******/ 		"vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js": () => (import("/umd/vendors-node_modules_libphonenumber-js_mobile_exports_parsePhoneNumberWithError_js.dev.js")),
+/******/ 		"vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54": () => (import("/umd/vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-883e54.dev.js")),
+/******/ 		"src_widgets_phone-edit_jsx": () => (import("/umd/src_widgets_phone-edit_jsx.dev.js")),
+/******/ 		"src_views_account-settings-view_jsx": () => (import("/umd/src_views_account-settings-view_jsx.dev.js")),
+/******/ 		"src_views_create-account-view_jsx": () => (import("/umd/src_views_create-account-view_jsx.dev.js")),
+/******/ 		"src_views_acc-security-view_jsx": () => (import("/umd/src_views_acc-security-view_jsx.dev.js")),
+/******/ 		"src_views_password-reset-view_jsx": () => (import("/umd/src_views_password-reset-view_jsx.dev.js")),
+/******/ 		"src_views_wallpapers_jsx": () => (import("/umd/src_views_wallpapers_jsx.dev.js")),
+/******/ 		"src_widgets_call-panel_jsx": () => (import("/umd/src_widgets_call-panel_jsx.dev.js")),
+/******/ 		"src_widgets_doc-preview_jsx": () => (import("/umd/src_widgets_doc-preview_jsx.dev.js")),
+/******/ 		"src_widgets_image-preview_jsx": () => (import("/umd/src_widgets_image-preview_jsx.dev.js")),
+/******/ 		"src_widgets_the-card-preview_jsx": () => (import("/umd/src_widgets_the-card-preview_jsx.dev.js")),
+/******/ 		"src_widgets_video-preview_jsx": () => (import("/umd/src_widgets_video-preview_jsx.dev.js")),
+/******/ 		"vendors-node_modules_webm-duration-fix_lib_index_js": () => (import("/umd/vendors-node_modules_webm-duration-fix_lib_index_js.dev.js")),
+/******/ 		"src_widgets_audio-recorder_jsx": () => (import("/umd/src_widgets_audio-recorder_jsx.dev.js"))
+/******/ 	};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
@@ -138,33 +185,33 @@
 /******/ 	
 /******/ 	}
 /******/ 	
-/******/ 	// no chunk on demand loading
+/******/ 	__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 			// import() chunk loading for javascript
+/******/ 			let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 	
+/******/ 				// a Promise means "currently loading".
+/******/ 				if(installedChunkData) {
+/******/ 					promises.push(installedChunkData[1]);
+/******/ 				} else {
+/******/ 					if("runtime" != chunkId) {
+/******/ 						// setup Promise in chunk cache
+/******/ 						let promise = chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 							throw e;
+/******/ 						});
+/******/ 						promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
+/******/ 						promises.push(installedChunkData[1] = promise);
+/******/ 					} else installedChunks[chunkId] = 0;
+/******/ 				}
+/******/ 			}
+/******/ 	};
 /******/ 	
 /******/ 	// no prefetching
 /******/ 	
 /******/ 	// no preloaded
 /******/ 	
 /******/ 	__webpack_require__.C = installChunk;
-/******/ 	
-/******/ 	__webpack_require__.ei = (chunkId, importFn) => {
-/******/ 		let promises = [];
-/******/ 		let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
-/******/ 			// a Promise means "currently loading".
-/******/ 			if(installedChunkData) {
-/******/ 				promises.push(installedChunkData[1]);
-/******/ 			} else {
-/******/ 				let promise = importFn().then(installChunk, (e) => {
-/******/ 					if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
-/******/ 					throw e;
-/******/ 				});
-/******/ 				promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
-/******/ 				promises.push((installedChunkData[1] = promise));
-/******/ 			}
-/******/ 		}
-/******/ 		// no other chunk loading handlers
-/******/ 		return Promise.all(promises);
-/******/ 	};
 /******/ 	
 /******/ 	// no on chunks loaded
 /******/ 	// no HMR
