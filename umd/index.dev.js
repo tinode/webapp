@@ -3348,7 +3348,7 @@ function isSecureConnection() {
 }
 function isLocalHost() {
   if (typeof window.location == 'object') {
-    return window.location.hostname == 'localhost';
+    return window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1';
   }
   return false;
 }
