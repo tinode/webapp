@@ -79,7 +79,7 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^12.19.0",
+    "firebase": "^13.1.0",
     "libphonenumber-js": "^1.13.13",
     "qrcodejs": "^1.0.0",
     "react": "^19.3.0",
