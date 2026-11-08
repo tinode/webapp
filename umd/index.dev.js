@@ -2383,7 +2383,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const BASE_APP_NAME = 'TinodeWeb';
 const APP_NAME = BASE_APP_NAME + '/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.25');
-const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
+const API_KEY = 'AQAAAAABAAGn9LFimCi7U3ZKRXr2dyHR';
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
   local: 'localhost:6060'

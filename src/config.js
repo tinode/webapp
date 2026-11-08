@@ -6,10 +6,10 @@ export const BASE_APP_NAME = 'TinodeWeb';
 export const APP_NAME = BASE_APP_NAME + '/' + (PACKAGE_VERSION || '0.25');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
+export const API_KEY = 'AQAAAAABAAGn9LFimCi7U3ZKRXr2dyHR';
 
 // The array of possible hosts to connect to.
-export const KNOWN_HOSTS = {hosted: 'web.tinode.co', local: 'localhost:6060'};
+export const KNOWN_HOSTS = {hosted: 'im.callingclaw.app', local: 'localhost:6060'};
 
 // Default host name and port to connect to.
 export const DEFAULT_HOST = KNOWN_HOSTS.hosted;
