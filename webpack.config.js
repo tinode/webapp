@@ -70,6 +70,8 @@ module.exports = (env, argv) => {
       'livekit-client': 'var LivekitClient',
       'qrcodejs': 'var QRCode',
       'react': 'react',
+      'react/jsx-runtime': 'react/jsx-runtime',
+      'react/jsx-dev-runtime': 'react/jsx-dev-runtime',
       'react-dom/client': 'react-dom/client',
       'react-intl-original': 'react-intl-original',
       'tinode-sdk': 'var tinode',

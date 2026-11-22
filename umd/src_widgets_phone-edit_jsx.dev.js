@@ -19,7 +19,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_5__ = /*#__PURE__*/__webpack_require__(/*! libphonenumber-js/mobile/examples */ "./node_modules/libphonenumber-js/examples.mobile.json.js");
 /* harmony import */ var _dcodes_json__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dcodes.json */ "./src/dcodes.json");
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 

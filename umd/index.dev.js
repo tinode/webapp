@@ -1,6 +1,7 @@
 import * as __WEBPACK_EXTERNAL_MODULE_react__ from "react";
 import * as __WEBPACK_EXTERNAL_MODULE_react_dom_client_4cb20cd7__ from "react-dom/client";
 import * as __WEBPACK_EXTERNAL_MODULE_react_intl_original_31781609__ from "react-intl-original";
+import * as __WEBPACK_EXTERNAL_MODULE_react_jsx_dev_runtime_17c56db1__ from "react/jsx-dev-runtime";
 export const __webpack_esm_ids__ = ["index"];
 export const __webpack_esm_modules__ = {
 
@@ -2310,7 +2311,7 @@ async function generateSHA256Hash(input) {
     return hexHash;
 }
 
-
+;
 //# sourceMappingURL=index.esm.js.map
 
 
@@ -2495,7 +2496,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   makeImageUrl: () => (/* binding */ makeImageUrl)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
 
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -2786,7 +2786,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/audio-player.jsx */ "./src/widgets/audio-player.jsx");
 /* harmony import */ var _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/call-message.jsx */ "./src/widgets/call-message.jsx");
 /* harmony import */ var _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/call-status.jsx */ "./src/widgets/call-status.jsx");
@@ -3653,7 +3652,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   wallpaperTypeFromUrl: () => (/* binding */ wallpaperTypeFromUrl)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
 
@@ -3891,7 +3889,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4169,7 +4167,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4244,9 +4242,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4363,7 +4360,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4476,7 +4473,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4607,14 +4604,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/new-topic-by-id.jsx */ "./src/widgets/new-topic-by-id.jsx");
 /* harmony import */ var _widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/new-topic-group.jsx */ "./src/widgets/new-topic-group.jsx");
 /* harmony import */ var _widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/search-contacts.jsx */ "./src/widgets/search-contacts.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4804,7 +4800,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/host-selector.jsx */ "./src/widgets/host-selector.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -4962,7 +4958,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
 /* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
 /* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -5290,7 +5286,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/esm/index.esm.js");
 /* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "./node_modules/firebase/messaging/dist/esm/index.esm.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
 /* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
 /* harmony import */ var _widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/forward-dialog.jsx */ "./src/widgets/forward-dialog.jsx");
@@ -5305,7 +5300,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -7421,7 +7416,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../widgets/topic-desc-edit.jsx */ "./src/widgets/topic-desc-edit.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -7503,7 +7498,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -7653,7 +7648,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -7711,7 +7706,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -7966,7 +7961,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _cropper_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cropper.jsx */ "./src/widgets/cropper.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8052,7 +8047,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8147,7 +8142,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8213,7 +8208,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ ButtonBack)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class ButtonBack extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -8251,7 +8246,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8416,7 +8411,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8514,7 +8509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8660,7 +8655,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _chip_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./chip.jsx */ "./src/widgets/chip.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8813,7 +8808,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8869,7 +8864,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -8913,7 +8908,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ ContactBadges)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 const icon_mapping = {
@@ -8964,12 +8959,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -9141,14 +9135,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -9363,7 +9356,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -9884,7 +9877,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Cropper)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 const DEFAULT_MAX_ZOOM = 8;
@@ -10122,7 +10115,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10204,7 +10197,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10256,10 +10249,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _search_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./search-contacts.jsx */ "./src/widgets/search-contacts.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10368,7 +10360,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10445,7 +10437,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./visible-password.jsx */ "./src/widgets/visible-password.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10624,7 +10616,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10747,11 +10739,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -10823,7 +10814,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ LoadSpinner)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class LoadSpinner extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -10851,7 +10842,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ MenuCancel)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class MenuCancel extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -10883,7 +10874,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ MenuContacts)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class MenuContacts extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -10928,7 +10919,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ MenuStart)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class MenuStart extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -10977,7 +10968,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/config.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -11101,7 +11092,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -11369,8 +11360,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -11481,7 +11471,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu-contacts.jsx */ "./src/widgets/menu-contacts.jsx");
 /* harmony import */ var _menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./menu-start.jsx */ "./src/widgets/menu-start.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -11553,10 +11543,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -11770,9 +11759,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -11906,7 +11894,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "./src/lib/react-intl-compat.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./avatar-crop.jsx */ "./src/widgets/avatar-crop.jsx");
 /* harmony import */ var _avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
 /* harmony import */ var _in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
@@ -11915,7 +11902,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -12345,7 +12332,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ UnreadBadge)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class UnreadBadge extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -12372,7 +12359,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 
@@ -12408,7 +12395,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ VisiblePassword)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 
 
 class VisiblePassword extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureComponent {
@@ -12500,377 +12487,6 @@ class VisiblePassword extends react__WEBPACK_IMPORTED_MODULE_0__["default"].Pure
 
 /***/ },
 
-/***/ "./node_modules/react/cjs/react-jsx-dev-runtime.development.js"
-/*!*********************************************************************!*\
-  !*** ./node_modules/react/cjs/react-jsx-dev-runtime.development.js ***!
-  \*********************************************************************/
-(__unused_webpack_module, exports, __webpack_require__) {
-
-/**
- * @license React
- * react-jsx-dev-runtime.development.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-
- true &&
-  (function () {
-    function getComponentNameFromType(type) {
-      if (null == type) return null;
-      if ("function" === typeof type)
-        return type.$$typeof === REACT_CLIENT_REFERENCE
-          ? null
-          : type.displayName || type.name || null;
-      if ("string" === typeof type) return type;
-      switch (type) {
-        case REACT_FRAGMENT_TYPE:
-          return "Fragment";
-        case REACT_PROFILER_TYPE:
-          return "Profiler";
-        case REACT_STRICT_MODE_TYPE:
-          return "StrictMode";
-        case REACT_SUSPENSE_TYPE:
-          return "Suspense";
-        case REACT_SUSPENSE_LIST_TYPE:
-          return "SuspenseList";
-        case REACT_ACTIVITY_TYPE:
-          return "Activity";
-        case REACT_VIEW_TRANSITION_TYPE:
-          return "ViewTransition";
-      }
-      if ("object" === typeof type)
-        switch (
-          ("number" === typeof type.tag &&
-            console.error(
-              "Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."
-            ),
-          type.$$typeof)
-        ) {
-          case REACT_PORTAL_TYPE:
-            return "Portal";
-          case REACT_CONTEXT_TYPE:
-            return type.displayName || "Context";
-          case REACT_CONSUMER_TYPE:
-            return (type._context.displayName || "Context") + ".Consumer";
-          case REACT_FORWARD_REF_TYPE:
-            var innerType = type.render;
-            type = type.displayName;
-            type ||
-              ((type = innerType.displayName || innerType.name || ""),
-              (type = "" !== type ? "ForwardRef(" + type + ")" : "ForwardRef"));
-            return type;
-          case REACT_MEMO_TYPE:
-            return (
-              (innerType = type.displayName || null),
-              null !== innerType
-                ? innerType
-                : getComponentNameFromType(type.type) || "Memo"
-            );
-          case REACT_LAZY_TYPE:
-            innerType = type._payload;
-            type = type._init;
-            try {
-              return getComponentNameFromType(type(innerType));
-            } catch (x) {}
-        }
-      return null;
-    }
-    function testStringCoercion(value) {
-      return "" + value;
-    }
-    function checkKeyStringCoercion(value) {
-      try {
-        testStringCoercion(value);
-        var JSCompiler_inline_result = !1;
-      } catch (e) {
-        JSCompiler_inline_result = !0;
-      }
-      if (JSCompiler_inline_result) {
-        JSCompiler_inline_result = console;
-        var JSCompiler_temp_const = JSCompiler_inline_result.error;
-        var JSCompiler_inline_result$jscomp$0 =
-          ("function" === typeof Symbol &&
-            Symbol.toStringTag &&
-            value[Symbol.toStringTag]) ||
-          value.constructor.name ||
-          "Object";
-        JSCompiler_temp_const.call(
-          JSCompiler_inline_result,
-          "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.",
-          JSCompiler_inline_result$jscomp$0
-        );
-        return testStringCoercion(value);
-      }
-    }
-    function getTaskName(type) {
-      if (type === REACT_FRAGMENT_TYPE) return "<>";
-      if (
-        "object" === typeof type &&
-        null !== type &&
-        type.$$typeof === REACT_LAZY_TYPE
-      )
-        return "<...>";
-      try {
-        var name = getComponentNameFromType(type);
-        return name ? "<" + name + ">" : "<...>";
-      } catch (x) {
-        return "<...>";
-      }
-    }
-    function getOwner() {
-      var dispatcher = ReactSharedInternals.A;
-      return null === dispatcher ? null : dispatcher.getOwner();
-    }
-    function UnknownOwner() {
-      return Error("react-stack-top-frame");
-    }
-    function hasValidKey(config) {
-      if (hasOwnProperty.call(config, "key")) {
-        var getter = Object.getOwnPropertyDescriptor(config, "key").get;
-        if (getter && getter.isReactWarning) return !1;
-      }
-      return void 0 !== config.key;
-    }
-    function defineKeyPropWarningGetter(props, displayName) {
-      function warnAboutAccessingKey() {
-        specialPropKeyWarningShown ||
-          ((specialPropKeyWarningShown = !0),
-          console.error(
-            "%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)",
-            displayName
-          ));
-      }
-      warnAboutAccessingKey.isReactWarning = !0;
-      Object.defineProperty(props, "key", {
-        get: warnAboutAccessingKey,
-        configurable: !0
-      });
-    }
-    function elementRefGetterWithDeprecationWarning() {
-      var componentName = getComponentNameFromType(this.type);
-      didWarnAboutElementRef[componentName] ||
-        ((didWarnAboutElementRef[componentName] = !0),
-        console.error(
-          "Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."
-        ));
-      componentName = this.props.ref;
-      return void 0 !== componentName ? componentName : null;
-    }
-    function ReactElement(type, key, props, owner, debugStack, debugTask) {
-      var refProp = props.ref;
-      type = {
-        $$typeof: REACT_ELEMENT_TYPE,
-        type: type,
-        key: key,
-        props: props,
-        _owner: owner
-      };
-      null !== (void 0 !== refProp ? refProp : null)
-        ? Object.defineProperty(type, "ref", {
-            enumerable: !1,
-            get: elementRefGetterWithDeprecationWarning
-          })
-        : Object.defineProperty(type, "ref", { enumerable: !1, value: null });
-      type._store = {};
-      Object.defineProperty(type._store, "validated", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: 0
-      });
-      Object.defineProperty(type, "_debugInfo", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: null
-      });
-      Object.defineProperty(type, "_debugStack", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: debugStack
-      });
-      Object.defineProperty(type, "_debugTask", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: debugTask
-      });
-      Object.freeze && (Object.freeze(type.props), Object.freeze(type));
-      return type;
-    }
-    function jsxDEVImpl(
-      type,
-      config,
-      maybeKey,
-      isStaticChildren,
-      debugStack,
-      debugTask
-    ) {
-      var children = config.children;
-      if (void 0 !== children)
-        if (isStaticChildren)
-          if (isArrayImpl(children)) {
-            for (
-              isStaticChildren = 0;
-              isStaticChildren < children.length;
-              isStaticChildren++
-            )
-              validateChildKeys(children[isStaticChildren]);
-            Object.freeze && Object.freeze(children);
-          } else
-            console.error(
-              "React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead."
-            );
-        else validateChildKeys(children);
-      if (hasOwnProperty.call(config, "key")) {
-        children = getComponentNameFromType(type);
-        var keys = Object.keys(config).filter(function (k) {
-          return "key" !== k;
-        });
-        isStaticChildren =
-          0 < keys.length
-            ? "{key: someKey, " + keys.join(": ..., ") + ": ...}"
-            : "{key: someKey}";
-        didWarnAboutKeySpread[children + isStaticChildren] ||
-          ((keys =
-            0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}"),
-          console.error(
-            'A props object containing a "key" prop is being spread into JSX:\n  let props = %s;\n  <%s {...props} />\nReact keys must be passed directly to JSX without using spread:\n  let props = %s;\n  <%s key={someKey} {...props} />',
-            isStaticChildren,
-            children,
-            keys,
-            children
-          ),
-          (didWarnAboutKeySpread[children + isStaticChildren] = !0));
-      }
-      children = null;
-      void 0 !== maybeKey &&
-        (checkKeyStringCoercion(maybeKey), (children = "" + maybeKey));
-      hasValidKey(config) &&
-        (checkKeyStringCoercion(config.key), (children = "" + config.key));
-      if ("key" in config) {
-        maybeKey = {};
-        for (var propName in config)
-          "key" !== propName && (maybeKey[propName] = config[propName]);
-      } else maybeKey = config;
-      children &&
-        defineKeyPropWarningGetter(
-          maybeKey,
-          "function" === typeof type
-            ? type.displayName || type.name || "Unknown"
-            : type
-        );
-      return ReactElement(
-        type,
-        children,
-        maybeKey,
-        getOwner(),
-        debugStack,
-        debugTask
-      );
-    }
-    function validateChildKeys(node) {
-      isValidElement(node)
-        ? node._store && (node._store.validated = 1)
-        : "object" === typeof node &&
-          null !== node &&
-          node.$$typeof === REACT_LAZY_TYPE &&
-          ("fulfilled" === node._payload.status
-            ? isValidElement(node._payload.value) &&
-              node._payload.value._store &&
-              (node._payload.value._store.validated = 1)
-            : node._store && (node._store.validated = 1));
-    }
-    function isValidElement(object) {
-      return (
-        "object" === typeof object &&
-        null !== object &&
-        object.$$typeof === REACT_ELEMENT_TYPE
-      );
-    }
-    var React = __webpack_require__(/*! react */ "react"),
-      REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"),
-      REACT_PORTAL_TYPE = Symbol.for("react.portal"),
-      REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"),
-      REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"),
-      REACT_PROFILER_TYPE = Symbol.for("react.profiler"),
-      REACT_CONSUMER_TYPE = Symbol.for("react.consumer"),
-      REACT_CONTEXT_TYPE = Symbol.for("react.context"),
-      REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"),
-      REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"),
-      REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"),
-      REACT_MEMO_TYPE = Symbol.for("react.memo"),
-      REACT_LAZY_TYPE = Symbol.for("react.lazy"),
-      REACT_ACTIVITY_TYPE = Symbol.for("react.activity"),
-      REACT_VIEW_TRANSITION_TYPE = Symbol.for("react.view_transition"),
-      REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"),
-      ReactSharedInternals =
-        React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE,
-      hasOwnProperty = Object.prototype.hasOwnProperty,
-      isArrayImpl = Array.isArray,
-      createTask = console.createTask
-        ? console.createTask
-        : function () {
-            return null;
-          };
-    React = {
-      react_stack_bottom_frame: function (callStackForError) {
-        return callStackForError();
-      }
-    };
-    var specialPropKeyWarningShown;
-    var didWarnAboutElementRef = {};
-    var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(
-      React,
-      UnknownOwner
-    )();
-    var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
-    var didWarnAboutKeySpread = {};
-    exports.Fragment = REACT_FRAGMENT_TYPE;
-    exports.jsxDEV = function (type, config, maybeKey, isStaticChildren) {
-      var trackActualOwner =
-        1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-      if (trackActualOwner) {
-        var previousStackTraceLimit = Error.stackTraceLimit;
-        Error.stackTraceLimit = 10;
-        var debugStackDEV = Error("react-stack-top-frame");
-        Error.stackTraceLimit = previousStackTraceLimit;
-      } else debugStackDEV = unknownOwnerDebugStack;
-      return jsxDEVImpl(
-        type,
-        config,
-        maybeKey,
-        isStaticChildren,
-        debugStackDEV,
-        trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask
-      );
-    };
-  })();
-
-
-/***/ },
-
-/***/ "./node_modules/react/jsx-dev-runtime.js"
-/*!***********************************************!*\
-  !*** ./node_modules/react/jsx-dev-runtime.js ***!
-  \***********************************************/
-(module, __unused_webpack_exports, __webpack_require__) {
-
-
-
-if (false) // removed by dead control flow
-{} else {
-  module.exports = __webpack_require__(/*! ./cjs/react-jsx-dev-runtime.development.js */ "./node_modules/react/cjs/react-jsx-dev-runtime.development.js");
-}
-
-
-/***/ },
-
 /***/ "react"
 /*!************************!*\
   !*** external "react" ***!
@@ -12898,6 +12514,16 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_react_dom_client_4cb20cd7__;
 (module) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_react_intl_original_31781609__;
+
+/***/ },
+
+/***/ "react/jsx-dev-runtime"
+/*!****************************************!*\
+  !*** external "react/jsx-dev-runtime" ***!
+  \****************************************/
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_react_jsx_dev_runtime_17c56db1__;
 
 /***/ },
 
@@ -12944,6 +12570,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   _registerComponent: () => (/* binding */ _registerComponent),
 /* harmony export */   _removeServiceInstance: () => (/* binding */ _removeServiceInstance),
 /* harmony export */   _serverApps: () => (/* binding */ _serverApps),
+/* harmony export */   _setTrustedScriptSrc: () => (/* binding */ _setTrustedScriptSrc),
 /* harmony export */   deleteApp: () => (/* binding */ deleteApp),
 /* harmony export */   getApp: () => (/* binding */ getApp),
 /* harmony export */   getApps: () => (/* binding */ getApps),
@@ -13016,8 +12643,8 @@ function isVersionServiceProvider(provider) {
     return component?.type === "VERSION" /* ComponentType.VERSION */;
 }
 
-const name$q = "@firebase/app";
-const version$1 = "0.16.4";
+const name$r = "@firebase/app";
+const version$1 = "0.16.7";
 
 /**
  * @license
@@ -13037,19 +12664,21 @@ const version$1 = "0.16.4";
  */
 const logger = new _firebase_logger__WEBPACK_IMPORTED_MODULE_1__.Logger('@firebase/app');
 
-const name$p = "@firebase/app-compat";
+const name$q = "@firebase/app-compat";
 
-const name$o = "@firebase/analytics-compat";
+const name$p = "@firebase/analytics-compat";
 
-const name$n = "@firebase/analytics";
+const name$o = "@firebase/analytics";
 
-const name$m = "@firebase/app-check-compat";
+const name$n = "@firebase/app-check-compat";
 
-const name$l = "@firebase/app-check";
+const name$m = "@firebase/app-check";
 
-const name$k = "@firebase/auth";
+const name$l = "@firebase/auth";
 
-const name$j = "@firebase/auth-compat";
+const name$k = "@firebase/auth-compat";
+
+const name$j = "@firebase/crashlytics";
 
 const name$i = "@firebase/database";
 
@@ -13088,7 +12717,7 @@ const name$2 = "@firebase/ai";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "13.1.0";
+const version = "13.4.0";
 
 /**
  * @license
@@ -13113,14 +12742,15 @@ const version = "13.1.0";
  */
 const DEFAULT_ENTRY_NAME = '[DEFAULT]';
 const PLATFORM_LOG_STRING = {
-    [name$q]: 'fire-core',
-    [name$p]: 'fire-core-compat',
-    [name$n]: 'fire-analytics',
-    [name$o]: 'fire-analytics-compat',
-    [name$l]: 'fire-app-check',
-    [name$m]: 'fire-app-check-compat',
-    [name$k]: 'fire-auth',
-    [name$j]: 'fire-auth-compat',
+    [name$r]: 'fire-core',
+    [name$q]: 'fire-core-compat',
+    [name$o]: 'fire-analytics',
+    [name$p]: 'fire-analytics-compat',
+    [name$m]: 'fire-app-check',
+    [name$n]: 'fire-app-check-compat',
+    [name$l]: 'fire-auth',
+    [name$k]: 'fire-auth-compat',
+    [name$j]: 'fire-cls',
     [name$i]: 'fire-rtdb',
     [name$h]: 'fire-data-connect',
     [name$g]: 'fire-rtdb-compat',
@@ -13482,7 +13112,7 @@ class FirebaseServerAppImpl extends FirebaseAppImpl {
         // will never trigger.
         this._serverConfig.releaseOnDeref = undefined;
         serverConfig.releaseOnDeref = undefined;
-        registerVersion(name$q, version$1, 'serverapp');
+        registerVersion(name$r, version$1, 'serverapp');
     }
     toJSON() {
         return undefined;
@@ -13512,6 +13142,9 @@ class FirebaseServerAppImpl extends FirebaseAppImpl {
     // reference counts and delete itself if no reference count remain. The coordinating logic that
     // handles this is in deleteApp(...).
     automaticCleanup() {
+        if (this.isDeleted) {
+            return;
+        }
         void deleteApp(this);
     }
     get settings() {
@@ -14190,11 +13823,140 @@ function registerCoreComponents(variant) {
     _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
     _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
     // Register `app` package.
-    registerVersion(name$q, version$1, variant);
+    registerVersion(name$r, version$1, variant);
     // BUILD_TARGET will be replaced by values like esm, cjs, etc during the compilation
-    registerVersion(name$q, version$1, 'esm2020');
+    registerVersion(name$r, version$1, 'esm2020');
     // Register platform SDK identifier (no version).
     registerVersion('fire-js', '');
+}
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Name of the Trusted Types policy that Firebase SDKs use to load external
+ * scripts. Apps that restrict policy names with the `trusted-types` CSP
+ * directive must allow this name.
+ *
+ * @internal
+ */
+const _TRUSTED_TYPES_POLICY_NAME = 'firebase-js-sdk-policy';
+/**
+ * External scripts that Firebase SDKs are allowed to load. A script URL is
+ * allowed if it is one of these URLs, optionally followed by a query string.
+ *
+ * - Analytics: Google tag (gtag.js)
+ * - Auth: Google API loader (gapi), reCAPTCHA v2 and reCAPTCHA Enterprise
+ * - App Check: reCAPTCHA v3 and reCAPTCHA Enterprise
+ */
+const ALLOWED_SCRIPT_URLS = [
+    'https://www.googletagmanager.com/gtag/js',
+    'https://apis.google.com/js/api.js',
+    'https://www.google.com/recaptcha/api.js',
+    'https://www.google.com/recaptcha/enterprise.js'
+];
+// `undefined` means the policy has not been created yet. `null` means Trusted
+// Types are unavailable or the policy could not be created.
+let trustedTypesPolicy;
+// True if the browser supports Trusted Types but the policy could not be
+// created, usually because the page's CSP does not allow the policy name.
+let trustedTypesPolicyBlocked = false;
+/**
+ * Returns `url` if it is one of the allowed external scripts, and throws
+ * otherwise. Used as the `createScriptURL` implementation of the Trusted Types
+ * policy.
+ *
+ * @internal
+ */
+function _createTrustedScriptURL(url) {
+    const allowed = ALLOWED_SCRIPT_URLS.some(allowedUrl => url.startsWith(allowedUrl) &&
+        // Only allow a query string after the allowed URL, so that e.g.
+        // "https://apis.google.com/js/api.js.evil.com" is rejected.
+        (url.length === allowedUrl.length ||
+            url.charAt(allowedUrl.length) === '?'));
+    if (!allowed) {
+        throw new TypeError(`Firebase: Refusing to load untrusted script URL: ${url}`);
+    }
+    return url;
+}
+/**
+ * Lazily creates the Trusted Types policy. The policy is only created the first
+ * time a script is loaded, so that pages that load more than one copy of
+ * `@firebase/app` (for example the compat and modular CDN builds) only run
+ * into a policy name collision if more than one copy loads a script.
+ */
+function getTrustedTypesPolicy() {
+    if (trustedTypesPolicy === undefined) {
+        trustedTypesPolicy = null;
+        const trustedTypes = typeof window !== 'undefined' ? window.trustedTypes : undefined;
+        if (trustedTypes?.createPolicy) {
+            try {
+                trustedTypesPolicy = trustedTypes.createPolicy(_TRUSTED_TYPES_POLICY_NAME, { createScriptURL: _createTrustedScriptURL });
+            }
+            catch {
+                // The page's CSP does not allow this policy name, or a policy with
+                // this name already exists. Fall back to assigning a plain string,
+                // which still works unless the page also requires Trusted Types for
+                // scripts. If it does, _setTrustedScriptSrc logs an error explaining
+                // how to allow the policy.
+                trustedTypesPolicyBlocked = true;
+            }
+        }
+    }
+    return trustedTypesPolicy;
+}
+/**
+ * Sets the `src` of a script element through the Firebase Trusted Types policy
+ * when Trusted Types are supported, so that Firebase SDKs can load external
+ * scripts on pages that enforce Trusted Types.
+ *
+ * Throws if `url` is not an allowed Firebase script URL, or if the browser
+ * rejects the assignment.
+ *
+ * @param script - The script element to update.
+ * @param url - The script URL. Must be an allowed Firebase script URL.
+ *
+ * @internal
+ */
+function _setTrustedScriptSrc(script, url) {
+    // Validate the URL even when Trusted Types are unavailable, so that the
+    // allowlist is enforced the same way in every browser.
+    _createTrustedScriptURL(url);
+    const policy = getTrustedTypesPolicy();
+    if (policy) {
+        // HTMLScriptElement.src is typed as a string, but accepts a
+        // TrustedScriptURL.
+        script.src = policy.createScriptURL(url);
+        return;
+    }
+    try {
+        script.src = url;
+    }
+    catch (e) {
+        if (trustedTypesPolicyBlocked) {
+            // The browser rejected the plain string because the page requires
+            // Trusted Types, and the page's CSP did not allow our policy.
+            logger.error(`Unable to load ${url} because this page requires Trusted Types ` +
+                `for scripts but does not allow the "${_TRUSTED_TYPES_POLICY_NAME}" ` +
+                `Trusted Types policy. To fix this, add ` +
+                `"${_TRUSTED_TYPES_POLICY_NAME}" to the trusted-types directive ` +
+                `of the page's Content-Security-Policy.`);
+        }
+        throw e;
+    }
 }
 
 /**
@@ -14646,7 +14408,7 @@ class ComponentContainer {
     }
 }
 
-
+;
 //# sourceMappingURL=index.esm.js.map
 
 
@@ -16087,7 +15849,7 @@ function setUserLogHandler(logCallback, options) {
     }
 }
 
-
+;
 //# sourceMappingURL=index.esm.js.map
 
 
@@ -18101,26 +17863,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getDefaultsFromPostinstall: () => (/* binding */ getDefaultsFromPostinstall)
 /* harmony export */ });
-/**
- * @license
- * Copyright 2025 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-// This value is retrieved and hardcoded by the NPM postinstall script
-const getDefaultsFromPostinstall = () => undefined;
-
-
+const getDefaultsFromPostinstall = () => (undefined);
 
 
 /***/ },
@@ -18148,6 +17891,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   _registerComponent: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
 /* harmony export */   _removeServiceInstance: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
 /* harmony export */   _serverApps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._serverApps),
+/* harmony export */   _setTrustedScriptSrc: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._setTrustedScriptSrc),
 /* harmony export */   deleteApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
 /* harmony export */   getApp: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
 /* harmony export */   getApps: () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
@@ -18162,7 +17906,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "13.1.0";
+var version = "13.4.0";
 
 /**
  * @license
