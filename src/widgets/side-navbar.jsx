@@ -16,10 +16,7 @@ export default class SideNavbar extends React.PureComponent {
         icon_badges.push({icon: b, color: 'badge-inv'});
       });
     }
-    let avatar = null;
-    if (this.props.tinode) {
-      avatar = this.props.tinode.authorizeURL(sanitizeUrlForMime(this.props.avatar, 'image'));
-    }
+    const avatar = this.props.tinode && sanitizeUrlForMime(this.props.avatar, 'image');
     return (
       <div id="side-caption-panel" className="caption-panel">
         {this.props.onCancel ? <ButtonBack onBack={this.props.onCancel} /> : null}

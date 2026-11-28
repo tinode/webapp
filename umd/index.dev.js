@@ -5646,6 +5646,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0__["default"].Component 
       secure: secureConnection,
       persist: persistentCache
     }, onSetupCompleted);
+    tinode.authorizeURL = tinode.authorizeURL.bind(tinode);
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_10__.LOGGING_ENABLED, true);
     return tinode;
@@ -11491,10 +11492,7 @@ class SideNavbar extends react__WEBPACK_IMPORTED_MODULE_0__["default"].PureCompo
         });
       });
     }
-    let avatar = null;
-    if (this.props.tinode) {
-      avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrlForMime)(this.props.avatar, 'image'));
-    }
+    const avatar = this.props.tinode && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrlForMime)(this.props.avatar, 'image');
     return (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxDEV)("div", {
       id: "side-caption-panel",
       className: "caption-panel",

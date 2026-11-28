@@ -421,6 +421,8 @@ class TinodeWeb extends React.Component {
   static tnSetup(serverAddress, secureConnection, transport, locale, persistentCache, onSetupCompleted) {
     const tinode = new Tinode({appName: APP_NAME, host: serverAddress, apiKey: API_KEY, transport: transport,
       secure: secureConnection, persist: persistentCache}, onSetupCompleted);
+    // Avatar components receive this method as a callback.
+    tinode.authorizeURL = tinode.authorizeURL.bind(tinode);
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(LOGGING_ENABLED, true);
     return tinode;
